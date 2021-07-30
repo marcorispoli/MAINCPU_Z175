@@ -1,5 +1,5 @@
 gcc_arm/ram_release/obj/biopsy.o: \
- /mnt/hgfs/DBT/M4/M4_MASTER/source/biopsy.c \
+ /mnt/hgfs/DBT/M4/M4_MASTER/source/BIOPSY/biopsy.c \
  /mnt/hgfs/DBT/M4/M4_MASTER/source/dbt_m4.h \
  /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/mqx.h \
  /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/mqx_cnfg.h \
@@ -130,7 +130,9 @@ gcc_arm/ram_release/obj/biopsy.o: \
  /mnt/hgfs/DBT/M4/M4_MASTER/source/pcb215.h \
  /mnt/hgfs/DBT/M4/M4_MASTER/source/pcb190.h \
  /mnt/hgfs/DBT/M4/M4_MASTER/source/pcb244.h \
- /mnt/hgfs/DBT/M4/M4_MASTER/source/biopsy.h \
+ /mnt/hgfs/DBT/M4/M4_MASTER/source/BIOPSY/biopsy.h \
+ /mnt/hgfs/DBT/M4/M4_MASTER/source/BIOPSY/biopsy_driver.h \
+ /mnt/hgfs/DBT/M4/M4_MASTER/source/BIOPSY/biopsy_simulator.h \
  /mnt/hgfs/DBT/M4/M4_MASTER/source/pcb249U1.h \
  /mnt/hgfs/DBT/M4/M4_MASTER/source/pcb249U2.h \
  /mnt/hgfs/DBT/M4/M4_MASTER/source/actuators.h \

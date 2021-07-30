@@ -1083,13 +1083,14 @@ void pcb215VerifyComprData(void)
     updateLimitPos = TRUE;
   }
 
-  // Verificase se c'è la torretta ed è cambiata la z corrente
+  // Verificase se c'è la torretta ed è cambiata la z corrente per ricalcolare
+  // la posizione massima del compressore in risalita
   if(generalConfiguration.biopsyCfg.connected==TRUE)
   {
-    int dif = biopsyZ - generalConfiguration.biopsyCfg.needleZ;
+    int dif = biopsyZ - generalConfiguration.biopsyCfg.Z;
     if((dif>=10) || (dif<= -10))
     {
-      biopsyZ=generalConfiguration.biopsyCfg.needleZ;
+      biopsyZ=generalConfiguration.biopsyCfg.Z;
       updateLimitPos = TRUE;
     }
   }
@@ -1133,7 +1134,8 @@ void pcb215VerifyComprData(void)
   {
       if(generalConfiguration.biopsyCfg.connected==TRUE)
       {
-        padLimitPosition = generalConfiguration.biopsyCfg.conf.offsetPad +  generalConfiguration.biopsyCfg.conf.offsetZ - generalConfiguration.biopsyCfg.conf.margineRisalita - generalConfiguration.biopsyCfg.needleZ/10;
+        // Ricalcolo del limiti sulla base della configurazione ricevuta
+        padLimitPosition = generalConfiguration.biopsyCfg.conf.offsetPad +  generalConfiguration.biopsyCfg.conf.Z_homePosition - generalConfiguration.biopsyCfg.conf.margineRisalita - generalConfiguration.biopsyCfg.Z/10;
       }
       else if(IS_VALID_PAD)
       {
@@ -1163,11 +1165,6 @@ void pcb215VerifyComprData(void)
       spessore = _DEVREG(RG215_DOSE,CONTEST);
       spessore+= PAD.offset; // Aggiunge l'offset del Pad utilizzato
       if(spessore<1) spessore =1;
-
-
-      int mag_factor=0;
-      int sbalzo=0;
-
 
       // Verifica se c'è inserito l'ingranditore
       if(POTTER==POTTER_MAGNIFIER)

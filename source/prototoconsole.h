@@ -59,7 +59,7 @@ public:
     void notifyProjectionSelection(QString projection); // Notifica la AWS dell'avvenuta selezione
     void notifyAbortProjection(void); // Notifica la AWS dell'avvenuta selezione
     void notifyRequestPowerOff(void);
-    void setBiopsyPosition(int curX, int curY, int curZ);
+    void setBiopsyPosition(int curX, int curY, int curZ, int curSh);
     void setSpecimen(bool stat);
 
     void endCommandAck(unsigned char id, unsigned char code); // Acnowledge per fine comando

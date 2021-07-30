@@ -187,16 +187,23 @@ int main(int argc, char *argv[])
     ApplicationDatabase.append((int) 0);           // CAMPO TEMPERATURA CUFFIA
     ApplicationDatabase.append((int) 1);           // _DB_HU_ANODE
 
-    ApplicationDatabase.append("");                 // _DB_BIOP_HOLDER
-    ApplicationDatabase.append("");                 // _DB_BIOP_AGO
-    ApplicationDatabase.append("");                 // _DB_BIOP_MARG
-    ApplicationDatabase.append("");                 // _DB_BIOP_MAXZ
 
-    ApplicationDatabase.append("ND");               // _DB_BIOP_X
-    ApplicationDatabase.append("ND");               // _DB_BIOP_Y
-    ApplicationDatabase.append("ND");               // _DB_BIOP_Z
-    ApplicationDatabase.append((unsigned char) 0);  // _DB_BIOP_UNLOCK_BUTTON
-    ApplicationDatabase.append((unsigned char) 0);  // _DB_BIOP_MANUAL_ENA
+    ApplicationDatabase.append((int) 0);            // _DB_BIOP_MODEL
+    ApplicationDatabase.append((int) 0);            // _DB_BIOP_ADAPTER_ID
+    ApplicationDatabase.append((int) 0);            // _DB_BIOP_PADDLE_MARGINE
+    ApplicationDatabase.append((int) 0);            // _DB_BIOP_X
+    ApplicationDatabase.append((int) 0);            // _DB_BIOP_Y
+    ApplicationDatabase.append((int) 0);            // _DB_BIOP_Z
+    ApplicationDatabase.append((int) 0);            // _DB_BIOP_SH
+
+    ApplicationDatabase.append((int) 0);            // _DB_BIOP_LES_X
+    ApplicationDatabase.append((int) 0);            // _DB_BIOP_LES_Y
+    ApplicationDatabase.append((int) 0);            // _DB_BIOP_LES_Z
+    ApplicationDatabase.append((int) 0);            // _DB_BIOP_UNLOCK_BUTTON
+
+    ApplicationDatabase.append((int) 0);            // _DB_BIOP_NEEDLE_MARG
+    ApplicationDatabase.append((int) 0);            // _DB_BIOP_MAXZ
+
 
     ApplicationDatabase.append((unsigned char) 0);  // CAMPO DEMO_MODE
     ApplicationDatabase.append((unsigned char) 0);  // CAMPO DEAD_MEN

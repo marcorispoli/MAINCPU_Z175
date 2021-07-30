@@ -92,7 +92,9 @@ _____________________________________________________________________________*/
 #include "pcb215.h"     // Gestore Carrello compressore
 #include "pcb190.h"     // Gestore generatore
 #include "pcb244.h"     // Gestore potter
-#include "biopsy.h"     // Gestore biopsia
+#include "BIOPSY/biopsy.h"     // Gestore biopsia
+#include "BIOPSY/biopsy_driver.h"     // Gestore biopsia
+#include "BIOPSY/biopsy_simulator.h"     // Gestore biopsia
 #include "pcb249U1.h"   // Gestore filtri, lame di collimazione
 #include "pcb249U2.h"   // Gestore filtri, back/front, mirror,light
 #include "actuators.h"  // Gestore movimentazioni

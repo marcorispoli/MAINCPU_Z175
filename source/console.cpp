@@ -201,7 +201,7 @@ void console::consoleRxHandler(QByteArray rxbuffer)
         return;
     }else if(comando==GET_POTTER)
     {
-        if(pBiopsy->connected) emit consoleTxHandler(answ.answToQByteArray(QString("BP %1").arg(pBiopsy->accessorio)));
+        if(pBiopsy->connected) emit consoleTxHandler(answ.answToQByteArray(QString("BP %1").arg(pBiopsy->adapterId)));
         else if(pPotter->getPotId()==POTTER_2D)  emit consoleTxHandler(answ.answToQByteArray("2D 0"));
         else if(pPotter->getPotId()==POTTER_TOMO)  emit consoleTxHandler(answ.answToQByteArray("3D 0"));
         else if(pPotter->getPotId()==POTTER_MAGNIFIER)  emit consoleTxHandler(answ.answToQByteArray(QString("MG %1").arg(pCompressore->config.fattoreIngranditore[pPotter->getPotFactor()])));        
@@ -541,31 +541,18 @@ void console::consoleRxHandler(QByteArray rxbuffer)
     {
         if(handleSetIaRxData(&protocollo, &answ)==FALSE) emit consoleTxHandler(answ.cmdToQByteArray("NOK"));
         else emit consoleTxHandler(answ.cmdToQByteArray("OK"));
-    }else if(comando==SET_BIOPSY_DATA)
+    }else if(comando==SET_BIOPSY_MOVE)
     {
-        code = handleSetBiopsyData(&protocollo);
-        if(code>0)
-        {
-            answ.addParam(QString("%1").arg((int) code));
-            emit consoleTxHandler(answ.cmdToQByteArray("NOK"));
-        }else
-        {
-            emit consoleTxHandler(answ.cmdToQByteArray("OK 30"));
-        }
-    }else if(comando==GET_BIOPSY_Z)
+        handleBiopsyMove(&protocollo, &answ);
+    }else if(comando==GET_BIOPSY_PARAM)
     {
-        handleGetBiopsyZ(&answ);
-    }else if(comando==SET_BIOPSY_HOME)
+        handleGetBiopsyParam(&protocollo, &answ);
+    }else if(comando==SET_BIOPSY_PARAM)
     {
-        code = handleSetBiopsyHome(&protocollo);
-        if(code>0)
-        {
-            answ.addParam(QString("%1").arg((int) code));
-            emit consoleTxHandler(answ.cmdToQByteArray("NOK"));
-        }else
-        {
-            emit consoleTxHandler(answ.cmdToQByteArray("OK 0"));
-        }
+        handleSetBiopsyParam(&protocollo, &answ);
+    }else if(comando==SET_BIOPSY_CONFIG)
+    {
+         handleSetBiopsyConfig(&protocollo, &answ);
     }else if(comando==SET_LINGUA)
     {
         code = handleSetLingua(&protocollo);
@@ -2995,23 +2982,6 @@ void console::handleSetXrayLamp(QString par)
 
 
 
-///////////////////////////////////////////////////////////////////
-/*
-
- Data: 09/11/2014
- Autore: M.Rispoli
-
-*/
-///////////////////////////////////////////////////////////////////
-void console::demoBiopsy(bool status)
-{
-
-    pGuiMcc->sendFrame(MCC_BIOPSY_DEMO_CMD,0,(unsigned char*) &status, sizeof(status));
-
-}
-
-
-
 #define NBYTE_FINE_RAGGI 6
 void console::guiNotify(unsigned char id, unsigned char mcccode, QByteArray data)
 {
@@ -4657,105 +4627,116 @@ bool console::handleSetIaRxData(protoConsole* frame, protoConsole* answer)
 }
 
 /*
-    Stringa di comando	<ID LEN %SetBiopsyData PAR0 .. PAR7%>
-    PARAMETRI:	Tipo    dato                        Valore
-    PAR0        Int     Posizione X                 Valore in decimi di millimetro
-    PAR1        Int     Posizione Y                 Valore in decimi di millimetro
-    PAR2        Int     Posizione Z                 Valore in decimi di millimetro
-    PAR3        Int     Posizione Z Limite          Valore in  millimetro
-    PAR4        Int     POsizione Z Lesione         Valore in  millimetro
-    PAR5    	Int     Lunghezza effettiva Ago     Valore in  millimetro
 
-    PAR6        String	Nome descrittore Accessorio	Descrizione dell'accessorio da utilizzare
-    PAR7        blank  SPARE
-    PAR8        String	Nome descrittore Ago        Descrizione simbolica Ago utilizzato
-
-
-    Frame di risposta: <ID LEN %OK/NOK PAR0%>
-        OK	Torretta si muove verso XYZ
-        NOK	Errore formato comando
-        PARAMETRI	Tipo    dato                Valore
-        PAR0        Int     Timeout Comando     Indica quanto tempo in secondi dovrebbe impiegare al massimo il posizionamento
-
-     A questo comando seguir√  l'invio di un messaggio asincrono per notificare
-     il completamento:
-    Stringa di comando	<ID LEN %OK/NOK PAR0%>
-    PARAMETRI	Tipo dato	Valore	Note
-    OK/NOK	Stringa	Risultato	OK = Posizionamento corretto
-    NOK = Errore posizionamento
-    PAR0	Stringa	Stringa di errore	Se OK: == "" Nessuna stringa;
-    Se NOK: Se l'operazione non √® andata a buon fine (NOK) questa √® la stringa di errore generata dalla CPU
 
  */
-int console::handleSetBiopsyData(protoConsole* frame)
+void console::handleBiopsyMove(protoConsole* frame, protoConsole* answer)
 {
+    // Controllo sulla dimensione dei parametri
+    if(frame->parametri.size() != 3 ) {
+        emit consoleTxHandler(answer->answToQByteArray("NOK 1"));
+        return;
+    }
 
-     // Check numero parametri
-    if(frame->parametri.size()!=9) return -1;
-
-    // Prepara i target di movimento
     unsigned short targetX = frame->parametri[0].toUInt(); // dam
     unsigned short targetY = frame->parametri[1].toUInt(); // dam
     unsigned short targetZ = frame->parametri[2].toUInt(); // dam
 
-    unsigned short Zlimit = (unsigned char) frame->parametri[3].toUInt(); // mm
-    unsigned short Zlesione = (unsigned char) frame->parametri[4].toUInt(); // mm
-    unsigned short Lago = (unsigned char) frame->parametri[5].toUInt(); // mm
-    unsigned short holder = (unsigned char) frame->parametri[6].toUInt();
-    // spare frame->parametri[7];
-    QString codiceAgo = frame->parametri[8];
+    // Se la distanza tra il target e la posizione corrente Ë <= 1mm
+    // si considera il target gi‡ raggiunto
+    if ( (abs(( int) targetX - (int) pBiopsy->curX_dmm) <= 10) &&
+         (abs(( int) targetY - (int) pBiopsy->curY_dmm) <= 10) &&
+         (abs(( int) targetZ - (int) pBiopsy->curZ_dmm) <= 10)
+        ){
+        emit consoleTxHandler(answer->answToQByteArray("OK 0"));
+        return;
+    }
 
+    // Movimento in Home
+    if( (targetX <= 10) && (targetY <= 10) && (targetZ <= 10) ) {
+        pBiopsy->moveHome(frame->id);
+        emit consoleTxHandler(answer->answToQByteArray("OK 255"));
+    }
 
-    return pBiopsy->setBiopsyData(targetX, targetY, targetZ, // Posizione da raggiungere
-                              Zlimit,        // Massima Z calcolata dalla AWS
-                              Zlesione,      // Posizione rilevata della lesione
-                              Lago,          // Lunghezza dell'ago
-                              holder,        // Codice holder utilizzato dalla AWS
-                              codiceAgo,     // Nome dellk'accessorio montato da AWS
-                              frame->id      // Id del comando richiesto
-                              );
+   // Movimento a posizione arbitraria
+    pBiopsy->moveXYZ(targetX, targetY, targetZ, frame->id);
+    emit consoleTxHandler(answer->answToQByteArray("OK 255"));
+    return;
 
 }
 
 /* 
-  Restituisce la corsa massima prima di impattare con ili compressore
+    Restituisce i seguenti parametri funzionali della Biopsia:
+    - Stato della Connessione
+
+    - Modello della torretta
+    - Distanza Z-Home fibra di carbonio in mm
+    - Posizione del cursore XYZ in dmm;
+    - Posizione del cursore del cuneo in dmm;
+    - Distanza attuale Base torretta  Staffe del compressore in mm;
+    - Distanza punta ago e home come ricevuto da AWS
+    - Massima Z calcolata dal Gantry sulla base della distanza dal compressore
+    - Massima Z assoluta come la minore tra impatto ago e impatto compressore
+    - Codice Adattatore
+    - Stato del pulsante di sblocco
+    - Posizione lateralit‡
+
  */
-void console::handleGetBiopsyZ(protoConsole* answer)
-{   
-    answer->addParam(QString("%1").arg(pBiopsy->maxZ*10));    
-    emit consoleTxHandler(answer->answToQByteArray());
+void console::handleGetBiopsyParam(protoConsole* frame, protoConsole* answer)
+{
+    QString stringa = "OK ";
+    if(pBiopsy->connected)  stringa += QString("1 ");
+    else stringa += QString("0 ");
+
+    stringa += QString("%1 ").arg((int) pBiopsy->model);
+    stringa += QString("%1 ").arg((int) pBiopsy->config.Z_homePosition);
+    stringa += QString("%1 ").arg((int) pBiopsy->curX_dmm);
+    stringa += QString("%1 ").arg((int) pBiopsy->curY_dmm);
+    stringa += QString("%1 ").arg((int) pBiopsy->curZ_dmm);
+    stringa += QString("%1 ").arg((int) pBiopsy->curSh_dmm);
+    stringa += QString("%1 ").arg((int) pBiopsy->paddle_margine);
+    stringa += QString("%1 ").arg((int) pBiopsy->needle_home);
+    stringa += QString("%1 ").arg((int) pBiopsy->max_z_paddle);
+    stringa += QString("%1 ").arg((int) pBiopsy->abs_max_z);
+    stringa += QString("%1 ").arg((int) pBiopsy->adapterId);
+    if(pBiopsy->unlock_button) stringa += QString("1 ");
+    else stringa += QString("0 ");
+    stringa += QString("%1 ").arg((int) pBiopsy->laterality);
+
+    emit consoleTxHandler(answer->answToQByteArray(stringa));
+    return;
 }
 
 /*
-    Stringa di comando	<ID LEN %handleSetBiopsyHome PAR0%>
-    PARAMETRI:	Tipo    dato                        Valore
-    PAR0        Int     Posizione base del cursore  (mm)
-
-    Frame di risposta: <ID LEN %OK%>
-
+ *  Impostazione di alcuni parametri operativi sotto il controllo della AWS
+ *  - Impostazione Distanza punta ago e home in mm
+ *
  */
-int console::handleSetBiopsyHome(protoConsole* frame)
+void console::handleSetBiopsyParam(protoConsole* frame, protoConsole* answer)
 {
+    if(frame->parametri.size() !=1 ){
+        emit consoleTxHandler(answer->answToQByteArray(QString("NOK 1")));
+    }
 
-    // Check presenza
-    if(pBiopsy->connected == FALSE) return 1;
+    // Imposta la distanza della punta dell'ago dalla posizione di home
+    pBiopsy->needle_home = frame->parametri[0].toInt();
+    pBiopsy->calcoloMargini();
 
-    // Check numero parametri
-    if(frame->parametri.size()!=1) return 2;
+    // Riceve tutto il set di parametri ricalcolati
+    handleGetBiopsyParam(frame, answer);
 
-    // Calcolo il nuovo offset
-    pBiopsy->config.offsetZ = frame->parametri[0].toInt();
-
-    // Salva il file di configurazione
-    pBiopsy->storeConfig();
-
-    // Effettua l'update della configurazione verso M4
-    pBiopsy->updateConfig();
-
-    return 0;
+    return ;
 
 }
 
+void console::handleSetBiopsyConfig(protoConsole* frame, protoConsole* answer)
+{
+
+
+
+    return ;
+
+}
 /*
     Stringa di comando	<ID LEN %SetLingua PAR0%>
     PARAMETRI:	Tipo    dato                        Valore

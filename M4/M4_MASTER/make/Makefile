@@ -8,6 +8,7 @@ MQX_ROOTDIR         = $(PROJ_DIR)/MQX
 SHARED_DIR	    = $(PROJ_DIR)/../shared_a5_m4
 COM_DIR	    	    = $(PROJ_DIR)/COMMON
 SRC_DIR	    	    = $(PROJ_DIR)/M4_MASTER/source
+SRC_BYM	    	    = $(PROJ_DIR)/M4_MASTER/source/BIOPSY
 
 
 #LIBRARY_ROOTDIR     = $(MQX_ROOTDIR)/lib/$(BOARD).$(TOOL)
@@ -36,7 +37,9 @@ INCLUDE += $(SHARED_DIR)
 INCLUDE += $(LIBRARY_ROOTDIR)/$(CONFIG)/mcc
 
 
-SOURCES += $(SRC_DIR)/biopsy.c
+SOURCES += $(SRC_DIR)/BIOPSY/biopsy.c
+SOURCES += $(SRC_DIR)/BIOPSY/biopsy_driver.c
+SOURCES += $(SRC_DIR)/BIOPSY/biopsy_simulator.c
 SOURCES += $(SRC_DIR)/fault.c
 SOURCES += $(SRC_DIR)/loader.c
 SOURCES += $(SRC_DIR)/master_can.c 

@@ -451,7 +451,7 @@ void protoToConsole::setConfigChanged(_configCode config){
     case protoToConsole::ACCESSORIO:
 
         cmd.addParam(QString("POTTER")); // Parola chiave
-        if(pBiopsy->connected) cmd.addParam(QString("BP %1").arg(pBiopsy->accessorio));
+        if(pBiopsy->connected) cmd.addParam(QString("BP %1").arg(pBiopsy->adapterId));
         else if(pPotter->getPotId()==POTTER_2D)  cmd.addParam(QString("2D 0"));
         else if(pPotter->getPotId()==POTTER_TOMO)  cmd.addParam(QString("3D 0"));
         else if(pPotter->getPotId()==POTTER_MAGNIFIER)  cmd.addParam(QString("MG %1").arg(pCompressore->config.fattoreIngranditore[pPotter->getPotFactor()]));
@@ -464,12 +464,11 @@ void protoToConsole::setConfigChanged(_configCode config){
     return;
 }
 
-void protoToConsole::setBiopsyPosition(int curX, int curY, int curZ){
+void protoToConsole::setBiopsyPosition(int curX, int curY, int curZ, int curSh){
     protoConsole cmd(1,UNICODE_FORMAT);
-    cmd.addParam(QString("%1 %2 %3").arg(curX).arg(curY).arg(curZ));
+    cmd.addParam(QString("%1 %2 %3 %4").arg(curX).arg(curY).arg(curZ).arg(curSh));
     sendNotificheTcp(cmd.cmdToQByteArray(NOTIFY_SET_BIOPSY_POSITION));
-
-   return;
+    return;
 }
 
 void protoToConsole::setSpecimen(bool stat){

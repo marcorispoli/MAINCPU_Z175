@@ -10,39 +10,6 @@
 /*___________________________________________________________________________________
                 DESCRIZIONE REVISIONI INTERFACCIA IRS
 
-REV 1.1.0
-    La funzione di inserimento collimazione è in grado di aggiungere un nuovo PAD
-
-REV 1.1.1
-    Aggiunto comando per update software
-
-REV 1.3.0
-    Nuovo IRS per la versione di rilascio ID10
-
-REV 1.4.0
-    Nuovo IRS per la versione di rilascio ID11
-
-REV 1.5.0
-    Aggiunto comando per lettura tubo da generatore:
-
-REV 1.6.0
-    Aggiunta gestione delle soglie di riconoscimento PAD
-
-_________________________________________________________________________________
-10/10/2018
-
-REV 1.6.1
-
- - Aggiunto comanto compressore: getTrolley()
- - Aggiunto comando compressore: setCompressorRelease()
-
-
-
-_________________________________________________________________________________
-26/01/2021
-REV 1.7.0
- - Eliminato set di comandi per Analogica
- - Inseriti comadi per le impostazioni dei files di configurazione
 
 ___________________________________________________________________________________*/
 
@@ -138,11 +105,7 @@ public slots:
     void handleMoveArm(QString tag, QByteArray data);
 
     void handleBiopsy(QByteArray data);
-        void handleBiopsyMoveX(QByteArray data);
-        void handleBiopsyMoveY(QByteArray data);
-        void handleBiopsyMoveZ(QByteArray data);
-        void handleBiopsyStepZ(QByteArray data);
-        void handleBiopsyMoveXYZ(QByteArray data);
+
 
     void handleSetAlarm(QByteArray data, bool selfreset);
 

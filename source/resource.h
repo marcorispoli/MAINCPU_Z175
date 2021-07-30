@@ -140,106 +140,114 @@ enum
 // INDICI CAMPI DATABASE
 enum
 {
- _DB_SLAVE_GUI_REVISION=0,
- _DB_SYSTEM_CONFIGURATION,
- _DB_SERVICE_PASSWORD,
- _DB_PASSWORD,
- _DB_LINGUA,
- _DB_COLLIMAZIONE,
- _DB_MANUAL_COLLIMAZIONE,
+_DB_SLAVE_GUI_REVISION=0,
+_DB_SYSTEM_CONFIGURATION,
+_DB_SERVICE_PASSWORD,
+_DB_PASSWORD,
+_DB_LINGUA,
+_DB_COLLIMAZIONE,
+_DB_MANUAL_COLLIMAZIONE,
 
- _DB_COMPRESSOR_PAD,
- _DB_COMPRESSOR_PAD_CODE,
- _DB_ACCESSORY_NAME,
- _DB_MAG_FACTOR,
- _DB_ACCESSORIO,
- _DB_ACCESSORIO_COLLIMATORE,
- _DB_FORZA,
- _DB_TARGET_FORCE,
- _DB_SPESSORE,
- _DB_COMPRESSOR_POSITION,
- _DB_DANGOLO,
- _DB_TRX,
- _DB_GONIO,
+_DB_COMPRESSOR_PAD,
+_DB_COMPRESSOR_PAD_CODE,
+_DB_ACCESSORY_NAME,
+_DB_MAG_FACTOR,
+_DB_ACCESSORIO,
+_DB_ACCESSORIO_COLLIMATORE,
+_DB_FORZA,
+_DB_TARGET_FORCE,
+_DB_SPESSORE,
+_DB_COMPRESSOR_POSITION,
+_DB_DANGOLO,
+_DB_TRX,
+_DB_GONIO,
 
- _DB_ACVOLT,
- _DB_VPRIMARIO,
- _DB_BATTCHARGE,
- _DB_AWS_CONNECTION,
- _DB_PCAWS_CONNECTION,
+_DB_ACVOLT,
+_DB_VPRIMARIO,
+_DB_BATTCHARGE,
+_DB_AWS_CONNECTION,
+_DB_PCAWS_CONNECTION,
 
- _DB_INTESTAZIONE,
- _DB_ACR_VIEW,
- _DB_ACR_SUF,
- _DB_XRAY_SYM,
- _DB_COMPRESSOR_UNLOCK,
- _DB_CALIB_SYM,
- _DB_EXPOSURE_MODE,
- _DB_ENABLE_MOVIMENTI,
- _DB_CONNETCTED_DRIVER,
- _DB_PACKAGE_ID,
- _DB_STARTUP_FASE,
- _DB_IMAGE_NAME,
- _DB_STUDY_STAT,        // 0 = CLOSED STUDY, 1= OPEN STUDY LOCAL, 2=OPEN_STUDY_DICOM,
- _DB_PROIEZIONI,    // Lista proiezioni disponibili
- _DB_SEL_PROJ,      // Proiezione selezionata
- _DB_READY_EXPOSURE,    // Stato di pronto esecuzione raggi
- _DB_XRAY_PUSH_BUTTON, // Stato del pulsante raggi
- _DB_CLOSED_DOOR,       // Porta dello studio chiusa
+_DB_INTESTAZIONE,
+_DB_ACR_VIEW,
+_DB_ACR_SUF,
+_DB_XRAY_SYM,
+_DB_COMPRESSOR_UNLOCK,
+_DB_CALIB_SYM,
+_DB_EXPOSURE_MODE,
+_DB_ENABLE_MOVIMENTI,
+_DB_CONNETCTED_DRIVER,
+_DB_PACKAGE_ID,
+_DB_STARTUP_FASE,
+_DB_IMAGE_NAME,
+_DB_STUDY_STAT,        // 0 = CLOSED STUDY, 1= OPEN STUDY LOCAL, 2=OPEN_STUDY_DICOM,
+_DB_PROIEZIONI,    // Lista proiezioni disponibili
+_DB_SEL_PROJ,      // Proiezione selezionata
+_DB_READY_EXPOSURE,    // Stato di pronto esecuzione raggi
+_DB_XRAY_PUSH_BUTTON, // Stato del pulsante raggi
+_DB_CLOSED_DOOR,       // Porta dello studio chiusa
 
- // Blocco Allarmi__________________________________________________________________
- _DB_NALLARMI_ATTIVI,   // Indica il numero di allarmi che sono al momento attivi
- _DB_ALLARMI_POWERDOWN,
- _DB_ALLARMI_BIOPSIA,
- _DB_ALLARMI_ALR_PAD,
- _DB_ALLARMI_ALR_COMPRESSORE,
- _DB_ALLARMI_ALR_POTTER,
- _DB_ALLARMI_ALR_RAGGI,
- _DB_ALLARMI_ALR_ARM,
- _DB_ALLARMI_ALR_TRX,
- _DB_ALLARMI_ALR_LENZE,
- _DB_ALLARMI_ALR_GEN,
- _DB_ALLARMI_ALR_COLLI,
- _DB_ALLARME_XRAY_PUSH,// Diagnostica sul pulsante raggi
- _DB_ALLARME_CMP_PUSH, // Diagnostica sulla pedaliera del compressore
- _DB_ALLARME_LIFT_PUSH,// Diagnostica sulla pedaliera del motore alto/basso
- _DB_ALLARME_ARM_PUSH, // Diagnostica sui pulsanti di rotazione
- _DB_ALLARME_INFO_STAT,// Messaggi di informazione stato
- _DB_ALLARMI_SYSCONF,  // Allarmi relativi alla configurazione generale del sistema
- _DB_ALLARMI_PARCHEGGIO, // Allarmi relativi alle operazioni di parcheggio
- _DB_ALLARMI_ALR_SOFT, // Questo è l'ultimo: non spostare
- // Fine Blocco allarmi_________________________________________________
+// Blocco Allarmi__________________________________________________________________
+_DB_NALLARMI_ATTIVI,   // Indica il numero di allarmi che sono al momento attivi
+_DB_ALLARMI_POWERDOWN,
+_DB_ALLARMI_BIOPSIA,
+_DB_ALLARMI_ALR_PAD,
+_DB_ALLARMI_ALR_COMPRESSORE,
+_DB_ALLARMI_ALR_POTTER,
+_DB_ALLARMI_ALR_RAGGI,
+_DB_ALLARMI_ALR_ARM,
+_DB_ALLARMI_ALR_TRX,
+_DB_ALLARMI_ALR_LENZE,
+_DB_ALLARMI_ALR_GEN,
+_DB_ALLARMI_ALR_COLLI,
+_DB_ALLARME_XRAY_PUSH,// Diagnostica sul pulsante raggi
+_DB_ALLARME_CMP_PUSH, // Diagnostica sulla pedaliera del compressore
+_DB_ALLARME_LIFT_PUSH,// Diagnostica sulla pedaliera del motore alto/basso
+_DB_ALLARME_ARM_PUSH, // Diagnostica sui pulsanti di rotazione
+_DB_ALLARME_INFO_STAT,// Messaggi di informazione stato
+_DB_ALLARMI_SYSCONF,  // Allarmi relativi alla configurazione generale del sistema
+_DB_ALLARMI_PARCHEGGIO, // Allarmi relativi alle operazioni di parcheggio
+_DB_ALLARMI_ALR_SOFT, // Questo è l'ultimo: non spostare
+// Fine Blocco allarmi_________________________________________________
 
- _DB_FAULT_CODE_GEN,
- _DB_T_CUFFIA,
- _DB_HU_ANODE,
- _DB_BIOP_HOLDER,
- _DB_BIOP_AGO,
- _DB_BIOP_MARG,
- _DB_BIOP_MAXZ,
- _DB_BIOP_X,
- _DB_BIOP_Y,
- _DB_BIOP_Z,
- _DB_BIOP_UNLOCK_BUTTON,
- _DB_BIOP_MANUAL_ENA,
- _DB_DEMO_MODE,
- _DB_DEAD_MEN,
- _DB_POWER_STAT,
- _DB_REQ_POWEROFF,
- _DB_REVISION_ERROR_STRING,
- _DB_PARKING_MODE,
+_DB_FAULT_CODE_GEN,
+_DB_T_CUFFIA,
+_DB_HU_ANODE,
+
+_DB_BIOP_MODEL,         // Modello di Biopsia riconosciuto
+_DB_BIOP_ADAPTER_ID,    // Codice adattatore riconosciuto
+_DB_BIOP_PADDLE_MARGINE,// Distanza Superficie Paddle rispetto a base torretta
+_DB_BIOP_X,             // X in dmm
+_DB_BIOP_Y,             // Y in dmm
+_DB_BIOP_Z,             // Z in dmm
+_DB_BIOP_SH,            // SH in dmm
+
+_DB_BIOP_LES_X,         // Posizione lesione X
+_DB_BIOP_LES_Y,         // Posizione lesione Y
+_DB_BIOP_LES_Z,         // Posizione lesione Z
+_DB_BIOP_UNLOCK_BUTTON, // Stato pulsante di sblocco
+_DB_BIOP_NEEDLE_MARG,   // Distanza punta ago fibra i carbonio
+_DB_BIOP_MAXZ,          // Massimo spostamento possibile sulla base dei dati
+
+
+_DB_DEMO_MODE,
+_DB_DEAD_MEN,
+_DB_POWER_STAT,
+_DB_REQ_POWEROFF,
+_DB_REVISION_ERROR_STRING,
+_DB_PARKING_MODE,
 
 
 
-  // Variabili stringa di servizio
- _DB_SERVICE1_STR,
- _DB_SERVICE2_STR,
- _DB_SERVICE3_STR,
- _DB_SERVICE4_STR,
- _DB_SERVICE5_STR,
- _DB_SERVICE6_STR,
- _DB_SERVICE7_STR,
- _DB_SERVICE8_STR,
+// Variabili stringa di servizio
+_DB_SERVICE1_STR,
+_DB_SERVICE2_STR,
+_DB_SERVICE3_STR,
+_DB_SERVICE4_STR,
+_DB_SERVICE5_STR,
+_DB_SERVICE6_STR,
+_DB_SERVICE7_STR,
+_DB_SERVICE8_STR,
 _DB_SERVICE9_STR,
 _DB_SERVICE10_STR,
 _DB_SERVICE11_STR,
@@ -248,38 +256,38 @@ _DB_SERVICE13_STR,
 _DB_SERVICE14_STR,
 _DB_SERVICE15_STR,
 
- _DB_SERVICE1_INT,
- _DB_SERVICE2_INT,
- _DB_SERVICE3_INT,
- _DB_SERVICE4_INT,
- _DB_SERVICE5_INT,
- _DB_SERVICE6_INT,
- _DB_SERVICE7_INT,
- _DB_SERVICE8_INT,
- _DB_SERVICE9_INT,
- _DB_SERVICE10_INT,
- _DB_SERVICE11_INT,
- _DB_SERVICE12_INT,
- _DB_SERVICE13_INT,
- _DB_SERVICE14_INT,
- _DB_SERVICE15_INT,
- _DB_SERVICE16_INT,
- _DB_SERVICE17_INT,
- _DB_SERVICE18_INT,
- _DB_SERVICE19_INT,
- _DB_SERVICE20_INT,
- _DB_SERVICE21_INT,
- _DB_SERVICE22_INT,
- _DB_SERVICE23_INT,
- _DB_SERVICE24_INT,
- _DB_SERVICE25_INT,
- _DB_SERVICE26_INT,
- _DB_SERVICE27_INT,
- _DB_SERVICE28_INT,
- _DB_SERVICE29_INT,
- _DB_SERVICE30_INT,
+_DB_SERVICE1_INT,
+_DB_SERVICE2_INT,
+_DB_SERVICE3_INT,
+_DB_SERVICE4_INT,
+_DB_SERVICE5_INT,
+_DB_SERVICE6_INT,
+_DB_SERVICE7_INT,
+_DB_SERVICE8_INT,
+_DB_SERVICE9_INT,
+_DB_SERVICE10_INT,
+_DB_SERVICE11_INT,
+_DB_SERVICE12_INT,
+_DB_SERVICE13_INT,
+_DB_SERVICE14_INT,
+_DB_SERVICE15_INT,
+_DB_SERVICE16_INT,
+_DB_SERVICE17_INT,
+_DB_SERVICE18_INT,
+_DB_SERVICE19_INT,
+_DB_SERVICE20_INT,
+_DB_SERVICE21_INT,
+_DB_SERVICE22_INT,
+_DB_SERVICE23_INT,
+_DB_SERVICE24_INT,
+_DB_SERVICE25_INT,
+_DB_SERVICE26_INT,
+_DB_SERVICE27_INT,
+_DB_SERVICE28_INT,
+_DB_SERVICE29_INT,
+_DB_SERVICE30_INT,
 
- _DB_LAST_FIELD
+_DB_LAST_FIELD
 
 } ;
 #define FIRST_ALR_CLASS _DB_ALLARMI_POWERDOWN

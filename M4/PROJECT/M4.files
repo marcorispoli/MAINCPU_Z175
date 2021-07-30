@@ -3,7 +3,6 @@
 ../M4_MASTER/source/master_can.h
 ../M4_MASTER/source/fault.h
 ../M4_MASTER/source/pcb244.h
-../M4_MASTER/source/biopsy.h
 ../M4_MASTER/source/seqrx_std.h
 ../M4_MASTER/source/gui.h
 ../M4_MASTER/source/ser422.h
@@ -20,7 +19,6 @@
 ../M4_MASTER/source/master_can.c
 ../M4_MASTER/source/pcb244.c
 ../M4_MASTER/source/ser422.c
-../M4_MASTER/source/biopsy.c
 ../M4_MASTER/source/seqrx_std_aec.c
 ../M4_MASTER/source/seqrx_std.c
 ../M4_MASTER/source/pcb215.c
@@ -89,3 +87,9 @@
 ../../shared_a5_m4/mcc.h
 ../../shared_a5_m4/errors.h
 ../../shared_a5_m4/defines.h
+../M4_MASTER/source/BIOPSY/biopsy_simulator.h
+../M4_MASTER/source/BIOPSY/biopsy_driver.h
+../M4_MASTER/source/BIOPSY/biopsy.h
+../M4_MASTER/source/BIOPSY/biopsy_simulator.c
+../M4_MASTER/source/BIOPSY/biopsy_driver.c
+../M4_MASTER/source/BIOPSY/biopsy.c

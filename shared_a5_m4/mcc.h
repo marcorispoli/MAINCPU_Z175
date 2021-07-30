@@ -188,21 +188,99 @@ typedef enum
 
 }_MccPCB249U1Notify_Code;
 
+
+
+
+
+
+
+
+
+
+// _____________________________________________________________________
 // Codici per notifiche Biopsia
 // Contenuto notifica m4-A5 biopsia
-#define _BP_CONNESSIONE 0
-#define _BP_SBLOCCO     1
-#define _BP_ACCESSORIO  2
-#define _BP_ZL          3
-#define _BP_ZH          4
-#define _BP_MOTION      5
-#define _BP_MOTION_END  6
-#define _BP_CHKH        7
-#define _BP_CHKL        8
-#define _BP_REVIS       9
-#define _BP_MAX_Z       10
-#define _BP_DATA_LEN    11
+#define _BP_CONNESSIONE     0 // Stato della connessione
+#define _BP_MOTION          1 // Stato dell'attivazione in corso
+#define _BP_MOTION_END      2 // Risultato del movimento appena terminato
+#define _BP_PUSH_SBLOCCO    3 // Stato del pulsante di sblocco
+#define _BP_ADAPTER_ID      4 // Codice holder riconosciuto
 
+// Posizione torretta in dmm
+#define _BP_XL              5
+#define _BP_XH              6
+#define _BP_YL              7
+#define _BP_YH              8
+#define _BP_ZL              9
+#define _BP_ZH              10
+#define _BP_SHL             11
+#define _BP_SHH             12
+
+#define _BP_PADDLE_MARGINE  13 // Distanza compressore da base torretta
+#define _BP_MAX_Z_PADDLE    14 // Massima Z sulla base del margine PADDLE
+
+// Dati per la revisione e checksum
+#define _BP_CHKH            15
+#define _BP_CHKL            16
+#define _BP_REVIS           17
+#define _BP_MODEL           18
+//______________________________
+#define _BP_DATA_LEN        19
+//_____________________________
+
+// Codici relativi al tipo di adapter ID
+#define _BP_ADAPTER_OPEN            0
+#define _BP_ADAPTER_NEEDLE          1
+#define _BP_ADAPTER_A               2
+#define _BP_ADAPTER_B               3
+#define _BP_ADAPTER_SHORT           4
+
+// Codici relativi allo stato della connessione
+#define _BP_CONNESSIONE_DISCONNECTED            0
+#define _BP_CONNESSIONE_CONNECTED               1
+
+// Codici relativi allo stato del movimento
+#define _BP_NO_MOTION                     0
+#define _BP_MOTION_ON                     1
+#define _BP_MOTION_TERMINATED             2
+
+// Codici risultato movimento
+#define _BP_TIMEOUT_COMANDO     1
+#define _BP_ERROR_POSITIONINIG  2
+#define _BP_POSITIONINIG_OK     3
+
+// Codici pulsante di sblocco
+#define _BP_PUSH_SBLOCCO_DISATTIVO           0
+#define _BP_PUSH_SBLOCCO_ATTIVO              1
+
+// Codici relativo al modello di torretta
+#define _BP_MODEL_UNDEFINED     0
+#define _BP_MODEL_UPRIGHT       1
+#define _BP_MODEL_LATERAL       2
+
+// Codici relativo alla lateralità
+#define _BP_LATERALITY_DISABLED  0
+#define _BP_LATERALITY_UNDEFINED 1
+#define _BP_LATERALITY_UPRIGHT   2
+#define _BP_LATERALITY_LEFT      3
+#define _BP_LATERALITY_RIGHT     4
+
+// __________________________________________________________
+// CODICI COMANDO BIOPSIA (DA GUI A M4): MCC_BIOPSY_CMD
+#define _MCC_BIOPSY_CMD_MOVE_HOME   1
+#define _MCC_BIOPSY_CMD_MOVE_XYZ    2
+#define _MCC_BIOPSY_CMD_MOVE_INCX   3
+#define _MCC_BIOPSY_CMD_MOVE_DECX   4
+#define _MCC_BIOPSY_CMD_MOVE_INCY   5
+#define _MCC_BIOPSY_CMD_MOVE_DECY   6
+#define _MCC_BIOPSY_CMD_MOVE_INCZ   7
+#define _MCC_BIOPSY_CMD_MOVE_DECZ   8
+#define _MCC_BIOPSY_CMD_SET_STEPVAL 9
+#define _MCC_BIOPSY_CMD_SET_ZLIMIT  10
+
+
+
+//________________________________________________________________________
 typedef enum
 {
   BIOP_NOTIFY_STAT=0,           // buffer[0]: 0=NULLA, 1 = ->CONNESSO, 2->NON CONNESSO
@@ -211,6 +289,9 @@ typedef enum
                                 // buffer[4]: 1= muove X, 2=muoveY, 3=muoveZ 4=fine movimenti
   BIOP_NOTIFY_MOVE_CMD          // <TBD>
 }_MccBiopNotify_Code;
+
+
+
 
 typedef struct
 {
@@ -330,8 +411,8 @@ typedef enum
     MCC_SET_ROT_TOOL_CONFIG,    // Configurazione del tool di gesitone rotazioni
 
     // BIOPSY
-    MCC_BIOPSY_DEMO_CMD,     // Comando di attivazione/Disattivazione demo
-    MCC_BIOPSY_XYZ,          // Comando di movimento Biopsia a XYZ
+    MCC_BIOPSY_SIMULATOR,     // Comando di attivazione/Disattivazione demo
+    MCC_BIOPSY_CMD,          // Comando di movimento Biopsia a XYZ
 
     MCC_GUI_NOTIFY,          // Notifica per l'applicazione da GUI M4
     MCC_CONFIG_NOTIFY,       // Notifica dal configuratore

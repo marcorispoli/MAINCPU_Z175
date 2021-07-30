@@ -4104,34 +4104,7 @@ void serverDebug::handleSetOutputs(QByteArray data)
 }
 
 
-/*
- *
-#define _BP_CONNESSIONE 0
-#define _BP_SBLOCCO     1
-#define _BP_ACCESSORIO  2
-#define _BP_ZL          3
-#define _BP_ZH          4
-#define _BP_MOTION      5
-#define _BP_MOTION_END  6
-#define _BP_CHKH        7
-#define _BP_CHKL        8
-#define _BP_REVIS       9
-#define _BP_MAX_Z       10
-#define _BP_DATA_LEN    11
 
-    PAR0        Int     Posizione X                 Valore in decimi di millimetro
-    PAR1        Int     Posizione Y                 Valore in decimi di millimetro
-    PAR2        Int     Posizione Z                 Valore in decimi di millimetro
-    PAR3        Int     Posizione Z Limite          Valore in decimi di millimetro
-    PAR4        Int     POsizione Z Lesione         Valore in decimi di millimetro
-    PAR5    	Int     Lunghezza effettiva Ago     Valore in decimi di millimetro
-
-    PAR6        String	Nome descrittore Accessorio	Descrizione dell'accessorio da utilizzare
-    PAR7        blank  SPARE
-    PAR8        String	Nome descrittore Ago        Descrizione simbolica Ago utilizzato
-
-
- */
 void serverDebug::handleBiopsy(QByteArray data)
 {
     QList<QByteArray> parametri;
@@ -4140,181 +4113,17 @@ void serverDebug::handleBiopsy(QByteArray data)
     if(data.contains("?"))
     {
         serviceTcp->txData(QByteArray("-----------------------------------------------------------------\r\n"));
-        serviceTcp->txData(QByteArray("moveX <x>  ----------------- Muove di X (16bit) \r\n"));
-        serviceTcp->txData(QByteArray("moveY <x>  ----------------- Muove di Y (16bit) \r\n"));
-        serviceTcp->txData(QByteArray("moveZ <x>  ----------------- Muove di Z (16bit) \r\n"));
-        serviceTcp->txData(QByteArray("stepZ <x>  ----------------- Muove di Z (step) \r\n"));
-        serviceTcp->txData(QByteArray("moveXYZ <x,y,z>  ----------- Muove di XYZ (16bit) \r\n"));
-        serviceTcp->txData(QByteArray("getRevision    ------------- Chiede revisione e checksum torretta\r\n"));
-        serviceTcp->txData(QByteArray("simConn    ON/OFF ---------- Simula connessione \r\n"));
-        serviceTcp->txData(QByteArray("simMove    [default]/ X,Y,Z,Zl,Zles,LAgo,Holder,Spare,Accessorio \r\n"));
-        serviceTcp->txData(QByteArray("simAngolo trx,arm  ---------- Imposta angolo tubo e braccio\r\n"));
+
         serviceTcp->txData(QByteArray("-----------------------------------------------------------------\r\n"));
     } else
     {
 
-        if(data.contains("simConn "))
-        {
-            parametri = getNextFieldsAfterTag(data, QString("simConn"));
-            if(parametri.size()!=1) serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\n\r"));
-            else{
-                if(parametri.at(0)=="ON"){
-                    cmddata.clear();
-                    cmddata.insert(_BP_CONNESSIONE,1); // Connected
-                    cmddata.insert(_BP_REVIS,100);
-                    cmddata.insert(_BP_CHKH,0x30);
-                    cmddata.insert(_BP_CHKL,0x40);
-                    cmddata.insert(_BP_MAX_Z,255);
-                    pBiopsy->mccStatNotify(1,BIOP_NOTIFY_STAT,cmddata );
-                }else {
-                    cmddata.clear();
-                    cmddata.insert(_BP_CONNESSIONE,2); // Disconnected
-                    pBiopsy->mccStatNotify(1,BIOP_NOTIFY_STAT,cmddata );
-                }
-            }
 
-        }else  if(data.contains("simMove"))
-        {
-            parametri = getNextFieldsAfterTag(data, QString("simMove"));
-            unsigned short x,y,z,zl,zles,lago,holder;
-            QString accessorio;
-
-            if(parametri.size()==0) {
-                // Set di parametri di default
-                x= 300;
-                y= 400;
-                z= 500;
-                zl=100;
-                zles=80;
-                lago=100;
-                holder=_BIOP_ACCESSORIO_MAMMOTOME;
-                accessorio=QString("AGO 100 mm");
-             }else{
-
-             }
-
-             int res = pBiopsy->setBiopsyData(x,y,z,zl,zles,lago,holder,accessorio,-1);
-             if(res){
-                serviceTcp->txData(QString("ERRORE:%1\n\r").arg(res).toAscii());
-                return;
-             }
-
-            // Simula il movimento completato
-            char buffer[_BP_DATA_LEN];
-
-            buffer[_BP_CONNESSIONE]=(char) 0;
-            buffer[_BP_ACCESSORIO]=(char) holder;
-            buffer[_BP_MAX_Z]=(char)255;
-            buffer[_BP_MOTION]=(char)4; // movimento in corso
-            buffer[_BP_MOTION_END]=(char)7; // movimento completato con successo
-            buffer[_BP_ZL]=(char) (z);
-            buffer[_BP_ZH]=(char)(z>>8);
-
-            cmddata.clear();
-            for(int ciclo=0; ciclo<_BP_DATA_LEN; ciclo++ )
-              cmddata.append(buffer[ciclo]);
-
-            pBiopsy->mccStatNotify(1,BIOP_NOTIFY_STAT,cmddata);
-
-        }else  if(data.contains("simAngolo"))
-        {
-            parametri = getNextFieldsAfterTag(data, QString("simAngolo"));
-            int trx,arm;
-
-            if(parametri.size()!=2) {
-                // Set di parametri di default
-                trx= 15;
-                arm= 45;
-             }else{
-                trx = parametri[0].toInt();
-                arm = parametri[1].toInt();
-             }
-
-             ApplicationDatabase.setData(_DB_TRX,(int) trx*10,0);
-             ApplicationDatabase.setData(_DB_DANGOLO,(int) arm*10,0);
-        }else if(data.contains("moveX "))
-        {
-
-            handleBiopsyMoveX(data);
-        }else if(data.contains("moveY "))
-        {
-
-            handleBiopsyMoveY(data);
-        }else if(data.contains("moveZ "))
-        {
-            handleBiopsyMoveZ(data);
-        }else if(data.contains("stepZ "))
-        {
-            handleBiopsyStepZ(data);
-        }else if(data.contains("moveXYZ "))
-        {
-            handleBiopsyMoveXYZ(data);
-        }else if(data.contains("getRevision"))
-        {
-            if(pBiopsy->connected)
-            {
-                serviceTcp->txData(QString("REVISIONE:%1  CHECKSUM:%2\n").arg(pBiopsy->revisione).arg(pBiopsy->checksum_h*256+pBiopsy->checksum_l,1,16).toAscii());
-            }else
-            {
-                serviceTcp->txData(QByteArray("BIOPSIA NON CONNESSA\n"));
-            }
-
-        }
 
     }
 }
 
-void serverDebug::handleBiopsyMoveX(QByteArray data)
-{
-    QList<QByteArray> parametri;
 
-    parametri = getNextFieldsAfterTag(data, QString("moveX"));
-    if(parametri.size()!=1) serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\n"));
-
-    pBiopsy->moveX(parametri.at(0).toUInt());
-
-}
-void serverDebug::handleBiopsyMoveY(QByteArray data)
-{
-    QList<QByteArray> parametri;
-
-    parametri = getNextFieldsAfterTag(data, QString("moveY"));
-    if(parametri.size()!=1) serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\n"));
-
-    pBiopsy->moveY(parametri.at(0).toUInt());
-
-}
-void serverDebug::handleBiopsyMoveZ(QByteArray data)
-{
-    QList<QByteArray> parametri;
-
-    parametri = getNextFieldsAfterTag(data, QString("moveZ"));
-    if(parametri.size()!=1) serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\n"));
-
-    pBiopsy->moveZ(parametri.at(0).toUInt());
-
-}
-
-void serverDebug::handleBiopsyStepZ(QByteArray data)
-{
-    QList<QByteArray> parametri;
-
-    parametri = getNextFieldsAfterTag(data, QString("stepZ"));
-    if(parametri.size()!=1) serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\n"));
-
-    pBiopsy->stepZ(parametri.at(0).toInt());
-
-}
-void serverDebug::handleBiopsyMoveXYZ(QByteArray data)
-{
-    QList<QByteArray> parametri;
-    int i;
-
-    parametri = getNextFieldsAfterTag(data, QString("moveXYZ"));
-    if(parametri.size()!=3) serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\n"));
-
-    pBiopsy->moveXYZ(parametri.at(0).toUInt(),parametri.at(1).toUInt(),parametri.at(2).toUInt());
-}
 
 void serverDebug::handleShell(QByteArray data)
 {

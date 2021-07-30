@@ -10,6 +10,18 @@
 // FUNZIONE DI GESTIONE DELLA RICEZIONE DATI DA CONSOLE
 //
 ///////////////////////////////////////////////////////////////////
+
+// Nuova Interfaccia per Biopsia Standard e ad Approccio laterale
+// #define SET_BIOPSY_DATA     "SetBiopsyData"
+// #define SET_BIOPSY_HOME     "SetBiopsyHome"
+// #define GET_BIOPSY_Z        "GetBiopsyZ"
+
+#define SET_BIOPSY_MOVE        "SetBiopsyMove"      // Muove ad un punto qualsiasi XYZ
+#define SET_BIOPSY_CONFIG      "SetBiopsyConfig"    // Configura la biopsia
+#define SET_BIOPSY_PARAM       "SetBiopsyParam"     // Imposta i dati che dipendono dalla AWS
+#define GET_BIOPSY_PARAM       "GetBiopsyParam"     // Chiede tutti i dati peculiari della torretta
+
+
 #define GET_SPECIMEN        "GetSpecimen"
 //__________________________________________________________________________________________________
 
@@ -63,8 +75,7 @@
 #define SET_XRAY_LAMP       "SetXrayLamp"
 #define SET_TOMO_HOME_CALIB_MODE    "SetTomoHomeCalibMode" // ->modalit√  Tomo calib
 #define SET_TOMO_HOME   "SetTomoHome"
-#define SET_BIOPSY_DATA     "SetBiopsyData"
-#define SET_BIOPSY_HOME     "SetBiopsyHome"
+
 #define SET_TUBE        "SetTube"       // Muove TRX ad angolo
 #define SET_ARM         "SetArm"        // Muove ARM ad angolo
 #define SET_STOP_MOVE   "SetStopMove"   // Blocca qualsiasi movimento in corso
@@ -113,7 +124,7 @@
 #define GET_IA_RX           "GetIaRx"   // Richiesta ultima corrente in mA utilizzata per raggi
 #define GET_GEN_CONF        "GetGenConf"  // Richiesta valore dei massimi kV e presenza starter
 #define GET_TOMO_HOME   "GetTomoHome"
-#define GET_BIOPSY_Z        "GetBiopsyZ"
+
 #define GET_TRX         "GetTrx"        // Richiesta angolo Tubo
 #define GET_ARM         "GetArm"        // Richiesta angolo Braccio
 #define GET_TUBES               "GetTubes"              // Restituisce il nome di tutti i file di configurazione Tubi
@@ -339,9 +350,10 @@ public:
     bool handleSetIaRxData(protoConsole* frame, protoConsole* answer);
 
     // GESTIONE BIOPSIA
-    int  handleSetBiopsyData(protoConsole* frame);      // Posizionamento del cursore
-    void handleGetBiopsyZ(protoConsole* answer);        // Richiede i dati di posizione della Biopsia
-    int  handleSetBiopsyHome(protoConsole* frame);      // Aggiorna la configurazione della calibrazione dell' offsetZ biopsia
+    void  handleBiopsyMove(protoConsole* frame,protoConsole* answer);      // Posizionamento del cursore
+    void  handleGetBiopsyParam(protoConsole* frame,protoConsole* answer);        // Richiede i dati di posizione della Biopsia
+    void  handleSetBiopsyParam(protoConsole* frame,protoConsole* answer);        // Richiede i dati di posizione della Biopsia
+    void  handleSetBiopsyConfig(protoConsole* frame,protoConsole* answer);      // Aggiorna la configurazione della calibrazione
 
     int  handleSetLingua(protoConsole* frame);          // Impostazione della lingua
     void handleSetFirmwareUpdate(protoConsole* frame, protoConsole* answer);    // Attivazione aggiornamento del sistema

@@ -10,22 +10,21 @@ class biopsy : public QObject
 public:
     explicit biopsy(QObject *parent = 0);
     void activateConnections(void);
-    
-    bool moveXYZ(unsigned short X, unsigned short Y, unsigned short Z); // Chiede il movimento sui tre assi
-    bool moveZ(unsigned short Z); // Chiede il movimento su Z
-    bool stepZ(int step); // Muove di un certo numero di steps
-    bool moveX(unsigned short X); // Chiede il movimento su X
-    bool moveY(unsigned short Y); // Chiede il movimento su Y
-    bool updateTorretta(unsigned char id); // Effettua l'update dei dati precaricati da console
-    void verifyAccessorio(void); // Verifica se deve attivare l'avviso di accessorio non corrispondente
-    int  setBiopsyData(unsigned int x, unsigned int y, unsigned int z, // Posizione da raggiungere
-                              unsigned int z_limit,     // Massima Z calcolata dalla AWS
-                              unsigned int z_lesione,   // Posizione rilevata della lesione
-                              unsigned int lAgo,        // Lunghezza dell'ago
-                              unsigned int holder_code, // Codice holder utilizzato dalla AWS
-                              QString  nome_accessorio,  // Nome dellk'accessorio montato da AWS
-                              int cmd_id      // Id del comando richiesto
-                              );
+    void calcoloMargini(void);
+
+    // Movimenti su tre assi
+    int moveXYZ(unsigned short X, unsigned short Y, unsigned short Z, int id); // Chiede il movimento sui tre assi
+    int moveHome(int id); // Chiede il movimento verso home
+
+    // Movimenti per step
+    bool setStepVal(unsigned char step);
+    bool moveDecZ(void);
+    bool moveIncZ(void);
+    bool moveDecX(void);
+    bool moveIncX(void);
+    bool moveDecY(void);
+    bool moveIncY(void);
+
 
 signals:
     
@@ -37,40 +36,65 @@ public:
     biopsyConf_Str config;          // Dati di configurazione
     bool openCfg(void);             // Funzione per l'apertura del file di configurazione
     bool storeConfig(void);         // Salva la configurazione
+    void defaultConfigData(void);
+
     bool updateConfig(void);        // Aggioirna M4 con i valori correnti
 
-    unsigned char Lago;            // (mm) Lunghezza effettiva Ago
-    unsigned char Zlimit;          // (mm) Posizione limite Z
-    unsigned char Zlesione;        // (mm) Posizione limite Z
-    QString        codiceAccessorio;// Nome accessorio selezionato
-    QString        codiceAgo;       // Nome ago selezionato
+    // Comandi in corso
+    int movingCommand;  // Codice comando in esecuzione
+    int activationId;   // Codice ID per comando AWS
+    #define _BIOPSY_MOVING_NO_COMMAND       0
+    #define _BIOPSY_MOVING_COMPLETED        1
+    #define _BIOPSY_MOVING_XYZ              2
+    #define _BIOPSY_MOVING_HOME             3
+    #define _BIOPSY_MOVING_DECZ             4
+    #define _BIOPSY_MOVING_INCZ             5
+    #define _BIOPSY_MOVING_DECX             6
+    #define _BIOPSY_MOVING_INCX             7
+    #define _BIOPSY_MOVING_DECY             8
+    #define _BIOPSY_MOVING_INCY             9
 
+    int  movingError;
+    #define _BIOPSY_MOVING_NO_ERROR         0
+    #define _BIOPSY_MOVING_ERROR_MCC        1
+    #define _BIOPSY_MOVING_ERROR_TIMEOUT    2
+    #define _BIOPSY_MOVING_ERROR_TARGET     3
+    #define _BIOPSY_MOVING_ERROR_BUSY       6
 
-    unsigned short curX;    // (0.1mm) Ultimo comando di movimento
-    unsigned short curY;    // (0.1mm) Ultimo comando di movimento
-    unsigned short curZ;    // (0.1mm) Ultimo comando di movimento
-    int margZ;   // (mm)  Margine di spostamento della Z
+    // Posizione corrente della torretta
+    unsigned short curX_dmm;    // (0.1mm) Posizione corrente X
+    unsigned short curY_dmm;    // (0.1mm) Posizione corrente Y
+    unsigned short curZ_dmm;    // (0.1mm) Posizione corrente Z
+    unsigned short curSh_dmm;   // (0.1mm) Posizione corrente Sh
 
-    unsigned short maxZ;    // (mm) Massima escursione meccanica
-    unsigned short targetX;    // (dam) Valore Target di movimento X
-    unsigned short targetY;    // (dam) Valore Target di movimento Y
-    unsigned short targetZ;    // (dam) Valore Target di movimento Z
+    // Limiti di movimento
+    unsigned char  paddle_margine;  // (mm) distanza staffe paddle - base torretta (mm) calcolata da Gantry
+    unsigned char  needle_home;     // (mm) distanza punta ago - home torretta
+    unsigned char  max_z_paddle;    // (mm) Massima Z ricalcolata sulla base della posizione del paddle
+    unsigned char  abs_max_z;       // (mm) Massima Z assoluta rspetto sia al paddle che all'ago (se presente)
 
-    #define _BIOP_ACCESSORIO_ND 0
-    #define _BIOP_ACCESSORIO_MAMMOTOME 1
-    #define _BIOP_ACCESSORIO_AGO 2
-    #define _BIOP_ACCESSORIO_GUN 3
-    unsigned char accessorio; // Accessorio riconosciuto
-    unsigned char accessorioSelezionato; // Accessorio impostato da Console
+    // Target di movimento impostato
+    unsigned short targetX_dmm;    // (0.1mm) Valore Target di movimento X
+    unsigned short targetY_dmm;    // (0.1mm) Valore Target di movimento Y
+    unsigned short targetZ_dmm;    // (0.1mm) Valore Target di movimento Z
 
-    unsigned char id_console;   // ID comando da console
+    // Impostazione corrente step di incremento
+    unsigned char  stepVal;      // STEPVAL corrente
+
+    // Accessorio riconosciuto
+    unsigned char adapterId;       // adapterId riconosciuto
+
+    // Pulsante di sblocco
+    bool unlock_button;
+
+    // Pulsante di sblocco
+    unsigned char laterality;
 
     // Dati perifierica collegata
     unsigned char checksum_h;
     unsigned char checksum_l;
     unsigned char revisione;
-
-
+    unsigned char model;
 };
 
 #endif // BIOPSY_H

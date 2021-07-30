@@ -224,8 +224,10 @@ typedef struct
 // Configurazione biopsia
 typedef struct
 {
-    unsigned char  offsetZ;                 // Posizione zero cursore (mm)
-    unsigned char  offsetPad;               // Offset meccanico Staffe Pad (mm)
+    unsigned short Z_homePosition;          // Posizione del punto Z=0 rispetto alla fibra di carbonio
+    unsigned char  offsetPad;               // Offset meccanico Staffe Pad rispetto alla calibrazione(mm)
+    unsigned char  offsetBasePosizionatore; // Offset meccanico base Asse X
+
     unsigned char  margineRisalita;         // Margine di risalita (mm)
     unsigned char  marginePosizionamento;   // Margine di sicurezza sul posizionamento (mm)
 

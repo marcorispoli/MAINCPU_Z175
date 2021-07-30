@@ -1,5 +1,7 @@
 ./gcc_arm/ram_release/obj/actuators.o
 ./gcc_arm/ram_release/obj/biopsy.o
+./gcc_arm/ram_release/obj/biopsy_driver.o
+./gcc_arm/ram_release/obj/biopsy_simulator.o
 ./gcc_arm/ram_release/obj/canopen.o
 ./gcc_arm/ram_release/obj/common.o
 ./gcc_arm/ram_release/obj/fault.o

@@ -442,16 +442,20 @@ void BiopsyPage::setBiopXYZ(void)
     QString x = ApplicationDatabase.getDataS(_DB_BIOP_X);
     QString y = ApplicationDatabase.getDataS(_DB_BIOP_Y);
     QString z = ApplicationDatabase.getDataS(_DB_BIOP_Z);
-    QString m = ApplicationDatabase.getDataS(_DB_BIOP_MARG);
-    QString mz = ApplicationDatabase.getDataS(_DB_BIOP_MAXZ);
+
+    //QString m = ApplicationDatabase.getDataS(_DB_BIOP_MARG);
+    //QString mz = ApplicationDatabase.getDataS(_DB_BIOP_MAXZ);
 
     biopXValue->labelText=QString("%1").arg(x);
     biopYValue->labelText=QString("%1").arg(y);
     biopZValue->labelText=QString("%1").arg(z);
+
+    /*
     if(m!="")  biopMargineValue->labelText=QString("%1").arg(m);
     else biopMargineValue->labelText=QString("");
     if(mz!="") biopMaxZValue->labelText=QString("%1").arg(mz);
     else biopMaxZValue->labelText=QString("");
+    */
 
     biopXValue->update();
     biopYValue->update();
@@ -530,25 +534,19 @@ void BiopsyPage::valueChanged(int index,int opt)
         setArmAngolo();
         break;
 
-    case _DB_BIOP_HOLDER:
+    case _DB_BIOP_ADAPTER_ID:
         updateHolder();
         break;
 
-    case _DB_BIOP_AGO:
-
-        break;
 
     case _DB_BIOP_X:
     case _DB_BIOP_Y:
     case _DB_BIOP_Z:
-    case _DB_BIOP_MARG:
+    case _DB_BIOP_SH:
+    case _DB_BIOP_NEEDLE_MARG:
     case _DB_BIOP_MAXZ:
         setBiopXYZ();
         break;
-    case _DB_BIOP_MANUAL_ENA:
-        updateManualActivation();
-        break;
-
     case _DB_TRX:
         setTrxAngolo();
         if((isMaster) && (pCollimatore->accessorio == COLLI_ACCESSORIO_FRUSTOLI)) pCollimatore->updateColli();
@@ -649,14 +647,9 @@ void BiopsyPage::buttonActivationNotify(int id, bool status,int opt)
     // Gestione pulsanti di step Z per biopsia
     if(isMaster)
     {
-        bool ret;
-        if(pbutton == pulsanteBiopStepUp) ret = pBiopsy->stepZ(-10);
-        else if(pbutton == pulsanteBiopStepDown) ret = pBiopsy->stepZ(10);
-        else if(pbutton == pulsanteBiopHome) ret = pBiopsy->setBiopsyData(0,0,0,193,0,0,0,"",0);
-
-        // In caso di comando di attivazione accettato, il sistema disabilita ulteriori pressioni fino al termine del comando
-        if(ret)    ApplicationDatabase.setData(_DB_BIOP_MANUAL_ENA,(unsigned char) 0 ,0);
-
+        if(pbutton == pulsanteBiopStepUp) pBiopsy->moveDecZ();
+        else if(pbutton == pulsanteBiopStepDown) pBiopsy->moveIncZ();
+        else if(pbutton == pulsanteBiopHome) pBiopsy->moveHome(0);
     }
 
 }
@@ -678,7 +671,7 @@ void BiopsyPage::updateHolder(void){
         alarmHolderPix->hide();
         return;
     }
-
+/*
     QString holder = ApplicationDatabase.getDataS(_DB_BIOP_HOLDER);
     if(holder.size()==0) {
         // Holder non presente o non riconosciuto
@@ -692,7 +685,7 @@ void BiopsyPage::updateHolder(void){
         biopHolderValue->show();
         biopHolderValue->update();
     }
-
+*/
 }
 
 // Funzione di aggiornamento grafica legata ai movimenti manuali
@@ -709,7 +702,7 @@ void BiopsyPage::updateManualActivation(void){
         lineaMarginePix->hide();
         return;
     }
-
+/*
     // Verifica se i pulsanti Manuali sono abilitati
     unsigned char val = ApplicationDatabase.getDataU(_DB_BIOP_MANUAL_ENA);
     if(val) enableBiopMoveButtons=true;
@@ -732,5 +725,6 @@ void BiopsyPage::updateManualActivation(void){
         buttonsPix->hide();
         lineaMarginePix->hide();
     }
+    */
 }
 
