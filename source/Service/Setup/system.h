@@ -34,11 +34,10 @@ public slots:
     void valueChanged(int index,int opt);
 
 
-    void onLeftGantry(void);
+
     void onLeftStarter(void);
     void onLeftDetector(void);
     void onLeftRotation(void);
-    void onRightGantry(void);
     void onRightStarter(void);
     void onRightDetector(void);
     void onRightRotation(void);

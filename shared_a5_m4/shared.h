@@ -8,12 +8,9 @@
 // Configurazione generale della macchina
 typedef struct
 {
-   unsigned short   gantryModel;            // Definisce la classe della macchina
    unsigned short   detectorType;           // Codice detector type
-
    bool             armMotor;               // Presenza della rotazione motorizzata o del freno
    bool             trxMotor;               // Presenza Pendolazione
-
    bool             highSpeedStarter;       // Abilitazione presenza Starter IAE
    bool             spare;
 }systemCfg_Str;
@@ -106,9 +103,13 @@ typedef struct
 
     unsigned short manual_speed;           // Hz movimento manuale      // Setpoint 1
     unsigned short automatic_speed;        // Hz movimento automatico   // Setpoint 2
+    unsigned short parking_speed;          // Hz movimento di posteggio // Setpoint 3
 
     unsigned char calibrated;              // 1 = CALIBRATED
-    unsigned char spare;
+    bool startupInParkingMode;             // True stato di parking mode alla partenza. Si esce solo alzando il braccio
+    int  parkingSafePoint;                 // Posizione di sicurezza anti urto
+    int  parkingTarget;                    // Posizione calibrata di posteggio
+    bool calibratedParkingTarget;          // Stato di calibrazione avvenuto correttamente
 
 } lenzeConfig_Str;
 
@@ -118,22 +119,25 @@ typedef struct
 // CONFIGURAZIONI DISPOSITIVI
 typedef struct
 {
-   int offset;          // Sbalzo rispetto alla nacchera
+   int offset;          // Sbalzo rispetto alla nacchera   
    unsigned char  kF;   // Compensazione forza
-   unsigned char  peso; // Peso in newton
+   unsigned char  peso; // Peso in newton   
 }pad_Str;
 
 typedef struct
 {
     unsigned short calibPosK;       // K linare calibrazione nacchera
-    unsigned short calibPosOfs;     // Offset Calibrazione Nacchera
+    unsigned short calibPosOfs;     // Offset Calibrazione Nacchera    
     pad_Str pads[PAD_ENUM_SIZE];    // Dati relativi ai compressori
 
     // Coefficienti per la forza
     unsigned short F0;               // Valore row forza zero calibrazione forza
-    unsigned short KF0;             // Valore K forza zero calibrazione forza
+    unsigned short KF0;             // Valore K forza zero calibrazione forza    
     unsigned short F1;               // Valore soglia curva
     unsigned short KF1;              // Coeff. K curva operativa
+
+    // Massima forza di compressione
+    unsigned short max_compression_force;
 
     // Posizione nacchera
     unsigned short maxMechPosition; // MAssima posizione meccanica    
@@ -145,7 +149,7 @@ typedef struct
     unsigned short fattoreIngranditore[8]; //  X.Y, X=HB, Y=LB
     
     // Configurazione riconoscimento nacchera
-    unsigned char thresholds[10];
+    unsigned char  thresholds[10];
 
 }compressoreCnf_Str;
 

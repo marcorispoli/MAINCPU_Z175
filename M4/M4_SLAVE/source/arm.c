@@ -748,12 +748,16 @@ bool InitPositionSetting(_PD4_Status_t* pStat){
     if(canopenReadSDO(&od, CANOPEN_ARM_CONTEXT)==false) return false;
     positioningData.initEncoder = od.val; // Device Units
 
-    // Attiva contestualmente il riposizionamento del LENZE
-    lenzeActivatePositionCompensation(positioningData.initPosition,positioningData.targetPosition);
+    // Se l'angolo corrisponde al parcheggio allora attiva il lenze in modalità parcheggio
+    if( (positioningData.targetPosition==2000) || (positioningData.targetPosition==-2000)){
+        //lenzeActivateParkingMode();
+        if(positioningData.targetPosition==2000) positioningData.targetPosition = 1810;
+        else if(positioningData.targetPosition==-2000) positioningData.targetPosition = -1810;
+    }else{
+        // Attiva contestualmente il riposizionamento del LENZE
+        lenzeActivatePositionCompensation(positioningData.initPosition,positioningData.targetPosition);
+    }
 
-    // Parcheggio
-    if(positioningData.targetPosition==2000) positioningData.targetPosition = 1810;
-    else if(positioningData.targetPosition==-2000) positioningData.targetPosition = -1810;
 
     // Set the Position target
     long deltaP = dGRAD_TO_POS((long) (positioningData.targetPosition - positioningData.initPosition)); // Trasformato in device units
@@ -1037,10 +1041,11 @@ bool armSetCommand(_arm_command_t command, void* data){
             driver_stat.event_type = ARM_MOVE_TO_POSITION;
             driver_stat.event_code = ARM_ERROR_INVALID_STATUS;
             driver_stat.event_data = 0;
-            printf("COMMAND SET MANUAL ARM ERROR\n");
+            printf("COMMAND MOVE TO POSITION ARM ERROR\n");
             _EVSET(_EV0_ARM_EVENT);
             return false;
         }
+
 
         _mutex_lock(&driver_stat.req_mutex);
         memcpy(&positioningData,data,sizeof(_arm_positioning_data_t));

@@ -852,7 +852,6 @@ void PageAlarms::createMessageList(void){
 
 
 
-
     errors.replace(_DB_ALLARMI_ALR_ARM-FIRST_ALR_CLASS,classitem);
     //___________________________________________________________________________________________________________________________________________________________________
 
@@ -1742,6 +1741,15 @@ void PageAlarms::createMessageList(void){
     erritem.errpix =  QPixmap(ERR_PIX);
     erritem.errdescr= QString("");
     classitem.errlist.append(erritem);
+    erritem.codestr = QString("00967");
+    erritem.codeval = ERROR_INVALID_COLLIMATION_PLATE ;
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-RAGGI","ACCESSORIO DI COLLIMAZIONE NON CONSENTITO", 0, QApplication::UnicodeUTF8));
+    erritem.errpix =  QPixmap(ERR_PIX);
+    erritem.errdescr= QString("");
+    classitem.errlist.append(erritem);
+
+
+
 
     /* Prevedere i seguenti errori
     - 967 -> AEC sovraesposto"
@@ -1962,20 +1970,6 @@ void PageAlarms::createMessageList(void){
   classitem.errlist.append(erritem);
 
 
-  erritem.codestr = QString("01710");
-  erritem.codeval = INFOMSG_NOT_READY_MISSING_CASSETTE;
-  erritem.errmsg  = QString(QApplication::translate("ERROR NOT-READY","MANCA CASSETTA", 0, QApplication::UnicodeUTF8));
-  erritem.errpix =  QPixmap(INFO_PIX);
-  erritem.errdescr= QString("Mancanza della cassetta duranze esposizione a studio aperto");
-  classitem.errlist.append(erritem);
-
-  erritem.codestr = QString("01711");
-  erritem.codeval = INFOMSG_NOT_READY_EXPOSED_CASSETTE;
-  erritem.errmsg  = QString(QApplication::translate("ERROR NOT-READY","CASSETTA ESPOSTA", 0, QApplication::UnicodeUTF8));
-  erritem.errpix =  QPixmap(INFO_PIX);
-  erritem.errdescr= QString("Cassetta già esposta. Cambiare cassetta");
-  classitem.errlist.append(erritem);
-
   errors.replace(_DB_ALLARME_INFO_STAT-FIRST_ALR_CLASS,classitem);
 
   //___________________________________________________________________________________________________________________________________________________________________
@@ -2056,41 +2050,84 @@ void PageAlarms::createMessageList(void){
   erritem.errdescr= QString("Il file di configurazione è assente o è corrotto");
   classitem.errlist.append(erritem);
 
-
-  erritem.codestr = QString("01811");
-  erritem.codeval = ERROR_ANALOG_CONFIG;
-  erritem.errmsg  = QString(QApplication::translate("ERRORE-CONFIGURAZIONE","ERRORE MANCANZA CONFIGURAZIONE ANALOGICA!\n", 0, QApplication::UnicodeUTF8));
-  erritem.errpix =  QPixmap(ERR_PIX);
-  erritem.errdescr= QString("Il file di configurazione è assente o è corrotto");
-  classitem.errlist.append(erritem);
-
-
   errors.replace(_DB_ALLARMI_SYSCONF-FIRST_ALR_CLASS,classitem);
 
   //___________________________________________________________________________________________________________________________________________________________________
+  // ___________________      _DB_ALLARMI_PARCHEGGIO ____________________________________________________________________________________________________________________________________________
 
-  // __________________________ _DB_ALLARMI_ANALOGICA, // Diagnostica sui pulsanti di rotazione
+
   classitem.className=QString("01900");
-  classitem.classDescription=QString("ERRORI RISERVATI A VERSIONE ANALOGICA");
+  classitem.classDescription=QString("MESSAGGI DI ERRORE OPERAZIONI DI PARCHEGGIO");
   classitem.errlist.clear();
 
   erritem.codestr = QString("01901");
-  erritem.codeval = ERROR_SETTING_DET_FIELD;
-  erritem.errmsg  = QString(QApplication::translate("ERRORE-ANALOGICA","IMPOSTAZIONE CAMPO ESPOSIMETRO", 0, QApplication::UnicodeUTF8));
+  erritem.codeval = ERROR_PARKING_TILT_SETTING;
+  erritem.errmsg  = QString(QApplication::translate("ERRORE-PARCHEGGIO","ERRORE POSIZIONAMENTO TUBO", 0, QApplication::UnicodeUTF8));
   erritem.errpix =  QPixmap(ERR_PIX);
-  erritem.errdescr= QString("Il comando di impostazione del campo esposimetro è fallito");
+  erritem.errdescr= QString("Impossibile riposizionare a 0 il Tubo");
   classitem.errlist.append(erritem);
 
   erritem.codestr = QString("01902");
-  erritem.codeval = ERROR_NO_AEC_PROFILE;
-  erritem.errmsg  = QString(QApplication::translate("ERRORE-ANALOGICA","NESSUN PROFILO AEC DISPONIBILE", 0, QApplication::UnicodeUTF8));
+  erritem.codeval = ERROR_PARKING_LENZE_BUSY;
+  erritem.errmsg  = QString(QApplication::translate("ERRORE-PARCHEGGIO","MOTORE ALTO-BASSO ATTIVO", 0, QApplication::UnicodeUTF8));
   erritem.errpix =  QPixmap(ERR_PIX);
-  erritem.errdescr= QString("Non esistono profili AEC disponibili");
+  erritem.errdescr= QString("Il motore Alto Basso è già in movimento");
   classitem.errlist.append(erritem);
 
 
+  erritem.codestr = QString("01903");
+  erritem.codeval = ERROR_PARKING_LENZE_TMO;
+  erritem.errmsg  = QString(QApplication::translate("ERRORE-PARCHEGGIO","TIMEOUT MOTORE ALTO-BASSO", 0, QApplication::UnicodeUTF8));
+  erritem.errpix =  QPixmap(ERR_PIX);
+  erritem.errdescr= QString("Timeout durante posizionamento Alto-Basso");
+  classitem.errlist.append(erritem);
 
-  errors.replace(_DB_ALLARMI_ANALOGICA-FIRST_ALR_CLASS,classitem);
+
+  erritem.codestr = QString("01904");
+  erritem.codeval = ERROR_PARKING_LENZE_POSITION;
+  erritem.errmsg  = QString(QApplication::translate("ERRORE-PARCHEGGIO","FALLIO POSIZIONAMENTO ALTO-BASSO", 0, QApplication::UnicodeUTF8));
+  erritem.errpix =  QPixmap(ERR_PIX);
+  erritem.errdescr= QString("La posizione finale Alto-Basso è errata");
+  classitem.errlist.append(erritem);
+
+  erritem.codestr = QString("01905");
+  erritem.codeval = ERROR_PARKING_ARM_TMO;
+  erritem.errmsg  = QString(QApplication::translate("ERRORE-PARCHEGGIO","TIMEOUT ROTAZIONE C-ARM\n", 0, QApplication::UnicodeUTF8));
+  erritem.errpix =  QPixmap(ERR_PIX);
+  erritem.errdescr= QString("Il Braccio non ha completato in tempo la rotazione a 180°");
+  classitem.errlist.append(erritem);
+
+  erritem.codestr = QString("01906");
+  erritem.codeval = ERROR_PARKING_ARM_WRONG_ANGLE;
+  erritem.errmsg  = QString(QApplication::translate("ERRORE-PARCHEGGIO","ERRORE ARM NON IN POSIZIONE", 0, QApplication::UnicodeUTF8));
+  erritem.errpix =  QPixmap(WARN_PIX);
+  erritem.errdescr= QString("Errore con arm a sblocco meccanico. il braccio deve essere a 180°");
+  classitem.errlist.append(erritem);
+
+  erritem.codestr = QString("01907");
+  erritem.codeval = WARNING_PARKING_ACTIVATION_PROCEDURE;
+  erritem.errmsg  = QString(QApplication::translate("ERRORE-PARCHEGGIO","START PARCHEGGIO", 0, QApplication::UnicodeUTF8));
+  erritem.errpix =  QPixmap(WARN_PIX);
+  erritem.errdescr= QString("Messaggio di avviso procedura di parcheggio attivata");
+  classitem.errlist.append(erritem);
+
+  erritem.codestr = QString("01908");
+  erritem.codeval = WARNING_UNPARKING_ACTIVATION_PROCEDURE;
+  erritem.errmsg  = QString(QApplication::translate("ERRORE-PARCHEGGIO","START USCITA DA PARCHEGGIO", 0, QApplication::UnicodeUTF8));
+  erritem.errpix =  QPixmap(WARN_PIX);
+  erritem.errdescr= QString("Messaggio di avviso procedura di uscita parcheggio attivata");
+  classitem.errlist.append(erritem);
+
+  erritem.codestr = QString("01909");
+  erritem.codeval = ERROR_PARKING_NOT_CALIBRATED;
+  erritem.errmsg  = QString(QApplication::translate("ERRORE-PARCHEGGIO","POSIZIONE DI PARCHEGGIO NON CALIBRATA", 0, QApplication::UnicodeUTF8));
+  erritem.errpix =  QPixmap(ERR_PIX);
+  erritem.errdescr= QString("La posizione di parcheggio non è stata calibrata");
+  classitem.errlist.append(erritem);
+
+
+  errors.replace(_DB_ALLARMI_PARCHEGGIO-FIRST_ALR_CLASS,classitem);
+
 
   //___________________________________________________________________________________________________________________________________________________________________
 }

@@ -139,6 +139,9 @@ private:
     QGraphicsPixmapItem* demoPix;
     QGraphicsPixmapItem* rotPix;
 
+    bool specimenMode;
+    bool specimenLeft;
+
     bool xRayStat;
     bool isOpen;
 };

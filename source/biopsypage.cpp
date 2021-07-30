@@ -148,6 +148,9 @@ BiopsyPage::BiopsyPage(bool local, QString bgl, QString bgs , bool showLogo, int
     xrayPix = addPixmap(QPixmap(BIOPSY_XRAY_PIX));
     xrayPix->setPos(BIOPSY_XRAY_POS);
 
+
+    specimenMode = false;
+
     disableTimedButtons = false; // Abilitazione pulsanti
     timerId = startTimer(1000);
 
@@ -193,27 +196,86 @@ void BiopsyPage::setCloseStudy(void){
 void BiopsyPage::InitBiopsyPage(void)
 {    
 
-    if(ApplicationDatabase.getDataU(_DB_STUDY_STAT)==_OPEN_STUDY_LOCAL) localStudy = true;
-    else localStudy=false;
+    // Discrimina fra modalità frustoli e standard
+    if(ApplicationDatabase.getDataI(_DB_ACCESSORIO_COLLIMATORE) == COLLI_ACCESSORIO_FRUSTOLI){
+        specimenMode = true;
+    }else specimenMode = false;
 
-    if (localStudy==false)
-    {
-        studyColor = QColor(_C_COL);
-        setBackground(_BACKGROUND_C_BIOPSY);
-        buttonsPix->setPixmap(QPixmap("://BiopsyPage/BiopsyPage/buttonsCnoHome.png"));
-        rotPix->setPixmap(QPixmap("://BiopsyPage/BiopsyPage/rotPixC.png"));
+    int angolo = pConfig->convertDangolo(ApplicationDatabase.getDataI(_DB_TRX));
+
+    if(specimenMode){
+        if(angolo > 0){
+            setBackground("://BiopsyPage/BiopsyPage/specimen_r.png");
+            specimenLeft = false;
+        }  else if(angolo <= 0){
+            setBackground("://BiopsyPage/BiopsyPage/specimen_l.png");
+            specimenLeft = true;
+        }
+
+        rotPix->hide();
+        spessoreValue->hide();
+        targetValue->hide();
+        compressioneValue->hide();
+        biopXValue->hide();
+        biopYValue->hide();
+        biopZValue->hide();
+        intestazioneValue->hide();
+
+    }else{
+
+        spessoreValue->show();
+        targetValue->show();
+        compressioneValue->show();
+
+        biopXValue->show();
+        biopYValue->show();
+        biopZValue->show();
+        intestazioneValue->show();
+
+
+
+        if(ApplicationDatabase.getDataU(_DB_STUDY_STAT)==_OPEN_STUDY_LOCAL) localStudy = true;
+        else localStudy=false;
+
+        if (localStudy==false)
+        {
+            studyColor = QColor(_C_COL);
+            setBackground(_BACKGROUND_C_BIOPSY);
+            buttonsPix->setPixmap(QPixmap("://BiopsyPage/BiopsyPage/buttonsCnoHome.png"));
+            rotPix->setPixmap(QPixmap("://BiopsyPage/BiopsyPage/rotPixC.png"));
+
+        }
+        else
+        {
+            studyColor = QColor(_Y_COL);
+            setBackground(_BACKGROUND_Y_BIOPSY);
+            buttonsPix->setPixmap(QPixmap("://BiopsyPage/BiopsyPage/buttonsYnoHome.png"));
+            rotPix->setPixmap(QPixmap("://BiopsyPage/BiopsyPage/rotPixY.png"));
+        }
+
+        if(ApplicationDatabase.getDataU(_DB_BIOP_UNLOCK_BUTTON)) rotPix->show();
+        else   rotPix->hide();
+
+        targetValue->labelColor=studyColor;
+        targetValue->labelText = QString("%1:%2 (N)").arg(QApplication::translate("BIOPSY-PAGE","TARGET")).arg(ApplicationDatabase.getDataI(_DB_TARGET_FORCE));
+        targetValue->update();
+
+        if(ApplicationDatabase.getDataS(_DB_CALIB_SYM)!=""){
+            calibPix->show();
+        }else{
+            calibPix->hide();
+            pulsanteImgOn->setVisible(ImagePage::existImage(ApplicationDatabase.getDataS(_DB_IMAGE_NAME)));
+        }
+
+        // Attiva i campi valore per la biopsia
+        setIntestazione();
+        setSpessore();
+        setCompressione();
 
     }
-    else
-    {
-        studyColor = QColor(_Y_COL);
-        setBackground(_BACKGROUND_Y_BIOPSY);
-        buttonsPix->setPixmap(QPixmap("://BiopsyPage/BiopsyPage/buttonsYnoHome.png"));
-        rotPix->setPixmap(QPixmap("://BiopsyPage/BiopsyPage/rotPixY.png"));
-    }
 
+    // Common for speciment and standard
     pulsanteImgOn->setVisible(false);
-
     xrayPix->hide();
 
     if(ApplicationDatabase.getDataU(_DB_DEMO_MODE)==1){
@@ -222,32 +284,11 @@ void BiopsyPage::InitBiopsyPage(void)
         demoPix->hide();
     }
 
-    if(ApplicationDatabase.getDataU(_DB_BIOP_UNLOCK_BUTTON)) rotPix->show();
-    else   rotPix->hide();
-
-    targetValue->labelColor=studyColor;
-    targetValue->labelText = QString("%1:%2 (N)").arg(QApplication::translate("BIOPSY-PAGE","TARGET")).arg(ApplicationDatabase.getDataI(_DB_TARGET_FORCE));
-    targetValue->update();
-
-    if(ApplicationDatabase.getDataS(_DB_CALIB_SYM)!=""){
-        calibPix->show();
-    }else{
-        calibPix->hide();
-        pulsanteImgOn->setVisible(ImagePage::existImage(ApplicationDatabase.getDataS(_DB_IMAGE_NAME)));
-    }
-
-
-
-    // Attiva i campi valore per la biopsia
+    updateHolder();
     setTrxAngolo();
     setArmAngolo();
-    updateHolder();
     setBiopXYZ();
-    setIntestazione();
-    setSpessore();
-    setCompressione();
     updateManualActivation();
-
 }
 
 
@@ -342,6 +383,12 @@ void BiopsyPage::setArmAngolo(void)
 {
     QString str;
 
+    if(specimenMode){
+         armValue->hide();
+         return;
+    }
+    armValue->show();
+
     // Prende l'angolo del Braccio dal database
     str.setNum(pConfig->convertDangolo(ApplicationDatabase.getDataI(_DB_DANGOLO)));
     str.append(QString::fromUtf8("Â°"));
@@ -355,6 +402,21 @@ void BiopsyPage::setTrxAngolo(void)
     QString str;
 
     int angolo = pConfig->convertDangolo(ApplicationDatabase.getDataI(_DB_TRX));
+
+    if(specimenMode){
+        if((angolo > 0) && (specimenLeft==true)){
+            setBackground("://BiopsyPage/BiopsyPage/specimen_r.png");
+            specimenLeft = false;
+        }  else if((angolo <= 0)&& (specimenLeft==false)){
+            setBackground("://BiopsyPage/BiopsyPage/specimen_l.png");
+            specimenLeft = true;
+        }
+
+        trxValue->hide();
+        return;
+    }
+
+    trxValue->show();
 
     if((angolo>=14) && (angolo<=16)) trxValue->labelText="L";
     else if((angolo>=-16) && (angolo<=-14)) trxValue->labelText="R";
@@ -376,6 +438,7 @@ void BiopsyPage::setTrxAngolo(void)
 
 void BiopsyPage::setBiopXYZ(void)
 {
+
     QString x = ApplicationDatabase.getDataS(_DB_BIOP_X);
     QString y = ApplicationDatabase.getDataS(_DB_BIOP_Y);
     QString z = ApplicationDatabase.getDataS(_DB_BIOP_Z);
@@ -488,6 +551,7 @@ void BiopsyPage::valueChanged(int index,int opt)
 
     case _DB_TRX:
         setTrxAngolo();
+        if((isMaster) && (pCollimatore->accessorio == COLLI_ACCESSORIO_FRUSTOLI)) pCollimatore->updateColli();
         break;
 
     case _DB_SPESSORE:
@@ -558,6 +622,10 @@ void BiopsyPage::valueChanged(int index,int opt)
         }
         break;
 
+    case _DB_ACCESSORIO_COLLIMATORE:
+        if((ApplicationDatabase.getDataI(_DB_ACCESSORIO_COLLIMATORE) == COLLI_ACCESSORIO_FRUSTOLI) && (specimenMode==false)) InitBiopsyPage();
+        else if((ApplicationDatabase.getDataI(_DB_ACCESSORIO_COLLIMATORE) != COLLI_ACCESSORIO_FRUSTOLI) && (specimenMode==true)) InitBiopsyPage();
+        break;
 
     }
 }
@@ -604,6 +672,13 @@ void BiopsyPage::languageChanged()
 // Funzione interna pper aggiornare la visualizzazione dell'holder
 void BiopsyPage::updateHolder(void){
 
+    if(specimenMode){
+        biopHolderValue->hide();
+        holderPix->hide();
+        alarmHolderPix->hide();
+        return;
+    }
+
     QString holder = ApplicationDatabase.getDataS(_DB_BIOP_HOLDER);
     if(holder.size()==0) {
         // Holder non presente o non riconosciuto
@@ -624,6 +699,17 @@ void BiopsyPage::updateHolder(void){
 // Oltre all'attivazione dei pulsante, la funzione aggiorna anche
 // il margine di movimento disponibile
 void BiopsyPage::updateManualActivation(void){
+    if(specimenMode){
+        pulsanteBiopStepUp->setEnable(false);
+        pulsanteBiopStepDown->setEnable(false);
+        pulsanteBiopHome->setEnable(false);
+        biopMargineValue->hide();
+        biopMaxZValue->hide();
+        buttonsPix->hide();
+        lineaMarginePix->hide();
+        return;
+    }
+
     // Verifica se i pulsanti Manuali sono abilitati
     unsigned char val = ApplicationDatabase.getDataU(_DB_BIOP_MANUAL_ENA);
     if(val) enableBiopMoveButtons=true;

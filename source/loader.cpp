@@ -3,25 +3,11 @@
 #include "application.h"
 #include "appinclude.h"
 #include "globvar.h"
-#include "ui_loader.h"
+
 
 Loader::Loader(int rotation, QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::Loader)
+    QWidget(parent)
 {
-    ui->setupUi(this);
-    scene = new QGraphicsScene();
-    view = new QGraphicsView(scene);
-    proxy = scene->addWidget(this);
-
-    view->setWindowFlags(Qt::FramelessWindowHint);
-    view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    view->setFixedSize(640,480);    // Dimensione della vista
-    scene -> setSceneRect(0,0,480,640);
-    view->setAlignment(Qt::AlignLeft);
-    view->rotate(rotation);       // Angolo di rotazione della vista corrente
-    view->setScene(scene);
 
     manualMode = false;
 
@@ -29,7 +15,7 @@ Loader::Loader(int rotation, QWidget *parent) :
 
 Loader::~Loader()
 {
-    delete ui;
+
 }
 
 
@@ -689,61 +675,33 @@ void Loader::firmwareUpdate(void){
         }
     }
 
-    if(pConfig->sys.gantryModel==GANTRY_MODEL_DIGITAL){
-        if(pConfig->rv244 != pConfig->swConf.rv244)
-        {
 
-            // Verifica la presenza del file
-            file.setFileName(FILE_244);
-            if(file.exists()==FALSE){
+    if(pConfig->rv244 != pConfig->swConf.rv244)
+    {
+
+        // Verifica la presenza del file
+        file.setFileName(FILE_244);
+        if(file.exists()==FALSE){
+             pConfig->updError = true;
+             pConfig->updErrStr.append(QString("Loader: ERR %1, File:%2\n").arg(FIRMWARE_INESISTENTE).arg(FILE_244));
+        }else{
+
+            // Test Checksum e revisione firmware dall'header del file
+            codice = verifyHeader(FILE_244, pConfig->swConf.rv244, &calc_crc, &file_rev);
+            if(codice){
                  pConfig->updError = true;
-                 pConfig->updErrStr.append(QString("Loader: ERR %1, File:%2\n").arg(FIRMWARE_INESISTENTE).arg(FILE_244));
+                 pConfig->updErrStr.append(QString("Loader: ERR %1 SUB-ERR %2, File:%3\n").arg(FORMATO_HEX).arg(codice).arg(FILE_244));
             }else{
-
-                // Test Checksum e revisione firmware dall'header del file
-                codice = verifyHeader(FILE_244, pConfig->swConf.rv244, &calc_crc, &file_rev);
-                if(codice){
-                     pConfig->updError = true;
-                     pConfig->updErrStr.append(QString("Loader: ERR %1 SUB-ERR %2, File:%3\n").arg(FORMATO_HEX).arg(codice).arg(FILE_244));
-                }else{
-                    // Aggiunge alla lista
-                    item.loaderAddr = 0x1D;
-                    item.file = FILE_244;
-                    item.uC = 1;
-                    item.devTag = "PCB244";
-                    pendingDownload.append(item);
-                }
+                // Aggiunge alla lista
+                item.loaderAddr = 0x1D;
+                item.file = FILE_244;
+                item.uC = 1;
+                item.devTag = "PCB244";
+                pendingDownload.append(item);
             }
         }
-
-    }else{
-        if(pConfig->rv244A != pConfig->swConf.rv244A)
-        {
-
-            // Verifica la presenza del file
-            file.setFileName(FILE_244A);
-            if(file.exists()==FALSE){
-                 pConfig->updError = true;
-                 pConfig->updErrStr.append(QString("Loader: ERR %1, File:%2\n").arg(FIRMWARE_INESISTENTE).arg(FILE_244A));
-            }else{
-
-                // Test Checksum e revisione firmware dall'header del file
-                codice = verifyHeader(FILE_244A, pConfig->swConf.rv244A, &calc_crc, &file_rev);
-                if(codice){
-                     pConfig->updError = true;
-                     pConfig->updErrStr.append(QString("Loader: ERR %1 SUB-ERR %2, File:%3\n").arg(FORMATO_HEX).arg(codice).arg(FILE_244A));
-                }else{
-                    // Aggiunge alla lista
-                    item.loaderAddr = 0x1A;
-                    item.file = FILE_244A;
-                    item.uC = 1;
-                    item.devTag = "PCB244A";
-                    pendingDownload.append(item);
-                }
-            }
-        }
-
     }
+
 
 
 

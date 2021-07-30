@@ -260,6 +260,9 @@ typedef enum{
     ACTUATORS_FAULT_LENZE,
     ACTUATORS_LENZE_RUN_STAT,
     ACTUATORS_SET_LENZE_CONFIG,
+    ACTUATORS_MOVE_LENZE,   // tbd
+    ACTUATORS_LENZE_UNPARK,
+    ACTUATORS_LENZE_PARK,
 
     // ______________________________ SEZIONE SEGNALAZIONI DA TRX
     ACTUATORS_TRX_CMD_SECTION,
@@ -325,15 +328,6 @@ typedef enum{
 
 #define BYTE_GET_STATUS_ERRORS       6 // Errori importanti per la diagnostica durante lo startup
 #define BYTE_GET_STATUS_7   7
-
-// Defines per il comando ACTUATORS_SET_LENZE_CONFIG
-#define BYTE_SET_LENZE_CONFIG_MAXLIM    1
-#define BYTE_SET_LENZE_CONFIG_MINLIM    2
-#define BYTE_SET_LENZE_CONFIG_MANSPEED  3
-#define BYTE_SET_LENZE_CONFIG_AUTOSPEED 4
-#define BYTE_SET_LENZE_CALIBRATED       5
-
-
 
 
 #ifdef _MAIN_C_

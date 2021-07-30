@@ -210,9 +210,6 @@ public:
     bool openPackageCfg(QString filename, firmwareCfg_Str* swConf);           // Apre il file di compatibilit√  versioni firmware
     bool savePackageCfg(QString filename, firmwareCfg_Str sw);
 
-    // Apertura configurazione per macchine analogiche
-    bool openAnalogConfig(void);
-    bool saveAnalogConfig(void);
 
     bool fileTransfer(QString origine, QString destinazione);
 
@@ -268,7 +265,6 @@ public:
     QString rv249U2;
     QString rv190;
     QString rv244;
-    QString rv244A;
     QString rvPackage;
 
 
@@ -281,7 +277,6 @@ public:
 
     systemCfg_Str   sys;            // System config
     userCnf_Str     userCnf;        // Dati uso interfaccia
-    analogCnf_Str   analogCnf;      // Configurazione analogice
 
     // Funzioni per gestire i file di configurazione
     static QList<QString> getNextArrayFields(QFile* fp); // Restituisce una lista di Items tra <> e separati da virgole
@@ -378,11 +373,6 @@ public:
     bool compressor_configured;     // Compressore configurato
     bool collimator_configured;     // Configurazione collimatore acquisita
 
-    bool aec_configured;            // AEC configurato
-    bool kerma_mo_configured;       // Kerma data per Mo configurato;
-    bool kerma_rh_configured;       // Kerma data per Rh configurato;
-    bool kerma_cg_configured;       // Parametri CG configurati
-    bool analog_configured;             // File di configurazione analogica
 
     // Bitfield relativi al test della configurazione di sistema
     // TRUE = ERROR

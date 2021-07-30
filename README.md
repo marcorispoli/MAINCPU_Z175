@@ -1,0 +1,5 @@
+- Per modificare i permessi per le directory montate: /etc/exports
+- Le directory di Build sono collocate in /home/user/Desktop/CHIMERA/Workspace/DBT
+- La directory Deploy contiene tutto il materiale per la realizzazione del package. 
+- Questa directory viene anche montata dai terminali remoti quando occorre
+- Per aprire il progetto DBTController, dalla applicazione QtCreator lanciare DBTController.pro

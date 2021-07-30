@@ -236,4 +236,5 @@ volatile _DeviceRegItem_Str  PCB249U2_Registers[]=
   ext unsigned char backcolli_req,frontcolli_req; // Richiesta di spostamento lame frontali e posteriori
   ext bool backfront_eseguito;
   ext bool pcb249WaitBusy(int timeout);
+  ext bool pcb249U2_GetFreeze(void);
 #endif

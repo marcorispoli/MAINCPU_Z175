@@ -516,6 +516,9 @@ void _SEQERRORFUNC(int code)
     data[3]= _DEVREGL(RG190_HV_RXEND,PCB190_CONTEST);
     mccGuiNotify(1,MCC_CMD_RAGGI_AEC_TOMO,data,4);          
 
+    // Reset errori per consentire di eseguire comandi sui dispositivi della PCB190
+    pcb190ResetFault();
+
     // Carica i dati relativi all'esposizione se necessario
     if(!generalConfiguration.demoMode) rxNotifyData(3,code);
 

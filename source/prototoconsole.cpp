@@ -233,50 +233,6 @@ void protoToConsole::fineRaggiCalibIa(QByteArray data)
 }
 
 
-//______________________________________________________________________
-// Fine raggi procedura di calibrazione detector per macchine Analogiche
-/* if(data.at(0)){
-            // Esito negativo
-            PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_RAGGI, data.at(0),TRUE); // Self resetting
-
-        }else{
-            // Assegna i dati ricevuti
-            ApplicationDatabase.setData(_DB_DETECTOR_DMAS,(int) ((int) data[1]+ 256 * (int) data[2])  );
-            ApplicationDatabase.setData(_DB_DETECTOR_PLOG,(int) ((int) data[3]+ 256 * (int) data[4])  );
-            ApplicationDatabase.setData(_DB_DETECTOR_RAD,(int) ((int) data[5]+ 256 * (int) data[6])  );
-            ApplicationDatabase.setData(_DB_DETECTOR_OFSET,(int) ((int) data[9]+ 256 * (int) data[10])  );
-        }
-*/
-void protoToConsole::fineRaggiAnalogCalibDetector(QByteArray data)
-{
-
-    protoConsole cmd(1,UNICODE_FORMAT);
-
-    // Notifica la Console sul fine raggi
-    cmd.addParam(QString("%1").arg((unsigned char) data[0])); // Esito fine raggi
-    cmd.addParam(QString("%1").arg((float) (data[1]+ 256 * data[2])/10));    // mAs
-    cmd.addParam(QString("%1").arg((int) (data[3]+ 256 * data[4])));         // PLOG
-    cmd.addParam(QString("%1").arg((int) (data[5]+ 256 * data[6])));         // RAD
-
-
-    emit notificheTxHandler(cmd.cmdToQByteArray(NOTIFY_FINERAGGI_CALIB_DETECTOR));
-    return;
-}
-
-void protoToConsole::fineRaggiAnalogCalibTube(unsigned char result, unsigned char rawKv, int dkV, int dIa)
-{
-
-    protoConsole cmd(1,UNICODE_FORMAT);
-
-    // Notifica la Console sul fine raggi
-    cmd.addParam(QString("%1").arg((unsigned char) result)); // Esito fine raggi
-    cmd.addParam(QString("%1").arg((unsigned char) rawKv)); // Esito fine raggi
-    cmd.addParam(QString("%1").arg((float) dkV/10));    // kV
-    cmd.addParam(QString("%1").arg((float) dIa/10));    // Ia
-
-    emit notificheTxHandler(cmd.cmdToQByteArray(NOTIFY_ANALOG_FINERAGGI_CALIB_TUBE));
-    return;
-}
 
 void protoToConsole::notificheConnectionHandler(bool stat)
 {
@@ -512,6 +468,15 @@ void protoToConsole::setBiopsyPosition(int curX, int curY, int curZ){
     protoConsole cmd(1,UNICODE_FORMAT);
     cmd.addParam(QString("%1 %2 %3").arg(curX).arg(curY).arg(curZ));
     sendNotificheTcp(cmd.cmdToQByteArray(NOTIFY_SET_BIOPSY_POSITION));
+
+   return;
+}
+
+void protoToConsole::setSpecimen(bool stat){
+    protoConsole cmd(1,UNICODE_FORMAT);
+    if(stat) cmd.addParam(QString("1"));
+    else cmd.addParam(QString("0"));
+    sendNotificheTcp(cmd.cmdToQByteArray(NOTIFY_SPECIMEN));
 
    return;
 }

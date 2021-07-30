@@ -97,7 +97,8 @@
         <file>MainPage/penddisabled.png</file>
         <file>MainPage/rotdisabled.png</file>
         <file>MainPage/ac.png</file>
-        <file>MainPage/backgroundAnalogic.png</file>
+        <file>MainPage/parkingMode.png</file>
+        <file>MainPage/frameParkingManual.png</file>
     </qresource>
     <qresource prefix="/LanguagePage">
         <file>LanguagePage/BandiereC.png</file>
@@ -120,8 +121,8 @@
     </qresource>
     <qresource prefix="/Translate">
         <file>Translate/traduzione_eng.qm</file>
-        <file>Translate/traduzione_rus.qm</file>
         <file>Translate/traduzione_ita.qm</file>
+        <file>Translate/traduzione_rus.qm</file>
     </qresource>
     <qresource prefix="/Logo">
         <file>Logo/anm.png</file>
@@ -131,7 +132,6 @@
     <qresource prefix="/Template"/>
     <qresource prefix="/ServicePanel">
         <file>ServicePanel/power_menu.png</file>
-        <file>ServicePanel/in_out_menu.png</file>
         <file>ServicePanel/calib_menu.png</file>
         <file>ServicePanel/tools_menu.png</file>
         <file>ServicePanel/package_menu.png</file>
@@ -139,16 +139,10 @@
         <file>ServicePanel/setup_menu.png</file>
     </qresource>
     <qresource prefix="/Service_Setup">
-        <file>Service_Setup/diagnostic_menu.png</file>
         <file>Service_Setup/starter_menu.png</file>
         <file>Service_Setup/general_menu.png</file>
-        <file>Service_Setup/special_menu.png</file>
-        <file>Service_Setup/diagnostic_icon.png</file>
         <file>Service_Setup/general_icon.png</file>
-        <file>Service_Setup/special_icon.png</file>
         <file>Service_Setup/starter_icon.png</file>
-        <file>Service_Setup/toggle_right.png</file>
-        <file>Service_Setup/toggle_left.png</file>
         <file>Service_Setup/yes.png</file>
         <file>Service_Setup/background.png</file>
         <file>Service_Setup/scroll_right.png</file>
@@ -189,6 +183,9 @@
         <file>Service_Calib/lenze_pot_step2.png</file>
         <file>Service_Calib/calibPower.png</file>
         <file>Service_Calib/background_calib_starter.png</file>
+        <file>Service_Calib/manualColliBackground.png</file>
+        <file>Service_Calib/parking.png</file>
+        <file>Service_Calib/parkingBackground.png</file>
     </qresource>
     <qresource prefix="/Service_Tools">
         <file>Service_Tools/tools_icon.png</file>
@@ -219,6 +216,8 @@
         <file>BiopsyPage/background_biopsy_C.png</file>
         <file>BiopsyPage/buttonsCnoHome.png</file>
         <file>BiopsyPage/buttonsYnoHome.png</file>
+        <file>BiopsyPage/specimen_l.png</file>
+        <file>BiopsyPage/specimen_r.png</file>
     </qresource>
     <qresource prefix="/StartupPage">
         <file>StartupPage/startup_tc.png</file>
@@ -253,6 +252,10 @@
         <file>paginaOpenStudy/calib_pix.png</file>
         <file>paginaOpenStudy/calibOpenPage.png</file>
         <file>paginaOpenStudy/unlockComprPix.png</file>
+        <file>paginaOpenStudy/AutoColliSym.png</file>
+        <file>paginaOpenStudy/ManualColliSym.png</file>
+        <file>paginaOpenStudy/manualListFieldC.png</file>
+        <file>paginaOpenStudy/manualListFieldY.png</file>
     </qresource>
     <qresource prefix="/paginaProiezioni">
         <file>paginaProiezioni/RSIOT.png</file>
@@ -350,63 +353,11 @@
         <file>Pulsanti/but_off.png</file>
         <file>Pulsanti/but_on.png</file>
     </qresource>
-    <qresource prefix="/paginaOperativaAnalogica">
-        <file>paginaOperativaAnalogica/spessore.png</file>
-        <file>paginaOperativaAnalogica/forza.png</file>
-        <file>paginaOperativaAnalogica/sblocco.png</file>
-        <file>paginaOperativaAnalogica/backgroundOperativoAnalogico.png</file>
-        <file>paginaOperativaAnalogica/ready.png</file>
-        <file>paginaOperativaAnalogica/options.png</file>
-        <file>paginaOperativaAnalogica/notready.png</file>
-        <file>paginaOperativaAnalogica/campi3.png</file>
-        <file>paginaOperativaAnalogica/campi2.png</file>
-        <file>paginaOperativaAnalogica/campi1.png</file>
-        <file>paginaOperativaAnalogica/pannellokV.png</file>
-        <file>paginaOperativaAnalogica/film.png</file>
-        <file>paginaOperativaAnalogica/CR.png</file>
-        <file>paginaOperativaAnalogica/pannelloRotondoProiezioniL.png</file>
-        <file>paginaOperativaAnalogica/pannelloRotondoProiezioniR.png</file>
-        <file>paginaOperativaAnalogica/smallFocus.png</file>
-        <file>paginaOperativaAnalogica/pannellokVauto.png</file>
-        <file>paginaOperativaAnalogica/wrongProjection.png</file>
-        <file>paginaOperativaAnalogica/pannelloMas0.png</file>
-        <file>paginaOperativaAnalogica/pannelloMas1.png</file>
-        <file>paginaOperativaAnalogica/pannelloMas2.png</file>
-        <file>paginaOperativaAnalogica/pannelloMas3.png</file>
-        <file>paginaOperativaAnalogica/disable_mas.png</file>
-        <file>paginaOperativaAnalogica/disable_od.png</file>
-        <file>paginaOperativaAnalogica/disable_tech.png</file>
-        <file>paginaOperativaAnalogica/disable_film.png</file>
-        <file>paginaOperativaAnalogica/disable_button.png</file>
-        <file>paginaOperativaAnalogica/selButton.png</file>
-        <file>paginaOperativaAnalogica/pannelloOpzioni.png</file>
-        <file>paginaOperativaAnalogica/pannelloComandi.png</file>
-        <file>paginaOperativaAnalogica/blocco.png</file>
-        <file>paginaOperativaAnalogica/xrayon.png</file>
-    </qresource>
     <qresource prefix="/Sym">
         <file>Sym/pad.png</file>
         <file>Sym/xray_sym.png</file>
         <file>Sym/pc.png</file>
         <file>Sym/tubo_sym.png</file>
-        <file>Sym/MAGNIFIER_CASSETTE.png</file>
-        <file>Sym/PMMI1.png</file>
-        <file>Sym/PMMI2.png</file>
-        <file>Sym/PMMI3.png</file>
-        <file>Sym/PMMI4.png</file>
-        <file>Sym/PMMI5.png</file>
-        <file>Sym/PMMI6.png</file>
-        <file>Sym/PMMI7.png</file>
-        <file>Sym/POTTER-BUCKY_CASSETTE.png</file>
-        <file>Sym/POTTER-BUCKY-NO_CASSETTA.png</file>
-        <file>Sym/RMMI-155.png</file>
-        <file>Sym/campi_back.png</file>
-        <file>Sym/campi_center.png</file>
-        <file>Sym/campi_front.png</file>
-        <file>Sym/LargeFocus.png</file>
-        <file>Sym/SmallFocus.png</file>
-        <file>Sym/InvalidPotter.png</file>
-        <file>Sym/POTTER-BUCKY.png</file>
         <file>Sym/InvalidPad.png</file>
         <file>Sym/closed_door_pix.png</file>
     </qresource>

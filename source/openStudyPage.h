@@ -55,6 +55,8 @@ public:
     GLabel* cuffiaTLabel;
     GLabel* HuAnodeLabel;
     GPush* pulsanteTcuffia;
+
+
     unsigned char cuffiaViewMode; // 0 = HU%, 1=HU, 2 =Â°C
     void setTempCuffia(int temp);
     void setHuAnode(int khu);
@@ -147,6 +149,18 @@ public:
 private:
     bool isOpen; // Indica che la pagina è già stata aperta
     unsigned char enableSblocco;
+
+    // Gestione della collimazione manuale
+    bool manualColliMode;
+    int manualPad;
+    int manualColliTimer;
+
+    void updateManualCollimationStatus(void);
+    void toggleManualPad(bool increment);
+    QGraphicsPixmapItem* manualListPix;
+    GPush* pulsanteManualColli;
+    GPush* pulsanteToggleColliDec;
+    GPush* pulsanteToggleColliInc;
 
 };
 

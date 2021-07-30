@@ -123,10 +123,8 @@ void ServicePanelMenu::valueChanged(int index,int opt){
 // Reazione alla pressione del pulsante di uscita
 void ServicePanelMenu::onExitButton(void)
 {   
-    if(ApplicationDatabase.getDataU(_DB_SYSTEM_CONFIGURATION) & _ARCH_GANTRY_DIGITAL)
-        GWindowRoot.setNewPage(_PG_MAIN_DIGITAL,GWindowRoot.curPage,0);
-    else
-        GWindowRoot.setNewPage(_PG_MAIN_ANALOG,GWindowRoot.curPage,0);
+    GWindowRoot.setNewPage(_PG_MAIN_DIGITAL,GWindowRoot.curPage,0);
+
 }
 
 void ServicePanelMenu::timerEvent(QTimerEvent* ev)

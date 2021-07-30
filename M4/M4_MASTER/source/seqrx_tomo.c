@@ -460,7 +460,10 @@ void RxTomoSeqError(int code)
     data[2]=(unsigned char) ((mAs_erogati>>8)&0xFF);      
     data[3]= _DEVREGL(RG190_HV_RXEND,PCB190_CONTEST); 
     mccGuiNotify(1,MCC_CMD_RAGGI_TOMO,data,4); 
-      
+
+    // Reset errori per consentire di eseguire comandi sui dispositivi della PCB190
+    pcb190ResetFault();
+
 
     // Carica i dati relativi all'esposizione se necessario
     if(!generalConfiguration.demoMode) rxNotifyData(2,code);

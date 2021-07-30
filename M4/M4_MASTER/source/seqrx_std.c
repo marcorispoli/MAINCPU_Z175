@@ -46,10 +46,7 @@ void std_rx_task(uint32_t taskRegisters)
     ERROR=0;
   
     // In Demo mode il comando non viene eseguito
-    if(generalConfiguration.gantryCfg.gantryModel == GANTRY_MODEL_ANALOG)
-        printf("MODELLO ANALOGICO:ATTIVAZIONE PROCEDURA RAGGI MANUALE\n");
-    else
-        printf("MODELLO DIGITALE:ATTIVAZIONE PROCEDURA RAGGI 2D MANUALE\n");
+    printf("ATTIVAZIONE PROCEDURA RAGGI 2D MANUALE\n");
 
     if(generalConfiguration.demoMode) printf("DEMO MODE\n");
     else  printf("ESPOSIZIONE REALE\n");
@@ -74,8 +71,7 @@ void std_rx_task(uint32_t taskRegisters)
       printf("PORTA STUDIO APERTA!\n");
       _SEQERROR(ERROR_CLOSED_DOOR);  
     }    
-        
-  
+          
     // Reset Eventuale Fault della PCB190
     pcb190ResetFault();
 
@@ -284,6 +280,9 @@ void _SEQERRORFUNC(int code)
     data[3]= _DEVREGL(RG190_HV_RXEND,PCB190_CONTEST); 
 
     mccGuiNotify(1,MCC_CMD_RAGGI_STD,data,4);
+
+    // Reset errori per consentire di eseguire comandi sui dispositivi della PCB190
+    pcb190ResetFault();
 
     // Carica i dati relativi all'esposizione se necessario
     if(!generalConfiguration.demoMode) rxNotifyData(0,ERROR);

@@ -41,6 +41,8 @@ ext bool actuatorsTrxActivateZeroSetting(void);
 // Comandi di azionamento
 ext int actuatorsArmMove(int angolo);
 ext bool actuatorsTrxMove(int angolo); // Angoli espressi in decimi di grado
+ext void actuatorsLenzeUnpark(void);
+ext void actuatorsLenzPark(void);
 
 // Configuration functions
 ext bool config_trx(bool setmem, unsigned char blocco, unsigned char* buffer, unsigned char len);

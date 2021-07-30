@@ -31,8 +31,8 @@ public slots:
      void onPositionCalibButton(void); // Attiva il menu setup
      void onTiltCalibButton(void); // Attiva il menu setup
      void onLenzePotCalibButton(void); // Calibrazione potenziometro lenze
-     void onDetectorCalibButton(void);
-
+     void onParkingCalibButton(void); // Calibrazione posizione di parcheggio
+     void onColliCalibButton(void) ; // Calibrazione collimazione manuale
 private:
     Ui::CalibMenuObject *ui;
     QGraphicsScene *scene;

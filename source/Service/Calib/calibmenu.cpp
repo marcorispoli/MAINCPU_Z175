@@ -42,7 +42,8 @@ CalibMenu::CalibMenu(int rotview, QWidget *parent) :
     connect(ui->TiltCalibButton,SIGNAL(released()),this,SLOT(onTiltCalibButton()),Qt::UniqueConnection);
     connect(ui->FilterCalibButton,SIGNAL(released()),this,SLOT(onFilterCalibButton()),Qt::UniqueConnection);
     connect(ui->lenzePotCalibButton,SIGNAL(released()),this,SLOT(onLenzePotCalibButton()),Qt::UniqueConnection);
-    connect(ui->detectorButton,SIGNAL(released()),this,SLOT(onDetectorCalibButton()),Qt::UniqueConnection);
+    connect(ui->parkingCalibButton,SIGNAL(released()),this,SLOT(onParkingCalibButton()),Qt::UniqueConnection);
+    connect(ui->colliCalibButton,SIGNAL(released()),this,SLOT(onColliCalibButton()),Qt::UniqueConnection);
 
 
 }
@@ -99,10 +100,6 @@ void CalibMenu::initPage(void){
     if(architettura & _ARCH_HIGH_SPEED_STARTER) ui->StarterCalibButton->hide();
     else ui->StarterCalibButton->show();
 
-    // CAlibrazione detector solo se macchina analogica
-     if(ApplicationDatabase.getDataU(_DB_SYSTEM_CONFIGURATION)&_ARCH_GANTRY_DIGITAL) ui->frameDetector->hide();
-    else ui->frameDetector->show();
-
     return;
 }
 
@@ -147,6 +144,11 @@ void CalibMenu::onPositionCalibButton(void)
         GWindowRoot.setNewPage(_PG_SERVICE_CALIB_POSITION,GWindowRoot.curPage,0);
 }
 
+void CalibMenu::onParkingCalibButton(void)
+{
+        GWindowRoot.setNewPage(_PG_SERVICE_CALIB_PARKING,GWindowRoot.curPage,0);
+}
+
 void CalibMenu::onHVCalibButton(void)
 {        
         GWindowRoot.setNewPage(_PG_SERVICE_CALIB_POWER,GWindowRoot.curPage,0);
@@ -166,12 +168,13 @@ void CalibMenu::onLenzePotCalibButton(void)
         GWindowRoot.setNewPage(_PG_SERVICE_CALIB_LENZE_POT,GWindowRoot.curPage,0);
 }
 
-void CalibMenu::onDetectorCalibButton(void)
+
+void CalibMenu::onColliCalibButton(void)
 {
 
-    ApplicationDatabase.setData(_DB_EXPOSURE_MODE,(unsigned char) _EXPOSURE_MODE_CALIB_MODE_EXPOSIMETER);
-    ApplicationDatabase.setData(_DB_STUDY_STAT,(unsigned char) _OPEN_STUDY_ANALOG);
-    GWindowRoot.setNewPage(_PG_CALIB_ANALOG,GWindowRoot.curPage,0);
+        GWindowRoot.setNewPage(_PG_SERVICE_CALIB_COLLI,GWindowRoot.curPage,0);
 }
+
+
 
 

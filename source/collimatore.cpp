@@ -38,6 +38,9 @@ Collimatore::Collimatore(QObject *parent) :
 
     colliTestNumber = 0;
     colliTestTimer = 0;
+
+
+    collimazione_frustoli = COLLI_FRUSTOLI_ND;
 }
 
 void Collimatore::timerEvent(QTimerEvent* ev)
@@ -159,9 +162,16 @@ void Collimatore::pcb249U1Notify(unsigned char id, unsigned char notifyCode, QBy
             if(tempCuffia>pConfig->userCnf.tempCuffiaAlr) tempCuffia|=0x0200;
             else if(tempCuffia>pConfig->userCnf.tempCuffiaAlrOff) tempCuffia|=0x0100;
             ApplicationDatabase.setData(_DB_T_CUFFIA,(int)tempCuffia, 0);
-            accessorio = buffer.at(2);
 
-            // Hotfix 11C
+            // Cambio accessorio
+            if(buffer.at(2) != accessorio){
+                accessorio = buffer.at(2);
+                ApplicationDatabase.setData(_DB_ACCESSORIO_COLLIMATORE, (int) accessorio);
+                updateColli();
+                if(accessorio == COLLI_ACCESSORIO_FRUSTOLI) pToConsole->setSpecimen(true);
+                else pToConsole->setSpecimen(false);
+            }
+
             // Auto apprendimento accessorio 3D
             if((accessorio==COLLI_ACCESSORIO_PROTEZIONE_PAZIENTE_3D)&&(startupEvent)){
                 if(pConfig->userCnf.enable3DCheckAccessorio == false){
@@ -304,7 +314,59 @@ bool Collimatore::updateColli(void)
         return TRUE;
     }
 
+
+
+
+    // In biopsia, con la piastrina per frustoli si utilizza una collimazione dedicata che dipende dall'angolo del braccio
+    if((pBiopsy->connected) && (accessorio==COLLI_ACCESSORIO_FRUSTOLI)){
+
+        ApplicationDatabase.setData(_DB_COLLIMAZIONE,"SPECIMEN",0);
+
+        // Se il braccio si trova nella corretta posizione allora imposta la collimazione adeguata
+        if(ApplicationDatabase.getDataI(_DB_TRX)>100){
+            if(collimazione_frustoli == COLLI_FRUSTOLI_RIGHT) return true;
+            data[COLLI_F] = 50;// front
+            data[COLLI_B] = 50;// back
+            data[COLLI_T] = 100;
+            data[COLLI_L] = 255;
+            data[COLLI_R] = 0;
+            collimazione_frustoli = COLLI_FRUSTOLI_RIGHT;
+
+        }else if(ApplicationDatabase.getDataI(_DB_TRX)<-100){
+            if(collimazione_frustoli == COLLI_FRUSTOLI_LEFT) return true;
+            data[COLLI_F] = 50;// front
+            data[COLLI_B] = 50;// back
+            data[COLLI_T] = 0;
+            data[COLLI_L] = 0;
+            data[COLLI_R] = 255;
+            collimazione_frustoli = COLLI_FRUSTOLI_LEFT;
+        }else{
+            if(collimazione_frustoli == COLLI_FRUSTOLI_CENTER) return true;
+            data[COLLI_F] = 50;// front
+            data[COLLI_B] = 50;// back
+            data[COLLI_T] = 50;
+            data[COLLI_L] = 0;
+            data[COLLI_R] = 0;
+            collimazione_frustoli = COLLI_FRUSTOLI_CENTER;
+        }
+
+
+
+        // Invio comando
+        if(pConsole->pGuiMcc->sendFrame(MCC_SET_COLLI,_COLLI_ID,data, COLLI_LEN)==FALSE)
+        {
+            qDebug() << "MCC FALLITO";
+            collimazione_frustoli = COLLI_FRUSTOLI_ND;
+            return FALSE;
+        }
+
+        return TRUE;
+    }
+
+
     // In modo operativo necessariamente ci deve essere una collimazione pre-definita.
+    collimazione_frustoli = COLLI_FRUSTOLI_ND;
+
     // Non è ammessa una collimazione OPEN
     if(pConsole->isOperatingMode())
     {
@@ -550,6 +612,8 @@ bool Collimatore::manualColliUpdate(void)
     data[COLLI_R] = manualR;// Right Blade
     data[COLLI_T] = manualT;// back Trap
 
+    collimazione_frustoli = COLLI_FRUSTOLI_ND;
+
     // Invio comando
     return pConsole->pGuiMcc->sendFrame(MCC_SET_COLLI,_COLLI_ID,data, COLLI_LEN);
 }
@@ -730,17 +794,11 @@ void Collimatore::setTomoConfigDefault(QString mat){
 
 }
 
-// Lettura file di configurazione
-bool Collimatore::readConfigFile(void){
-    if(pConfig->sys.gantryModel == GANTRY_MODEL_DIGITAL) return readDigitalConfigFile();
-    else return readAnalogConfigFile();
-}
 
-
-
-bool Collimatore::readDigitalConfigFile(void)
+bool Collimatore::readConfigFile(void)
 {
     QString filename;
+    _colliPadStr colli24x30;
     QList<QString> dati;
     int i=0;
     colliTomoConf_Str* pTomo;
@@ -784,6 +842,12 @@ bool Collimatore::readDigitalConfigFile(void)
 
     colliConf.colliTomoMo.enabled=true;
     colliConf.colliTomoW.enabled=true;
+
+    customL = 0;
+    customR = 0;
+    customT = 50;
+    customB = 0;
+    customF = 0;
 
     bool tomoW=false;
     bool tomoMo=false;
@@ -865,6 +929,17 @@ bool Collimatore::readDigitalConfigFile(void)
             newColli2DItem.B = (unsigned char) dati.at(5).toInt();
             newColli2DItem.T = (unsigned char) dati.at(6).toInt();
             colliConf.colli2D.append(newColli2DItem);
+            if(pad == PAD_24x30) colli24x30 = newColli2DItem;
+            continue;
+        }
+
+        // ---------------------------- Collimazioni Custom --------------------------------------- //
+        if(dati.at(0).contains("CUSTOM")){
+            customL = dati.at(1).toInt();
+            customR = dati.at(2).toInt();
+            customF = dati.at(3).toInt();
+            customB = dati.at(4).toInt();
+            customT = dati.at(5).toInt();
             continue;
         }
 
@@ -914,27 +989,29 @@ bool Collimatore::readDigitalConfigFile(void)
 
     // C'è stata una variazione di revisione
     if( fileRevision != COLLI_CNF_REV){
+
+        if(fileRevision<= 2){
+            // Crea il nuovo item di collimazione
+            _colliPadStr newColli2DItem;
+            newColli2DItem = colli24x30;
+            newColli2DItem.PadCode = PAD_PROSTHESIS;
+            colliConf.colli2D.append(newColli2DItem);
+
+            newColli2DItem.PadCode = PAD_9x9_MAG;
+            colliConf.colli2D.append(newColli2DItem);
+        }
+
         // Salvataggio
-        storeDigitalConfigFile();
+        storeConfigFile();
     }
 
     return true;
 }
 
-bool Collimatore::readAnalogConfigFile(void)
-{
-
-    return true;
-}
-
-// Lettura file di configurazione
-bool Collimatore::storeConfigFile(void){
-    if(pConfig->sys.gantryModel == GANTRY_MODEL_DIGITAL) return storeDigitalConfigFile();
-    else return storeAnalogConfigFile();
-}
 
 
-bool Collimatore::storeDigitalConfigFile(void)
+
+bool Collimatore::storeConfigFile(void)
 {
     QString filename;
     QString filenamecpy;
@@ -984,6 +1061,10 @@ bool Collimatore::storeDigitalConfigFile(void)
 
     // Collimazione OPEN
     data = QString("<OPEN,%1,%2,%3,%4,%5>\n\n").arg((int) colliConf.colliOpen.L).arg((int) colliConf.colliOpen.R).arg((int) colliConf.colliOpen.F).arg((int) colliConf.colliOpen.B).arg((int) colliConf.colliOpen.T);
+    file.write(data.toAscii().data());
+
+    // Collimazione Custom
+    data = QString("<CUSTOM,%1,%2,%3,%4,%5>\n\n").arg((int) customL).arg((int) customR).arg((int) customF).arg((int) customB).arg((int) customT);
     file.write(data.toAscii().data());
 
 
@@ -1081,9 +1162,48 @@ bool Collimatore::storeDigitalConfigFile(void)
     return TRUE;
 }
 
-bool Collimatore::storeAnalogConfigFile(void)
-{
+/*
+ * Richiede la selezione di una collimazione standard/ custom
+ * mandando il sistema in modalità di collimazione manuale
+ */
+void Collimatore::selectManualColliFormat(unsigned char pad){
+    int index;
 
-    return TRUE;
+    if(pad == PAD_ENUM_SIZE){
+        // Imposta la collimazione Custom
+        manualF = customF;  // front
+        manualB = customB;  // back
+        manualL = customL;  // Left Blade
+        manualR = customR;  // Right Blade
+        manualT = customT; // back Trap
+        manualCollimation = true;
+
+    }else if(pad<PAD_ENUM_SIZE){
+        manualCollimation = true;
+        // Impostazione di una delle collimazioni possibili
+        // Deriva il codice di collimazione
+        if(pad!=PAD_TOMO_24x30)  index = getColli2DIndex(pad);
+        else index = getColli2DIndex(PAD_24x30);
+
+        if(index<0){
+
+            manualF = 0;  // front
+            manualB = 0;  // back
+            manualL = 0;  // Left Blade
+            manualR = 0;  // Right Blade
+            manualT = 50; // back Trap
+
+        }else{
+            _colliPadStr colli2D = colliConf.colli2D.at(index);
+            // Carica le posizioni
+            manualF = colli2D.F;// front
+            manualB = colli2D.B;// back
+            manualL = colli2D.L;// Left Blade
+            manualR = colli2D.R;// Right Blade
+            manualT = colli2D.T;// back Trap
+        }
+
+    }
 }
+
 

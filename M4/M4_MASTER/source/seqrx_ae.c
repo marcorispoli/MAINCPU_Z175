@@ -82,6 +82,9 @@ void std_ae_rx_task(uint32_t taskRegisters)
       _SEQERROR(ERROR_CLOSED_DOOR);  
     }
 
+    // Reset Eventuale Fault della PCB190
+    pcb190ResetFault();
+
     if(Param->esposizione.HV & 0x4000)
     {
       if(pcb190StarterH()==FALSE) printf("WARNING: COMANDO STARTER HIGH FALLITO\n");
@@ -92,9 +95,6 @@ void std_ae_rx_task(uint32_t taskRegisters)
       else printf("STARTER ATTIVATO A BASSA VELOCITA'\n");
     }
 
-
-    // Reset Eventuale Fault della PCB190
-    pcb190ResetFault();
 
     // Caricamento parametri di esposizione o pre esposizione per impulso bassa energia
     if(pcb190UploadExpose(Param, FALSE)==FALSE) _SEQERROR(_SEQ_UPLOAD190_PARAM);      
@@ -353,6 +353,10 @@ void _SEQERRORFUNC(int code)
     data[4]=(unsigned char) (mAs_erogati_AE&0xFF);  // Aggiungere mas residui
     data[5]=(unsigned char) ((mAs_erogati_AE>>8)&0xFF);
     mccGuiNotify(1,MCC_CMD_RAGGI_AE,data,6);
+
+    // Reset errori per consentire di eseguire comandi sui dispositivi della PCB190
+    pcb190ResetFault();
+
     printf("SEQ AE ERROR:%d, mAsLow=%d mAsAE=%d kVBUS=%d\n",code, mAs_erogati, mAs_erogati_AE,data[3] );
 
     // Carica i dati relativi all'esposizione se necessario

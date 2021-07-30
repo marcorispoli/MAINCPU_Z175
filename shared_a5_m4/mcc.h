@@ -13,13 +13,6 @@
 #define _DEF_APP_SLAVE_TO_M4_SLAVE             1,0,7 // Porta M4 SLAVE
 #define _DEF_M4_SLAVE_TO_APP_SLAVE             0,0,8 // Porta GUI SLAVE
 
-//__________________________________________________________________________________
-// ESPOSIMETRO
-#define _ANALOG_DETECTOR_FRONT_FIELD    0
-#define _ANALOG_DETECTOR_MIDDLE_FIELD   1
-#define _ANALOG_DETECTOR_BACK_FIELD     2
-
-
 // _______________________________________________
 // SOTTOGRUPPO COMANDI MCC_CALIB_ZERO
 #define CALIB_ZERO_MANUAL_ACTIVATION_TRX_CALIB     1 // Attivazione manuale TRX lenta
@@ -38,7 +31,8 @@
 #define CONFIG_GENERAL        3
 
 #define CONFIG_PCB190         20
-#define CONFIG_PCB269         30
+#define CONFIG_PCB269_0       30
+#define CONFIG_PCB269_1       31
 #define CONFIG_PCB249U2       40
 #define CONFIG_PCB244         50
 #define CONFIG_BIOPSY         60
@@ -259,6 +253,13 @@ typedef enum
 
 }_MccPCB244A_Code;
 
+// Comandi per gestione Parcheggio
+#define MCC_PARKING_MODE_COMMANDS_START_PARKING         1
+#define MCC_PARKING_MODE_COMMANDS_START_UNPARKING       2
+#define MCC_PARKING_MODE_COMMANDS_START_CALIBRATION     3
+#define MCC_PARKING_MODE_COMMANDS_STOP_CALIBRATION      4
+#define MCC_PARKING_MODE_COMMANDS_GET_POT               5
+
 
 // Comandi tra MASTER GUI e MASTER M4 tramite MCC
 typedef enum
@@ -355,18 +356,8 @@ typedef enum
     MCC_GET_TRX_INPUTS,
     MCC_GET_ARM_INPUTS,
     MCC_GET_LENZE_INPUTS,
+    MCC_PARKING_MODE_COMMANDS
 
-    // Sezione dedicata alla versione analogica
-    MCC_XRAY_ANALOG_MANUAL,
-    MCC_XRAY_ANALOG_AUTO,
-    MCC_XRAY_ANALOG_CALIB_PRE,          // Calibrazione pre-impulso
-    MCC_XRAY_ANALOG_CALIB_PROFILE,      // Calibrazione pre-impulso
-    MCC_XRAY_ANALOG_CALIB_TUBE,         // Calibrazione kV e corrente anodica
-    MCC_XRAY_ANALOG_REQ_AEC_PULSE,      // il driver richiede i dati per l'impulso
-
-    // Messaggi Audio
-    MCC_AUDIO,
-    MCC_244_A_FUNCTIONS // Sezione di comandi deicati all'esposimetro
 
 
 }_MccGuiToDevice_Cmd;

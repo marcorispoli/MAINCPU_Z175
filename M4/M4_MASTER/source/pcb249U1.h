@@ -242,4 +242,6 @@ volatile _DeviceRegItem_Str  PCB249U1_Registers[]=
   ext unsigned char trapcolli_req;
   ext unsigned char u1colli_id;
   ext bool u1colli_result;
+  ext bool pcb249U1_GetFreeze(void);
+
 #endif

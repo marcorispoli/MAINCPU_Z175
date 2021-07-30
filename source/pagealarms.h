@@ -108,12 +108,7 @@ class PageAlarms : public GWindow
     #define ERROR_USER_CONFIG       8   // Il sistem user non è configurato
     #define ERROR_PACKAGE_CONFIG    9   // Il package non è configurato
     #define ERROR_SN_CONFIG         10   // Il SN non è stato assegnato
-    #define ERROR_ANALOG_CONFIG     11  // File di configurazione analogica mancante
 
-
-    // ___________________      _DB_ALLARMI_ANALOGICA __________________________________________________________________________
-    #define ERROR_SETTING_DET_FIELD     1
-    #define ERROR_NO_AEC_PROFILE        2
 
     // ___________________      _DB_ALLARMI_ALR_SOFT __________________________________________________________________________
     #define ERROR_MCC               1   // Erroe su comando MCC

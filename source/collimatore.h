@@ -114,6 +114,13 @@ public:
     int manualB;
     int manualF;
 
+    // Collimazione Custom
+    int customL;
+    int customR;
+    int customT;
+    int customB;
+    int customF;
+
 
 
     QString getFilterTag(unsigned char code)
@@ -141,6 +148,11 @@ public:
     }
 
 
+    unsigned char collimazione_frustoli;
+
+    // Collimazione manuale in operativo
+    void selectManualColliFormat(unsigned char pad); // Selezione di una particolare collimazione
+
 private:
     int colliTestNumber;
     int colliTestTimer;
@@ -148,14 +160,7 @@ private:
     bool filter_test_status;
 
 
-    bool readDigitalConfigFile(void);
-    bool readAnalogConfigFile(void);
-    bool storeDigitalConfigFile(void);
-    bool storeAnalogConfigFile(void);
 
-#ifdef COLLI_DBG
-    void printCnf(void);
-#endif
 };
 
 #endif // COLLIMATORE_H

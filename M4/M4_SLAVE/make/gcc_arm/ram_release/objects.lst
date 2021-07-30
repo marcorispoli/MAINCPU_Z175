@@ -1,0 +1,13 @@
+./gcc_arm/ram_release/obj/actuators.o
+./gcc_arm/ram_release/obj/arm.o
+./gcc_arm/ram_release/obj/canopen.o
+./gcc_arm/ram_release/obj/common.o
+./gcc_arm/ram_release/obj/fault.o
+./gcc_arm/ram_release/obj/i510.o
+./gcc_arm/ram_release/obj/lenze.o
+./gcc_arm/ram_release/obj/main.o
+./gcc_arm/ram_release/obj/mccClass.o
+./gcc_arm/ram_release/obj/pd4.o
+./gcc_arm/ram_release/obj/ser240.o
+./gcc_arm/ram_release/obj/slave_can.o
+./gcc_arm/ram_release/obj/trx.o

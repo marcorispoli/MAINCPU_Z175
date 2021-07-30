@@ -611,46 +611,69 @@ bool pcb190StopStarter(void)
  
   // Sospende il driver bloccando la mutex del polling
   // Il driver si blocca esattamente dopo aver letto i registri di stato
-  _mutex_lock(&(CONTEST.pollinglist_mutex));
   
   printf("PCB190: ESECUZIONE STOP STARTER \n");
+  for(int i=0; i<10; i++) {
 
-  // Prepara il comando 
-  frame.address = TARGET_ADDRESS;
-  frame.attempt = 10;
-  frame.cmd=SER422_COMMAND;
-  frame.data1=_CMD1(PCB190_STOP_AR);
-  frame.data2=_CMD2(PCB190_STOP_AR);
-  
-  Ser422Send(&frame, SER422_BLOCKING,CONTEST.ID);
-  _mutex_unlock(&(CONTEST.pollinglist_mutex));
-  
-  if(frame.retcode==SER422_COMMAND_OK) return TRUE; 
-  else return FALSE;  
+      _mutex_lock(&(CONTEST.pollinglist_mutex));
+
+      // Prepara il comando
+      frame.address = TARGET_ADDRESS;
+      frame.attempt = 10;
+      frame.cmd=SER422_COMMAND;
+      frame.data1=_CMD1(PCB190_STOP_AR);
+      frame.data2=_CMD2(PCB190_STOP_AR);
+
+      Ser422Send(&frame, SER422_BLOCKING,CONTEST.ID);
+      _mutex_unlock(&(CONTEST.pollinglist_mutex));
+
+      if(frame.retcode==SER422_COMMAND_OK) return TRUE;
+      else{
+          _time_delay(100);
+      }
+
+  }
+
+  // Fallito Stop Starter
+  printf("PCB190: ESECUZIONE STOP STARTER FALLITA!!\n");
+  return false;
 }
 
+
+// Spegne lo starter: ripete il comando se necessario
 bool pcb190OffStarter(void)
 {
   _Ser422_Command_Str frame;
 
   // Sospende il driver bloccando la mutex del polling
   // Il driver si blocca esattamente dopo aver letto i registri di stato
-  _mutex_lock(&(CONTEST.pollinglist_mutex));
-
   printf("PCB190: ESECUZIONE OFF STARTER \n");
 
-  // Prepara il comando
-  frame.address = TARGET_ADDRESS;
-  frame.attempt = 10;
-  frame.cmd=SER422_COMMAND;
-  frame.data1=_CMD1(PCB190_OFF_AR);
-  frame.data2=_CMD2(PCB190_OFF_AR);
+  for(int i=0; i<10; i++) {
 
-  Ser422Send(&frame, SER422_BLOCKING,CONTEST.ID);
-  _mutex_unlock(&(CONTEST.pollinglist_mutex));
+      _mutex_lock(&(CONTEST.pollinglist_mutex));
 
-  if(frame.retcode==SER422_COMMAND_OK) return TRUE;
-  else return FALSE;
+      // Prepara il comando
+      frame.address = TARGET_ADDRESS;
+      frame.attempt = 10;
+      frame.cmd=SER422_COMMAND;
+      frame.data1=_CMD1(PCB190_OFF_AR);
+      frame.data2=_CMD2(PCB190_OFF_AR);
+
+      Ser422Send(&frame, SER422_BLOCKING,CONTEST.ID);
+      _mutex_unlock(&(CONTEST.pollinglist_mutex));
+
+      if(frame.retcode==SER422_COMMAND_OK){
+          printf("PCB190: ESECUZIONE OFF OK!!! \n");
+          return TRUE;
+      }else{
+          _time_delay(100);
+      }
+
+  }
+
+  printf("PCB190: ESECUZIONE OFF FALLITO!!! \n");
+  return false;
 }
 
 // Attende ATTEMPT*100ms il ready dalla PCB190

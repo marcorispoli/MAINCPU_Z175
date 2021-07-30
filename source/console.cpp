@@ -2,9 +2,6 @@
 #include "appinclude.h"
 #include "globvar.h"
 
-#include "ANALOG/Calibration/pageCalibAnalogic.h"
-extern AnalogCalibPageOpen* paginaCalibAnalogic;
-
 // NOTA: SetFocus attiva il Fuoco
 void console::activateConnections(void){
     // Creazione del socket di comunicazione esterna con la Console
@@ -267,9 +264,6 @@ void console::consoleRxHandler(QByteArray rxbuffer)
         // Verifica tipologia di calibrazione
         if(protocollo.parametri.count()==0) return;
 
-        // Distinzione tra macchina digitale e analogica
-        if(pConfig->sys.gantryModel == GANTRY_MODEL_DIGITAL){
-
             if(protocollo.parametri[0]=="TOMO"){
                 // Modalità calibrazione Tomo
                 if(protocollo.parametri.count()!=2) return;
@@ -311,41 +305,6 @@ void console::consoleRxHandler(QByteArray rxbuffer)
             ApplicationDatabase.setData(_DB_CALIB_SYM,intestazioneCalib,0);
             setOpenStudy(true,""); // Apre uno studio locale anonimo
             return;
-        }else{
-
-            if(protocollo.parametri[0]=="KV"){
-                ApplicationDatabase.setData(_DB_EXPOSURE_MODE,(unsigned char) _EXPOSURE_MODE_CALIB_MODE_KV);
-            }else if(protocollo.parametri[0]=="IA"){
-                ApplicationDatabase.setData(_DB_EXPOSURE_MODE,(unsigned char) _EXPOSURE_MODE_CALIB_MODE_IA);
-            }else if(protocollo.parametri[0]=="DETECTOR"){
-                if(protocollo.parametri.count()!=3) {
-                    emit consoleTxHandler( answ.answToQByteArray("NOK 1"));
-                    return;
-                }
-
-                // Aggiunge i dati di accettabilità
-                paginaCalibAnalogic->rmmi_reference = protocollo.parametri[1].toInt();
-                paginaCalibAnalogic->rmmi_toll = protocollo.parametri[2].toInt();
-                ApplicationDatabase.setData(_DB_EXPOSURE_MODE,(unsigned char) _EXPOSURE_MODE_CALIB_MODE_EXPOSIMETER);
-            }else if(protocollo.parametri[0]=="SHOT"){
-                ApplicationDatabase.setData(_DB_EXPOSURE_MODE,(unsigned char) _EXPOSURE_MODE_RX_SHOT_NODET_MODE);
-            }else if(protocollo.parametri[0]=="PROFILE"){
-                paginaCalibAnalogic->pc_data_valid =false;
-                ApplicationDatabase.setData(_DB_EXPOSURE_MODE,(unsigned char) _EXPOSURE_MODE_CALIB_MODE_PROFILE);
-            }else{
-                return;
-            }
-
-
-            emit consoleTxHandler( answ.answToQByteArray(_IMMEDIATO));
-
-            ApplicationDatabase.setData(_DB_STUDY_STAT,(unsigned char) _OPEN_STUDY_ANALOG);
-
-            pConfig->selectOperatingPage();
-            return;
-        }
-
-
     }else if(comando==SET_OPER_MODE)
     {
         if(protocollo.parametri.count()!=0) return;
@@ -718,6 +677,9 @@ void console::consoleRxHandler(QByteArray rxbuffer)
     }else if(comando==GET_COLLI_TOMO)
     {
         handleGetColliTomo(&protocollo, &answ);
+    }else if(comando==GET_SPECIMEN){
+        if(pCollimatore->accessorio == COLLI_ACCESSORIO_FRUSTOLI)  emit consoleTxHandler( answ.cmdToQByteArray("OK 1"));
+        else emit consoleTxHandler( answ.cmdToQByteArray("OK 0"));
     }else if(comando==SET_TEST_CMD){
         unsigned char data;
         pGuiMcc->sendFrame(MCC_TEST,1,&data,0);
@@ -878,25 +840,6 @@ void console::consoleRxHandler(QByteArray rxbuffer)
 
         return;
 
-    }else if(comando==SET_AEC_FIELD){
-        // Impostazione campo Detector Analogico ma solo se calibrazione detector
-        if(ApplicationDatabase.getDataU(_DB_EXPOSURE_MODE)!=_EXPOSURE_MODE_CALIB_MODE_EXPOSIMETER){
-            emit consoleTxHandler(answ.cmdToQByteArray("NOK 2"));
-            return;
-        }
-        if(protocollo.parametri.size()!=1){
-            emit consoleTxHandler(answ.cmdToQByteArray("NOK 1"));
-            return;
-        }
-        if(protocollo.parametri[0].toInt()>2){
-            emit consoleTxHandler(answ.cmdToQByteArray("NOK 3"));
-            return;
-        }
-
-        paginaCalibAnalogic->setAecField(protocollo.parametri[0].toInt());
-        emit consoleTxHandler(answ.cmdToQByteArray("OK 0"));
-        return;
-
     }else if(comando==SET_LOGO){
         // Non più usata
         emit consoleTxHandler(answ.cmdToQByteArray("OK 0"));
@@ -904,81 +847,6 @@ void console::consoleRxHandler(QByteArray rxbuffer)
     }else if(comando==SET_LAT){
         // Non più usata
         emit consoleTxHandler(answ.cmdToQByteArray("OK 0"));
-
-    }else if(comando==SET_CALIB_FIELD){
-        if(protocollo.parametri.size()!=4){
-            emit consoleTxHandler(answ.cmdToQByteArray("NOK 1"));
-            return;
-        }
-
-        pConfig->analogCnf.calib_f1 = protocollo.parametri[0].toInt();
-        pConfig->analogCnf.calib_f2 = protocollo.parametri[1].toInt();
-        pConfig->analogCnf.calib_f3 = protocollo.parametri[2].toInt();
-        pConfig->analogCnf.calib_margine=  protocollo.parametri[3].toInt();
-        emit consoleTxHandler(answ.cmdToQByteArray("OK 0"));
-
-    }else if(comando==SET_STORE_ANALOG_CONFIG){
-
-        emit consoleTxHandler(answ.cmdToQByteArray("OK 0"));
-        pConfig->saveAnalogConfig();
-    }else if(comando==SET_CALIB_PROFILE_DATA){
-
-        if(protocollo.parametri.size()!=5) {
-            emit consoleTxHandler( answ.answToQByteArray("NOK 1 INVALID PARAM"));
-            return;
-        }
-
-        if(ApplicationDatabase.getDataU(_DB_EXPOSURE_MODE) != _EXPOSURE_MODE_CALIB_MODE_PROFILE){
-            emit consoleTxHandler( answ.answToQByteArray("NOK 2 ONLY-VALID-IN-PROFILE-CALIB-MODE"));
-            return;
-        }
-
-        paginaCalibAnalogic->pc_selected_profile_index = protocollo.parametri[0].toInt();
-
-        // Selezione profilo in base all'indice
-        if(pGeneratore->selectProfile(paginaCalibAnalogic->pc_selected_profile_index)==null){
-            emit consoleTxHandler( answ.answToQByteArray("NOK 3 INVALID-PROFILE-INDEX"));
-            return;
-        }
-
-        if(protocollo.parametri[1].toInt() > 70){
-            emit consoleTxHandler( answ.answToQByteArray("NOK 4 INVALID-PMMI"));
-            return;
-        }
-        paginaCalibAnalogic->pc_selected_pmmi = protocollo.parametri[1].toInt();
-
-        if(protocollo.parametri[2]=="FP") paginaCalibAnalogic->pc_selected_fuoco = Generatore::FUOCO_SMALL; // Fuoco piccolo
-        else if(protocollo.parametri[2]=="FG")  paginaCalibAnalogic->pc_selected_fuoco =Generatore::FUOCO_LARGE; // Fuoco grande
-        else{
-            emit consoleTxHandler( answ.answToQByteArray("NOK 5 INVALID-FOCUS"));
-            return;
-        }
-
-        if(protocollo.parametri[3]=="Rh") paginaCalibAnalogic->pc_selected_filtro = Collimatore::FILTRO_Rh;
-        else if(protocollo.parametri[3]=="Mo") paginaCalibAnalogic->pc_selected_filtro = Collimatore::FILTRO_Mo;
-        else {
-            emit consoleTxHandler( answ.answToQByteArray("NOK 6 INVALID-FILTER"));
-            return;
-        }
-
-        if(protocollo.parametri[4]=="FRONT") paginaCalibAnalogic->pc_selected_field = ANALOG_AECFIELD_FRONT;
-        else if(protocollo.parametri[4]=="CENTER") paginaCalibAnalogic->pc_selected_field = ANALOG_AECFIELD_CENTER;
-        else if(protocollo.parametri[4]=="BACK") paginaCalibAnalogic->pc_selected_field = ANALOG_AECFIELD_BACK;
-        else {
-            emit consoleTxHandler( answ.answToQByteArray("NOK 7 INVALID-FIELD"));
-            return;
-        }
-        emit consoleTxHandler(answ.cmdToQByteArray("OK 0"));
-        paginaCalibAnalogic->setProfileData();
-
-    }else if(comando==SET_ANALOG_KV_CALIB_TUBE_DATA){
-        handleSetAnalogKvCalibTubeData(&protocollo, &answ);
-
-    }else if(comando==SET_ANALOG_IA_CALIB_TUBE_DATA){
-        handleSetAnalogIaCalibTubeData(&protocollo, &answ);
-
-    }else if(comando==SET_ANALOG_CALIB_TUBE_OFFSET){
-        handleSetAnalogCalibTubeOffset(&protocollo, &answ);
 
     }else if(comando==GET_GANTRY_TYPE){
         emit consoleTxHandler( answ.cmdToQByteArray(QString("OK DMD")));
@@ -2184,33 +2052,46 @@ void console::Rx2DSequence(void)
     unsigned char data[15];
     QByteArray ret;
 
-    // In biopsia il flag deve sempre essere azzerato a scanso di equivoci
-    if(pBiopsy->connected) xSequence.isCombo=false;
 
-    // Nel caso in cui sia una sequenza combo Ã¨ richiesto che
-    // ci sia il PAD24x30_TOMO per proseguire
-    if(xSequence.isCombo)
-    {
-        // Hotfix 11C
-        // Controllo su Pb e Plexyglass sempre!
-        if(pConfig->userCnf.enableCheckAccessorio){
-            if(
-                (pCollimatore->accessorio==COLLI_ACCESSORIO_CALIB_PLEXYGLASS)||
-                (pCollimatore->accessorio==COLLI_ACCESSORIO_PIOMBO)
+    if(pBiopsy->connected){
+        // In biopsia il flag deve sempre essere azzerato a scanso di equivoci
+        xSequence.isCombo=false;
+    }else{
 
-               ){
-                PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_RAGGI, ERROR_MISS_PROT_PAZIENTE_3D,TRUE); // Self resetting
-                ret.clear();
-                ret.append(ERROR_MISS_PROT_PAZIENTE_3D);
-                ret.append(( char) 0);
-                ret.append(( char) 0);
-                if(xSequence.isAEC) guiNotify(1, MCC_CMD_RAGGI_AEC,ret);
-                else guiNotify(1, MCC_CMD_RAGGI_STD,ret);
-                return;
-                }
+        // Controllo sulla piastrina frustoli sempre se non si è in Biopsia
+        if(pCollimatore->accessorio==COLLI_ACCESSORIO_FRUSTOLI){
+            PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_RAGGI, ERROR_INVALID_COLLIMATION_PLATE,TRUE); // Self resetting
+            ret.clear();
+            ret.append(ERROR_INVALID_COLLIMATION_PLATE);
+            ret.append(( char) 0);
+            ret.append(( char) 0);
+            if(xSequence.isAEC) guiNotify(1, MCC_CMD_RAGGI_AEC,ret);
+            else guiNotify(1, MCC_CMD_RAGGI_STD,ret);
+            return;
         }
+    }
 
-        // Hotfix 11C
+    // Mai consentito l'uso di accessori di collimazione
+    if(
+        (pCollimatore->accessorio==COLLI_ACCESSORIO_CALIB_PLEXYGLASS)||
+        (pCollimatore->accessorio==COLLI_ACCESSORIO_PIOMBO)
+
+       ){
+        PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_RAGGI, ERROR_INVALID_COLLIMATION_PLATE,TRUE); // Self resetting
+        ret.clear();
+        ret.append(ERROR_INVALID_COLLIMATION_PLATE);
+        ret.append(( char) 0);
+        ret.append(( char) 0);
+        if(xSequence.isAEC) guiNotify(1, MCC_CMD_RAGGI_AEC,ret);
+        else guiNotify(1, MCC_CMD_RAGGI_STD,ret);
+        return;
+    }
+
+    // Nel caso in cui sia una sequenza combo si richiesto che
+    // ci sia il PAD24x30_TOMO per proseguire
+    // Attenzione NON esiste la combo con la biopsia!!
+    if(xSequence.isCombo)
+    {        
         if(pCompressore->getPad()!=PAD_TOMO_24x30)
         {
             ret.clear();
@@ -2222,7 +2103,7 @@ void console::Rx2DSequence(void)
             return;
         }
 
-        // Hotfix 11C
+        // Controllo protezione paziente 3D in combo obbligatorio
         if(pConfig->userCnf.enableCheckAccessorio){
             if(pConfig->userCnf.enable3DCheckAccessorio){
                 if(pCollimatore->accessorio!=COLLI_ACCESSORIO_PROTEZIONE_PAZIENTE_3D)
@@ -2240,28 +2121,8 @@ void console::Rx2DSequence(void)
         }
     }else{
 
-        // Hotfix 11C
-        // Controllo su Pb e Plexyglass sempre!
-        if(pConfig->userCnf.enableCheckAccessorio){
-            if(
-                (pCollimatore->accessorio==COLLI_ACCESSORIO_CALIB_PLEXYGLASS)||
-                (pCollimatore->accessorio==COLLI_ACCESSORIO_PIOMBO)
-
-               ){
-                PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_RAGGI, ERROR_MISSA_PROT_PAZIENTE,TRUE); // Self resetting
-                ret.clear();
-                ret.append(ERROR_MISSA_PROT_PAZIENTE);
-                ret.append(( char) 0);
-                ret.append(( char) 0);
-                if(xSequence.isAEC) guiNotify(1, MCC_CMD_RAGGI_AEC,ret);
-                else guiNotify(1, MCC_CMD_RAGGI_STD,ret);
-                return;
-                }
-        }
-
-        // Verifica la presenza dell'accessorio protezione paziente ma NON con l'ingranditore
-        // Hotfix 11C
-        if(!pPotter->isMagnifier()){
+        // Ingranditore e Biopsia non necessitano di protezione paziente
+        if((!pPotter->isMagnifier())&&(!pBiopsy->connected)){
             if(pConfig->userCnf.enableCheckAccessorio){
                 if((pCollimatore->accessorio!=COLLI_ACCESSORIO_PROTEZIONE_PAZIENTE_2D)&&(pCollimatore->accessorio!=COLLI_ACCESSORIO_PROTEZIONE_PAZIENTE_3D)){
                     PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_RAGGI, ERROR_MISSA_PROT_PAZIENTE,TRUE); // Self resetting
@@ -2351,15 +2212,26 @@ void console::RxAESequence(void)
     unsigned char data[14];
     QByteArray ret;
 
+    // Controllo sulla piastrine di collimazione non consentite
+    if( (pCollimatore->accessorio==COLLI_ACCESSORIO_CALIB_PLEXYGLASS)||
+        (pCollimatore->accessorio==COLLI_ACCESSORIO_PIOMBO)||
+        (pCollimatore->accessorio==COLLI_ACCESSORIO_FRUSTOLI))
+    {
+        PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_RAGGI, ERROR_INVALID_COLLIMATION_PLATE,TRUE); // Self resetting
+        ret.clear();
+        ret.append(ERROR_INVALID_COLLIMATION_PLATE);
+        ret.append(( char) 0);
+        ret.append(( char) 0);
+        if(xSequence.isAEC) guiNotify(1, MCC_CMD_RAGGI_AEC,ret);
+        else guiNotify(1, MCC_CMD_RAGGI_STD,ret);
+        return;
+    }
 
-        // Hotfix 11C
-        // Controllo su Pb e Plexyglass sempre!
+
+    // Verifica la presenza dell'accessorio protezione paziente ma NON con l'ingranditore
+    if(!pPotter->isMagnifier()){
         if(pConfig->userCnf.enableCheckAccessorio){
-            if(
-                (pCollimatore->accessorio==COLLI_ACCESSORIO_CALIB_PLEXYGLASS)||
-                (pCollimatore->accessorio==COLLI_ACCESSORIO_PIOMBO)
-
-               ){
+            if((pCollimatore->accessorio!=COLLI_ACCESSORIO_PROTEZIONE_PAZIENTE_2D)&&(pCollimatore->accessorio!=COLLI_ACCESSORIO_PROTEZIONE_PAZIENTE_3D)){
                 PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_RAGGI, ERROR_MISSA_PROT_PAZIENTE,TRUE); // Self resetting
                 ret.clear();
                 ret.append(ERROR_MISSA_PROT_PAZIENTE);
@@ -2368,25 +2240,9 @@ void console::RxAESequence(void)
                 if(xSequence.isAEC) guiNotify(1, MCC_CMD_RAGGI_AEC,ret);
                 else guiNotify(1, MCC_CMD_RAGGI_STD,ret);
                 return;
-                }
-        }
-
-        // Verifica la presenza dell'accessorio protezione paziente ma NON con l'ingranditore
-        // Hotfix 11C
-        if(!pPotter->isMagnifier()){
-            if(pConfig->userCnf.enableCheckAccessorio){
-                if((pCollimatore->accessorio!=COLLI_ACCESSORIO_PROTEZIONE_PAZIENTE_2D)&&(pCollimatore->accessorio!=COLLI_ACCESSORIO_PROTEZIONE_PAZIENTE_3D)){
-                    PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_RAGGI, ERROR_MISSA_PROT_PAZIENTE,TRUE); // Self resetting
-                    ret.clear();
-                    ret.append(ERROR_MISSA_PROT_PAZIENTE);
-                    ret.append(( char) 0);
-                    ret.append(( char) 0);
-                    if(xSequence.isAEC) guiNotify(1, MCC_CMD_RAGGI_AEC,ret);
-                    else guiNotify(1, MCC_CMD_RAGGI_STD,ret);
-                    return;
-                }
             }
         }
+    }
 
 
     // Invia il log con la stringa di dati dei raggi in corso
@@ -2626,19 +2482,7 @@ void console::RxKvCalibModeSequence(void)
     // Collega il segnale per il termine sequenza
     connect(pConsole,SIGNAL(raggiDataSgn(QByteArray)),pToConsole,SLOT(fineRaggiCalibKv(QByteArray)),Qt::UniqueConnection);
 
-    // Verifica la presenza dell'accessorio in Piombo
-
-    /* ID4: non più applicabile
-    if((pCollimatore->accessorio!=COLLI_ACCESSORIO_PIOMBO)&&(pConfig->userCnf.enableCheckAccessorio)&&(pConfig->userCnf.enablePbCheckAccessorio))
-    {
-        PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_RAGGI, ERROR_MISS_PIOMPO,TRUE); // Self resetting
-        ret.clear();
-        ret.resize(RX_DATA_LEN);
-        ret[0] = ERROR_MISS_PIOMPO;
-        emit raggiDataSgn (ret);
-        return;
-    }*/
-
+    //
     // Verifica che i dati siano stati validati: la validazione viene subito tolta
     // Per evitare di riutilizzare i dati uscendo dalla funzione
     if(kvCalibData.validated==FALSE)
@@ -2710,18 +2554,6 @@ void console::RxIaCalibModeSequence(void)
     // Collega il segnale per il termine sequenza
     connect(pConsole,SIGNAL(raggiDataSgn(QByteArray)),pToConsole,SLOT(fineRaggiCalibIa(QByteArray)),Qt::UniqueConnection);
 
-
-    // Verifica la presenza dell'accessorio in Piombo
-    /*ID4: eliminato controllo
-    if((pCollimatore->accessorio!=COLLI_ACCESSORIO_PIOMBO)&&(pConfig->userCnf.enableCheckAccessorio)&&(pConfig->userCnf.enablePbCheckAccessorio))
-    {
-        PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_RAGGI, ERROR_MISS_PIOMPO,TRUE); // Self resetting
-        ret.clear();
-        ret.resize(RX_DATA_LEN);
-        ret[0] = ERROR_MISS_PIOMPO;
-        emit raggiDataSgn (ret);
-        return;
-    }*/
 
     // Verifica che i dati siano stati validati: la validazione viene subito tolta
     // Per evitare di riutilizzare i dati uscendo dalla funzione
@@ -2815,8 +2647,38 @@ void console::Rx3DSequence(void)
     QByteArray ret;
 
 
-    // In biopsia il flag deve sempre essere azzerato a scanso di equivoci
-    if(pBiopsy->connected) xSequence.isCombo=false;
+    if(pBiopsy->connected){
+        // In biopsia il flag deve sempre essere azzerato a scanso di equivoci
+        xSequence.isCombo=false;
+    }else{
+        // Controllo sulla piastrina frustoli sempre se non si è in Biopsia
+        if(pCollimatore->accessorio==COLLI_ACCESSORIO_FRUSTOLI){
+            PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_RAGGI, ERROR_INVALID_COLLIMATION_PLATE,TRUE); // Self resetting
+            ret.clear();
+            ret.append(ERROR_INVALID_COLLIMATION_PLATE);
+            ret.append(( char) 0);
+            ret.append(( char) 0);
+            if(xSequence.isAEC) guiNotify(1, MCC_CMD_RAGGI_AEC,ret);
+            else guiNotify(1, MCC_CMD_RAGGI_STD,ret);
+            return;
+        }
+    }
+
+    // Mai consentito l'uso di accessori di collimazione
+    if(
+        (pCollimatore->accessorio==COLLI_ACCESSORIO_CALIB_PLEXYGLASS)||
+        (pCollimatore->accessorio==COLLI_ACCESSORIO_PIOMBO)
+
+       ){
+        PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_RAGGI, ERROR_INVALID_COLLIMATION_PLATE,TRUE); // Self resetting
+        ret.clear();
+        ret.append(ERROR_INVALID_COLLIMATION_PLATE);
+        ret.append(( char) 0);
+        ret.append(( char) 0);
+        if(xSequence.isAEC) guiNotify(1, MCC_CMD_RAGGI_AEC,ret);
+        else guiNotify(1, MCC_CMD_RAGGI_STD,ret);
+        return;
+    }
 
     // Controllo sul compressore utilizzato
     if(ApplicationDatabase.getDataU(_DB_ACCESSORIO)!=BIOPSY_DEVICE){
@@ -2832,6 +2694,7 @@ void console::Rx3DSequence(void)
             return;
         }
 
+        // Obbligatorio il pad 3D presente!
         if(pCompressore->getPad()!=PAD_TOMO_24x30)
         {
             ret.clear();
@@ -2843,14 +2706,10 @@ void console::Rx3DSequence(void)
             return;
         }
 
-        // Nel caso in cui sia una sequenza combo Ã¨ richiesto che
-        // ci sia il PAD24x30_TOMO per proseguire
-        if(pConfig->userCnf.enableCheckAccessorio){
-            if(
-                (pCollimatore->accessorio==COLLI_ACCESSORIO_CALIB_PLEXYGLASS)||
-                (pCollimatore->accessorio==COLLI_ACCESSORIO_PIOMBO)
-
-               ){
+        // Obbigatoria protezione paziente 3D
+        if((pConfig->userCnf.enableCheckAccessorio) && (pConfig->userCnf.enable3DCheckAccessorio)){
+            if(pCollimatore->accessorio!=COLLI_ACCESSORIO_PROTEZIONE_PAZIENTE_3D)
+            {
                 PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_RAGGI, ERROR_MISS_PROT_PAZIENTE_3D,TRUE); // Self resetting
                 ret.clear();
                 ret.append(ERROR_MISS_PROT_PAZIENTE_3D);
@@ -2859,39 +2718,8 @@ void console::Rx3DSequence(void)
                 if(xSequence.isAEC) guiNotify(1, MCC_CMD_RAGGI_AEC_TOMO,ret);
                 else guiNotify(1, MCC_CMD_RAGGI_TOMO,ret);
                 return;
-                }
-
-            if(xSequence.isCombo)
-            {
-                if(pConfig->userCnf.enable3DCheckAccessorio){
-                    if(pCollimatore->accessorio!=COLLI_ACCESSORIO_PROTEZIONE_PAZIENTE_3D)
-                    {
-                        PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_RAGGI, ERROR_MISS_PROT_PAZIENTE_3D,TRUE); // Self resetting
-                        ret.clear();
-                        ret.append(ERROR_MISS_PROT_PAZIENTE_3D);
-                        ret.append(( char) 0);
-                        ret.append(( char) 0);
-                        if(xSequence.isAEC) guiNotify(1, MCC_CMD_RAGGI_AEC_TOMO,ret);
-                        else guiNotify(1, MCC_CMD_RAGGI_TOMO,ret);
-                        return;
-                    }
-                }
-            }else{
-                if(pCollimatore->accessorio==COLLI_ACCESSORIO_PROTEZIONE_PAZIENTE_2D)
-                {
-                    PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_RAGGI, ERROR_MISS_PROT_PAZIENTE_3D,TRUE); // Self resetting
-                    ret.clear();
-                    ret.append(ERROR_MISS_PROT_PAZIENTE_3D);
-                    ret.append(( char) 0);
-                    ret.append(( char) 0);
-                    if(xSequence.isAEC) guiNotify(1, MCC_CMD_RAGGI_AEC_TOMO,ret);
-                    else guiNotify(1, MCC_CMD_RAGGI_TOMO,ret);
-                    return;
-                }
-
             }
-
-     }
+        }
     }
 
     // Invia il log con la stringa di dati dei raggi in corso
@@ -3300,7 +3128,27 @@ void console::guiNotify(unsigned char id, unsigned char mcccode, QByteArray data
 
         break;
 
+    case MCC_PARKING_MODE_COMMANDS:
 
+        // Gestione errori
+        if(data.at(1)){
+            PageAlarms::activateNewAlarm(_DB_ALLARMI_PARCHEGGIO,(int) data.at(1),TRUE);
+            return;
+        }
+
+        if(data.at(0)==MCC_PARKING_MODE_COMMANDS_START_PARKING){
+            // Parking mode
+            pConfig->lenzeConfig.startupInParkingMode = true;
+            ApplicationDatabase.setData(_DB_PARKING_MODE, (unsigned char) 1, DBase::_DB_FORCE_SGN);
+            pConfig->saveLenzeConfig();
+            pConfig->activatePowerOff();
+        }else if(data.at(0)==MCC_PARKING_MODE_COMMANDS_START_UNPARKING){
+            ApplicationDatabase.setData(_DB_PARKING_MODE, (unsigned char) 0, DBase::_DB_FORCE_SGN);
+            pConfig->lenzeConfig.startupInParkingMode = false;
+            pConfig->saveLenzeConfig();
+        }
+
+        break;
     default:
             return;
         break;
@@ -3373,14 +3221,6 @@ void mccMasterCom::mccRxHandler(_MccFrame_Str mccframe)
           bufdata.append(mccframe.buffer[2+ciclo]);
         pConsole->emitServiceNotify(mccframe.id, mccframe.buffer[0],bufdata);
         break;
-
-         case MCC_244_A_FUNCTIONS:
-
-         bufdata.clear();
-         for(ciclo=0; ciclo<mccframe.buffer[1]; ciclo++ )
-           bufdata.append(mccframe.buffer[2+ciclo]);
-         pConsole->emitPcb244ANotify(mccframe.id, mccframe.buffer[0],bufdata);
-         break;
 
         case MCC_LOADER_NOTIFY: // Notifiche dal Loader M4
 
@@ -3868,13 +3708,7 @@ void console::handleGetSoftwareRevisions(protoConsole* frame)
     frame->addParam(pConfig->rv249U1);
     frame->addParam(pConfig->rv249U2);
     frame->addParam(pConfig->rv190);
-
-    if(ApplicationDatabase.getDataU(_DB_SYSTEM_CONFIGURATION)&_ARCH_GANTRY_DIGITAL)
-        frame->addParam(pConfig->rv244);
-    else
-        frame->addParam(pConfig->rv244A);
-
-
+    frame->addParam(pConfig->rv244);
     emit consoleTxHandler(frame->answToQByteArray()); // Invio a console
 
     return;
@@ -3899,11 +3733,7 @@ void console::consoleSoftwareRevisionsNotify(void)
     frame.addParam(pConfig->rv249U1);
     frame.addParam(pConfig->rv249U2);
     frame.addParam(pConfig->rv190);
-    if(ApplicationDatabase.getDataU(_DB_SYSTEM_CONFIGURATION)&_ARCH_GANTRY_DIGITAL)
-        frame.addParam(pConfig->rv244);
-    else
-        frame.addParam(pConfig->rv244A);
-
+    frame.addParam(pConfig->rv244);
 
     emit consoleTxHandler(frame.answToQByteArray()); // Invio a console
 }
@@ -3980,14 +3810,6 @@ void console::handleSelectTube(QString tubeName, protoConsole* answer)
     // Modifica e salvataggio nuova configurazione
     pConfig->userCnf.tubeFileName = tubeName;
     pConfig->saveUserCfg();
-
-    // Se l'applicazione è analogica e il sistema è in calibrazione
-    // si comunica l'avvenuta selezione del tubo in oggetto
-    if(pConfig->sys.gantryModel==GANTRY_MODEL_ANALOG){
-        if((ApplicationDatabase.getDataU(_DB_EXPOSURE_MODE)==_EXPOSURE_MODE_CALIB_MODE_KV) || (ApplicationDatabase.getDataU(_DB_EXPOSURE_MODE)==_EXPOSURE_MODE_CALIB_MODE_IA)){
-            paginaCalibAnalogic->selectTube(pConfig->userCnf.tubeFileName);
-        }
-    }
 
     // Rilettura file di configurazione del Tubo
     QString tubeDir = QString(_TUBEPATH) + QString("/") + pConfig->userCnf.tubeFileName + QString("/");
@@ -4294,199 +4116,6 @@ bool console::handleSetKvRxData(protoConsole* frame, protoConsole* answer)
 
 
         return TRUE;
-
-}
-
-/*_____________________________________________________________________________________________
- *
- *          IMPOSTAZIONE DATI PER CALIBRAZIONE TUBO MACCHINA ANALOGICA
- *          KV
- _____________________________________________________________________________________________*/
-bool console::handleSetAnalogKvCalibTubeData(protoConsole* frame, protoConsole* answ)
-{
-
-    if(pConfig->sys.gantryModel==GANTRY_MODEL_DIGITAL){
-        emit consoleTxHandler( answ->answToQByteArray("NOK 1 INVALID-GANTRY-MODEL"));
-        return false;
-    }
-
-    // Sezione dedicata alla macchina Analogica
-    if(ApplicationDatabase.getDataU(_DB_EXPOSURE_MODE)!=_EXPOSURE_MODE_CALIB_MODE_KV) {
-        emit consoleTxHandler( answ->answToQByteArray("NOK 2 INVALID-CALIB-MODE"));
-        return false;
-    }
-
-    // Il fuoco da selezionare per l'esposizione di calibrazione kV è sempre il fuoco grande
-    paginaCalibAnalogic->pc_selected_fuoco = Generatore::FUOCO_LARGE;
-
-    // Selezione filtro
-    if(frame->parametri[0]=="Mo") paginaCalibAnalogic->pc_selected_filtro = Collimatore::FILTRO_Mo;
-    else paginaCalibAnalogic->pc_selected_filtro = Collimatore::FILTRO_Rh;
-    paginaCalibAnalogic->pc_selected_kV = frame->parametri[1].toInt();
-    if((paginaCalibAnalogic->pc_selected_kV<_MIN_KV) ||(paginaCalibAnalogic->pc_selected_kV>_MAX_KV)) {
-        emit consoleTxHandler( answ->answToQByteArray("NOK 4 INVALID-KV-VALUE"));
-        return false;
-    }
-    // Valore atteso tensione dac e atteso
-    paginaCalibAnalogic->pc_selected_vdac = frame->parametri[2].toInt();
-    if((paginaCalibAnalogic->pc_selected_vdac == 0) || (paginaCalibAnalogic->pc_selected_vdac > 4095) ) {
-        emit consoleTxHandler( answ->answToQByteArray("NOK 3 INVALID-VDAC-VALUE"));
-        return false;
-    }
-
-    if(pGeneratore->getIdacForKvCalibration(paginaCalibAnalogic->pc_selected_kV, pGeneratore->selectedAnodo, &paginaCalibAnalogic->pc_selected_Idac, &paginaCalibAnalogic->pc_selected_Ia)==false) return false;
-
-    paginaCalibAnalogic->pc_selected_mAs = frame->parametri[3].toInt();
-    if(paginaCalibAnalogic->pc_selected_mAs > 400) {
-        emit consoleTxHandler( answ->answToQByteArray("NOK 5 INVALID-MAS-VALUE"));
-        return false;
-    }
-
-    emit consoleTxHandler( answ->answToQByteArray("OK 0"));
-
-    paginaCalibAnalogic->pc_data_valid = true;
-    paginaCalibAnalogic->setTubeData();
-
-    return true;
-}
-
-
-bool console::handleSetAnalogCalibTubeOffset(protoConsole* frame, protoConsole* answ){
-    if(frame->parametri.size()!=7){
-        emit consoleTxHandler( answ->answToQByteArray("NOK 1 INVALID-PARAMETERS"));
-        return false;
-    }
-
-    int KVI =  frame->parametri[0].toInt()-20;
-    int in_fg =  frame->parametri[1].toInt();
-    int ic_fg =  frame->parametri[2].toInt();
-    int idac_fg =  frame->parametri[3].toInt();
-    int in_fp =  frame->parametri[4].toInt();
-    int ic_fp =  frame->parametri[5].toInt();
-    int idac_fp =  frame->parametri[6].toInt();
-
-    if(idac_fg > pGeneratore->genCnf.pcb190.IFIL_MAX_SET){
-        emit consoleTxHandler( answ->answToQByteArray("NOK 2 INVALID-IDAC-FG"));
-        return false;
-    }
-
-    if(idac_fp > pGeneratore->genCnf.pcb190.IFIL_MAX_SET){
-        emit consoleTxHandler( answ->answToQByteArray("NOK 3 INVALID-IDAC-FP"));
-        return false;
-    }
-
-    // Applica offset al tubo selezionato e lo salva
-    // Blocco dati WG
-    QString Anodo=pGeneratore->confF1;
-
-    // Calcolo differenza fuoco grande:
-    int dacdif=0;
-    int i;
-    for(i=0; i<pGeneratore->tube[KVI].iTab.count(); i++)
-    {
-        if((pGeneratore->tube[KVI].iTab[i].anode==Anodo) && (pGeneratore->tube[KVI].iTab[i].In ==in_fg) && (pGeneratore->tube[KVI].iTab[i].fsize == Generatore::FUOCO_LARGE))
-        {
-            dacdif = idac_fg - pGeneratore->tube[KVI].iTab[i].Idac;
-            pGeneratore->tube[KVI].iTab[i].INcalib = ic_fg;
-        }
-    }
-
-
-    for(int kv=0; kv<=20;kv++)
-        for(i=0; i<pGeneratore->tube[kv].iTab.count(); i++)
-        {
-            if((pGeneratore->tube[kv].iTab[i].anode==Anodo) && (pGeneratore->tube[kv].iTab[i].In !=0) && (pGeneratore->tube[kv].iTab[i].fsize == Generatore::FUOCO_LARGE))
-            {
-                if(pGeneratore->tube[kv].iTab[i].Idac + dacdif <= pGeneratore->genCnf.pcb190.IFIL_MAX_SET){
-                    pGeneratore->tube[kv].iTab[i].Idac += dacdif;
-                }
-            }
-        }
-
-    // Calcolo differenza fuoco piccolo:
-    dacdif=0;
-    for(i=0; i<pGeneratore->tube[KVI].iTab.count(); i++)
-    {
-        if((pGeneratore->tube[KVI].iTab[i].anode==Anodo) && (pGeneratore->tube[KVI].iTab[i].In ==in_fp) && (pGeneratore->tube[KVI].iTab[i].fsize == Generatore::FUOCO_SMALL))
-        {
-            dacdif = idac_fp - pGeneratore->tube[KVI].iTab[i].Idac;
-            pGeneratore->tube[KVI].iTab[i].INcalib = ic_fp;
-        }
-    }
-
-
-    for(int kv=0; kv<=20;kv++)
-        for(i=0; i<pGeneratore->tube[kv].iTab.count(); i++)
-        {
-            if((pGeneratore->tube[kv].iTab[i].anode==Anodo) && (pGeneratore->tube[kv].iTab[i].In !=0) && (pGeneratore->tube[kv].iTab[i].fsize == Generatore::FUOCO_SMALL))
-            {
-                if(pGeneratore->tube[kv].iTab[i].Idac + dacdif <= pGeneratore->genCnf.pcb190.IFIL_MAX_SET){
-                    pGeneratore->tube[kv].iTab[i].Idac += dacdif;
-
-                }
-            }
-        }
-
-
-    // Store del Tubo
-    pGeneratore->saveTube(pConfig->userCnf.tubeFileName);
-
-    // Salvataggio dati tubo modificati
-    emit consoleTxHandler( answ->answToQByteArray("OK 0"));
-    return true;
-
-}
-
-/*_____________________________________________________________________________________________
- *
- *          IMPOSTAZIONE DATI PER CALIBRAZIONE TUBO MACCHINA ANALOGICA
- *          CORRENTE ANODICA
- _____________________________________________________________________________________________*/
-bool console::handleSetAnalogIaCalibTubeData(protoConsole* frame, protoConsole* answ)
-{
-
-    if(pConfig->sys.gantryModel==GANTRY_MODEL_DIGITAL){
-        emit consoleTxHandler( answ->answToQByteArray("NOK 1 INVALID-GANTRY-MODEL"));
-        return false;
-    }
-
-    // Sezione dedicata alla macchina Analogica
-    if(ApplicationDatabase.getDataU(_DB_EXPOSURE_MODE)!=_EXPOSURE_MODE_CALIB_MODE_IA) {
-        emit consoleTxHandler( answ->answToQByteArray("NOK 2 INVALID-CALIB-MODE"));
-        return false;
-    }
-
-    if(frame->parametri[0]=="L") paginaCalibAnalogic->pc_selected_fuoco = Generatore::FUOCO_LARGE;
-    else  paginaCalibAnalogic->pc_selected_fuoco = Generatore::FUOCO_SMALL;
-
-    // Selezione filtro
-    paginaCalibAnalogic->pc_selected_filtro = pConfig->analogCnf.primo_filtro;
-
-    // Valore atteso tensione dac e atteso
-    unsigned char KV;
-    unsigned short KVDAC;
-    pGeneratore->getValidKv((float)frame->parametri[1].toInt(), &KV , &KVDAC );
-    paginaCalibAnalogic->pc_selected_kV = KV;
-    paginaCalibAnalogic->pc_selected_vdac = KVDAC;
-
-    // Corrente nominale
-    paginaCalibAnalogic->pc_selected_Ia = frame->parametri[2].toInt();
-
-    // Corrente Idac
-    paginaCalibAnalogic->pc_selected_Idac = frame->parametri[3].toInt();
-
-    // mAs esposizione
-    paginaCalibAnalogic->pc_selected_mAs = frame->parametri[4].toInt();
-    if(paginaCalibAnalogic->pc_selected_mAs > 400) {
-        emit consoleTxHandler( answ->answToQByteArray("NOK 5 INVALID-MAS-VALUE"));
-        return false;
-    }
-    emit consoleTxHandler( answ->answToQByteArray("OK 0"));
-
-    paginaCalibAnalogic->pc_data_valid = true;
-    paginaCalibAnalogic->setTubeData();
-
-    return true;
 
 }
 

@@ -38,7 +38,7 @@ toolsmenu::toolsmenu(int rotview, QWidget *parent) :
     connect(ui->armToolButton,SIGNAL(released()),this,SLOT(onArmToolButton()),Qt::UniqueConnection);
     connect(ui->lenzeDriverButton,SIGNAL(released()),this,SLOT(onLenzeDriverButton()),Qt::UniqueConnection);
     connect(ui->inverterButton,SIGNAL(released()),this,SLOT(onInverterButton()),Qt::UniqueConnection);
-    connect(ui->manualAnalogXrayButton,SIGNAL(released()),this,SLOT(onManualAnalogXrayButton()),Qt::UniqueConnection);
+
 }
 
 toolsmenu::~toolsmenu()
@@ -91,8 +91,6 @@ void toolsmenu::initPage(void){
     else ui->tiltingToolButton->hide();
     if(architettura & _ARCH_ARM_MOTOR) ui->armToolButton->show();
     else ui->armToolButton->hide();
-    if(architettura & _ARCH_GANTRY_DIGITAL) ui->analogManualXray->hide();
-    else ui->analogManualXray->show();
 
     return;
 }
@@ -141,10 +139,3 @@ void toolsmenu::onLenzeDriverButton(void)
     GWindowRoot.setNewPage(_PG_SERVICE_TOOLS_LENZE,GWindowRoot.curPage,0);
 }
 
-void toolsmenu::onManualAnalogXrayButton(void)
-{
-
-    ApplicationDatabase.setData(_DB_EXPOSURE_MODE,(unsigned char) _EXPOSURE_MODE_ANALOG_MANUAL_EXPOSURE);
-    ApplicationDatabase.setData(_DB_STUDY_STAT,(unsigned char) _OPEN_STUDY_ANALOG);
-    GWindowRoot.setNewPage(_PG_CALIB_ANALOG,GWindowRoot.curPage,0);
-}

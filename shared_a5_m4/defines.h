@@ -11,7 +11,6 @@
 //#define __NO_SLAVE_STUB
 //#define  __NO_CANBUS
 #define __PRINT   // Attiva le Print di debug sulle GUI
-//#define __FORCE_DIGITAL // Effettua lo stub per la PCB244-A
 //#define _CANDEVICE_SIMULATION // Stub per mancanza CAN BUS su m4_slave
 //#define __APPLICATION_DESKTOP_COMPILE // Compilazione per moduli TS da tavolo: rotazione 180 display, indirizzi CONSOLE a 192.168.30.10, abilitazione PRINT
 //#define __CONSOLE_IP_ADDRESS 10 // MODIFICA l'IP AWS
@@ -31,7 +30,6 @@
 #define _ARCH_HIGH_SPEED_STARTER    0x01
 #define _ARCH_TRX_MOTOR             0x02
 #define _ARCH_ARM_MOTOR             0x04
-#define _ARCH_GANTRY_DIGITAL        0x08
 
 #define _COLLI_TYPE_NOT_ASSIGNED   0 // Vecchio collimatore
 #define _COLLI_TYPE_ASSY_01   1 // Vecchio collimatore
@@ -51,7 +49,7 @@
 #define _POTTER_10x24_LEVEL     3   // PAD 10x24
 #define _POTTER_BP2D_LEVEL      4   // PAD BIOPSIA 2D
 #define _POTTER_TOMO_LEVEL      5   // PAD TOMOGRAFIA
-#define _POTTER_D75_LEVEL       6   // D75 A CONTATTO
+#define _POTTER_PROSTHESIS      6   // 10x24 per protesi
 #define _POTTER_18x24L_LEVEL    7   // 18x24 shiftato Left
 #define _POTTER_18x24R_LEVEL    8   // 18x24 shiftato Right
 
@@ -60,7 +58,7 @@
 #define _MAG_LEVEL_2            2
 #define _MAG_LEVEL_3            3
 #define _MAG_LEVEL_4            4
-#define _MAG_LEVEL_5            5
+#define _MAG_9x9_LEVEL          5   // 9x9
 #define _MAG_D75_LEVEL          6   // D75 A SBALZO
 #define _MAG_LEVEL_7            7
 #define _MAG_LEVEL_8            8
@@ -87,14 +85,20 @@
 #define POTTER_DESCR_24x30      0
 #define POTTER_DESCR_18x24      1
 
-// Hotfix 11C
+
 // Struttura dati di configurazione Tomo
 #define COLLI_ACCESSORIO_ND 0
 #define COLLI_ACCESSORIO_PROTEZIONE_PAZIENTE_2D 1
 #define COLLI_ACCESSORIO_PROTEZIONE_PAZIENTE_3D 2
 #define COLLI_ACCESSORIO_CALIB_PLEXYGLASS 3
 #define COLLI_ACCESSORIO_PIOMBO 4
-#define COLLI_ACCESSORIO_FAULT 5
+#define COLLI_ACCESSORIO_FRUSTOLI 5
+#define COLLI_ACCESSORIO_FAULT 6
+
+#define COLLI_FRUSTOLI_ND       0
+#define COLLI_FRUSTOLI_LEFT     1
+#define COLLI_FRUSTOLI_CENTER   2
+#define COLLI_FRUSTOLI_RIGHT    3
 
 // Lista codici standard associati ai  PAD riconosciuti
 typedef enum
@@ -104,12 +108,13 @@ typedef enum
     PAD_18x24_LEFT,     // 18x24 Shifted Left
     PAD_18x24_RIGHT,    // 18x24 Shifted Right
     PAD_9x21,           // 9x21  Ingranditore
-    PAD_10x24,          // Pad Sbalzato formato 10x24
-    PAD_D75_CNT,        // Pad a contatto diametro 75
+    PAD_10x24,          // Pad formato 10x24
+    PAD_PROSTHESIS,     // Pad per le protesi
     PAD_D75_MAG,        // Pad Sbalzato per ingranditore, diametro 75
     PAD_BIOP_2D,        // Pad per biopsia 2D
     PAD_BIOP_3D,        // Pad per biopsia con torretta
     PAD_TOMO_24x30,     // Pad per scansione Tomo 24x30
+    PAD_9x9_MAG,        // Pad Sbalzato per ingrandimento
 
     //____________//
     PAD_ENUM_SIZE,      // Codice utilizzato per identificare il primo dei non validi
@@ -201,8 +206,6 @@ typedef enum
 #define _PAD_THRESHOLD_9  240;
 
 
-#define GANTRY_MODEL_DIGITAL    0
-#define GANTRY_MODEL_ANALOG     1
 
 //////////////////////////////////////////////////////////////////////////////
 // COSTANTI RELATIVE AL COMANDO DI INVIO DATI DA AEC

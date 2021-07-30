@@ -28,7 +28,6 @@ public slots:
     void onArmToolButton(void);
     void onLenzeDriverButton(void);
     void onInverterButton(void);
-    void onManualAnalogXrayButton(void);
 
 private:
     Ui::toolsMenuUI *ui;

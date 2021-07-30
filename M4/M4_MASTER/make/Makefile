@@ -3,7 +3,7 @@
 #----------------------------------------------------------
 
 
-PROJ_DIR	    = $(abspath /home/user/Desktop/CHIMERA/Workspace/DBT/M4)
+PROJ_DIR	    = $(abspath /mnt/hgfs/DBT/M4)
 MQX_ROOTDIR         = $(PROJ_DIR)/MQX
 SHARED_DIR	    = $(PROJ_DIR)/../shared_a5_m4
 COM_DIR	    	    = $(PROJ_DIR)/COMMON
@@ -41,8 +41,6 @@ SOURCES += $(SRC_DIR)/fault.c
 SOURCES += $(SRC_DIR)/loader.c
 SOURCES += $(SRC_DIR)/master_can.c 
 SOURCES += $(SRC_DIR)/actuators.c
-SOURCES += $(SRC_DIR)/esposimetro.c
-SOURCES += $(SRC_DIR)/analog_rx_sequences.c 
 SOURCES += $(SRC_DIR)/pcb215.c 
 SOURCES += $(SRC_DIR)/pcb249U1.c
 SOURCES += $(SRC_DIR)/seqrx_std.c 
@@ -51,7 +49,6 @@ SOURCES += $(SRC_DIR)/gui.c
 SOURCES += $(SRC_DIR)/main.c
 SOURCES += $(SRC_DIR)/pcb190.c 
 SOURCES += $(SRC_DIR)/pcb244.c
-SOURCES += $(SRC_DIR)/pcb244-A.c
 SOURCES += $(SRC_DIR)/pcb249U2.c
 SOURCES += $(SRC_DIR)/seqrx_std_aec.c
 SOURCES += $(SRC_DIR)/seqrx_ae.c
@@ -72,7 +69,7 @@ include $(MQX_ROOTDIR)/build/common/make/app-process.mak
 
 
 elf:
-	/opt/arm-2017/bin/arm-none-eabi-objcopy -O binary $(APPLICATION_FILE) $(PROJ_DIR)/$(NAME).bin
-	cp $(PROJ_DIR)/$(NAME).bin /nfs_chimera/TerminalMaster
+	/opt/arm-2017/bin/arm-none-eabi-objcopy -O binary $(APPLICATION_FILE) $(PROJ_DIR)/BIN/$(NAME).bin
+	cp $(PROJ_DIR)/BIN/$(NAME).bin /data/CHIMERA/Workspace/DBT/M4_MASTER
 	/opt/arm-2012/bin/arm-none-eabi-readelf $(APPLICATION_FILE) -h | grep "Entry point"
 

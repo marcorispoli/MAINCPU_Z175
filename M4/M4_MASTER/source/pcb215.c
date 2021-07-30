@@ -1168,34 +1168,17 @@ void pcb215VerifyComprData(void)
       int mag_factor=0;
       int sbalzo=0;
 
-      if(generalConfiguration.gantryCfg.gantryModel == GANTRY_MODEL_ANALOG){
-          if(POTTER==POTTER_MAGNIFIER){
-              for(int mj=0;mj<8;mj++){
-                if(generalConfiguration.comprCfg.calibration.sbalzoIngranditore[mj]==0) continue; // Solo quelli configurati
-                if((generalConfiguration.comprCfg.calibration.fattoreIngranditore[mj]!=15)&&(generalConfiguration.comprCfg.calibration.fattoreIngranditore[mj]!=20)) continue; // Limita a 1.5 e 2x
-                if((spessore>generalConfiguration.comprCfg.calibration.sbalzoIngranditore[mj]-5)&&(generalConfiguration.comprCfg.calibration.sbalzoIngranditore[mj]>sbalzo)){
-                    sbalzo = generalConfiguration.comprCfg.calibration.sbalzoIngranditore[mj];
-                    mag_factor  = mj;
-                }
-              }
 
-              // Ricalcolo Spessore
-              spessore-=sbalzo;
-              generalConfiguration.potterCfg.potMagFactor = mag_factor;
-              printf("POTTER MAG FACTOR ANALOGICO = %d\n", mag_factor);
-        }
-      }else{
-          // Verifica se c'è inserito l'ingranditore
-          if(POTTER==POTTER_MAGNIFIER)
-                spessore-=INGRANDIMENTO; // Solo per digitali che hanno il riconoscimento del fattore di ingrandimento
-      }
+      // Verifica se c'è inserito l'ingranditore
+      if(POTTER==POTTER_MAGNIFIER)
+            spessore-=INGRANDIMENTO; // Solo per digitali che hanno il riconoscimento del fattore di ingrandimento
+
 
     data[COMPRESSORE_THICKL] = (unsigned char) (spessore &0xFF);
     data[COMPRESSORE_THICKH] = (unsigned char) ((spessore>>8) &0xFF);;
   }else
   {
-    if(generalConfiguration.gantryCfg.gantryModel == GANTRY_MODEL_ANALOG)
-        generalConfiguration.potterCfg.potMagFactor = 255; // Undefined magnifier factor
+
     data[COMPRESSORE_THICKL]=0;
     data[COMPRESSORE_THICKH]=0;
     spessore=0;
@@ -1317,8 +1300,8 @@ bool classifyPad(void)
       case _POTTER_TOMO_LEVEL: // PAD PER TOMO
           generalConfiguration.comprCfg.padSelezionato = PAD_TOMO_24x30;
           break;
-      case _POTTER_D75_LEVEL: // Diametro 75 a contatto
-          generalConfiguration.comprCfg.padSelezionato = PAD_D75_CNT;
+      case _POTTER_PROSTHESIS: // 10x24 per protesi
+          generalConfiguration.comprCfg.padSelezionato = PAD_PROSTHESIS;
           break;
       case _POTTER_18x24L_LEVEL: // 18x24 Left
           generalConfiguration.comprCfg.padSelezionato = PAD_18x24_LEFT;
@@ -1340,7 +1323,12 @@ bool classifyPad(void)
       case _MAG_D75_LEVEL: // D75 Sbalzato per ingranditore Center
           generalConfiguration.comprCfg.padSelezionato = PAD_D75_MAG;
           break;
-      default:  
+
+    case _MAG_9x9_LEVEL:
+        generalConfiguration.comprCfg.padSelezionato = PAD_9x9_MAG;
+        break;
+
+    default:
         generalConfiguration.comprCfg.padSelezionato = PAD_ND;
       break;
     }
@@ -1462,7 +1450,9 @@ void pcb215PrintConfig(void){
   printf("KF0 =%d\n", generalConfiguration.comprCfg.calibration.KF0);
   printf("F1 =%d\n", generalConfiguration.comprCfg.calibration.F1);
   printf("KF1 =%d\n", generalConfiguration.comprCfg.calibration.KF1);
-  
+  printf("MAX COMPRESSION: =%d\n", generalConfiguration.comprCfg.calibration.max_compression_force);
+
+
   printf("MAX MECH =%d\n", generalConfiguration.comprCfg.calibration.maxMechPosition);
   printf("MAX POS =%d\n", generalConfiguration.comprCfg.calibration.maxPosition);
   printf("MAX PROT =%d\n", generalConfiguration.comprCfg.calibration.maxProtection);
@@ -1486,17 +1476,16 @@ Funzione configuratrice:
 */
 bool config_pcb215(bool setmem, unsigned char blocco, unsigned char* buffer, unsigned char len){
   
-   
-  // Salva nella struttura locale i dati
-  if(setmem){
-    if(len!=sizeof(compressoreCnf_Str))
-    {
-      printf("PCB215 CONFIG FALLITA PER LEN: RIC=%d CUR=%d\n",len,sizeof(compressoreCnf_Str));
-      return false;    
-    }
-    memcpy((unsigned char*)&(generalConfiguration.comprCfg.calibration), (compressoreCnf_Str*) buffer, sizeof(compressoreCnf_Str));
-    pcb215PrintConfig();    
+  if(blocco==0){
+      memcpy((unsigned char*)&(generalConfiguration.comprCfg.calibration), buffer, _MCC_DIM-2);
+      printf("PCB269 CONFIG BLOCCO 0\n");
+      return true;
   }
+
+  // Completa il blocco dati
+  memcpy(&((unsigned char*)&(generalConfiguration.comprCfg.calibration))[_MCC_DIM-2], buffer, sizeof(compressoreCnf_Str) - (_MCC_DIM-2));
+  pcb215PrintConfig();
+
 
   // Forza l'uscita dal modo calibrazione se necessario
   generalConfiguration.comprCfg.calibrationMode = FALSE;
@@ -1505,6 +1494,7 @@ bool config_pcb215(bool setmem, unsigned char blocco, unsigned char* buffer, uns
   if(Ser422WriteRegister(_REGID(COMPRESSOR_POS_OFS), generalConfiguration.comprCfg.calibration.calibPosOfs,10,&CONTEST)!=_SER422_NO_ERROR) return false;
   if(Ser422WriteRegister(_REGID(COMPRESSOR_POS_K), generalConfiguration.comprCfg.calibration.calibPosK,10,&CONTEST)!=_SER422_NO_ERROR) return false;
   if(Ser422WriteRegister(_REGID(COMPRESSOR_STR_K), 0,10,&CONTEST)!=_SER422_NO_ERROR) return false;
+  if(Ser422WriteRegister(_REGID(COMPRESSION_LIMIT),  generalConfiguration.comprCfg.calibration.max_compression_force,10,&CONTEST)!=_SER422_NO_ERROR) return false;
 
   if(Ser422WriteRegister(_REGID(COMPRESSOR_F0), generalConfiguration.comprCfg.calibration.F0,10,&CONTEST)!=_SER422_NO_ERROR) return false;
   if(Ser422WriteRegister(_REGID(COMPRESSOR_KF0), generalConfiguration.comprCfg.calibration.KF0,10,&CONTEST)!=_SER422_NO_ERROR) return false;

@@ -90,7 +90,7 @@ border: 0px;</string>
    <widget class="QPushButton" name="HVCalibButton">
     <property name="geometry">
      <rect>
-      <x>240</x>
+      <x>190</x>
       <y>260</y>
       <width>120</width>
       <height>120</height>
@@ -158,7 +158,7 @@ border: 0px;</string>
    <widget class="QPushButton" name="StarterCalibButton">
     <property name="geometry">
      <rect>
-      <x>440</x>
+      <x>350</x>
       <y>260</y>
       <width>120</width>
       <height>120</height>
@@ -222,7 +222,7 @@ color: rgb(248, 248, 54);</string>
    <widget class="QPushButton" name="lenzePotCalibButton">
     <property name="geometry">
      <rect>
-      <x>645</x>
+      <x>525</x>
       <y>265</y>
       <width>111</width>
       <height>111</height>
@@ -236,112 +236,67 @@ background-image:url(//transparent.png);</string>
      <string notr="true"/>
     </property>
    </widget>
-   <widget class="QFrame" name="frameDetector">
+   <widget class="QPushButton" name="parkingCalibButton">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>250</y>
-      <width>156</width>
-      <height>136</height>
+      <x>675</x>
+      <y>265</y>
+      <width>111</width>
+      <height>111</height>
      </rect>
     </property>
-    <property name="toolTip">
-     <string notr="true"/>
-    </property>
-    <property name="statusTip">
-     <string notr="true"/>
-    </property>
-    <property name="whatsThis">
-     <string notr="true"/>
-    </property>
-    <property name="accessibleName">
-     <string notr="true"/>
-    </property>
-    <property name="accessibleDescription">
-     <string notr="true"/>
-    </property>
     <property name="styleSheet">
-     <string notr="true">background-image: url(:/transparent.png);</string>
+     <string notr="true">border-image:url(://Service_Calib/Service_Calib/parking.png);
+background-image:url(//transparent.png);</string>
     </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
+    <property name="text">
+     <string notr="true"/>
     </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
-    <widget class="QPushButton" name="detectorButton">
-     <property name="geometry">
-      <rect>
-       <x>15</x>
-       <y>-5</y>
-       <width>120</width>
-       <height>120</height>
-      </rect>
-     </property>
-     <property name="toolTip">
-      <string notr="true"/>
-     </property>
-     <property name="statusTip">
-      <string notr="true"/>
-     </property>
-     <property name="whatsThis">
-      <string notr="true"/>
-     </property>
-     <property name="accessibleName">
-      <string notr="true"/>
-     </property>
-     <property name="accessibleDescription">
-      <string notr="true"/>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">
-border-image: url(:/Sym/Sym/campi_front.png);
-</string>
-     </property>
-     <property name="text">
-      <string notr="true"/>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label">
-     <property name="geometry">
-      <rect>
-       <x>15</x>
-       <y>110</y>
-       <width>126</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-       <pointsize>16</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="toolTip">
-      <string notr="true"/>
-     </property>
-     <property name="statusTip">
-      <string notr="true"/>
-     </property>
-     <property name="whatsThis">
-      <string notr="true"/>
-     </property>
-     <property name="accessibleName">
-      <string notr="true"/>
-     </property>
-     <property name="accessibleDescription">
-      <string notr="true"/>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">color: rgb(248, 248, 54);</string>
-     </property>
-     <property name="text">
-      <string notr="true">DETECTOR</string>
-     </property>
-    </widget>
    </widget>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>35</x>
+     <y>350</y>
+     <width>126</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>DejaVu Sans</family>
+     <pointsize>16</pointsize>
+     <weight>75</weight>
+     <italic>false</italic>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-image: url(:/transparent.png);
+color: rgb(255, 255, 127);</string>
+   </property>
+   <property name="text">
+    <string>Collimator</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="colliCalibButton">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>270</y>
+     <width>106</width>
+     <height>76</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-image: url(:/paginaOpenStudy/paginaOpenStudy/ManualColliSym.png);
+
+background-image: url(:/transparent.png);</string>
+   </property>
+   <property name="text">
+    <string notr="true"/>
+   </property>
   </widget>
  </widget>
  <resources/>

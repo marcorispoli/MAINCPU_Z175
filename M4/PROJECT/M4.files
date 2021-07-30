@@ -86,12 +86,6 @@
 ../MQX/mqx/source/include/mqx.h
 ../M4_SLAVE/make/gcc_arm/ram_release/m4_slave.map
 ../M4_SLAVE/source/vmm.h
-../M4_MASTER/source/esposimetro.h
-../M4_MASTER/source/esposimetro.c
-../M4_MASTER/source/analog_rx_sequences.c
-../M4_MASTER/source/analog_rx_sequences.h
-../M4_MASTER/source/pcb244-A.h
-../M4_MASTER/source/pcb244-A.c
 ../../shared_a5_m4/mcc.h
 ../../shared_a5_m4/errors.h
 ../../shared_a5_m4/defines.h

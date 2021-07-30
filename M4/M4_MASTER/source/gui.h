@@ -18,7 +18,6 @@ Data Ultima Modifica:22/09/2014
 
 void  manageMccLoader(void);
 void  digitalManageMccOperativo(void);
-void  analogManageMccOperativo(void);
 void  manageMccConfig(void);
 
 
@@ -67,16 +66,10 @@ void mccSetCalibFiltro(void);
 void mcc_raggi_bassa_energia(bool);
 void mcc_raggi_alta_energia(void);
 void mcc_calib_zero(void);
+void mcc_parking_mode(void);
+void mcc_unparking_mode(void);
 
 
-
-void mcc_xray_analog_manual(void);
-void mcc_xray_analog_auto(void);
-void mcc_xray_analog_pre_calib(void);
-void mcc_xray_analog_calib_profile(void);
-void mcc_xray_analog_calib_tube(void);
-void mcc_audio(unsigned char messaggio);
-void mcc_244_A_functions(void);
 
 #else
   #define ext extern

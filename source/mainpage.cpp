@@ -73,7 +73,6 @@ MainPage::MainPage(bool local, QString bgl, QString bgs , bool showLogo, int w,i
     pulsanteTilt = new GPush((GWindow*) this,setPointPath(8,334,97,465,97,465,224,334,224),334,97,0,0,FALSE);
     pulsantePowerOff= new GPush((GWindow*) this,setPointPath(8,692,0,800,0,800,115,692,115),692,0,0,0,FALSE);
     pulsanteToolsOn = new GPush((GWindow*) this,setPointPath(8,0,0,120,0,120,120,0,120),0,0,0,0,FALSE);
-    pulsanteOperatingMode = new GPush((GWindow*) this,setPointPath(8,539,279,662,279,6662,363,539,362),539,279,0,0,FALSE);
 
 
     acPresent = this->addPixmap(QPixmap("://MainPage/MainPage/ac.png"));
@@ -132,6 +131,12 @@ MainPage::MainPage(bool local, QString bgl, QString bgs , bool showLogo, int w,i
     pulsanteRotP = new GPush((GWindow*) this, 0,QPixmap("://MainPage/MainPage/SelezioneP.png"),0,setPointPath(8,370,346,436,346,436,417,370,417),216,48,10,200,FALSE,FALSE,TRUE);
 
 
+    // Pannello parking mode
+    pulsanteOkUnpark = new GPush((GWindow*) this,setPointPath(8,  95,65,692,65,692,275,95,275),95,65,0,0,FALSE);
+    parkingPix = addPixmap(QPixmap("://MainPage/MainPage/parkingModeActivation.png"));
+    parkingPix->setPos(0,0);
+    parkingPix->hide();
+
     // Pannello Power Off
     pulsanteCancPowerOff= new GPush((GWindow*) this,setPointPath(8,194,212,316,212,316,344,194,344),194,212,0,0,FALSE);
     pulsanteOkPowerOff= new GPush((GWindow*) this,setPointPath(8,452,212,586,212,586,344,452,344),452,212,0,0,FALSE);
@@ -182,8 +187,16 @@ void MainPage::childStatusPage(bool stat,int opt)
     }
     connect(&ApplicationDatabase,SIGNAL(dbDataChanged(int,int)), this,SLOT(valueChanged(int,int)),Qt::UniqueConnection);
 
+
     changePannello(_MAIN_PANEL);
     paginaAllarmi->alarm_enable=true;
+
+    if(isMaster){
+        if(pConfig->lenzeConfig.startupInParkingMode)
+            ApplicationDatabase.setData(_DB_PARKING_MODE,(unsigned char) 1);
+        else
+            ApplicationDatabase.setData(_DB_PARKING_MODE,(unsigned char) 0);
+    }
 
 }
 
@@ -266,6 +279,10 @@ void MainPage::valueChanged(int index,int opt)
 
     switch(index)
     {
+    case _DB_PARKING_MODE:
+        if(ApplicationDatabase.getDataU(index)) changePannello(_PARK_PANEL);
+        else changePannello(_MAIN_PANEL);
+        break;
 
     case _DB_REQ_POWEROFF:
         if(!isMaster) return;
@@ -295,6 +312,8 @@ void MainPage::valueChanged(int index,int opt)
     case _DB_TRX:
         tiltValue->labelText = getTiltString();
         tiltValue->update();
+        if((isMaster) && (pBiopsy->connected) && (pCollimatore->accessorio == COLLI_ACCESSORIO_FRUSTOLI)) pCollimatore->updateColli();
+
         break;
     case _DB_COMPRESSOR_POSITION:
         positionValue->labelText= QString("%1 (mm)").arg(ApplicationDatabase.getDataI(_DB_COMPRESSOR_POSITION));
@@ -382,7 +401,7 @@ void MainPage::buttonActivationNotify(int id, bool status,int opt)
         if(pbutton==pulsanteRotazioni){
 
             // Se la rotazione non è configurata allora NON mostra MAI il pannello di rotazioni
-            if(!(ApplicationDatabase.getDataU(_DB_SYSTEM_CONFIGURATION)&_ARCH_ARM_MOTOR)) return;
+            //if(!(ApplicationDatabase.getDataU(_DB_SYSTEM_CONFIGURATION)&_ARCH_ARM_MOTOR)) return;
 
             changePannello(_ROT_PANEL);
             return;
@@ -407,20 +426,7 @@ void MainPage::buttonActivationNotify(int id, bool status,int opt)
             return;
         }
 
-        // Pulsante di apertura studio Analogico (Solo per macchine analogiche!)
-        if((isMaster)&&(pbutton==pulsanteOperatingMode)){
-            if(pConfig->testConfigError(true,true)) return; // Non apre la pagina operativa con errori di configurazione
-            if(ApplicationDatabase.getDataU(_DB_NALLARMI_ATTIVI)) return; //Nessun allarme ammesso
-            /*
-            if(ApplicationDatabase.getDataU(_DB_AWS_CONNECTION)){
-                PageAlarms::activateNewAlarm(_DB_ALLARME_INFO_STAT,INFOMSG_OPERATING_PAGE_DISABLED_WITH_AWS,true);
-                return; // Non apre la pagina operativa con AWS connessa
-            }*/
-            ApplicationDatabase.setData(_DB_EXPOSURE_MODE,(unsigned char) _EXPOSURE_MODE_OPERATING_MODE);
-            ApplicationDatabase.setData(_DB_STUDY_STAT,(unsigned char) _OPEN_STUDY_ANALOG);
-            pConfig->selectOperatingPage();
-            return;
-        }
+
         break;
 
     case _ROT_PANEL:
@@ -459,6 +465,12 @@ void MainPage::buttonActivationNotify(int id, bool status,int opt)
             timerPowerOffButton = startTimer(100);
 
         changePannello(_MAIN_PANEL);
+        break;
+    case _PARK_PANEL:
+        if((isMaster) && (pbutton==pulsanteOkUnpark)){
+            activateUnpark();
+        }
+
         break;
     }
 
@@ -501,71 +513,74 @@ QString MainPage::getTiltString(void){
     else return QString("%1").arg(intero);
 }
 
-void MainPage::setRotGroupEnaView(void){
-    unsigned char cval;
-    unsigned char trxerr,armerr;
-
-    if(ApplicationDatabase.getDataU(_DB_DEAD_MEN)){
+// if(ApplicationDatabase.getDataU(_DB_DEAD_MEN)){
+/*
+ * if(ApplicationDatabase.getDataU(_DB_DEAD_MEN)){
         pulsanteRotazioni->setVisible(false);
         pulsanteTilt->setVisible(false);
         rotDisabledPix->show();
         tiltDisabledPix->show();
         deadmanPix->show();
-    }else{
-        deadmanPix->hide();
-        cval=ApplicationDatabase.getDataU(_DB_ENABLE_MOVIMENTI);
-        trxerr=ApplicationDatabase.getDataI(_DB_ALLARMI_ALR_TRX);
-        armerr=ApplicationDatabase.getDataI(_DB_ALLARMI_ALR_ARM);
+    }
 
-        if(ApplicationDatabase.getDataU(_DB_SYSTEM_CONFIGURATION)&_ARCH_ARM_MOTOR){
+    // deadmanPix->hide();
+ */
+void MainPage::setRotGroupEnaView(void){
+    unsigned char cval;
+    unsigned char trxerr,armerr;
 
-            if(armerr){
-                // Errori sulla rotazione
-                pulsanteRotazioni->setVisible(false);
-                rotDisabledPix->show();
-           }else if(cval&ACTUATOR_STATUS_ENABLE_ROT_FLAG){
-                pulsanteRotazioni->setVisible(true);
-                rotDisabledPix->hide();
-            }else{
-                pulsanteRotazioni->setVisible(false);
-                rotDisabledPix->show();
-            }
+    deadmanPix->hide();
+
+    cval=ApplicationDatabase.getDataU(_DB_ENABLE_MOVIMENTI);
+    trxerr=ApplicationDatabase.getDataI(_DB_ALLARMI_ALR_TRX);
+    armerr=ApplicationDatabase.getDataI(_DB_ALLARMI_ALR_ARM);
+
+    if(ApplicationDatabase.getDataU(_DB_SYSTEM_CONFIGURATION)&_ARCH_ARM_MOTOR){
+
+        if(armerr){
+            // Errori sulla rotazione
+            pulsanteRotazioni->setVisible(false);
+            rotDisabledPix->show();
+        }else if(cval&ACTUATOR_STATUS_ENABLE_ROT_FLAG){
+            pulsanteRotazioni->setVisible(true);
+            rotDisabledPix->hide();
         }else{
             pulsanteRotazioni->setVisible(false);
             rotDisabledPix->show();
         }
+    }else{
+        if(cval&ACTUATOR_STATUS_ENABLE_ROT_FLAG){
+            pulsanteRotazioni->setVisible(true);
+            rotDisabledPix->hide();
+        }else{
+            pulsanteRotazioni->setVisible(false);
+            rotDisabledPix->show();
+        }
+    }
 
-        // Se il TRX non è configurato non viene MAI visto il pulsante
-        if(ApplicationDatabase.getDataU(_DB_SYSTEM_CONFIGURATION)&_ARCH_TRX_MOTOR){
-            if(trxerr){
-                // Errori sulla pendolazione
-                pulsanteTilt->setVisible(false);
-                tiltDisabledPix->show();
-            }else if(cval&ACTUATOR_STATUS_ENABLE_PEND_FLAG){
-                pulsanteTilt->setVisible(true);
-                tiltDisabledPix->hide();
-            }else{
-                pulsanteTilt->setVisible(false);
-                tiltDisabledPix->show();
-            }
+    // Se il TRX non è configurato non viene MAI visto il pulsante
+    if(ApplicationDatabase.getDataU(_DB_SYSTEM_CONFIGURATION)&_ARCH_TRX_MOTOR){
+        if(trxerr){
+            // Errori sulla pendolazione
+            pulsanteTilt->setVisible(false);
+            tiltDisabledPix->show();
+        }else if(cval&ACTUATOR_STATUS_ENABLE_PEND_FLAG){
+            pulsanteTilt->setVisible(true);
+            tiltDisabledPix->hide();
         }else{
             pulsanteTilt->setVisible(false);
             tiltDisabledPix->show();
         }
+    }else{
+        pulsanteTilt->setVisible(false);
+        tiltDisabledPix->show();
     }
+
 }
 
 // Funzione chiamata solo per il cambio pannello
 void MainPage::changePannello(int newpanel){
-
-    if(ApplicationDatabase.getDataU(_DB_SYSTEM_CONFIGURATION)&_ARCH_GANTRY_DIGITAL){
-         setBackground("://MainPage/MainPage/background.png");
-         pulsanteOperatingMode->setVisible(false);         
-
-    }else{
-         setBackground("://MainPage/MainPage/backgroundAnalogic.png");
-         pulsanteOperatingMode->setVisible(true);
-    }
+    setBackground("://MainPage/MainPage/background.png");
 
     // Controllo sulla correttezza della configurazione
     if(isMaster) pConfig->testConfigError(true,false);
@@ -597,6 +612,9 @@ void MainPage::changePannello(int newpanel){
     pulsanteOkPowerOff->setVisible(false);
     powerOffLabel->setVisible(false);
 
+    pulsanteOkUnpark->setVisible(false);
+    parkingPix->hide();
+
     switch(pannello){
     case _MAIN_PANEL:
             pulsantePowerOff->setVisible(true);
@@ -605,23 +623,28 @@ void MainPage::changePannello(int newpanel){
 
     case _ROT_PANEL:
         selRotAngolo = -1;
-        panelTool->setPixmap(QPixmap("://MainPage/MainPage/frameRotazioni.png"));
         panelTool->show();
         pulsanteCancRot->setVisible(true);
-        pulsanteRot0->setVisible(true);
-        pulsanteRot135->setVisible(true);
-        pulsanteRot_135->setVisible(true);
-        pulsanteRotP->setVisible(true);
         pulsanteOkRot->setVisible(true);
+        pulsanteRotP->setVisible(true);
 
-        pulsanteRot45->setVisible(true);
-        pulsanteRot45->pulsanteData = 45;
-        pulsanteRot90->setVisible(true);
-        pulsanteRot90->pulsanteData=90;
-        pulsanteRot_45->setVisible(true);
-        pulsanteRot_45->pulsanteData=-45;
-        pulsanteRot_90->setVisible(true);
-        pulsanteRot_90->pulsanteData=-90;
+        if(ApplicationDatabase.getDataU(_DB_SYSTEM_CONFIGURATION)&_ARCH_ARM_MOTOR){
+            panelTool->setPixmap(QPixmap("://MainPage/MainPage/frameRotazioni.png"));
+            pulsanteRot0->setVisible(true);
+            pulsanteRot135->setVisible(true);
+            pulsanteRot_135->setVisible(true);
+            pulsanteRot45->setVisible(true);
+            pulsanteRot45->pulsanteData = 45;
+            pulsanteRot90->setVisible(true);
+            pulsanteRot90->pulsanteData=90;
+            pulsanteRot_45->setVisible(true);
+            pulsanteRot_45->pulsanteData=-45;
+            pulsanteRot_90->setVisible(true);
+            pulsanteRot_90->pulsanteData=-90;
+        }else{
+            panelTool->setPixmap(QPixmap("://MainPage/MainPage/frameParkingManual.png"));
+        }
+
         break;
     case _TILT_PANEL:
         panelTool->setPixmap(QPixmap("://MainPage/MainPage/frameTilt.png"));
@@ -644,6 +667,11 @@ void MainPage::changePannello(int newpanel){
         pulsanteCancPowerOff->setVisible(true);
         pulsanteOkPowerOff->setVisible(true);
         powerOffLabel->setVisible(true);
+        break;
+    case _PARK_PANEL:
+        panelTool->setPixmap(QPixmap("://MainPage/MainPage/parkingMode.png"));
+        panelTool->show();
+        pulsanteOkUnpark->setVisible(true);
         break;
     }
 
@@ -779,12 +807,22 @@ void MainPage::setWindowUpdate(void)
 
 void MainPage::activateRot(int angolo)
 {
+
     if(!isMaster) return;
 
-    if(angolo!=200){
-        if(angolo > 180) angolo = 180;
-        else if(angolo<-180) angolo = -180;
+    // Parking mode: solo se la calibrazione è presente!
+    if(angolo==200){
+        if(!pConfig->lenzeConfig.calibratedParkingTarget){
+            PageAlarms::activateNewAlarm(_DB_ALLARMI_PARCHEGGIO,ERROR_PARKING_NOT_CALIBRATED,TRUE);
+            return;
+        }
+        activateParking();
+        return;
     }
+
+    if(angolo > 180) angolo = 180;
+    else if(angolo<-180) angolo = -180;
+
 
     // Impostazione Parametro
     unsigned char buffer[2];
@@ -813,4 +851,38 @@ void MainPage::activateTilt(int angolo)
 
 }
 
+void MainPage::activateUnpark(void)
+{
+    if(!isMaster) return;
+    unsigned char buffer[2];
 
+    PageAlarms::activateNewAlarm(_DB_ALLARMI_PARCHEGGIO,WARNING_UNPARKING_ACTIVATION_PROCEDURE,TRUE);
+    buffer[0]=MCC_PARKING_MODE_COMMANDS_START_UNPARKING;
+    pConsole->pGuiMcc->sendFrame(MCC_PARKING_MODE_COMMANDS,1,buffer, sizeof(buffer));
+
+}
+
+void MainPage::activateParking(void)
+{
+    if(!isMaster) return;
+
+    unsigned char buffer[2];
+
+    if( !(ApplicationDatabase.getDataU(_DB_SYSTEM_CONFIGURATION)&_ARCH_ARM_MOTOR)){
+        // Con rotazione meccanica occorreverificare la posizione del braccio prima di procedere
+        // Acquisisce l'angolo corrente
+        int dangolo = ApplicationDatabase.getDataI(_DB_DANGOLO);
+
+        // Se l'angolo non è a 180° non può proseguire
+        if( (dangolo < 1780) && (dangolo > -1780)){
+            PageAlarms::activateNewAlarm(_DB_ALLARMI_PARCHEGGIO,ERROR_PARKING_ARM_WRONG_ANGLE,TRUE);
+            return;
+        }
+    }
+
+
+    PageAlarms::activateNewAlarm(_DB_ALLARMI_PARCHEGGIO,WARNING_PARKING_ACTIVATION_PROCEDURE,TRUE);
+    buffer[0]=MCC_PARKING_MODE_COMMANDS_START_PARKING;
+    pConsole->pGuiMcc->sendFrame(MCC_PARKING_MODE_COMMANDS,1,buffer, sizeof(buffer));
+
+}

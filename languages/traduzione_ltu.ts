@@ -33,18 +33,18 @@
 <context>
     <name>BIOPSY-PAGE</name>
     <message>
-        <location filename="../source/biopsypage.cpp" line="229"/>
-        <location filename="../source/biopsypage.cpp" line="518"/>
+        <location filename="../source/biopsypage.cpp" line="260"/>
+        <location filename="../source/biopsypage.cpp" line="582"/>
         <source>TARGET</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/biopsypage.cpp" line="325"/>
+        <location filename="../source/biopsypage.cpp" line="366"/>
         <source>Nome Paziente</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/biopsypage.cpp" line="329"/>
+        <location filename="../source/biopsypage.cpp" line="370"/>
         <source>Studio Locale</source>
         <translation type="unfinished"></translation>
     </message>
@@ -52,20 +52,20 @@
 <context>
     <name>COLLIMATORE</name>
     <message>
-        <location filename="../source/collimatore.cpp" line="209"/>
-        <location filename="../source/collimatore.cpp" line="227"/>
-        <location filename="../source/collimatore.cpp" line="235"/>
+        <location filename="../source/collimatore.cpp" line="306"/>
+        <location filename="../source/collimatore.cpp" line="376"/>
+        <location filename="../source/collimatore.cpp" line="384"/>
         <location filename="../source/echodisplay.cpp" line="304"/>
         <source>NON DEFINITA</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/collimatore.cpp" line="216"/>
+        <location filename="../source/collimatore.cpp" line="313"/>
         <source>MANUALE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/collimatore.cpp" line="248"/>
+        <location filename="../source/collimatore.cpp" line="397"/>
         <source>APERTA</source>
         <translation type="unfinished"></translation>
     </message>
@@ -73,96 +73,81 @@
 <context>
     <name>COMPRESSORE</name>
     <message>
-        <location filename="../source/compressor.cpp" line="376"/>
-        <location filename="../source/compressor.cpp" line="387"/>
+        <location filename="../source/compressor.cpp" line="575"/>
+        <location filename="../source/compressor.cpp" line="586"/>
         <source>NON RICONOSCIUTO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/compressor.cpp" line="377"/>
-        <location filename="../source/compressor.cpp" line="389"/>
+        <location filename="../source/compressor.cpp" line="576"/>
+        <location filename="../source/compressor.cpp" line="588"/>
         <source>CODICE ERRATO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/compressor.cpp" line="384"/>
+        <location filename="../source/compressor.cpp" line="583"/>
         <source>COMPRESSORE NON BLOCCATO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/compressor.cpp" line="386"/>
+        <location filename="../source/compressor.cpp" line="585"/>
         <source>NACCHERA NON BLOCCATA</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CalibMenuObject</name>
+    <message>
+        <location filename="../source/Service/Calib/calibmenu.ui" line="280"/>
+        <source>Collimator</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ERROR NOT-READY</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1902"/>
+        <location filename="../source/pagealarms.cpp" line="1910"/>
         <source>STARTUP INCOMPLETO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1909"/>
+        <location filename="../source/pagealarms.cpp" line="1917"/>
         <source>LETTURA HV NON CALIBRATA</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1916"/>
+        <location filename="../source/pagealarms.cpp" line="1924"/>
         <source>LOW SPEED STARTER NON CALIBRATO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1923"/>
+        <location filename="../source/pagealarms.cpp" line="1931"/>
         <source>STUDIO APERTO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1930"/>
+        <location filename="../source/pagealarms.cpp" line="1938"/>
         <source>COMPRESSORE NON RICONOSCIUTO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1937"/>
+        <location filename="../source/pagealarms.cpp" line="1945"/>
         <source>SISTEMA NON IN COMPRESSIONE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1944"/>
+        <location filename="../source/pagealarms.cpp" line="1952"/>
         <source>POTTER NON VALIDO O NON RICONOSCIUTO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1951"/>
+        <location filename="../source/pagealarms.cpp" line="1959"/>
         <source>MANCA PROTEZIONE PAZIENTE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1959"/>
-        <source>PAGINA OPERATIVA DISABILITATA CON PC CONNESSO</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../source/pagealarms.cpp" line="1967"/>
-        <source>MANCA CASSETTA</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/pagealarms.cpp" line="1974"/>
-        <source>CASSETTA ESPOSTA</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ERRORE-ANALOGICA</name>
-    <message>
-        <location filename="../source/pagealarms.cpp" line="2079"/>
-        <source>IMPOSTAZIONE CAMPO ESPOSIMETRO</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/pagealarms.cpp" line="2086"/>
-        <source>NESSUN PROFILO AEC DISPONIBILE</source>
+        <source>PAGINA OPERATIVA DISABILITATA CON PC CONNESSO</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -252,7 +237,7 @@
 <context>
     <name>ERRORE-ARMPUSH</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1887"/>
+        <location filename="../source/pagealarms.cpp" line="1895"/>
         <source>PULSANTI ROTAZIONE MANUALE BLOCCATI
 </source>
         <translation type="unfinished"></translation>
@@ -279,26 +264,26 @@
 <context>
     <name>ERRORE-COLLIMATORE</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="866"/>
+        <location filename="../source/pagealarms.cpp" line="865"/>
         <source>COLLIMAZIONE FALLITA
 RIPETERE SEQUENZA DI COLLIMAZIONE
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="872"/>
+        <location filename="../source/pagealarms.cpp" line="871"/>
         <source>IMPOSTAZIONE FILTRO FALLITA!
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="878"/>
+        <location filename="../source/pagealarms.cpp" line="877"/>
         <source>IMPOSTAZIONE SPECCHIO FALLITA!
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="885"/>
+        <location filename="../source/pagealarms.cpp" line="884"/>
         <source>IMPOSTAZIONE LAMPADA CENTRATORE FALLITA!
 </source>
         <translation type="unfinished"></translation>
@@ -307,7 +292,7 @@ RIPETERE SEQUENZA DI COLLIMAZIONE
 <context>
     <name>ERRORE-COMPPUSH</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1859"/>
+        <location filename="../source/pagealarms.cpp" line="1867"/>
         <source>PEDALI COMPRESSORE BLOCCATI
 </source>
         <translation type="unfinished"></translation>
@@ -316,64 +301,58 @@ RIPETERE SEQUENZA DI COLLIMAZIONE
 <context>
     <name>ERRORE-CONFIGURAZIONE</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1989"/>
+        <location filename="../source/pagealarms.cpp" line="1983"/>
         <source>ERRORE CONFIG GENERATORE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1996"/>
+        <location filename="../source/pagealarms.cpp" line="1990"/>
         <source>CALCOLATORE DI DOSE NON CONFIGURATO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="2004"/>
+        <location filename="../source/pagealarms.cpp" line="1998"/>
         <source>CALCOLATORE DI DOSE NON CONFIGURATO PER I FILTRI ATTIVI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="2012"/>
+        <location filename="../source/pagealarms.cpp" line="2006"/>
         <source>STARTUP ERROR IN OPERATIVO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="2019"/>
+        <location filename="../source/pagealarms.cpp" line="2013"/>
         <source>ERRORE FILE DI CONFIGURAZIONE COLLIMATORE!
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="2026"/>
+        <location filename="../source/pagealarms.cpp" line="2020"/>
         <source>ERRORE FILE DI CONFIGURAZIONE COMPRESSORE!
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="2033"/>
+        <location filename="../source/pagealarms.cpp" line="2027"/>
         <source>ERRORE FILE DI CONFIGURAZIONE SISTEMA!
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="2040"/>
+        <location filename="../source/pagealarms.cpp" line="2034"/>
         <source>ERRORE FILE DI CONFIGURAZIONE USER!
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="2047"/>
+        <location filename="../source/pagealarms.cpp" line="2041"/>
         <source>ERRORE FILE DI CONFIGURAZIONE PACKAGE!
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="2054"/>
+        <location filename="../source/pagealarms.cpp" line="2048"/>
         <source>ERRORE MANCANZA SERIAL NUMBER!
-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/pagealarms.cpp" line="2062"/>
-        <source>ERRORE MANCANZA CONFIGURAZIONE ANALOGICA!
 </source>
         <translation type="unfinished"></translation>
     </message>
@@ -381,123 +360,123 @@ RIPETERE SEQUENZA DI COLLIMAZIONE
 <context>
     <name>ERRORE-GENERATORE</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1009"/>
+        <location filename="../source/pagealarms.cpp" line="1008"/>
         <source>TEMPERATURA TUBO ECCESSIVA</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1016"/>
+        <location filename="../source/pagealarms.cpp" line="1015"/>
         <source>IMPOSTAZIONE FUOCO FALLITA
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1023"/>
+        <location filename="../source/pagealarms.cpp" line="1022"/>
         <source>ANOMALIA SENSING CORRENTE ANODICA</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1030"/>
+        <location filename="../source/pagealarms.cpp" line="1029"/>
         <source>ANOMALIA CONNESSIONE CONNESSIONE DI TERRA</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1037"/>
+        <location filename="../source/pagealarms.cpp" line="1036"/>
         <source>MANCANZA CALIBRAZIONE HV</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1044"/>
+        <location filename="../source/pagealarms.cpp" line="1043"/>
         <source>ANOMALIA TENSIONE HV</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1051"/>
+        <location filename="../source/pagealarms.cpp" line="1050"/>
         <source>ANOMALIA mAsMETRO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1058"/>
+        <location filename="../source/pagealarms.cpp" line="1057"/>
         <source>ANOMALIA CORRENTE DI FILAMENTO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1065"/>
+        <location filename="../source/pagealarms.cpp" line="1064"/>
         <source>ANOMALIA TEMPERATURA AMPLIFICATORE DI FILAMENTO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1072"/>
+        <location filename="../source/pagealarms.cpp" line="1071"/>
         <source>ANOMALIA STARTER BASSA VELOCITA
 CORRENTE MAIN-OFF</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1079"/>
+        <location filename="../source/pagealarms.cpp" line="1078"/>
         <source>ANOMALIA STARTER BASSA VELOCITA
 CORRENTE SHIFT-OFF</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1086"/>
+        <location filename="../source/pagealarms.cpp" line="1085"/>
         <source>ANOMALIA STARTER BASSA VELOCITA
 CORRENTE MAIN RUN-MAX</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1093"/>
+        <location filename="../source/pagealarms.cpp" line="1092"/>
         <source>ANOMALIA STARTER BASSA VELOCITA
 CORRENTE MAIN RUN-MIN</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1100"/>
+        <location filename="../source/pagealarms.cpp" line="1099"/>
         <source>ANOMALIA STARTER BASSA VELOCITA
 CORRENTE MAIN KEEP-MAX</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1107"/>
+        <location filename="../source/pagealarms.cpp" line="1106"/>
         <source>ANOMALIA STARTER BASSA VELOCITA
 CORRENTE MAIN KEEP-MIN</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1114"/>
+        <location filename="../source/pagealarms.cpp" line="1113"/>
         <source>ANOMALIA STARTER BASSA VELOCITA
 CORRENTE SHIFT RUN-MAX</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1121"/>
+        <location filename="../source/pagealarms.cpp" line="1120"/>
         <source>ANOMALIA STARTER BASSA VELOCITA
 CORRENTE SHIFT RUN-MIN</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1128"/>
+        <location filename="../source/pagealarms.cpp" line="1127"/>
         <source>ANOMALIA STARTER BASSA VELOCITA
 CORRENTE SHIFT KEEP-MAX</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1135"/>
+        <location filename="../source/pagealarms.cpp" line="1134"/>
         <source>ANOMALIA STARTER BASSA VELOCITA
 CORRENTE SHIFT KEEP-MIN</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1142"/>
+        <location filename="../source/pagealarms.cpp" line="1141"/>
         <source>STARTER NON CALIBRATO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1149"/>
+        <location filename="../source/pagealarms.cpp" line="1148"/>
         <source>HU ANODO ECCESSIVI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1156"/>
+        <location filename="../source/pagealarms.cpp" line="1155"/>
         <source>ANOMALIA SENSORE TEMPERATURA TUBO</source>
         <translation type="unfinished"></translation>
     </message>
@@ -505,22 +484,22 @@ CORRENTE SHIFT KEEP-MIN</source>
 <context>
     <name>ERRORE-LENZE</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1809"/>
+        <location filename="../source/pagealarms.cpp" line="1817"/>
         <source>LENZE: ERRORE CONNESSIONE SENSORE DI POSIZIONE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1815"/>
+        <location filename="../source/pagealarms.cpp" line="1823"/>
         <source>LENZE: ERRORE SENSORE DI POSIZIONE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1821"/>
+        <location filename="../source/pagealarms.cpp" line="1829"/>
         <source>LENZE: ERRORE DISPOSITIVO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1827"/>
+        <location filename="../source/pagealarms.cpp" line="1835"/>
         <source>LENZE: ALLARME CADUTA BRACCIO</source>
         <translation type="unfinished"></translation>
     </message>
@@ -528,7 +507,7 @@ CORRENTE SHIFT KEEP-MIN</source>
 <context>
     <name>ERRORE-LIFTPUSH</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1873"/>
+        <location filename="../source/pagealarms.cpp" line="1881"/>
         <source>PEDALI ALTO/BASSO BLOCCATI
 </source>
         <translation type="unfinished"></translation>
@@ -537,36 +516,85 @@ CORRENTE SHIFT KEEP-MIN</source>
 <context>
     <name>ERRORE-PAD</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1205"/>
+        <location filename="../source/pagealarms.cpp" line="1204"/>
         <source>COMPRESSORE SBLOCCATO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1211"/>
+        <location filename="../source/pagealarms.cpp" line="1210"/>
         <source>SUPPORTO COMPRESSORE SBLOCCATO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1217"/>
+        <location filename="../source/pagealarms.cpp" line="1216"/>
         <source>COMPRESSORE NON RICONOSCIUTO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1223"/>
+        <location filename="../source/pagealarms.cpp" line="1222"/>
         <source>COMPRESSIONE IN CORSO A STUDIO CHIUSO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1229"/>
+        <location filename="../source/pagealarms.cpp" line="1228"/>
         <source>ACCESSORIO DISCONNESSO
 </source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
+    <name>ERRORE-PARCHEGGIO</name>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2065"/>
+        <source>ERRORE POSIZIONAMENTO TUBO</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2072"/>
+        <source>MOTORE ALTO-BASSO ATTIVO</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2080"/>
+        <source>TIMEOUT MOTORE ALTO-BASSO</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2088"/>
+        <source>FALLIO POSIZIONAMENTO ALTO-BASSO</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2095"/>
+        <source>TIMEOUT ROTAZIONE C-ARM
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2102"/>
+        <source>ERRORE ARM NON IN POSIZIONE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2109"/>
+        <source>START PARCHEGGIO</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2116"/>
+        <source>START USCITA DA PARCHEGGIO</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2123"/>
+        <source>POSIZIONE DI PARCHEGGIO NON CALIBRATA</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ERRORE-PCB269</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1764"/>
+        <location filename="../source/pagealarms.cpp" line="1772"/>
         <source>COMPRESSIONE ECCESSIVA</source>
         <translation type="unfinished"></translation>
     </message>
@@ -574,12 +602,12 @@ CORRENTE SHIFT KEEP-MIN</source>
 <context>
     <name>ERRORE-POTTER</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1244"/>
+        <location filename="../source/pagealarms.cpp" line="1243"/>
         <source>INGRANDITORE: FATTORE DI INGRANDIMENTO NON VALIDO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1251"/>
+        <location filename="../source/pagealarms.cpp" line="1250"/>
         <source>INGRANDITORE: FATTORE DI INGRANDIMENTO NON CONFIGURATO</source>
         <translation type="unfinished"></translation>
     </message>
@@ -587,17 +615,17 @@ CORRENTE SHIFT KEEP-MIN</source>
 <context>
     <name>ERRORE-POWERDOWN</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1781"/>
+        <location filename="../source/pagealarms.cpp" line="1789"/>
         <source>ERRORE MANCANZA RETE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1787"/>
+        <location filename="../source/pagealarms.cpp" line="1795"/>
         <source>ERRORE PULSANTE DI EMERGENZA</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1793"/>
+        <location filename="../source/pagealarms.cpp" line="1801"/>
         <source>WARNING CARICA CONDENSATORI IN CORSO</source>
         <translation type="unfinished"></translation>
     </message>
@@ -605,232 +633,232 @@ CORRENTE SHIFT KEEP-MIN</source>
 <context>
     <name>ERRORE-RAGGI</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1268"/>
+        <location filename="../source/pagealarms.cpp" line="1267"/>
         <source>IMPOSSIBILE PROCEDERE CON I RAGGI!!
 INSERIRE ACCESSORIO PIOMBO
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1274"/>
+        <location filename="../source/pagealarms.cpp" line="1273"/>
         <source>IMPOSSIBILE PROCEDERE CON I RAGGI!!
 INSERIRE ACCESSORIO PLEXYGLASS
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1280"/>
+        <location filename="../source/pagealarms.cpp" line="1279"/>
         <source>IMPOSSIBILE PROCEDERE CON I RAGGI!!
 INSERIRE ACCESSORIO PROTEZIONE PAZIENTE
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1286"/>
+        <location filename="../source/pagealarms.cpp" line="1285"/>
         <source>IMPOSSIBILE PROCEDERE CON I RAGGI!!
 PORTA STUDIO APERTA
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1292"/>
+        <location filename="../source/pagealarms.cpp" line="1291"/>
         <source>ERRORE DATI SU DRIVER PCB190!!
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1298"/>
+        <location filename="../source/pagealarms.cpp" line="1297"/>
         <source>IO ERROR: IMPOSSIBILE ATTIVARE XRAY ENA
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1304"/>
+        <location filename="../source/pagealarms.cpp" line="1303"/>
         <source>TIMEOUT STARTER ANODO ROTANTE
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1310"/>
+        <location filename="../source/pagealarms.cpp" line="1309"/>
         <source>RILASCIO ANTICIPATO DEL PULSANTE RAGGI
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1316"/>
+        <location filename="../source/pagealarms.cpp" line="1315"/>
         <source>RILASCIO ANTICIPATO DEL PULSANTE RAGGI NO PREP
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1322"/>
+        <location filename="../source/pagealarms.cpp" line="1321"/>
         <source>RILASCIO ANTICIPATO DEL PULSANTE RAGGI AFTER PREP
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1328"/>
+        <location filename="../source/pagealarms.cpp" line="1327"/>
         <source>STARTER BUSY
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1334"/>
+        <location filename="../source/pagealarms.cpp" line="1333"/>
         <source>TIMEOUT ATTESA SEGNALE EXP WIN DA DETECTOR
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1340"/>
+        <location filename="../source/pagealarms.cpp" line="1339"/>
         <source>DIAGNOSTICA PCB190 SEGNALA HV ALTI
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1346"/>
+        <location filename="../source/pagealarms.cpp" line="1345"/>
         <source>DIAGNOSTICA PCB190 SEGNALA HV BASSI
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1352"/>
+        <location filename="../source/pagealarms.cpp" line="1351"/>
         <source>DIAGNOSTICA PCB190 SEGNALA CORRENTE ANODICA ALTA
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1358"/>
+        <location filename="../source/pagealarms.cpp" line="1357"/>
         <source>DIAGNOSTICA PCB190 SEGNALA CORRENTE ANODICA BASSA
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1364"/>
+        <location filename="../source/pagealarms.cpp" line="1363"/>
         <source>DIAGNOSTICA PCB190 SEGNALA CORRENTE DI FILAMENTO ALTA
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1370"/>
+        <location filename="../source/pagealarms.cpp" line="1369"/>
         <source>DIAGNOSTICA PCB190 SEGNALA ANOMALIA SU V DI FILAMENTO
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1376"/>
+        <location filename="../source/pagealarms.cpp" line="1375"/>
         <source>DIAGNOSTICA PCB190 SEGNALA BASSA TENSIONE DI ALIMENTAZIONE POTENZA
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1382"/>
+        <location filename="../source/pagealarms.cpp" line="1381"/>
         <source>TIMEOUT DURANTE ESECUZIONE RAGGI
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1388"/>
+        <location filename="../source/pagealarms.cpp" line="1387"/>
         <source>SELEZIONE kV NON VALIDA
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1394"/>
+        <location filename="../source/pagealarms.cpp" line="1393"/>
         <source>SELEZIONE mAs NON VALIDA
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1400"/>
+        <location filename="../source/pagealarms.cpp" line="1399"/>
         <source>CONFIGURAZIONE PARAMETRI GENERATORE NON VALIDA
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1406"/>
+        <location filename="../source/pagealarms.cpp" line="1405"/>
         <source>kv SELEZIONATI RISULTANO NON CALIBRATI
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1412"/>
+        <location filename="../source/pagealarms.cpp" line="1411"/>
         <source>CORRENTE DI FILAMENTO NON CALIBRATA
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1418"/>
+        <location filename="../source/pagealarms.cpp" line="1417"/>
         <source>PARAMETRI GENERATORE NON CONFIGURATI
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1424"/>
+        <location filename="../source/pagealarms.cpp" line="1423"/>
         <source>SELEZIONE FUOCO NON VALIDA
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1430"/>
+        <location filename="../source/pagealarms.cpp" line="1429"/>
         <source>SELEZIONE FILTRO NON VALIDA
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1436"/>
+        <location filename="../source/pagealarms.cpp" line="1435"/>
         <source>SELEZIONE COLLIMAZIONE NON VALIDA
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1442"/>
+        <location filename="../source/pagealarms.cpp" line="1441"/>
         <source>ANOMALIA TENSIONE DI GRIGLIA
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1448"/>
+        <location filename="../source/pagealarms.cpp" line="1447"/>
         <source>ANOMALIA ALIMENTAZIONE SCHEDA PCB190
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1454"/>
+        <location filename="../source/pagealarms.cpp" line="1453"/>
         <source>ATTIVAZIONE RAGGI NON CONSENTITA
 PAD NON IDONEO AL CONTESTO
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1460"/>
+        <location filename="../source/pagealarms.cpp" line="1459"/>
         <source>ATTIVAZIONE RAGGI NON CONSENTITA
 PAD NON RICONOSCIUTO
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1466"/>
+        <location filename="../source/pagealarms.cpp" line="1465"/>
         <source>ATTIVAZIONE RAGGI NON CONSENTITA
 POTTER NON RICONOSCIUTO
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1473"/>
+        <location filename="../source/pagealarms.cpp" line="1472"/>
         <source>ATTIVAZIONE RAGGI NON CONSENTITA
 BRACCIO FUORI POSIZIONE
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1480"/>
+        <location filename="../source/pagealarms.cpp" line="1479"/>
         <source>ATTIVAZIONE RAGGI NON CONSENTITA
 SENO NON COMPRESSO
 APPLICARE COMPRESSIONE PER PROSEGUIRE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1487"/>
+        <location filename="../source/pagealarms.cpp" line="1486"/>
         <source>SEQUENZA RAGGI INTERROTTA
 OPERAZIONE DI SCRITTURA REGISTRI
 FALLITA
@@ -838,7 +866,7 @@ FALLITA
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1494"/>
+        <location filename="../source/pagealarms.cpp" line="1493"/>
         <source>SEQUENZA RAGGI INTERROTTA
 OPERAZIONE DI LETTURA REGISTRI
 FALLITA
@@ -846,7 +874,7 @@ FALLITA
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1501"/>
+        <location filename="../source/pagealarms.cpp" line="1500"/>
         <source>SEQUENZA RAGGI INTERROTTA
 IO NETWORK BUSY
 RILASCIARE IL PULSANTE RAGGI E RIPETERE
@@ -854,7 +882,7 @@ RILASCIARE IL PULSANTE RAGGI E RIPETERE
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1508"/>
+        <location filename="../source/pagealarms.cpp" line="1507"/>
         <source>SEQUENZA RAGGI INTERROTTA
 IMPOSSIBILE BLOCCARE I DRIVER
 EFFETTUARE RESET HARDWARE!!
@@ -862,7 +890,7 @@ EFFETTUARE RESET HARDWARE!!
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1515"/>
+        <location filename="../source/pagealarms.cpp" line="1514"/>
         <source>SEQUENZA RAGGI INTERROTTA
 IMPOSSIBILE SBLOCCARE I DRIVER
 EFFETTUARE RESET HARDWARE!!
@@ -870,7 +898,7 @@ EFFETTUARE RESET HARDWARE!!
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1522"/>
+        <location filename="../source/pagealarms.cpp" line="1521"/>
         <source>SEQUENZA RAGGI INTERROTTA
 IMPOSSIBILE CARICARE I PARAMETRI
 DI ESPOSIZIONE!!
@@ -878,7 +906,7 @@ DI ESPOSIZIONE!!
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1529"/>
+        <location filename="../source/pagealarms.cpp" line="1528"/>
         <source>SEQUENZA RAGGI INTERROTTA
 DRIVER PCB190 BUSY
 RIPETERE ESPOSIZIONE
@@ -886,28 +914,28 @@ RIPETERE ESPOSIZIONE
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1537"/>
+        <location filename="../source/pagealarms.cpp" line="1536"/>
         <source>SEQUENZA RAGGI INTERROTTA
 TIMEOUT ATTESA FINE ESPOSIZIONE
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1544"/>
+        <location filename="../source/pagealarms.cpp" line="1543"/>
         <source>SEQUENZA RAGGI INTERROTTA
 TIMEOUT ATTESA DATI AEC
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1550"/>
+        <location filename="../source/pagealarms.cpp" line="1549"/>
         <source>SEQUENZA RAGGI INTERROTTA
 DATI AEC NON DISPONIBILI
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1556"/>
+        <location filename="../source/pagealarms.cpp" line="1555"/>
         <source>SEQUENZA RAGGI INTERROTTA
 IMPOSSIBILE IMPOSTARE MODALITA&apos; TOMO
 SU COLLIMATORE
@@ -915,155 +943,160 @@ SU COLLIMATORE
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1562"/>
+        <location filename="../source/pagealarms.cpp" line="1561"/>
         <source>SEQUENZA RAGGI INTERROTTA
 ERRORE POSIZIONAMENTO TUBO IN HOME
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1568"/>
+        <location filename="../source/pagealarms.cpp" line="1567"/>
         <source>SEQUENZA RAGGI INTERROTTA
 ERRORE POSIZIONAMENTO TUBO IN HOME WIDE
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1575"/>
+        <location filename="../source/pagealarms.cpp" line="1574"/>
         <source>SEQUENZA RAGGI INTERROTTA
 ERRORE ATTIVAZIONE TUBO PER SCANSIONE
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1582"/>
+        <location filename="../source/pagealarms.cpp" line="1581"/>
         <source>SEQUENZA RAGGI INTERROTTA
 ERRORE ATTIVAZIONE TUBO PER SCANSIONE WIDE
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1590"/>
+        <location filename="../source/pagealarms.cpp" line="1589"/>
         <source>SEQUENZA RAGGI INTERROTTA
 ERRORE ATTIVAZIONE TUBO IN POSIZIONE CC
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1597"/>
+        <location filename="../source/pagealarms.cpp" line="1596"/>
         <source>SEQUENZA RAGGI INTERROTTA
 ERRORE SOFTWARE: CODA MCC PIENA
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1605"/>
+        <location filename="../source/pagealarms.cpp" line="1604"/>
         <source>SEQUENZA RAGGI INTERROTTA
 ERRORE INGRANDITORE: INGRANDIMENTO NON VALIDO
 O NON RICONOSCIUTO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1612"/>
+        <location filename="../source/pagealarms.cpp" line="1611"/>
         <source>SEQUENZA RAGGI INTERROTTA
 SI STA UTILIZZANDO IL FUOCO GRANDE
 CON L&apos;INGRANDITORE INSERITO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1619"/>
+        <location filename="../source/pagealarms.cpp" line="1618"/>
         <source>SEQUENZA RAGGI INTERROTTA
 SI STA UTILIZZANDO IL FUOCO PICCOLO
 SENZA USO DELL&apos;INGRANDITORE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1626"/>
+        <location filename="../source/pagealarms.cpp" line="1625"/>
         <source>ANOMALIA MOVIMENTO TUBO DURANTE RAGGI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1633"/>
+        <location filename="../source/pagealarms.cpp" line="1632"/>
         <source>ERRORE SPECCHIO FUORI CAMPO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1641"/>
+        <location filename="../source/pagealarms.cpp" line="1640"/>
         <source>SEQUENZA RAGGI INTERROTTA
 ERRORE POSIZIONAMENTO TUBO IN HOME INTERMEDIATE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1648"/>
+        <location filename="../source/pagealarms.cpp" line="1647"/>
         <source>SEQUENZA RAGGI INTERROTTA
 ERRORE ATTIVAZIONE TUBO PER SCANSIONE INTERMEDIATE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1655"/>
+        <location filename="../source/pagealarms.cpp" line="1654"/>
         <source>PROTEZIONE PAZIENTE 3D
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1662"/>
-        <location filename="../source/pagealarms.cpp" line="1668"/>
-        <location filename="../source/pagealarms.cpp" line="1674"/>
-        <location filename="../source/pagealarms.cpp" line="1680"/>
-        <location filename="../source/pagealarms.cpp" line="1686"/>
-        <location filename="../source/pagealarms.cpp" line="1692"/>
-        <location filename="../source/pagealarms.cpp" line="1698"/>
-        <location filename="../source/pagealarms.cpp" line="1704"/>
-        <location filename="../source/pagealarms.cpp" line="1710"/>
-        <location filename="../source/pagealarms.cpp" line="1716"/>
+        <location filename="../source/pagealarms.cpp" line="1661"/>
+        <location filename="../source/pagealarms.cpp" line="1667"/>
+        <location filename="../source/pagealarms.cpp" line="1673"/>
+        <location filename="../source/pagealarms.cpp" line="1679"/>
+        <location filename="../source/pagealarms.cpp" line="1685"/>
+        <location filename="../source/pagealarms.cpp" line="1691"/>
+        <location filename="../source/pagealarms.cpp" line="1697"/>
+        <location filename="../source/pagealarms.cpp" line="1703"/>
+        <location filename="../source/pagealarms.cpp" line="1709"/>
+        <location filename="../source/pagealarms.cpp" line="1715"/>
         <source>SEQUENZA RAGGI INTERROTTA
 ANOMALIA STARTER BASSA VELOCITA
 ERROR CODE: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1723"/>
+        <location filename="../source/pagealarms.cpp" line="1722"/>
         <source>ATTENZIONE, HU ANODO ECCESSIVI
 ATTENDERE CHE IL TUBO SI RAFFREDDI
 PER PROSEGUIRE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1729"/>
+        <location filename="../source/pagealarms.cpp" line="1728"/>
         <source>ATTENZIONE, TEMPERATURA TUBO ECCESSIVA
 ATTENDERE CHE IL TUBO SI RAFFREDDI
 PER PROSEGUIRE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1735"/>
+        <location filename="../source/pagealarms.cpp" line="1734"/>
         <source>ATTENZIONE, SENSORE TEMPERATURA TUBO MALFUNZIONANTE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1741"/>
+        <location filename="../source/pagealarms.cpp" line="1740"/>
         <source>MOVIMENTO TUBO NON CONSENTITO. POSSIBILE IMPATTO CON IL SUOLO</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="1746"/>
+        <source>ACCESSORIO DI COLLIMAZIONE NON CONSENTITO</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ERRORE-SOFTWARE</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1172"/>
+        <location filename="../source/pagealarms.cpp" line="1171"/>
         <source>ALLARME SOFTWARE!!!
 CODE DI PROCESSO PROVVISORIAMENTE PIENE
 RIPETERE L&apos;ULTIMA OPERAZIONE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1179"/>
+        <location filename="../source/pagealarms.cpp" line="1178"/>
         <source>ALLARME SOFTWARE!!!
 RILEVATE REVISIONI SOFTWARE NON COMPATIBILI
 CONTATTARE L&apos;ASSISTENZA</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1187"/>
+        <location filename="../source/pagealarms.cpp" line="1186"/>
         <source>ATTENZIONE: SPEGNIMENTO SISTEMA IN CORSO</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1071,82 +1104,82 @@ CONTATTARE L&apos;ASSISTENZA</source>
 <context>
     <name>ERRORE-TRX</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="902"/>
+        <location filename="../source/pagealarms.cpp" line="901"/>
         <source>TRX: ATTIVAZIONE NON CONSENTITA</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="909"/>
+        <location filename="../source/pagealarms.cpp" line="908"/>
         <source>TRX: ERRORE PARAMETRI DI PREPARAZIONE AZZERAMENTO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="915"/>
+        <location filename="../source/pagealarms.cpp" line="914"/>
         <source>TRX: ERRORE PARAMETRI DI MOVIMENTO DI AZZERAMENTO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="921"/>
+        <location filename="../source/pagealarms.cpp" line="920"/>
         <source>TRX: TIMEOUT MOVIMENTO DI AZZERAMENTO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="927"/>
+        <location filename="../source/pagealarms.cpp" line="926"/>
         <source>TRX: ERRORE PARAMETRI PREPARAZIONE POSIZIONAMENTO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="933"/>
+        <location filename="../source/pagealarms.cpp" line="932"/>
         <source>TRX: ERRORE PARAMETRI MOVIMENTO DI POSIZIONAMENTO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="939"/>
+        <location filename="../source/pagealarms.cpp" line="938"/>
         <source>TRX: TIMEOUT DURANTE IL MOVIMENTO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="945"/>
+        <location filename="../source/pagealarms.cpp" line="944"/>
         <source>TRX: RILEVATO OSTACOLO DURANTE POSIZIONAMENTO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="951"/>
+        <location filename="../source/pagealarms.cpp" line="950"/>
         <source>ERRORE INTERNO DISPOSITIVO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="957"/>
+        <location filename="../source/pagealarms.cpp" line="956"/>
         <source>TRX: MOVIMENTO NON ABILITATO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="963"/>
+        <location filename="../source/pagealarms.cpp" line="962"/>
         <source>TRX: INTERVALLO DI MOVIMENTO NON CONSENTITO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="969"/>
+        <location filename="../source/pagealarms.cpp" line="968"/>
         <source>TRX: COMANDO IN CORSO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="975"/>
+        <location filename="../source/pagealarms.cpp" line="974"/>
         <source>TRX: DISPOSITIVO DI SICUREZZA ATTIVATO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="981"/>
+        <location filename="../source/pagealarms.cpp" line="980"/>
         <source>TRX: ERRORE DI COMUNICAZIONE SUL CAN BUS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="987"/>
+        <location filename="../source/pagealarms.cpp" line="986"/>
         <source>TRX: DISPOSITIVO RILEVAMENTO OSTACOLO BLOCCATO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="993"/>
+        <location filename="../source/pagealarms.cpp" line="992"/>
         <source>TRX: RILEVATA OSTRUZIONE DURANTE IL MOVIMENTO</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1154,7 +1187,7 @@ CONTATTARE L&apos;ASSISTENZA</source>
 <context>
     <name>ERRORE-XRAYPUSH</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1845"/>
+        <location filename="../source/pagealarms.cpp" line="1853"/>
         <source>PULSANTE RAGGI BLOCCATO
 </source>
         <translation type="unfinished"></translation>
@@ -1172,42 +1205,42 @@ CONTATTARE L&apos;ASSISTENZA</source>
 <context>
     <name>MAIN-PAGE</name>
     <message>
-        <location filename="../source/mainpage.cpp" line="707"/>
+        <location filename="../source/mainpage.cpp" line="734"/>
         <source>INTESTAZIONE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="710"/>
+        <location filename="../source/mainpage.cpp" line="737"/>
         <source>ACCESSORIO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="713"/>
+        <location filename="../source/mainpage.cpp" line="740"/>
         <source>COMPRESSORE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="716"/>
+        <location filename="../source/mainpage.cpp" line="743"/>
         <source>POSIZIONE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="718"/>
+        <location filename="../source/mainpage.cpp" line="745"/>
         <source>SPESSORE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="721"/>
+        <location filename="../source/mainpage.cpp" line="748"/>
         <source>FORZA</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="723"/>
+        <location filename="../source/mainpage.cpp" line="750"/>
         <source>TARGET</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="763"/>
+        <location filename="../source/mainpage.cpp" line="790"/>
         <source>MESSAGGIO ATTIVAZIONE POWER OFF</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1215,83 +1248,83 @@ CONTATTARE L&apos;ASSISTENZA</source>
 <context>
     <name>OPENSTUDY-PAGE</name>
     <message>
-        <location filename="../source/console.cpp" line="277"/>
+        <location filename="../source/console.cpp" line="272"/>
         <source>MODO TEST: CALIBRAZIONE TOMOGRAFIA</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/console.cpp" line="282"/>
+        <location filename="../source/console.cpp" line="277"/>
         <source>MODO TEST: ESPOSIZIONI CON DETECTOR</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/console.cpp" line="284"/>
+        <location filename="../source/console.cpp" line="279"/>
         <source>MODO TEST: ESPOSIZIONI SENZA DETECTOR</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/console.cpp" line="291"/>
+        <location filename="../source/console.cpp" line="286"/>
         <source>MODO TEST: CALIBRAZIONE COLLIMAZIONE DINAMICA</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/console.cpp" line="296"/>
+        <location filename="../source/console.cpp" line="291"/>
         <source>MODO TEST: CALIBRAZIONE ZERO TOMOGRAFIA</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/console.cpp" line="300"/>
+        <location filename="../source/console.cpp" line="295"/>
         <source>MODO TEST: CALIBRAZIONE CORRENTE DI FILAMENTO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/console.cpp" line="304"/>
+        <location filename="../source/console.cpp" line="299"/>
         <source>MODO TEST: CALIBRAZIONE KV</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/openStudyPage.cpp" line="323"/>
-        <location filename="../source/openStudyPage.cpp" line="586"/>
+        <location filename="../source/openStudyPage.cpp" line="363"/>
+        <location filename="../source/openStudyPage.cpp" line="643"/>
         <source>TARGET</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/openStudyPage.cpp" line="425"/>
+        <location filename="../source/openStudyPage.cpp" line="468"/>
         <source>READY</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/openStudyPage.cpp" line="431"/>
+        <location filename="../source/openStudyPage.cpp" line="474"/>
         <source>NOT READY</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/openStudyPage.cpp" line="761"/>
+        <location filename="../source/openStudyPage.cpp" line="900"/>
         <source>Nome Paziente</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/openStudyPage.cpp" line="765"/>
+        <location filename="../source/openStudyPage.cpp" line="904"/>
         <source>Studio Locale</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/openStudyPage.cpp" line="864"/>
+        <location filename="../source/openStudyPage.cpp" line="1008"/>
         <source>SPESSORE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/openStudyPage.cpp" line="866"/>
+        <location filename="../source/openStudyPage.cpp" line="1010"/>
         <source>COMPRESSIONE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/openStudyPage.cpp" line="868"/>
+        <location filename="../source/openStudyPage.cpp" line="1012"/>
         <source>COLLIMAZIONE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/openStudyPage.cpp" line="870"/>
+        <location filename="../source/openStudyPage.cpp" line="1014"/>
         <source>ACCESSORIO</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1307,7 +1340,7 @@ CONTATTARE L&apos;ASSISTENZA</source>
 <context>
     <name>POTTER</name>
     <message>
-        <location filename="../source/echodisplay.cpp" line="319"/>
+        <location filename="../source/echodisplay.cpp" line="318"/>
         <location filename="../source/potter.cpp" line="39"/>
         <source>ACCESSORIO NON DEFINITO</source>
         <translation type="unfinished"></translation>
@@ -1359,6 +1392,49 @@ CONTATTARE L&apos;ASSISTENZA</source>
     <message>
         <location filename="../source/projectionPage.cpp" line="343"/>
         <source>SELEZIONE PROIEZIONE</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>calibColliUI</name>
+    <message>
+        <location filename="../source/Service/Calib/calibColli.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>calibParkUI</name>
+    <message>
+        <location filename="../source/Service/Calib/calibParking.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/Service/Calib/calibParking.ui" line="135"/>
+        <source>STORE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/Service/Calib/calibParking.ui" line="172"/>
+        <source>LENZE POSITION</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/Service/Calib/calibParking.ui" line="215"/>
+        <source>100%</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <location filename="../source/Service/Calib/calibParking.ui" line="288"/>
+        <source>ARM 
+0°</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <location filename="../source/Service/Calib/calibParking.ui" line="315"/>
+        <source>ARM 
+180°</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -1,9 +1,9 @@
 #ifndef _DBT_M4_H
 #define _DBT_M4_H
 
-#define REVISIONE "1.3.0"
+#define REVISIONE "1.4.0"
 #define REVMAJ 1
-#define REVMIN 3
+#define REVMIN 4
 #define REV_BETA 0
 
 #define M4_MASTER
@@ -57,7 +57,6 @@ _____________________________________________________________________________*/
 #define PCB215                       8,9
 #define PCB190                       10,9
 #define PCB244                       11,9
-#define PCB244_A                     12,9
 #define BIOPSY                       13,9
 #define PCB249U1                     14,9
 #define PCB249U2                     15,9
@@ -75,8 +74,6 @@ _____________________________________________________________________________*/
 #define STD_RX_TASK                  52,11
 #define STD_RX_AEC_TASK              53,11
 #define STD_RX_AE_TASK               54,11
-#define ANALOG_RX_TASK               55,11
-
 #define SEQ_TASK                     60,11
 
 #include "eventi.h"
@@ -95,7 +92,6 @@ _____________________________________________________________________________*/
 #include "pcb215.h"     // Gestore Carrello compressore
 #include "pcb190.h"     // Gestore generatore
 #include "pcb244.h"     // Gestore potter
-#include "pcb244-A.h"   // Gestore potter + esposimetro Analogico
 #include "biopsy.h"     // Gestore biopsia
 #include "pcb249U1.h"   // Gestore filtri, lame di collimazione
 #include "pcb249U2.h"   // Gestore filtri, back/front, mirror,light
@@ -103,8 +99,6 @@ _____________________________________________________________________________*/
 #include "gui.h"        // Gestore interfacciamento con GUI A5
 #include "fault.h"      // Gestione dei faults
 #include "master_can.h" // Gestione comnicazione CAN
-#include "esposimetro.h"
-#include "analog_rx_sequences.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -173,6 +167,7 @@ typedef struct{
     bool           success;  // Ultimo comando eseguito con successo
     bool           completed;// Comando completato
     bool           lenze_run; // Indica se il lenze è in aggiornamento automatico
+    int            lenze_pot; // Dato potenziometro
 
     // Fault corrente
     unsigned char  faultcode;
@@ -212,6 +207,7 @@ typedef struct
     _trxCommand_Str    trxExecution;    // Dati relativi a comandi in corso
     _armCommand_Str    armExecution;    // Dati relativi a comandi in corso
     unsigned char      manual_mode_activation; // Modalità di attivazione TRX / ARM da pulsanti per calibrazioni
+    bool               lenze_park_enable_run;  // Abilita il movimento lenze nelle fasi di parcheggio
 
     compressoreCfg_Str  comprCfg;       // Parametri compressore
     potterCfg_Str       potterCfg;      // Configurazione Potter

@@ -441,42 +441,62 @@ Codici accessori:
 - Fantoccio 3D eco      V4
 */
 
+unsigned char getAccessorioCodice(unsigned char* raw, unsigned char* codice){
+    unsigned char accessorio;
+
+    Ser422ReadRegister(_REGID(RG249U1_RG_PROT),10,&CONTEST);
+    *raw = _DEVREGL(RG249U1_RG_PROT,CONTEST);
+
+    // Identificazione del codice
+    if(*raw<31) *codice = 0;
+    else if(*raw<80) *codice = 1;
+    else if(*raw<112) *codice = 2;
+    else if(*raw<143) *codice = 3;
+    else if(*raw<175) *codice = 4;
+    else if(*raw<207) *codice = 5;
+    else if(*raw<239) *codice = 6;
+    else *codice = 7;
+
+    switch(*codice){
+    case 7: accessorio = COLLI_ACCESSORIO_ND; break;
+    case 1: accessorio = COLLI_ACCESSORIO_PIOMBO; break;
+    case 3: accessorio = COLLI_ACCESSORIO_CALIB_PLEXYGLASS; break;
+    case 4: accessorio = COLLI_ACCESSORIO_PROTEZIONE_PAZIENTE_3D; break;
+    case 5: accessorio = COLLI_ACCESSORIO_PROTEZIONE_PAZIENTE_2D; break;
+    case 6: accessorio = COLLI_ACCESSORIO_FRUSTOLI; break;
+    default: accessorio = COLLI_ACCESSORIO_FAULT;
+    }
+
+    return accessorio;
+}
+
 bool identificazioneAccessorio(void)
 {
   static unsigned char accessorio=255;
-  unsigned char codice;
+  unsigned char codice,raw;
 
-  Ser422ReadRegister(_REGID(RG249U1_RG_PROT),10,&CONTEST);
-  unsigned char raw = _DEVREGL(RG249U1_RG_PROT,CONTEST); 
+  accessorio = getAccessorioCodice(&raw, &codice);
+  if(generalConfiguration.colliCfg.codiceAccessorio == accessorio) return false;
 
-  // Identificazione del codice
-  if(raw<31) codice = 0;
-  else if(raw<80) codice = 1;
-  else if(raw<112) codice = 2;
-  else if(raw<143) codice = 3;
-  else if(raw<175) codice = 4;
-  else if(raw<207) codice = 5;
-  else if(raw<239) codice = 6;
-  else codice = 7;
-  
-  // Assegnazione accessorio
-  switch(codice){
-  case 7: generalConfiguration.colliCfg.codiceAccessorio = COLLI_ACCESSORIO_ND; break;
-  case 1: generalConfiguration.colliCfg.codiceAccessorio = COLLI_ACCESSORIO_PIOMBO; break;  
-  case 3: generalConfiguration.colliCfg.codiceAccessorio = COLLI_ACCESSORIO_CALIB_PLEXYGLASS; break;
-  case 4: generalConfiguration.colliCfg.codiceAccessorio = COLLI_ACCESSORIO_PROTEZIONE_PAZIENTE_3D; break;
-  case 5: generalConfiguration.colliCfg.codiceAccessorio = COLLI_ACCESSORIO_PROTEZIONE_PAZIENTE_2D; break;
-  default: generalConfiguration.colliCfg.codiceAccessorio = COLLI_ACCESSORIO_FAULT; 
-  }
+  // Se cambiato, ripete la lettura per evitare rimbalzi
+  _time_delay(500);
+  accessorio = getAccessorioCodice(&raw, &codice);
+  if(generalConfiguration.colliCfg.codiceAccessorio == accessorio) return false;
 
-  // Verifica cambio di stato
-  if(accessorio!=generalConfiguration.colliCfg.codiceAccessorio)
-  {
-    accessorio = generalConfiguration.colliCfg.codiceAccessorio;
-    printf("RILEVATO CAMBIO ACCESSORIO COLLIMATORE: %d Codice: V%d, RAW: %d\n",accessorio,codice,raw);
-    return TRUE;
-  }
-  else return FALSE;
+  // ASsegna il cambiamento
+  generalConfiguration.colliCfg.codiceAccessorio = accessorio;
+
+    switch(accessorio){
+    case COLLI_ACCESSORIO_ND: printf("RILEVATO CAMBIO ACCESSORIO <NON DEFINITO>: %d Codice: V%d, RAW: %d\n",accessorio,codice,raw);break;
+    case COLLI_ACCESSORIO_FRUSTOLI: printf("RILEVATO CAMBIO ACCESSORIO <FRUSTOLI>: %d Codice: V%d, RAW: %d\n",accessorio,codice,raw);break;
+    case COLLI_ACCESSORIO_CALIB_PLEXYGLASS: printf("RILEVATO CAMBIO ACCESSORIO <PLEXYGLASS>: %d Codice: V%d, RAW: %d\n",accessorio,codice,raw);break;
+    case COLLI_ACCESSORIO_PROTEZIONE_PAZIENTE_3D: printf("RILEVATO CAMBIO ACCESSORIO <PROT 3D>: %d Codice: V%d, RAW: %d\n",accessorio,codice,raw);break;
+    case COLLI_ACCESSORIO_PROTEZIONE_PAZIENTE_2D: printf("RILEVATO CAMBIO ACCESSORIO <PROT 2D>: %d Codice: V%d, RAW: %d\n",accessorio,codice,raw);break;
+    case COLLI_ACCESSORIO_PIOMBO: printf("RILEVATO CAMBIO ACCESSORIO <PIOMBO>: %d Codice: V%d, RAW: %d\n",accessorio,codice,raw);break;
+    default: printf("RILEVATO CAMBIO ACCESSORIO <FAULT>: %d Codice: V%d, RAW: %d\n",accessorio,codice,raw);
+    }
+
+    return true;
 }
 
 // Effettua l'update dei registri di sistema
@@ -1058,6 +1078,11 @@ bool wait2DLeftRightTrapCompletion(int timeout){
     // Controllo completato con successo
     return true;
 }
+
+bool pcb249U1_GetFreeze(void){
+    return STATUS.freeze;
+}
+
 /* EOF */
  
   

@@ -19,11 +19,11 @@ public:
 
     // codici dedicati alla macchina Analogica
     #define NOTIFY_SET_READY                "SetReady"
-    #define NOTIFY_FINERAGGI_CALIB_DETECTOR "SetFineRaggiCalibDetector"
-    #define NOTIFY_ANALOG_FINERAGGI_CALIB_TUBE     "SetAnalogFineRaggiCalibTube"
 
     // Codici stringa per i messaggi di notifica asincroni verso Console
     #define NOTIFY_SEND_PUSH_CMD               "SetPush"
+    #define NOTIFY_SPECIMEN                    "SetSpecimen"
+
     #define NOTIFY_SEND_FINE_RAGGI             "SetFineRaggi"
     #define NOTIFY_SEND_FINE_RAGGI_CALIB_KV    "SetFineRaggiCalibKv"
     #define NOTIFY_SEND_FINE_RAGGI_CALIB_IA    "SetFineRaggiCalibIa"
@@ -60,6 +60,7 @@ public:
     void notifyAbortProjection(void); // Notifica la AWS dell'avvenuta selezione
     void notifyRequestPowerOff(void);
     void setBiopsyPosition(int curX, int curY, int curZ);
+    void setSpecimen(bool stat);
 
     void endCommandAck(unsigned char id, unsigned char code); // Acnowledge per fine comando
 
@@ -84,10 +85,6 @@ public slots:
 
     void fineRaggiCalibKv(QByteArray data); // Slot di ricezione dati da sequenza raggi di calibrazione KV
     void fineRaggiCalibIa(QByteArray data); // Slot di ricezione dati da sequenza raggi di calibrazione KV
-
-
-    void fineRaggiAnalogCalibDetector(QByteArray data); // Fine raggi calibrazione esposimetro macchine analogiche
-    void fineRaggiAnalogCalibTube(unsigned char result, unsigned char rawkV, int dkV, int dIa);
 
     // Slot di ricezione fine aggiornamento
     void fineSystemUpdate(bool ris, QString errstr);

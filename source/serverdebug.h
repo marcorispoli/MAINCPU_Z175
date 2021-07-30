@@ -129,7 +129,8 @@ public slots:
         void handleSetCalibMirror(QByteArray data);
         void handleSetCalib2D(QByteArray data);
         void handleSetCalibTomo(QByteArray data);
-        void handleSetCalibTomoFiltro(QByteArray data); // Hotfix 11C
+        void handleSetCalibTomoFiltro(QByteArray data);
+        void handleSetCalibCustom(QByteArray data);
 
     void setManualLameVal(QString lama, int val);
     void handleRotazioni(QByteArray data);
@@ -216,6 +217,33 @@ private:
     bool isCommand;
     bool isSpecial;
 
+
+    #define _8bit 0
+    #define _16bit 1
+    #define _UNSIGNED 0
+    #define _SIGNED   1
+    #define _CODEID_PCB249U1    0x16
+    #define _CODEID_PCB249U2    0x15
+    #define _CODEID_PCB190      0x13
+    #define _CODEID_PCB244      0x14
+    #define _CODEID_PCB269      0x11
+
+    typedef struct {
+        QString tag;
+        QString comment;
+        unsigned char  deviceId;
+
+        unsigned short address;
+        signed short   sval;
+        unsigned short val;
+        unsigned char data_type;
+        unsigned char sign_type;
+
+    } _deviceRegisterItem;
+
+    QList<_deviceRegisterItem> deviceRegisterList;
+    void handleDriversTagList(QByteArray data);
+    void handleDriversReadReg(QByteArray data);
 
 };
 

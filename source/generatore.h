@@ -240,7 +240,6 @@ public:
 
 public:
     genCnf_Str      genCnf;     // parametri generici di gestione Generatore
-    analogProfileCnf_Str AECprofiles; // In caso di macchine analogiche, vengono gestiti i profili AEC
 
     bool            validated;      // La selezione corrente è valida    
     float           selectedKv;     // KV selezionati reali
@@ -428,33 +427,6 @@ public:
     // della temperatura della cuffia per poter procedere.
     void initAnodeHU(void);
     void initAnodeHU(int Y, int M, int D, int h, int m, int s);
-
-
-    // FUNZIONI DEDICATE ALLA GESTIONE DELLA MACCHINA ANALOGICA
-
-    bool ordinaProfili(QList<profilePoint_Str>* ptr);
-    bool openAECProfiles(QString tubedir);
-    bool saveAECProfiles(void);
-    profileCnf_Str* getCurrentProfilePtr(void);
-    profileCnf_Str* getNextProfilePtr(void);
-    profileCnf_Str* getPrevProfilePtr(void);
-    profileCnf_Str* selectProfile(unsigned char index);
-    int getNumProfiles(void);
-
-    int     getMaxDMas(unsigned char kV, QString anodo, unsigned char fuoco); // GEnerico
-    int     getMaxDMas(void);    // Lavora sulla selezione corrente
-    float   getCurrentAnalogKv(void);   // Restituisce i kV correnti
-    int     getCurrentAnalogDmAs(void);    // Restituisce i mAs correnti
-
-
-
-    // Calcolatore di dose
-    doseCnf_Str dose;
-    bool readCgConfig(void);
-    bool readKermaConfig(QString filtro);
-    float getDoseUg(int mm, int dmAs, int dkv, int filtro);
-    int getAecData(int plog, int modo_filtro, int odindex, int techmode, int* filtro,float* kV, int* dmAs, int* pulses);
-
 
 };
 

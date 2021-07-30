@@ -5,8 +5,6 @@
 #include "biopsypage.h"
 #include "startuppage.h"
 
-#include "ANALOG/pageOpenAnalogic.h"
-#include "ANALOG/Calibration/pageCalibAnalogic.h"
 #include "Service/servicepanelmenu.h"
 
 #include "Service/Calib/calibmenu.h"
@@ -16,7 +14,9 @@
 #include "Service/Calib/calibfilter.h"
 #include "Service/Calib/calibpower.h"
 #include "Service/Calib/calibpot.h"
+#include "Service/Calib/calibParking.h"
 #include "Service/Calib/calibstarter.h"
+#include "Service/Calib/calibColli.h"
 #include "Service/Setup/system.h"
 #include "Service/Tools/toolsmenu.h"
 #include "Service/Tools/tiltingtool.h"
@@ -28,9 +28,6 @@
 #define _BACKGROUND_C_PG_MAIN       "://MainPage/MainPage/Pagina0C.png"
 
 
-AnalogPageOpen* paginaOpenStudyAnalogic;
-AnalogCalibPageOpen* paginaCalibAnalogic;
-
 ServicePanelMenu* pServiceMenu;
 CalibMenu* pCalibMenu;
 calibCompressorPosition* pCalibCompressionPositionPage;
@@ -41,7 +38,9 @@ systemPage* pSystem;
 calibfilter* pCalibFilterPage;
 calibpower* pCalibPowerPage;
 calibpot* pCalibPot;
+calibParking* pCalibParking;
 calibstarter* pCalibStarter;
+calibColli* pCalibColli;
 toolsmenu* pToolsMenu;
 tiltingtool* pTiltingTool;
 armtool* pArmTool;
@@ -125,11 +124,13 @@ int main(int argc, char *argv[])
     ApplicationDatabase.append("");                 // _DB_PASSWORD
     ApplicationDatabase.append("");                 // _DB_LINGUA
     ApplicationDatabase.append("");                 // _DB_COLLIMAZIONE
+    ApplicationDatabase.append("");                 // _DB_MANUAL_COLLIMAZIONE,
     ApplicationDatabase.append("");                 // _DB_COMPRESSOR_PAD    
     ApplicationDatabase.append((unsigned char) 0);  // _DB_COMPRESSOR_PAD_CODE
     ApplicationDatabase.append("");                 // _DB_ACCESSORY_NAME
     ApplicationDatabase.append((int)0);             // _DB_MAG_FACTOR
     ApplicationDatabase.append((unsigned char) 0);  // _DB_ACCESSORIO
+    ApplicationDatabase.append((int)COLLI_ACCESSORIO_ND); // _DB_ACCESSORIO_COLLIMATORE
     ApplicationDatabase.append((int)0);             // _DB_FORZA
     ApplicationDatabase.append((int)0);             // _DB_TARGET_FORCE
     ApplicationDatabase.append((int)0);             // _DB_SPESSORE
@@ -178,8 +179,8 @@ int main(int argc, char *argv[])
     ApplicationDatabase.append((int) 0);            // _DB_ALLARME_LIFT_PUSH
     ApplicationDatabase.append((int) 0);            // _DB_ALLARME_ARM_PUSH
     ApplicationDatabase.append((int) 0);            // _DB_ALLARME_INFO_STAT
-    ApplicationDatabase.append((int) 0);            // _DB_ALLARMI_SYSCONF
-    ApplicationDatabase.append((int) 0);            // _DB_ALLARMI_ANALOGICA
+    ApplicationDatabase.append((int) 0);            // _DB_ALLARMI_SYSCONF    
+    ApplicationDatabase.append((int) 0);            //_DB_ALLARMI_PARCHEGGIO
     ApplicationDatabase.append((int) 0);            // CAMPO ALLARMI ALR_SOFT
     //_____________________________________________________________________________
     ApplicationDatabase.append((unsigned char) 0);  // _DB_FAULT_CODE_GEN
@@ -202,6 +203,8 @@ int main(int argc, char *argv[])
     ApplicationDatabase.append((unsigned char) 0);  // _DB_POWER_STAT
     ApplicationDatabase.append((unsigned char) 0);  // _DB_REQ_POWEROFF
     ApplicationDatabase.append("");                 // _DB_REVISION_ERROR_STRING
+    ApplicationDatabase.append((unsigned char) 0);  // _DB_PARKING_MODE
+
 
 
     // DATABASE VARIABILI DI SERVIZIO ______________________________________________________
@@ -308,7 +311,6 @@ int main(int argc, char *argv[])
     paginaMainDigital = new MainPage(true,QString(_BACKGROUND_Y_PG_MAIN),QString(_BACKGROUND_C_PG_MAIN),TRUE,800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_MAIN_DIGITAL,GWindow::setPointPath(LEFT_ARROW_FRAME),(int)_PG_SERVICE_MENU,(int)_PG_MAIN_DIGITAL);
     paginaBiopsyDigital = new BiopsyPage(true,QString("_BACKGROUND_Y_PG_MAIN"),QString(""),TRUE,800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_ACR,GWindow::setPointPath(LEFT_ARROW_FRAME),(int)_PG_BIOPSY_DIGITAL,(int)_PG_BIOPSY_DIGITAL);
     paginaOpenStudyDigital = new OpenStudyPage(false,QString(""),QString(""),TRUE,800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_OPEN_STUDY_DIGITAL,GWindow::setPointPath(LEFT_ARROW_FRAME),(int)_PG_OPEN_STUDY_DIGITAL,(int)_PG_OPEN_STUDY_DIGITAL);
-    paginaOpenStudyAnalogic = new AnalogPageOpen(rotView);
     paginaProjections = new ProjectionPage(false,QString(""),QString(""),TRUE,800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_PROJECTIONS,GWindow::setPointPath(LEFT_ARROW_FRAME),(int)_PG_OPEN_STUDY_DIGITAL,(int)_PG_PROJECTIONS);
 
 
@@ -327,6 +329,8 @@ int main(int argc, char *argv[])
     pCalibFilterPage = new calibfilter(rotView) ;
     pCalibPowerPage = new calibpower(rotView) ;
     pCalibPot = new calibpot(rotView) ;
+    pCalibParking = new calibParking(rotView) ;
+    pCalibColli = new calibColli(rotView) ;
     pCalibStarter = new calibstarter(rotView) ;
     pToolsMenu = new toolsmenu(rotView) ;
     pTiltingTool = new tiltingtool(rotView) ;
@@ -334,7 +338,6 @@ int main(int argc, char *argv[])
     pLenzeTool = new lenzetool(rotView) ;
     pInverterTool = new invertertool(rotView) ;
 
-    paginaCalibAnalogic = new AnalogCalibPageOpen(rotView);
 
     QObject::connect(&GWindowRoot,SIGNAL(pushActivationSgn(int,bool,int)), pagina_language,SLOT(buttonActivationNotify(int,bool,int)),Qt::UniqueConnection);
     QObject::connect(&ApplicationDatabase,SIGNAL(dbDataChanged(int,int)), pagina_language,SLOT(valueChanged(int,int)),Qt::UniqueConnection);
@@ -378,12 +381,6 @@ int main(int argc, char *argv[])
     }
 
 
-    // Se il config file no ha trovato il file di sysConfig allor si apre la pagina
-    // per la configurazione hardware. Se invece la configurazione è OK
-    // si attiva la pagina per lo startup
-
-    // STUB
-    //GWindowRoot.setNewPage(_PG_OPEN_STUDY_ANALOG,0);
     GWindowRoot.setNewPage(_PG_STARTUP,_PG_STARTUP,0);
 
 

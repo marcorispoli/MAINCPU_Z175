@@ -8,6 +8,9 @@
 
 void actuatorTestCommands(void);
 void masterCommandExecution(void);
+
+static void actuatorMoveLenze(void);
+
 static void actuatorMoveArm(void);
 static void actuatorMoveManualArm(void);
 static void actuatorMoveManualTrx(void);
@@ -370,6 +373,8 @@ void manageLenzeEvents(void){
     case LENZE_RUN:
         buffer[0]= ACTUATORS_LENZE_RUN_STAT;
         buffer[1]= event_code; // 1 = MANUALE, 0=AUTOMATICO
+        buffer[2] = (unsigned char) event_data;    // Valore potenziometro in percentuale * 10
+        buffer[3] = (unsigned char) (event_data>>8);
         sendActuatorFrameToMaster(buffer);
         break;
 
@@ -427,6 +432,14 @@ void masterCommandExecution(void){
         actuatorTestCommands();
         break;
 
+    case ACTUATORS_LENZE_UNPARK:
+        printf("COMANDO UNPARK LENZE\n");
+        lenzeSetCommand(LENZE_UNLOCK_PARKING,0);
+        break;
+    case ACTUATORS_LENZE_PARK:
+        printf("COMANDO UNPARK LENZE\n");
+        lenzeSetCommand(LENZE_SET_PARKING,0);
+        break;
 
     case ACTUATORS_MOVE_ARM:
         /*
@@ -536,7 +549,23 @@ void masterCommandExecution(void){
     case ACTUATORS_SET_LENZE_CONFIG:
 
         // The following command sets the configuration of the Lenze device
-        lenzeUpdateConfiguration(actuatorCommand.data);
+        //lenzeUpdateConfiguration(actuatorCommand.data);
+        memcpy(buffer,actuatorCommand.data,8);
+        if(actuatorCommand.data[1]==255){
+            // Configurazione completata
+            lenzeUpdateConfiguration();
+        }else{
+
+            pLenzeStat->configured = false;
+            pData = (unsigned char*) &lenzeConfig;
+            for(i=0; i<actuatorCommand.data[2];i++){
+                pData[actuatorCommand.data[1]+i] = actuatorCommand.data[3+i];
+            }
+
+            // Feedback al Master
+            sendActuatorFrameToMaster(buffer);
+        }
+
         break;
 
     case ACTUATORS_SET_ARM_CONFIG:
@@ -707,6 +736,17 @@ void actuatorTestCommands(void){
     }
 }
 
+/*
+ *  Activates the Lenze
+ *  ActuatoCommand.data[] description:
+ *  data[0] = reserved
+ *  data[1] = position 0:100
+ */
+void actuatorMoveLenze(void){
+
+    lenzeSetCommand(LENZE_MOVE_TO_POSITION, actuatorCommand.data[1]);
+
+}
 /*
  *  Activates the ARM positioning
  *  ActuatoCommand.data[] description:

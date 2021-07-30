@@ -38,11 +38,14 @@ public:
     unsigned char getForce(){return comprStrenght;}
 
     // Configurazione
-    bool readConfigFile(void);
-    bool storeConfigFile(void);
-    bool readPadCfg(void);      // Lettura file di configurazione livelli di riconoscimento del pad
-    bool storePadCfg(void);     // Salvataggio dei dati di configurazione
-    void calibrateThresholds(unsigned char ncc); // Calcola le soglie corrette per il sistema vero
+    void switchCalibFileVersion(void);
+    void setConfigDefault(void);
+    void readOldConfigFile(void);
+    void readCompressorConfigFile(void);
+    void storeConfigFile(void);
+
+
+      void calibrateThresholds(unsigned char ncc); // Calcola le soglie corrette per il sistema vero
 
     bool configUpdate; // Configurazione compressore aggiornata
     compressoreCnf_Str config;
@@ -74,7 +77,6 @@ public:
 
     QList<QString> padTags;             // Tags per il collimatore
     QList<QString> padNames;            // Nomi da visualizzare a display
-    pad_Str        defPad;              // Carica i valori di default da assegnare ai compressori non configurati
 
     // Valore di tensione della batteria
     float battery;

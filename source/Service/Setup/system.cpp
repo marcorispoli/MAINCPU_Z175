@@ -91,10 +91,8 @@ void systemPage::changePage(int pg,  int opt)
 // Reazione alla pressione del pulsante di uscita
 void systemPage::onExitButton(void)
 {
-    if(ApplicationDatabase.getDataU(_DB_SYSTEM_CONFIGURATION) & _ARCH_GANTRY_DIGITAL)
-        GWindowRoot.setNewPage(_PG_MAIN_DIGITAL,GWindowRoot.curPage,0);
-    else
-        GWindowRoot.setNewPage(_PG_MAIN_ANALOG,GWindowRoot.curPage,0);
+    GWindowRoot.setNewPage(_PG_MAIN_DIGITAL,GWindowRoot.curPage,0);
+
 }
 
 void systemPage::initPage(void){
@@ -104,10 +102,9 @@ void systemPage::initPage(void){
     connect(EXIT_BUTTON,SIGNAL(released()),this,SLOT(onExitButton()),Qt::UniqueConnection);
 
     //______________________________________________________________________________________________________
-    connect(ui->buttonLeftGantry,SIGNAL(released()),this,SLOT(onLeftGantry()),Qt::UniqueConnection);
+
     connect(ui->buttonLeftStarter,SIGNAL(released()),this,SLOT(onLeftStarter()),Qt::UniqueConnection);
-    connect(ui->buttonLeftDetector,SIGNAL(released()),this,SLOT(onLeftDetector()),Qt::UniqueConnection);
-    connect(ui->buttonRightGantry,SIGNAL(released()),this,SLOT(onRightGantry()),Qt::UniqueConnection);
+    connect(ui->buttonLeftDetector,SIGNAL(released()),this,SLOT(onLeftDetector()),Qt::UniqueConnection);    
     connect(ui->buttonRightStarter,SIGNAL(released()),this,SLOT(onRightStarter()),Qt::UniqueConnection);
     connect(ui->buttonRightDetector,SIGNAL(released()),this,SLOT(onRightDetector()),Qt::UniqueConnection);
     connect(ui->buttonRightRotation,SIGNAL(released()),this,SLOT(onRightRotation()),Qt::UniqueConnection);
@@ -118,7 +115,6 @@ void systemPage::initPage(void){
 
     if(!isMaster) return;
 
-    ApplicationDatabase.setData(_DB_SERVICE1_INT,(int) pConfig->sys.gantryModel,DBase::_DB_FORCE_SGN);
     ApplicationDatabase.setData(_DB_SERVICE2_INT,(int) pConfig->sys.highSpeedStarter,DBase::_DB_FORCE_SGN);
     ApplicationDatabase.setData(_DB_SERVICE3_INT,(int) pConfig->sys.armMotor,DBase::_DB_FORCE_SGN);
     ApplicationDatabase.setData(_DB_SERVICE4_INT,(int) pConfig->sys.detectorType,DBase::_DB_FORCE_SGN);
@@ -134,7 +130,6 @@ void systemPage::exitPage(void){
 
     if(isMaster){
         // Salvataggio della configurazione e reboot della macchina
-        pConfig->sys.gantryModel = ApplicationDatabase.getDataI(_DB_SERVICE1_INT);
         pConfig->sys.highSpeedStarter = ApplicationDatabase.getDataI(_DB_SERVICE2_INT);
         pConfig->sys.armMotor = ApplicationDatabase.getDataI(_DB_SERVICE3_INT);
         pConfig->sys.trxMotor = ApplicationDatabase.getDataI(_DB_SERVICE5_INT);
@@ -166,9 +161,7 @@ void systemPage::valueChanged(int index,int opt)
 {
     switch(index)
     {
-    case _DB_SERVICE1_INT:
-        ui->gantry->setText(getGantryStr(ApplicationDatabase.getDataI(index)));
-    break;
+
     case _DB_SERVICE2_INT:
         ui->starter->setText(getStarterStr(ApplicationDatabase.getDataI(index)));
     break;
@@ -186,18 +179,6 @@ void systemPage::valueChanged(int index,int opt)
     }
 
 }
-
-
-void systemPage::onLeftGantry(void){
-    int val = ApplicationDatabase.getDataI(_DB_SERVICE1_INT);
-    if(val==GANTRY_MODEL_ANALOG) val = GANTRY_MODEL_DIGITAL;
-    else val = GANTRY_MODEL_ANALOG;
-    ApplicationDatabase.setData(_DB_SERVICE1_INT,val);
-}
-void systemPage::onRightGantry(void){
-    onLeftGantry();
-}
-
 
 
 void systemPage::onLeftStarter(void){
@@ -245,12 +226,6 @@ void systemPage::onLeftDetector(void){
     ApplicationDatabase.setData(_DB_SERVICE4_INT,val);
 }
 
-
-
-QString systemPage::getGantryStr(unsigned char val){
-    if(val==GANTRY_MODEL_ANALOG) return QString("ANALOGIC MODEL");
-    else return QString("DIGITAL MODEL");
-}
 
 QString systemPage::getStarterStr(unsigned char val){
     if(val) return QString("HIGH SPEED STARTER");

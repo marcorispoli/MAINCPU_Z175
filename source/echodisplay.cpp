@@ -311,8 +311,7 @@ void  EchoDisplay::masterDatabaseInitialization(void)
     unsigned char conf=0;
     if(pConfig->sys.highSpeedStarter) conf|=_ARCH_HIGH_SPEED_STARTER;
     if(pConfig->sys.trxMotor) conf|=_ARCH_TRX_MOTOR ;
-    if(pConfig->sys.armMotor) conf|=_ARCH_ARM_MOTOR ;
-    if(pConfig->sys.gantryModel==GANTRY_MODEL_DIGITAL) conf|=_ARCH_GANTRY_DIGITAL;
+    if(pConfig->sys.armMotor) conf|=_ARCH_ARM_MOTOR ;    
     ApplicationDatabase.setData(_DB_SYSTEM_CONFIGURATION, (unsigned char) conf , DBase::_DB_FORCE_SGN);
 
     ApplicationDatabase.setData(_DB_VPRIMARIO, (int) pGeneratore->genCnf.pcb190.HV_VPRIMARIO, DBase::_DB_FORCE_SGN);

@@ -909,5 +909,9 @@ bool wait2DBackFrontCompletion(int timeout){
     return true;
 }
 
+bool pcb249U2_GetFreeze(void){
+    return STATUS.freeze;
+}
+
 /* EOF */
  

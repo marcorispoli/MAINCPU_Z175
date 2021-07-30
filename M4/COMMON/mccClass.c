@@ -236,14 +236,7 @@ bool mccPCB215Notify(unsigned char id,unsigned char mcccode,unsigned char* buffe
 {
     return mccLibNotify(MCC_PCB215_NOTIFY,id,mcccode,buffer,buflen);
 }          
-bool mccPCB244ANotify(unsigned char id,unsigned char mcccode,unsigned char* buffer, int buflen)
-{
-     return mccLibNotify(MCC_244_A_FUNCTIONS,id,mcccode,buffer,buflen);
-}
-/*bool mccActuatorNotify(unsigned char id,unsigned char mcccode,unsigned char* buffer, int buflen)
-{
-    return mccLibNotify(MCC_ACTUATOR_NOTIFY,id,mcccode,buffer,buflen);
-} */
+
 bool mccPCB249U1Notify(unsigned char id,unsigned char mcccode,unsigned char* buffer, int buflen)
 {
     return mccLibNotify(MCC_PCB249U1_NOTIFY,id,mcccode,buffer,buflen);

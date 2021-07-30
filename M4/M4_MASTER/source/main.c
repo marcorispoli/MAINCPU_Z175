@@ -34,7 +34,6 @@ void ioSetInputs(_MccFrame_Str* mcc_cmd);
 void MainGetCfg(void);
 
 void startupDigitalGantry(void);
-void startupAnalogGantry(void);
 
 const TASK_TEMPLATE_STRUCT  MQX_template_list[] = 
 { 
@@ -44,13 +43,11 @@ const TASK_TEMPLATE_STRUCT  MQX_template_list[] =
    { _IDTASK(PCB215),                   pcb215_driver,          1500,   _PRIOTASK(PCB215),              "pcb215_driver",0,                      0,      0 },
    { _IDTASK(PCB190),                   pcb190_driver,          1500,   _PRIOTASK(PCB190),              "pcb190_driver",0,                      0,      0 },
    { _IDTASK(PCB244),                   pcb244_driver,          1500,   _PRIOTASK(PCB244),              "pcb244_driver",0,                      0,      0 },
-   { _IDTASK(PCB244_A),                 pcb244_A_driver,        1500,   _PRIOTASK(PCB244_A),            "pcb244_A_driver",0,                      0,      0 },
    { _IDTASK(BIOPSY),                   BIOPSY_driver,          1500,   _PRIOTASK(BIOPSY),              "BIOPSY_driver",0,                      0,      0 },
    { _IDTASK(PCB249U1),                 pcb249U1_driver,        1500,   _PRIOTASK(PCB249U1),            "pcb249U1_driver",0,                    0,      0 },
    { _IDTASK(PCB249U2),                 pcb249U2_driver,        1500,   _PRIOTASK(PCB249U2),            "pcb249U2_driver",0,                    0,      0 },
    { _IDTASK(GUI_INTERFACE),            gui_interface_task,     1500,   _PRIOTASK(GUI_INTERFACE),       "gui_task",     0,                      0,      0 },
    { _IDTASK(STD_RX_TASK ),             std_rx_task,            1500,   _PRIOTASK(STD_RX_TASK ),        "std_rx_task",  0,                      0,      0 },
-   { _IDTASK(ANALOG_RX_TASK ),          analog_rx_task,         1500,   _PRIOTASK(ANALOG_RX_TASK ),     "analog_rx_task",  0,                      0,      0 },
    { _IDTASK(STD_RX_AEC_TASK ),         std_aec_rx_task,        1500,   _PRIOTASK(STD_RX_AEC_TASK ),    "std_rx_aec_task",  0,                      0,      0 },
    { _IDTASK(STD_RX_AE_TASK ),          std_ae_rx_task,         1500,   _PRIOTASK(STD_RX_AE_TASK ),     "std_rx_ae_task",  0,                      0,      0 },
    { _IDTASK(TOMO_RX_TASK ),            tomo_rx_task,           1500,   _PRIOTASK(TOMO_RX_TASK ),       "tomo_rx_task",  0,                      0,      0 },
@@ -101,6 +98,7 @@ void main_task(uint32_t initial_data)
  generalConfiguration.trxExecution.completed = true;
  generalConfiguration.trxExecution.idle = true;
  generalConfiguration.manual_mode_activation=_MANUAL_ACTIVATION_ARM_STANDARD;
+ generalConfiguration.lenze_park_enable_run = false;
 
  generalConfiguration.armExecution.run = false;
  generalConfiguration.armExecution.lenze_run = false;
@@ -206,17 +204,9 @@ void main_task(uint32_t initial_data)
 
 #endif
 
-#ifdef __FORCE_DIGITAL
-   startupDigitalGantry();
-#else
-   //____________________________________________________________________________________________________
-   if(generalConfiguration.gantryCfg.gantryModel == GANTRY_MODEL_DIGITAL) startupDigitalGantry();
-   else if(generalConfiguration.gantryCfg.gantryModel == GANTRY_MODEL_ANALOG) startupAnalogGantry();
-   else {
-       printf("INVALID GANTRY HARDWARE SETUP SELECTION: STOP WORKING!\n");
-   }
-#endif
 
+
+   startupDigitalGantry();
    _task_block();
 
 
@@ -287,73 +277,11 @@ void startupDigitalGantry(void){
    _task_block();
 }
 
-void startupAnalogGantry(void){
-    _task_id tid;
-    printf("STARTUP GANTRY ANALOG MODEL\n");    
-
-    // Partenza sequenze raggi nella versione digitale
-   tid= _task_create(0,_IDTASK(ANALOG_RX_TASK),0);
-
-   //   Apertura driver PCB244: il driver NON deve attendere la connessione
-   tid = _task_create(0,_IDTASK(PCB244_A),(uint32_t) NULL);
-
-   // Partenza processo gestione biopsia (opzionale)
-   tid = _task_create(0,_IDTASK(BIOPSY),(uint32_t) NULL);
-
-   // Crea il driver PCB215
-   tid = _task_create(0,_IDTASK(PCB215),(uint32_t) NULL);
-
-   //   Apertura driver PCB190
-   tid = _task_create(0,_IDTASK(PCB190),(uint32_t) NULL);
-
-   //   Apertura driver PCB249U1
-   tid = _task_create(0,_IDTASK(PCB249U1),(uint32_t) NULL);
-
-   //   Apertura driver PCB249U2
-   tid = _task_create(0,_IDTASK(PCB249U2),(uint32_t) NULL);
-
-   // Attende che i dispositivi locali siano connessi e che le revisioni siano arrivate
-   printf("ATTESA CONNESSIONE PER I SEGUENTI PROCESSI: PCB249U1, PCB249U2, PCB190, PCB269\n");
-   while(1){
-       actuatorsGetStatus();
-       if(_EVWAIT_TALL(_MOR4(_EV1_PCB249U2_CONNECTED,_EV1_PCB249U1_CONNECTED,_EV1_PCB190_CONNECTED,_EV1_PCB215_CONNECTED),100)==true) break;
-   }
-
-   // Autorizza il completamento del refresh registri sui vari moduli ed attende il completamento prima di autorizzare la configurazione
-   printf("ATTESA REFRESH REGISTRI PERIFERICHE ..\n");
-   _EVSET(_EV1_UPDATE_REGISTERS);
-
-   // Attesa completamento dello startup di tutti i processi
-   while(1){
-       actuatorsGetStatus();
-       if((_EVWAIT_TALL(_MOR4(_EV2_PCB249U1_STARTUP_OK,_EV2_PCB249U2_STARTUP_OK,_EV2_PCB190_STARTUP_OK,_EV2_PCB215_STARTUP_OK),100)==true) && (generalConfiguration.slaveDeviceConnected)) break;
-       _time_delay(100);
-   }
-   printf("CONNESSIONE DI TUTTI I DISPOSITIVI COMPLETATA\n");
-
-   // Segnalazione a GUI che può ricevere la configurazione dei dispositivi
-   generalConfiguration.deviceConnected = 1;
-
-   // Main si sospende. Non ha altro da fare
-   printf("MAIN: STARTUP COMPLETATO. ATTESA CONFIGURAZIONE DISPOSITIVI\n");
-
-   _EVWAIT_ALL(_EV1_DEV_CONFIG_OK);
-    printf("MAIN: CONFIGURAZIONE COMPLETATA\n");
-
-    generalConfiguration.deviceConfigured = true;
-
-    // Fine thread main
-   _task_block();
-}
-
 
 // Stampa della configurazione hardware
 void mainPrintHardwareConfig(void){
     printf("HARDWARE CONFIGURATION:\n");
 
-    if(generalConfiguration.gantryCfg.gantryModel == GANTRY_MODEL_ANALOG) printf("ANALOG MODEL\n");
-    else if(generalConfiguration.gantryCfg.gantryModel == GANTRY_MODEL_DIGITAL)  printf("DIGITAL MODEL\n");
-    else printf("INVALID MODEL:%d\n", generalConfiguration.gantryCfg.gantryModel);
 
     if(generalConfiguration.gantryCfg.detectorType == DETECTOR_SCREENPLUS) printf("DETECTOR: %s\n",DETECTOR_SCREENPLUS_STR);
     else if(generalConfiguration.gantryCfg.detectorType == DETECTOR_LMAM2) printf("DETECTOR: %s\n",DETECTOR_LMAM2_STR);

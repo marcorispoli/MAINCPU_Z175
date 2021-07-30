@@ -431,6 +431,32 @@ void actuatorsManualTrxMove(unsigned char mode){
 
 
 /*
+ * This function causes the Lenz to Move in Auto mode to a given target
+ */
+void actuatorsLenzeUnpark(void){
+    uint8_t buffer[8];
+    printf("ACUATORS: ACTUATORS_LENZE_UNPARK COMMAND\n");
+    generalConfiguration.armExecution.id=0; // Non comunica il fine movimento lenze
+    generalConfiguration.armExecution.lenze_run=true; // Anticipa il flag di attivazione
+    buffer[0]= ACTUATORS_LENZE_UNPARK;
+    CanSendToActuatorsSlave(buffer);
+    return ;
+}
+
+/*
+ * This function causes the Lenz to Move in Auto mode to a given target
+ */
+void actuatorsLenzPark(void){
+    uint8_t buffer[8];
+    printf("ACUATORS: ACTUATORS_LENZE_PARK COMMAND\n");
+    generalConfiguration.armExecution.id=0; // Non comunica il fine movimento lenze
+    generalConfiguration.armExecution.lenze_run=true; // Anticipa il flag di attivazione
+    buffer[0]= ACTUATORS_LENZE_PARK;
+    CanSendToActuatorsSlave(buffer);
+    return ;
+}
+
+/*
   Funzione configuratrice
 */
 bool config_trx(bool setmem, unsigned char blocco, unsigned char* buffer, unsigned char len){
@@ -517,7 +543,8 @@ bool config_arm(bool setmem, unsigned char blocco, unsigned char* buffer, unsign
 }
 
 bool config_lenze(bool setmem, unsigned char blocco, unsigned char* buffer, unsigned char len){
-  printf("AGGIORNAMENTO LENZE \n");
+/*
+    printf("AGGIORNAMENTO LENZE \n");
   if(setmem){
     if(len!=sizeof(generalConfiguration.lenzeCfg)) return false;
     memcpy(&generalConfiguration.lenzeCfg,buffer,len);
@@ -531,10 +558,47 @@ bool config_lenze(bool setmem, unsigned char blocco, unsigned char* buffer, unsi
   data[BYTE_SET_LENZE_CONFIG_MAXLIM]=generalConfiguration.lenzeCfg.max_lenze_position;
   data[BYTE_SET_LENZE_CONFIG_MANSPEED]=generalConfiguration.lenzeCfg.manual_speed;
   data[BYTE_SET_LENZE_CONFIG_AUTOSPEED]=generalConfiguration.lenzeCfg.automatic_speed;
+  data[BYTE_SET_LENZE_PARKING_MODE]=generalConfiguration.lenzeCfg.startupInParkingMode;
+
   data[BYTE_SET_LENZE_CALIBRATED]=generalConfiguration.lenzeCfg.calibrated;
 
 
   CanSendToActuatorsSlave(data);
+  return true;
+  */
+
+
+  if(setmem){
+    if(len!=sizeof(generalConfiguration.lenzeCfg)) return false;
+    memcpy(&generalConfiguration.lenzeCfg,buffer,len);
+  }
+
+  // Invia i dati di configurazione al Lenze
+  uint8_t data[8];
+  unsigned char dim;
+  int i;
+  unsigned char* pData;
+  unsigned char offset;
+
+  offset = 0;
+  pData = (unsigned char*) &generalConfiguration.lenzeCfg;
+
+  data[0]= ACTUATORS_SET_LENZE_CONFIG;
+  data[1]= offset;                // Offset
+
+  if((sizeof(lenzeConfig_Str)) >=5) dim=5;
+  else dim = (sizeof(lenzeConfig_Str));
+  data[2] = dim;
+
+  for(i=0; i<dim; i++){
+      data[3+i] = pData[i];
+  }
+
+  printf("CONFIGURAZIONE LENZE\n");
+  _EVCLR(_EV1_LENZE_CONFIGURED);
+  CanSendToActuatorsSlave(data);
+  _EVWAIT_ALL(_EV1_LENZE_CONFIGURED);
+   printf("CONFIGURAZIONE LENZE OK\n");
   return true;
 }
 
@@ -688,9 +752,29 @@ void actuatorsManageEnables(void){
         return;
     }
 
+    // Condizioni particolari nel caso di Parking mode attivo
+    if(generalConfiguration.lenzeCfg.startupInParkingMode){
 
-    // Non c'è la pendolazione
-    if(!generalConfiguration.gantryCfg.trxMotor) SystemOutputs.CPU_PEND_ENA = 0;
+        SystemOutputs.CPU_PEND_ENA = 0;
+        SystemOutputs.CPU_ROT_ENA=0;
+
+        if(generalConfiguration.lenze_park_enable_run)       SystemOutputs.CPU_LIFT_ENA=1;
+        else SystemOutputs.CPU_LIFT_ENA=0;
+
+        // Verifica se deve aggiornare gli IO
+        if((SystemOutputs.CPU_PEND_ENA!=pendena) ||
+           (SystemOutputs.CPU_ROT_ENA!=rotena) ||
+           (SystemOutputs.CPU_LIFT_ENA!=liftena)){
+
+            _mutex_lock(&output_mutex);
+            _EVSET(_EV0_OUTPUT_CAMBIATI);
+            _mutex_unlock(&output_mutex);
+        }
+        return;
+    }
+
+    // Pendolazione
+    if(!generalConfiguration.gantryCfg.trxMotor)  SystemOutputs.CPU_PEND_ENA = 0;
     else SystemOutputs.CPU_PEND_ENA = 1;
 
 
@@ -1093,6 +1177,10 @@ void actuatorsRxFromTrx(uint8_t* data){
 //______________________________________________________________________________________________
 void actuatorsRxFromLenze(uint8_t* data){
     unsigned char buffer[8];
+    unsigned char dim;
+    int i;
+    unsigned char* pData;
+    unsigned char offset;
 
 
     switch(data[0]){
@@ -1105,15 +1193,19 @@ void actuatorsRxFromLenze(uint8_t* data){
 
     case ACTUATORS_LENZE_RUN_STAT:
         //data[1]==1 -> MANUALE, data[1]==0 -> Automatico
+        // data[2,3] = POtenziometro *10
         if(data[1]==0){
             generalConfiguration.armExecution.lenze_run = true;
-            printf("COMUNICAZIONE LENZE IN RUN\n");
+            printf("LENZE ATTIVATO IN MODO AUTOMATICO \n");
             return;
         }
 
         // Segnalazione di fine movimento lenze
-        printf("COMUNICAZIONE LENZE FINE MOVIMENTO\n");
+
+        printf("COMUNICAZIONE LENZE FINE MOVIMENTO AUTOMATICO\n");
         generalConfiguration.armExecution.lenze_run = false;
+        generalConfiguration.armExecution.lenze_pot = data[2] + 256 * data[3];
+
         if(generalConfiguration.armExecution.id==0) return; // Non c'è nessuna comunicazione da inviare
         if(generalConfiguration.armExecution.run) return; // Arm ancora in movimento
 
@@ -1123,6 +1215,38 @@ void actuatorsRxFromLenze(uint8_t* data){
         buffer[1] = 0;
         mccGuiNotify(generalConfiguration.armExecution.id,MCC_CMD_ARM,buffer,2);
         generalConfiguration.armExecution.id=0;
+
+        break;
+
+    case ACTUATORS_SET_LENZE_CONFIG:
+
+        // Feedback di avvenuta ricezione blocco dati di configurazione
+        if(data[1]+data[2]<(sizeof(lenzeConfig_Str))){
+            // Invia un altro blocco
+            offset = data[1]+data[2];
+            pData = (unsigned char*) &generalConfiguration.lenzeCfg;
+
+            buffer[0]= ACTUATORS_SET_LENZE_CONFIG;
+            buffer[1]= offset;                // Offset
+
+            if((sizeof(lenzeConfig_Str)-offset) >=5) dim=5;
+            else dim = (sizeof(lenzeConfig_Str)-offset);
+            buffer[2] = dim;
+
+            for(i=0; i<dim; i++){
+                buffer[3+i] = pData[offset+i];
+            }
+            CanSendToActuatorsSlave(buffer);
+
+        }else{
+            // Invia blocco di termine
+            buffer[0]=ACTUATORS_SET_LENZE_CONFIG;
+            buffer[1]=255;
+            buffer[2]=0;
+            CanSendToActuatorsSlave(buffer);
+            printf("FINE BLOCCO CONFIG LENZE\n");
+            _EVSET(_EV1_LENZE_CONFIGURED);
+        }
 
         break;
 

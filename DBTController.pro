@@ -68,22 +68,13 @@ HEADERS += \
     source/Service/Tools/tiltingtool.h \
     source/Service/Tools/armtool.h \
     source/Service/Tools/lenzetool.h \
-    source/ANALOG/pageOpenAnalogic.h \
-    source/ANALOG/pannelloComandi.h \
-    source/ANALOG/pannelloCompressione.h \
-    source/ANALOG/pannelloSpessore.h \
-    source/ANALOG/pannelloKv.h \
-    source/ANALOG/pannelloProiezioni.h \
-    source/ANALOG/analog.h \
-    source/ANALOG/pannelloMas.h \
-    source/ANALOG/pannelloOpzioni.h \
     shared_a5_m4/mcc.h \
     shared_a5_m4/errors.h \
     shared_a5_m4/defines.h \
-    source/ANALOG/Calibration/pageCalibAnalogic.h \
-    source/ANALOG/Calibration/analog_calib.h \
     source/Service/Tools/invertertool.h \
-    source/print.h
+    source/print.h \
+    source/Service/Calib/calibColli.h \
+    source/Service/Calib/calibParking.h
 
 SOURCES += \
     source/main.cpp \
@@ -132,22 +123,10 @@ SOURCES += \
     source/Service/Tools/tiltingtool.cpp \
     source/Service/Tools/armtool.cpp \
     source/Service/Tools/lenzetool.cpp \
-    source/ANALOG/pageOpenAnalogic.cpp \
-    source/ANALOG/pannelloComandi.cpp \
-    source/ANALOG/pannelloCompressione.cpp \
-    source/ANALOG/pannelloSpessore.cpp \
-    source/ANALOG/pannelloKv.cpp \
-    source/ANALOG/pannelloProiezioni.cpp \
-    source/ANALOG/pannelloMas.cpp \
-    source/ANALOG/pannelloOpzioni.cpp \
-    source/ANALOG/analogXrayProcedures.cpp \
-    source/ANALOG/Calibration/pageCalibAnalogic.cpp \
-    source/ANALOG/Calibration/pageAnalogicDetectorCalibration.cpp \
     source/Service/Tools/invertertool.cpp \
-    source/ANALOG/Calibration/pageAnalogicProfileCalibration.cpp \
     source/print.cpp \
-    source/ANALOG/Calibration/pageAnalogicTubeCalibration.cpp \
-    source/ANALOG/Calibration/pageAnalogicManualExposure.cpp
+    source/Service/Calib/calibColli.cpp \
+    source/Service/Calib/calibParking.cpp
 
 
 FORMS += \
@@ -169,9 +148,9 @@ FORMS += \
     source/Service/Tools/tilting.ui \
     source/Service/Tools/arm.ui \
     source/Service/Tools/lenze.ui \
-    source/ANALOG/analog.ui \
-    source/ANALOG/Calibration/analog_calib.ui \
-    source/Service/Tools/inverter.ui
+    source/Service/Tools/inverter.ui \
+    source/Service/Calib/calibColli.ui \
+    source/Service/Calib/calibParking.ui
 
 
 
@@ -184,5 +163,5 @@ RESOURCES += \
     resource/ui/grafica.qrc
 
 OTHER_FILES += \
-    source/release.txt
+    Deploy/RELEASE/Release_Note
 

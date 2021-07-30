@@ -112,6 +112,18 @@ OpenStudyPage::OpenStudyPage(bool local, QString bgl, QString bgs , bool showLog
     pulsanteTcuffia = new GPush((GWindow*) this,setPointPath(8,32,171,171,171,171,237,32,237),32,171,0,0,FALSE);
     cuffiaViewMode = 0;// 0 = HU%, 1=HU, 2 =Â°C
 
+
+
+    pulsanteManualColli = new GPush((GWindow*) this, QPixmap("://paginaOpenStudy/paginaOpenStudy/AutoColliSym.png"),QPixmap("://paginaOpenStudy/paginaOpenStudy/AutoColliSym.png"),setPointPath(8,242,104,318,104,318,162,242,162),242,104,0,0);
+    pulsanteManualColli->setEnable(true);
+    manualListPix = this->addPixmap(QPixmap("://paginaOpenStudy/paginaOpenStudy/manualListFieldY.png"));
+    manualListPix->setPos(28,106);
+    manualListPix->hide();
+    pulsanteToggleColliDec = new GPush((GWindow*) this,setPointPath(8,31,110,94,110,94,160,31,160),31,110,0,0,FALSE);
+    pulsanteToggleColliDec->setEnable(false);
+    pulsanteToggleColliInc = new GPush((GWindow*) this,setPointPath(8,152,110,231,110,231,160,152,160),152,110,0,0,FALSE);
+    pulsanteToggleColliInc->setEnable(false);
+
     // HU Anode Label
     font.setPointSize(23);
     font.setStretch(30);
@@ -183,6 +195,7 @@ OpenStudyPage::OpenStudyPage(bool local, QString bgl, QString bgs , bool showLog
     unlockCompressorPix->setPos(24,316);
 
 
+
     // Campo Ready
     readyPix = this->addPixmap(QPixmap(NOTREADYPIXY));
     readyPix->hide();
@@ -232,6 +245,8 @@ OpenStudyPage::OpenStudyPage(bool local, QString bgl, QString bgs , bool showLog
     timerId = startTimer(1000);
     disableTimedButtons = false; // Abilitazione pulsanti
     isOpen = false;
+    manualColliMode = false;
+    manualColliTimer = 0;
 
 
 }
@@ -295,10 +310,25 @@ void OpenStudyPage::setCloseStudy(void){
             pConfig->saveUserCfg();
             enableSblocco = pConfig->userCnf.enableSblocco;
         }
+
+        // Reset della collimazione manuale e ripristino di quella automatica
+        if(manualColliMode){
+            manualColliMode=false;
+            updateManualCollimationStatus();
+        }
     }
 }
 
 void OpenStudyPage::openStudyEvent(void){
+
+
+    manualColliMode = false;
+    manualPad = PAD_ENUM_SIZE; // Corrisponde al Custom
+    manualListPix->hide();
+    pulsanteToggleColliDec->setEnable(false);
+    pulsanteToggleColliInc->setEnable(false);
+
+    pulsanteManualColli->setPix("://paginaOpenStudy/paginaOpenStudy/AutoColliSym.png","://paginaOpenStudy/paginaOpenStudy/AutoColliSym.png");
 
     if (ApplicationDatabase.getDataU(_DB_STUDY_STAT)==_OPEN_STUDY_DICOM)
     {
@@ -307,6 +337,7 @@ void OpenStudyPage::openStudyEvent(void){
         //pulsanteSbloccoDis->setPix(PUSH_SBLK_PIXC, PUSH_SBLK_PIX_SELC );
         acrPix=QPixmap(ACRPIXC);
         pulsanteAcr->setVisible(false);
+        manualListPix->setPixmap(QPixmap("://paginaOpenStudy/paginaOpenStudy/manualListFieldC.png"));
 
     }else
     {
@@ -315,6 +346,7 @@ void OpenStudyPage::openStudyEvent(void){
         //pulsanteSbloccoDis->setPix(PUSH_SBLK_PIXY, PUSH_SBLK_PIX_SELY );
         acrPix=QPixmap(ACRPIXY);
         pulsanteAcr->setVisible(false);
+        manualListPix->setPixmap(QPixmap("://paginaOpenStudy/paginaOpenStudy/manualListFieldY.png"));
     }
 
 
@@ -374,6 +406,8 @@ void OpenStudyPage::openStudyEvent(void){
     enableSblocco = pConfig->userCnf.enableSblocco;
     ApplicationDatabase.setData(_DB_COMPRESSOR_UNLOCK, (unsigned char) pConfig->userCnf.enableSblocco,DBase::_DB_FORCE_SGN);
 
+    // Aggiorna lo stato del collimatore
+    pCollimatore->updateColli();
 }
 
 void OpenStudyPage::setProiezione(QString name){
@@ -473,6 +507,15 @@ void OpenStudyPage::timerEvent(QTimerEvent* ev)
 {
     static bool loc_status=false;
 
+
+    if(ev->timerId()==manualColliTimer)
+    {
+        manualColliTimer = 0;
+        killTimer(manualColliTimer);
+        if(!isMaster) return;
+        pCollimatore->manualColliUpdate();
+        return;
+    }
 
     if(ev->timerId()==timerDisableButton)
     {
@@ -583,7 +626,12 @@ void OpenStudyPage::valueChanged(int index,int opt)
         setIngrandimento(ApplicationDatabase.getDataS(_DB_ACCESSORY_NAME));
         break;
 
+    case _DB_MANUAL_COLLIMAZIONE:
+        if(!manualColliMode) return;
+        setCollimazione(ApplicationDatabase.getDataS(_DB_MANUAL_COLLIMAZIONE));
+        break;
     case _DB_COLLIMAZIONE:
+        if(manualColliMode) return;
         setCollimazione(ApplicationDatabase.getDataS(_DB_COLLIMAZIONE));
         break;
 
@@ -598,7 +646,15 @@ void OpenStudyPage::valueChanged(int index,int opt)
 
     case _DB_XRAY_SYM:
         if(ApplicationDatabase.getDataU(index)) setXrayOn(true);
-        else setXrayOn(false);
+        else{
+            setXrayOn(false);
+
+            // Reset della collimazione manuale e ripristino di quella automatica
+            if(manualColliMode){
+                manualColliMode=false;
+                updateManualCollimationStatus();
+            }
+        }
 
     break;
     case _DB_COMPRESSOR_UNLOCK:
@@ -758,8 +814,82 @@ void OpenStudyPage::buttonActivationNotify(int id, bool status,int opt)
         return;
     }
 
+    if(pbutton==pulsanteManualColli)
+    {
+        // Apertura menu di impostazione manuale della collimazione
+        manualColliMode = !manualColliMode;
+        updateManualCollimationStatus();
+        return;
+    }
+
+    if(pbutton==pulsanteToggleColliInc)
+    {
+        toggleManualPad(true);
+        return;
+    }
+    if(pbutton==pulsanteToggleColliDec)
+    {
+        toggleManualPad(false);
+        return;
+    }
 }
 
+
+
+void OpenStudyPage::updateManualCollimationStatus(void){
+
+    if(manualColliMode){
+        pulsanteManualColli->setPix("://paginaOpenStudy/paginaOpenStudy/ManualColliSym.png","://paginaOpenStudy/paginaOpenStudy/ManualColliSym.png");
+        manualListPix->show();
+        pulsanteToggleColliDec->setEnable(true);
+        pulsanteToggleColliInc->setEnable(true);
+    }else{
+        pulsanteManualColli->setPix("://paginaOpenStudy/paginaOpenStudy/AutoColliSym.png","://paginaOpenStudy/paginaOpenStudy/AutoColliSym.png");
+        manualPad = PAD_ENUM_SIZE; // Ricominceraà dal pad custom
+        manualListPix->hide();
+        pulsanteToggleColliDec->setEnable(false);
+        pulsanteToggleColliInc->setEnable(false);
+
+    }
+
+    if(!isMaster) return;
+
+    // Impostazione del campo stringa
+    if(manualColliMode){
+        if(manualPad == PAD_ENUM_SIZE)
+            ApplicationDatabase.setData(_DB_MANUAL_COLLIMAZIONE,"CUSTOM",DBase::_DB_FORCE_SGN);
+        else
+            ApplicationDatabase.setData(_DB_MANUAL_COLLIMAZIONE,pCompressore->getPadName((Pad_Enum)manualPad),DBase::_DB_FORCE_SGN);
+
+        pCollimatore->selectManualColliFormat(manualPad);
+
+        if(manualColliTimer){
+            killTimer(manualColliTimer);
+        }
+        manualColliTimer = startTimer(3000);
+
+    }else{
+        ApplicationDatabase.setData(_DB_COLLIMAZIONE,ApplicationDatabase.getDataS(_DB_COLLIMAZIONE),DBase::_DB_FORCE_SGN); // Refresh del pad corrente
+        pCollimatore->manualCollimation = false;
+        pCollimatore->updateColli();
+    }
+
+
+}
+
+// Effettua lo scroll del pad corrente
+void OpenStudyPage::toggleManualPad(bool increment){
+    if(increment){
+        manualPad++;
+        if(manualPad > PAD_ENUM_SIZE) manualPad = 0;
+    }else{
+        manualPad--;
+        if(manualPad < 0 ) manualPad = PAD_ENUM_SIZE;
+    }
+
+    updateManualCollimationStatus();
+
+}
 
 void OpenStudyPage::setIntestazione()
 {
@@ -794,8 +924,13 @@ void OpenStudyPage::setAngolo(int val)
     angoloValue->update();
 }
 
+// Aggiorna il campo collimazione corrente con il nome del pad selezionato
+// se la modalità di collimazione è automatica.
+// Se la modalità di collimazione è invece manuale allora questo campo viene
+// impostato dalla funzione updateManualCollimationStatus
 void OpenStudyPage::setCollimazione(QString str)
 {
+
     collimazioneValue->labelText=str;
     collimazioneValue->labelColor=studyColor;
     collimazioneValue->update();

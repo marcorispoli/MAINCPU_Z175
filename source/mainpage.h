@@ -21,7 +21,8 @@ public:
         _MAIN_PANEL = 0,
         _ROT_PANEL,
         _TILT_PANEL,
-        _PWROFF_PANEL
+        _PWROFF_PANEL,
+        _PARK_PANEL
     };
 
 
@@ -106,7 +107,7 @@ private:
     GPush* pulsanteRotazioni;
     GPush* pulsanteTilt;
     GPush* pulsantePowerOff;
-    GPush* pulsanteOperatingMode; // Per Analogico
+
 
     QGraphicsPixmapItem* acPresent;
     GLabel* acLabel;
@@ -139,6 +140,12 @@ private:
     GPush* pulsanteCancPowerOff;
     GPush* pulsanteOkPowerOff;
     GLabel* powerOffLabel;
+
+    // PANNELLO PARKING MODE ________________________________
+    GPush* pulsanteOkUnpark;
+    void activateUnpark(void);
+    void activateParking(void);
+    QGraphicsPixmapItem* parkingPix;
 
 
 };

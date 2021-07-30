@@ -83,11 +83,6 @@ void Config::configMaster(void)
      compressor_configured=false;     // Compressore configurato
      collimator_configured=false;     // Configurazione collimatore acquisita
 
-     analog_configured = false;           // File di configurazione analogico
-     aec_configured=false;            // AEC configurato
-     kerma_mo_configured=false;       // Kerma data per Mo configurato;
-     kerma_rh_configured=false;       // Kerma data per Rh configurato;
-     kerma_cg_configured=false;       // Parametri CG configurati
 
     this->isMaster = TRUE;
     rvGuiMaster = QString("%1.%2").arg(APPREVMAJ).arg(APPREVMIN);
@@ -107,8 +102,7 @@ void Config::configMaster(void)
     rv249U1.clear();
     rv249U2.clear();
     rv190.clear();
-    rv244.clear();
-    rv244A.clear();
+    rv244.clear();    
     revisionOK = FALSE;
 
 
@@ -117,7 +111,7 @@ void Config::configMaster(void)
     readArmConfig();
     readLenzeConfig();
     readLogo();
-    analog_configured = openAnalogConfig();
+
 
     // Reset timers
     timerInstall = 0;
@@ -148,16 +142,6 @@ bool Config::testConfigError(bool msgon, bool forceshow){
         error = ERROR_CONF_COMPRESSOR;
     }else if(!collimator_configured){
         error = COLLI_WRONG_CONFIG;
-    }else if(pConfig->sys.gantryModel==GANTRY_MODEL_ANALOG){
-        if(!pConfig->analog_configured) error =  ERROR_ANALOG_CONFIG;
-        /*
-        else if(!pConfig->kerma_cg_configured) error =  ERROR_DOSE_CALCULATOR_CONFIGURATION;
-        else if( ((pConfig->analogCnf.primo_filtro==Collimatore::FILTRO_Mo) && (!pGeneratore->dose.MoKerma.configured))||
-                ((pConfig->analogCnf.primo_filtro==Collimatore::FILTRO_Rh) && (!pGeneratore->dose.RhKerma.configured))||
-                ((pConfig->analogCnf.secondo_filtro==Collimatore::FILTRO_Mo) && (!pGeneratore->dose.MoKerma.configured))||
-                ((pConfig->analogCnf.secondo_filtro==Collimatore::FILTRO_Rh) && (!pGeneratore->dose.RhKerma.configured))
-              ) error = ERROR_DOSE_FILTER_CALCULATOR;
-              */
     }
 
     if(!error){
@@ -221,28 +205,17 @@ void Config::configSlave(void)
 void Config::selectOperatingPage(){
     if(!isMaster) return;
 
-    // Distinzione tra macchina Analogica e Digitale
-    if(ApplicationDatabase.getDataU(_DB_SYSTEM_CONFIGURATION)&_ARCH_GANTRY_DIGITAL){
-        if(ApplicationDatabase.getDataU(_DB_ACCESSORIO)==BIOPSY_DEVICE){
-             //GWindowRoot.setNewPage(_PG_BIOPSY_DIGITAL,DBase::_DB_NO_ECHO);
-             GWindowRoot.setNewPage(_PG_BIOPSY_DIGITAL,GWindowRoot.curPage,0);
-             // paginaBiopsyDigital->setOpenStudy();
-        }else{
-             //GWindowRoot.setNewPage(_PG_OPEN_STUDY_DIGITAL,DBase::_DB_NO_ECHO);
-             GWindowRoot.setNewPage(_PG_OPEN_STUDY_DIGITAL,GWindowRoot.curPage,0);
-             // paginaOpenStudyDigital->setOpenStudy();
-        }
-    }else{
-        if(ApplicationDatabase.getDataU(_DB_ACCESSORIO)==BIOPSY_DEVICE){
-             GWindowRoot.setNewPage(_PG_BIOPSY_ANALOG,GWindowRoot.curPage,0);
-        }else{
-            if(ApplicationDatabase.getDataU(_DB_EXPOSURE_MODE) == _EXPOSURE_MODE_OPERATING_MODE){
-                GWindowRoot.setNewPage(_PG_OPEN_STUDY_ANALOG,GWindowRoot.curPage,0);
-            }else
-                GWindowRoot.setNewPage(_PG_CALIB_ANALOG,GWindowRoot.curPage,0);
-        }
 
+    if(ApplicationDatabase.getDataU(_DB_ACCESSORIO)==BIOPSY_DEVICE){
+         //GWindowRoot.setNewPage(_PG_BIOPSY_DIGITAL,DBase::_DB_NO_ECHO);
+         GWindowRoot.setNewPage(_PG_BIOPSY_DIGITAL,GWindowRoot.curPage,0);
+         // paginaBiopsyDigital->setOpenStudy();
+    }else{
+         //GWindowRoot.setNewPage(_PG_OPEN_STUDY_DIGITAL,DBase::_DB_NO_ECHO);
+         GWindowRoot.setNewPage(_PG_OPEN_STUDY_DIGITAL,GWindowRoot.curPage,0);
+         // paginaOpenStudyDigital->setOpenStudy();
     }
+
 }
 
 // Funzione per uscire dalla pagina Operativa del sistema.
@@ -250,26 +223,21 @@ void Config::selectMainPage(){
     if(!isMaster) return;
 
     // Distinzione tra macchina Analogica e Digitale
-    if(sys.gantryModel==GANTRY_MODEL_DIGITAL){
-        GWindowRoot.setNewPage(_PG_MAIN_DIGITAL,GWindowRoot.curPage,0);
-    }else{
-        GWindowRoot.setNewPage(_PG_MAIN_ANALOG,GWindowRoot.curPage,0);
-    }
+    GWindowRoot.setNewPage(_PG_MAIN_DIGITAL,GWindowRoot.curPage,0);
 
 }
 
 
 // SE IL FIL EDI CONFIGURAZIONE NON VIENE TROVATO O RISULTASSE
 // ILLEGGIBILE ALLORA IL SISTEMA APRIRA' LA FINESTRA DI FACTORY INIT
-#define SYS_ITEMS 5
+#define SYS_ITEMS 4
 bool Config::openSysCfg(void)
 {
     QList<QString> dati;
     unsigned char nItems = 0;
 
     // Inizializzazione
-    sys.detectorType =  DETECTOR_LMAM2;         // Di default usa LMAM2
-    sys.gantryModel =   GANTRY_MODEL_DIGITAL;   // Modello Analogico/Digitale
+    sys.detectorType =  DETECTOR_LMAM2;         // Di default usa LMAM2    
     sys.armMotor    =   true;                   // Presenza rotazione motorizzata/freno
     sys.trxMotor    =   true;                   // Presenza pendolazione
     sys.highSpeedStarter = true;                // Presenza starter alta velocità
@@ -300,9 +268,6 @@ bool Config::openSysCfg(void)
         if(dati.at(0)=="DETECTOR"){
             nItems++;
             sys.detectorType=dati.at(1).toInt();
-        }else  if(dati.at(0)=="GANTRY"){
-            nItems++;
-            sys.gantryModel=dati.at(1).toInt();
         }else  if(dati.at(0)=="ARMMOT"){
             nItems++;
             if(dati.at(1).toInt()==1)      sys.armMotor=true;
@@ -345,9 +310,6 @@ bool Config::saveSysCfg(void)
     }
 
     frame = QString("<DETECTOR,%1>      //  Detector Model\n").arg(sys.detectorType);
-    file.write(frame.toAscii().data());
-
-    frame = QString("<GANTRY,%1>        //  Gantry Model\n").arg(sys.gantryModel);
     file.write(frame.toAscii().data());
 
     if(sys.armMotor) frame = QString("<ARMMOT,1>        //  Arm with motor\n");
@@ -555,7 +517,8 @@ bool Config::openUserCfg(void)
         }
 
     }
-    if(sys.gantryModel == GANTRY_MODEL_DIGITAL) SN_Configured=true;
+
+    SN_Configured=true;
 
     file2.close();
     return TRUE;
@@ -672,8 +635,7 @@ bool Config::openPackageCfg(QString filename, firmwareCfg_Str* swConf)
     swConf->rv249U1.clear();
     swConf->rv249U2.clear();
     swConf->rv190.clear();
-    swConf->rv244.clear();
-    swConf->rv244A.clear();
+    swConf->rv244.clear();    
     swConf->installedPackageName.clear();
     swConf->rvPackage.clear();
     swConf->rvLanguage.clear();
@@ -702,8 +664,7 @@ bool Config::openPackageCfg(QString filename, firmwareCfg_Str* swConf)
         else if(dati.at(0)=="PCB249U1")     swConf->rv249U1 = dati.at(1);
         else if(dati.at(0)=="PCB249U2")     swConf->rv249U2 = dati.at(1);
         else if(dati.at(0)=="PCB190")       swConf->rv190 = dati.at(1);
-        else if(dati.at(0)=="PCB244")       swConf->rv244 = dati.at(1);
-        else if(dati.at(0)=="PCB244A")      swConf->rv244A = dati.at(1);
+        else if(dati.at(0)=="PCB244")       swConf->rv244 = dati.at(1);        
         else if(dati.at(0)=="PACKAGE")      swConf->rvPackage = dati.at(1);
         else if(dati.at(0)=="FILENAME")     swConf->installedPackageName = dati.at(1);
         else if(dati.at(0)=="LANGUAGE")     swConf->rvLanguage = dati.at(1);
@@ -761,9 +722,6 @@ bool Config::savePackageCfg(QString filename, firmwareCfg_Str sw)
     data = QString("<PCB244,%1>  //  Revisione PCB244\n").arg(sw.rv244);
     file.write(data.toAscii().data());
 
-    data = QString("<PCB244A,%1>  //  Revisione PCB244-A\n").arg(sw.rv244A);
-    file.write(data.toAscii().data());
-
     file.close();
     file.flush();
 
@@ -775,392 +733,6 @@ bool Config::savePackageCfg(QString filename, firmwareCfg_Str sw)
 
 }
 
-
-// Gestione file di configurazione per la macchina analogica
-#define _ANALOG_CONFIG_ID   1
-bool Config::openAnalogConfig(void){
-QList<QString> dati;
-
-    // Impostazioni di default
-    analogCnf.selectedDkV=250;
-    analogCnf.selectedDmas=500;
-    analogCnf.selected_filtro = analogCnf.primo_filtro;
-    analogCnf.auto_filtro_mode =false;
-    analogCnf.current_profile = 0;
-    analogCnf.aec_field = ANALOG_AECFIELD_FRONT;
-    analogCnf.tech_mode  = ANALOG_TECH_MODE_MANUAL;
-
-
-    // Campi file di configurazione analog.cnf
-    analogCnf.primo_filtro = Collimatore::FILTRO_Mo;
-    analogCnf.secondo_filtro = Collimatore::FILTRO_Mo;
-
-    analogCnf.DKV_HC = -2;
-    analogCnf.DKV_LD = +2;
-
-    analogCnf.minKvFilm = 23;
-    analogCnf.maxKvFilm = 32;
-    analogCnf.minKvCR = 26;
-    analogCnf.maxKvCR = 31;
-
-    analogCnf.calib_f1 = 0;     // Valore di riferimento per verifica sul campo (campo 1)
-    analogCnf.calib_f2 = 0;     // Valore di riferimento per verifica sul campo (campo 2)
-    analogCnf.calib_f3 = 0;     // Valore di riferimento per verifica sul campo (campo 3)
-    analogCnf.calib_margine = 10; // Margine di accettabilita per la verifica dei campi
-
-    analogCnf.LCC = 0;
-    analogCnf.LMLO = 45;
-    analogCnf.LML =90;
-    analogCnf.LISO=135;
-    analogCnf.LFB=180;
-    analogCnf.LSIO=-45;
-    analogCnf.LLM=-90;
-    analogCnf.LLMO=-135;
-
-    analogCnf.RCC=0;
-    analogCnf.RMLO=-45;
-    analogCnf.RML=-90;
-    analogCnf.RISO=-135;
-    analogCnf.RFB=180;
-    analogCnf.RSIO=45;
-    analogCnf.RLM=90;
-    analogCnf.RLMO=135;
-
-    // Lettura file di configurazione
-    QFile file("/resource/config/analog.cnf");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        return saveAnalogConfig();
-    }
-
-    // Lettura file di configurazione
-    while(1)
-    {
-        dati = getNextArrayFields(&file);
-        if(dati.isEmpty()) break;
-
-        if(dati.size()==2){
-            if(dati.at(0)=="DKV"){
-                analogCnf.selectedDkV = dati.at(1).toInt();
-            }else  if(dati.at(0)=="DMAS"){
-                analogCnf.selectedDmas = dati.at(1).toInt();
-            }else if(dati.at(0)=="PRIMO_FILTRO"){
-                if(dati.at(1)=="Rh") analogCnf.primo_filtro = Collimatore::FILTRO_Rh;
-                else analogCnf.primo_filtro = Collimatore::FILTRO_Mo;
-            }else if(dati.at(0)=="SECONDO_FILTRO"){
-                if(dati.at(1)=="Rh") analogCnf.secondo_filtro = Collimatore::FILTRO_Rh;
-                else if(dati.at(1)=="Mo") analogCnf.secondo_filtro = Collimatore::FILTRO_Mo;
-                else analogCnf.secondo_filtro = analogCnf.primo_filtro;
-            }else if(dati.at(0)=="SELECTED_FILTRO"){
-                if(dati.at(1)=="Rh") analogCnf.selected_filtro = Collimatore::FILTRO_Rh;
-                else analogCnf.selected_filtro = Collimatore::FILTRO_Mo;
-            }else if(dati.at(0)=="AUTO_FILTRO"){
-                if(dati.at(1).toInt()) analogCnf.auto_filtro_mode =true;
-                else analogCnf.auto_filtro_mode =false;               
-            }else if(dati.at(0)=="AEC_FIELD"){
-                if(dati.at(1)=="FRONT") analogCnf.aec_field = ANALOG_AECFIELD_FRONT;
-                else if(dati.at(1)=="BACK") analogCnf.aec_field = ANALOG_AECFIELD_BACK;
-                else analogCnf.aec_field = ANALOG_AECFIELD_CENTER;
-            }else if(dati.at(0)=="TECH_MODE"){
-                if(dati.at(1)=="MANUAL") analogCnf.tech_mode  = ANALOG_TECH_MODE_MANUAL;
-                else if(dati.at(1)=="SEMI") analogCnf.tech_mode  = ANALOG_TECH_MODE_SEMI;
-                else analogCnf.tech_mode  = ANALOG_TECH_MODE_AUTO;
-            }else if(dati.at(0)=="PROFILE"){
-                analogCnf.current_profile = dati.at(1).toInt();
-            }else if(dati.at(0)=="DKVHC"){
-                analogCnf.DKV_HC = dati.at(1).toInt();
-            }else if(dati.at(0)=="DKVLD"){
-                analogCnf.DKV_LD = dati.at(1).toInt();
-            }else if(dati.at(0)=="F1"){
-                analogCnf.calib_f1 = dati.at(1).toInt();
-            }else if(dati.at(0)=="F2"){
-                analogCnf.calib_f2 = dati.at(1).toInt();
-            }else if(dati.at(0)=="F3"){
-                analogCnf.calib_f3 = dati.at(1).toInt();
-            }else if(dati.at(0)=="MARGINE_F"){
-                analogCnf.calib_margine = dati.at(1).toInt();
-            }else if(dati.at(0)=="LCC"){
-                analogCnf.LCC = dati.at(1).toInt();
-            }else if(dati.at(0)=="LMLO"){
-                analogCnf.LMLO = dati.at(1).toInt();
-            }else if(dati.at(0)=="LML"){
-                analogCnf.LML = dati.at(1).toInt();
-            }else if(dati.at(0)=="LISO"){
-                analogCnf.LISO = dati.at(1).toInt();
-            }else if(dati.at(0)=="LFB"){
-                analogCnf.LFB = dati.at(1).toInt();
-            }else if(dati.at(0)=="LSIO"){
-                analogCnf.LSIO = dati.at(1).toInt();
-            }else if(dati.at(0)=="LLM"){
-                analogCnf.LLM = dati.at(1).toInt();
-            }else if(dati.at(0)=="LLMO"){
-                analogCnf.LLMO = dati.at(1).toInt();
-            }else if(dati.at(0)=="RCC"){
-                analogCnf.RCC = dati.at(1).toInt();
-            }else if(dati.at(0)=="RMLO"){
-                analogCnf.RMLO = dati.at(1).toInt();
-            }else if(dati.at(0)=="RML"){
-                analogCnf.RML = dati.at(1).toInt();
-            }else if(dati.at(0)=="RISO"){
-                analogCnf.RISO = dati.at(1).toInt();
-            }else if(dati.at(0)=="RFB"){
-                analogCnf.RFB = dati.at(1).toInt();
-            }else if(dati.at(0)=="RSIO"){
-                analogCnf.RSIO = dati.at(1).toInt();
-            }else if(dati.at(0)=="RLM"){
-                analogCnf.RLM = dati.at(1).toInt();
-            }else if(dati.at(0)=="RLMO"){
-                analogCnf.RLMO = dati.at(1).toInt();
-            }
-
-        }
-
-        if(dati.size()==3){
-            if(dati.at(0)=="FILMKV"){
-                analogCnf.minKvFilm = dati.at(1).toInt();
-                analogCnf.maxKvFilm = dati.at(2).toInt();
-                if(analogCnf.minKvFilm < 20) analogCnf.minKvFilm = 20;
-                if(analogCnf.minKvFilm > 35) analogCnf.minKvFilm = 35;
-                if(analogCnf.maxKvFilm < 20) analogCnf.maxKvFilm = 20;
-                if(analogCnf.maxKvFilm > 35) analogCnf.maxKvFilm = 35;
-            }else if(dati.at(0)=="CRKV"){
-                analogCnf.minKvCR = dati.at(1).toInt();
-                analogCnf.maxKvCR = dati.at(2).toInt();
-                if(analogCnf.minKvCR < 20) analogCnf.minKvCR = 20;
-                if(analogCnf.minKvCR > 35) analogCnf.minKvCR = 35;
-                if(analogCnf.maxKvCR < 20) analogCnf.maxKvCR = 20;
-                if(analogCnf.maxKvCR > 35) analogCnf.maxKvCR = 35;
-            }
-        }
-    }
-    file.close();
-
-    // Applicazione di regole di consistenza
-    if(analogCnf.primo_filtro == Collimatore::FILTRO_ND)
-        analogCnf.primo_filtro = Collimatore::FILTRO_Mo;
-
-    if(analogCnf.secondo_filtro == Collimatore::FILTRO_ND){
-        analogCnf.auto_filtro_mode = false;
-        analogCnf.secondo_filtro = analogCnf.primo_filtro;
-        analogCnf.selected_filtro = analogCnf.primo_filtro;
-    }
-
-
-    return true;
-
-}
-
-bool Config::saveAnalogConfig(void){
-QString frame;
-QFile   file("/resource/config/analog.cnf");
-
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-    {
-        qDebug() <<"IMPOSSIBILE SALVARE IL FILE:" << QString("/resource/config/analog.cnf");
-        return FALSE;
-    }
-
-    frame = QString("<DKV,%1>  \n").arg(analogCnf.selectedDkV);
-    file.write(frame.toAscii().data());
-
-    frame = QString("<DMAS,%1>  \n").arg(analogCnf.selectedDmas);
-    file.write(frame.toAscii().data());
-
-    if(analogCnf.tech_mode==ANALOG_TECH_MODE_MANUAL){
-        frame = QString("<TECH_MODE,MANUAL>  \n");
-    }else if(analogCnf.tech_mode==ANALOG_TECH_MODE_SEMI){
-        frame = QString("<TECH_MODE,SEMI>  \n");
-    }else {
-         frame = QString("<TECH_MODE,AUTO>  \n");
-    }
-    file.write(frame.toAscii().data());
-
-    if(analogCnf.selected_filtro == Collimatore::FILTRO_Rh){
-        frame = QString("<SELECTED_FILTRO,Rh>  \n");
-    }else {
-        frame = QString("<SELECTED_FILTRO,Mo>  \n");
-    }
-    file.write(frame.toAscii().data());
-
-    if(analogCnf.auto_filtro_mode){
-        frame = QString("<AUTO_FILTRO,1>  \n");
-    }else {
-         frame = QString("<AUTO_FILTRO,0>  \n");
-    }
-    file.write(frame.toAscii().data());
-
-    if(analogCnf.aec_field==ANALOG_AECFIELD_FRONT){
-        frame = QString("<AEC_FIELD,FRONT>  \n");
-    }else if(analogCnf.aec_field==ANALOG_AECFIELD_BACK){
-        frame = QString("<AEC_FIELD,BACK>  \n");
-    }else {
-         frame = QString("<AEC_FIELD,MIDDLE>  \n");
-    }
-    file.write(frame.toAscii().data());
-
-    if(analogCnf.current_profile >= MAX_ANALOG_PROFILES) analogCnf.current_profile = 0;
-    frame = QString("<PROFILE,%1>  \n").arg(analogCnf.current_profile);
-    file.write(frame.toAscii().data());
-
-
-    if(analogCnf.primo_filtro == Collimatore::FILTRO_Rh){
-        frame = QString("<PRIMO_FILTRO,Rh>  \n");
-    }else {
-        frame = QString("<PRIMO_FILTRO,Mo>  \n");
-    }
-    file.write(frame.toAscii().data());
-
-    if(analogCnf.secondo_filtro == Collimatore::FILTRO_Rh){
-        frame = QString("<SECONDO_FILTRO,Rh>  \n");
-    }else if(analogCnf.secondo_filtro == Collimatore::FILTRO_Mo){
-        frame = QString("<SECONDO_FILTRO,Mo>  \n");
-    }else {
-        frame = QString("<SECONDO_FILTRO,ND>  \n");
-    }
-    file.write(frame.toAscii().data());
-
-
-    frame = QString("<DKVHC,%1>  \n").arg(analogCnf.DKV_HC);
-    file.write(frame.toAscii().data());
-    frame = QString("<DKVLD,%1>  \n").arg(analogCnf.DKV_LD);
-    file.write(frame.toAscii().data());
-
-    frame = QString("<FILMKV,%1,%2>  \n").arg(analogCnf.minKvFilm).arg(analogCnf.maxKvFilm);
-    file.write(frame.toAscii().data());
-
-    frame = QString("<CRKV,%1,%2>  \n").arg(analogCnf.minKvCR).arg(analogCnf.maxKvCR);
-    file.write(frame.toAscii().data());
-
-    frame = QString("<F1,%1>  \n").arg(analogCnf.calib_f1);
-    file.write(frame.toAscii().data());
-    frame = QString("<F2,%1>  \n").arg(analogCnf.calib_f2);
-    file.write(frame.toAscii().data());
-    frame = QString("<F3,%1>  \n").arg(analogCnf.calib_f3);
-    file.write(frame.toAscii().data());
-    frame = QString("<MARGINE_F,%1>  \n").arg(analogCnf.calib_margine);
-    file.write(frame.toAscii().data());
-
-    frame = QString("<LCC,%1>  \n").arg(analogCnf.LCC);
-    file.write(frame.toAscii().data());
-
-    frame = QString("<LMLO,%1>  \n").arg(analogCnf.LMLO);
-    file.write(frame.toAscii().data());
-
-    frame = QString("<LML,%1>  \n").arg(analogCnf.LML);
-    file.write(frame.toAscii().data());
-
-    frame = QString("<LISO,%1>  \n").arg(analogCnf.LISO);
-    file.write(frame.toAscii().data());
-
-    frame = QString("<LFB,%1>  \n").arg(analogCnf.LFB);
-    file.write(frame.toAscii().data());
-
-    frame = QString("<LSIO,%1>  \n").arg(analogCnf.LSIO);
-    file.write(frame.toAscii().data());
-
-    frame = QString("<LLM,%1>  \n").arg(analogCnf.LLM);
-    file.write(frame.toAscii().data());
-
-    frame = QString("<LLMO,%1>  \n").arg(analogCnf.LLMO);
-    file.write(frame.toAscii().data());
-
-    frame = QString("<LLMO,%1>  \n").arg(analogCnf.LLMO);
-    file.write(frame.toAscii().data());
-
-
-
-    frame = QString("<RCC,%1>  \n").arg(analogCnf.RCC);
-    file.write(frame.toAscii().data());
-
-    frame = QString("<RMLO,%1>  \n").arg(analogCnf.RMLO);
-    file.write(frame.toAscii().data());
-
-    frame = QString("<RML,%1>  \n").arg(analogCnf.RML);
-    file.write(frame.toAscii().data());
-
-    frame = QString("<RISO,%1>  \n").arg(analogCnf.RISO);
-    file.write(frame.toAscii().data());
-
-    frame = QString("<RFB,%1>  \n").arg(analogCnf.RFB);
-    file.write(frame.toAscii().data());
-
-    frame = QString("<RSIO,%1>  \n").arg(analogCnf.RSIO);
-    file.write(frame.toAscii().data());
-
-    frame = QString("<RLM,%1>  \n").arg(analogCnf.RLM);
-    file.write(frame.toAscii().data());
-
-    frame = QString("<RLMO,%1>  \n").arg(analogCnf.RLMO);
-    file.write(frame.toAscii().data());
-
-    frame = QString("<RLMO,%1>  \n").arg(analogCnf.RLMO);
-    file.write(frame.toAscii().data());
-
-    file.close();
-    file.flush();
-
-    // Effettua un sync
-    QString command = QString("sync");
-    system(command.toStdString().c_str());
-
-    return TRUE;
-}
-
-#ifdef __CAMPIONAMENTO_ANGOLO
-// Salva il contenuto del potenziometro a 0 degree
-bool Config::saveZeroPotCfg(unsigned short pot)
-{
-    QString data;
-
-    QFile file( "/resource/config/zeropot.cnf");
-    if (!file.open(QIODevice::ReadWrite | QIODevice::Text)) return FALSE;
-
-    rotCfg.zeropot= pot;
-
-    data = QString("<VAL,%1>\n").arg(pot);
-    file.write(data.toAscii().data());
-
-    file.close();
-    file.flush();
-
-    // Effettua un sync
-    QString command = QString("sync");
-    system(command.toStdString().c_str());
-
-    return TRUE;
-
-}
-#endif
-
-#ifdef __CAMPIONAMENTO_ANGOLO
-// Restituisce TRUE se il file esisteva altrementi restituisce FALSE
-// e i parametri saranno quelli di default
-bool Config::readZeroPot(void)
-{
-    rotCfg.zeropot=515; // Per casi nuovi aggiornamenti
-
-    // Apre il file
-    QString filename = QString("/resource/config/zeropot.cnf");
-    QFile file(filename);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))  return TRUE;
-
-    QList<QString> dati;
-
-    // Valori di default: Hotfix 11C
-    while(1)
-    {
-        dati = getNextArrayFields(&file);
-        if(dati.isEmpty()) break;
-        // Se il dato non Ã¨ corretto non lo considera
-        if(dati.size()!=2) continue;
-
-        if(dati.at(0)=="VAL")  rotCfg.zeropot=dati.at(1).toInt();
-
-    }
-
-    file.close();
-    return TRUE;
-}
-#endif
 
 QByteArray Config::getLine(QFile* fp)
 {
@@ -1836,6 +1408,12 @@ bool Config::readLenzeConfig(void)
     lenzeConfig.max_lenze_position = 85;  // %
     lenzeConfig.manual_speed =  50;       // 50Hz
     lenzeConfig.automatic_speed =20;      // 20Hz
+    lenzeConfig.parking_speed = 10;       // 10Hz
+    lenzeConfig.startupInParkingMode = false;
+    lenzeConfig.parkingTarget = 400;
+    lenzeConfig.parkingSafePoint = 410;
+    lenzeConfig.calibratedParkingTarget = false;
+
 
     // Apre il file se esiste
     QString filename = QString(LENZE_FILE_CFG);
@@ -1857,7 +1435,13 @@ bool Config::readLenzeConfig(void)
         else if(dati.at(0)=="MAXPOS")  lenzeConfig.max_lenze_position=dati.at(1).toInt();
         else if(dati.at(0)=="MANSPEED")  lenzeConfig.manual_speed=dati.at(1).toInt();
         else if(dati.at(0)=="AUTOSPEED")  lenzeConfig.automatic_speed=dati.at(1).toInt();
+        else if(dati.at(0)=="PARKSPEED")  lenzeConfig.parking_speed=dati.at(1).toInt();
         else if(dati.at(0)=="CALIBRATED") lenzeConfig.calibrated=dati.at(1).toInt();
+        else if(dati.at(0)=="PARKING") lenzeConfig.startupInParkingMode=dati.at(1).toInt();
+        else if(dati.at(0)=="PARKING_TARGET") lenzeConfig.parkingTarget=dati.at(1).toInt();
+        else if(dati.at(0)=="PARKING_SAFE") lenzeConfig.parkingSafePoint=dati.at(1).toInt();
+        else if(dati.at(0)=="CALIB_PARKING") lenzeConfig.calibratedParkingTarget=dati.at(1).toInt();
+
     }
 
     file.close();
@@ -1890,8 +1474,27 @@ bool Config::saveLenzeConfig(void)
     frame = QString("<AUTOSPEED,%1>     \n").arg(lenzeConfig.automatic_speed);
     file.write(frame.toAscii().data());
 
+    frame = QString("<PARKSPEED,%1>     \n").arg(lenzeConfig.parking_speed);
+    file.write(frame.toAscii().data());
+
     frame = QString("<CALIBRATED,%1>    \n").arg(lenzeConfig.calibrated);
     file.write(frame.toAscii().data());
+
+    if(lenzeConfig.startupInParkingMode)  frame = QString("<PARKING,1>    \n");
+    else   frame = QString("<PARKING,0>    \n");
+    file.write(frame.toAscii().data());
+
+    frame = QString("<PARKING_TARGET,%1>     \n").arg(lenzeConfig.parkingTarget);
+    file.write(frame.toAscii().data());
+
+    frame = QString("<PARKING_SAFE,%1>     \n").arg(lenzeConfig.parkingSafePoint);
+    file.write(frame.toAscii().data());
+
+
+    if(lenzeConfig.calibratedParkingTarget)  frame = QString("<CALIB_PARKING,1>    \n");
+    else   frame = QString("<CALIB_PARKING,0>    \n");
+    file.write(frame.toAscii().data());
+
 
 
     file.close();
@@ -1923,9 +1526,14 @@ bool Config::sendMccConfigCommand(unsigned char cmd){
             memcpy(pData, (unsigned char*) &pGeneratore->genCnf.pcb190, sizeof(pcb190Conf_Str));
             buflen += sizeof(pcb190Conf_Str);
         break;
-        case CONFIG_PCB269:
-            memcpy(pData, (unsigned char*) (&pCompressore->config), sizeof(compressoreCnf_Str));
-            buflen += sizeof(compressoreCnf_Str);
+        case CONFIG_PCB269_0:
+            memcpy(pData, (unsigned char*) (&pCompressore->config), (_MCC_DIM-2));
+            buflen = _MCC_DIM;
+        break;
+        case CONFIG_PCB269_1:
+            buffer[1]=1; // Secondo blocco dati
+            memcpy(pData, &(((unsigned char*) (&pCompressore->config))[_MCC_DIM-2]), sizeof(compressoreCnf_Str)-(_MCC_DIM-2));
+            buflen += (sizeof(compressoreCnf_Str)-(_MCC_DIM-2));
         break;
         case CONFIG_PCB249U1_1:
             // Invia il blocco 0. Sulle risposte verranno inviati i blocchi successivi.
@@ -2716,9 +2324,9 @@ void Config::configSlaveRxHandler(QByteArray frame)
 
         QString command = QString("/monta.sh");
         system(command.toStdString().c_str());
-        command = QString("cp /mnt/nfs/m4_slave.bin /");
+        command = QString("cp /mnt/target/M4_SLAVE/m4_slave.bin /");
         system(command.toStdString().c_str());
-        command = QString("cp /mnt/target/DBTController /");
+        command = QString("cp /mnt/target/DBTController/DBTController /");
         system(command.toStdString().c_str());
         command = QString("sync");
         system(command.toStdString().c_str());
@@ -2730,7 +2338,7 @@ void Config::configSlaveRxHandler(QByteArray frame)
 
         QString command = QString("/monta.sh");
         system(command.toStdString().c_str());
-        command = QString("cp /mnt/target/DBTController /");
+        command = QString("cp /mnt/target/DBTController/DBTController /");
         system(command.toStdString().c_str());
         command = QString("sync");
         system(command.toStdString().c_str());
@@ -3246,11 +2854,11 @@ bool Config::executeUpdateIde(){
 
     QString command = QString("/monta.sh");
     system(command.toStdString().c_str());
-    command = QString("cp /mnt/nfs/m4_master.bin /");
+    command = QString("cp /mnt/target/M4_MASTER/m4_master.bin /");
     system(command.toStdString().c_str());
-    command = QString("cp /mnt/nfs/m4_slave.bin /");
+    command = QString("cp /mnt/target/M4_SLAVE/m4_slave.bin /");
     system(command.toStdString().c_str());
-    command = QString("cp /mnt/target/DBTController /");
+    command = QString("cp /mnt/target/DBTController/DBTController /");
     system(command.toStdString().c_str());
     command = QString("sync");
     system(command.toStdString().c_str());
@@ -3268,7 +2876,7 @@ bool Config::executeUpdateGui(){
 
     QString command = QString("/monta.sh");
     system(command.toStdString().c_str());
-    command = QString("cp /mnt/target/DBTController /");
+    command = QString("cp /mnt/target/DBTController/DBTController /");
     system(command.toStdString().c_str());
     command = QString("sync");
     system(command.toStdString().c_str());
@@ -3394,7 +3002,7 @@ void Config::updatePCB249U2(void){
 
 void Config::updatePCB269(void){
     singleConfigUpdate = true;
-    sendMccConfigCommand(CONFIG_PCB269);
+    sendMccConfigCommand(CONFIG_PCB269_0);
     return ;
 }
 
@@ -3433,9 +3041,14 @@ void Config::configNotifySlot(unsigned char id, unsigned char mcccode, QByteArra
 
     switch(mcccode){
     case CONFIG_GENERAL:
-         sendMccConfigCommand(CONFIG_PCB269);
+         sendMccConfigCommand(CONFIG_PCB269_0);
         break;
-    case CONFIG_PCB269:
+
+    case CONFIG_PCB269_0:
+        sendMccConfigCommand(CONFIG_PCB269_1);
+        break;
+
+    case CONFIG_PCB269_1:
         if(singleConfigUpdate) {
             singleConfigUpdate = false;
             emit configUpdatedSgn();
@@ -3627,27 +3240,17 @@ bool Config::checkPackage(void)
         result = false;
         revisionError.append(QString(" NOK!\n\r"));
     }else revisionError.append(QString(" OK\n\r"));
-#ifdef __FORCE_DIGITAL
-    // Non controlla la PCB244
-#else
-    // Potter o Esposimero
-    if(sys.gantryModel==GANTRY_MODEL_DIGITAL){
-        // Potrebbe esserci la biopsia o non esserci nulla
-        if(rv244!="0.0"){
-            revisionError.append(QString("FW244 [%1]: -> %2").arg(swConf.rv244).arg(rv244));
-            if(swConf.rv244!=rv244){
-                result = false;
-                revisionError.append(QString(" NOK!\n\r"));
-             }else revisionError.append(QString(" OK\n\r"));
-        }else revisionError.append(QString("FW244 [%1]: -> NOT DETECTED\n\r").arg(swConf.rv244));
-    }else{
-        revisionError.append(QString("FW244A [%1]: -> %2").arg(swConf.rv244A).arg(rv244A));
-        if(swConf.rv244A!=rv244A){
+
+    // Potrebbe esserci la biopsia o non esserci nulla
+    if(rv244!="0.0"){
+        revisionError.append(QString("FW244 [%1]: -> %2").arg(swConf.rv244).arg(rv244));
+        if(swConf.rv244!=rv244){
             result = false;
             revisionError.append(QString(" NOK!\n\r"));
-        }else revisionError.append(QString(" OK\n\r"));
-    }
-#endif
+         }else revisionError.append(QString(" OK\n\r"));
+    }else revisionError.append(QString("FW244 [%1]: -> NOT DETECTED\n\r").arg(swConf.rv244));
+
+
     // Verifica se tutto è conforme
     PRINT(revisionError);
     PRINT("\n");

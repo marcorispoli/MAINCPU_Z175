@@ -74,6 +74,19 @@ typedef enum{
 
 }_lenze_errors_t;
 
+//////////////////////////////////////////////////////////////////////////////
+//              CODICI DI ERRORE RELATIVI ALLE OPERAZIONI DI PARCHEGGIO
+//////////////////////////////////////////////////////////////////////////////
+#define ERROR_PARKING_TILT_SETTING          1
+#define ERROR_PARKING_LENZE_BUSY            2
+#define ERROR_PARKING_LENZE_TMO             3
+#define ERROR_PARKING_LENZE_POSITION        4
+#define ERROR_PARKING_ARM_TMO               5
+#define ERROR_PARKING_ARM_WRONG_ANGLE       6
+#define WARNING_PARKING_ACTIVATION_PROCEDURE       7
+#define WARNING_UNPARKING_ACTIVATION_PROCEDURE     8
+#define ERROR_PARKING_NOT_CALIBRATED        9
+
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -160,7 +173,7 @@ typedef enum{
 #define ARFLT_SHIFT_KEEP_MIN  106   // Fault durante mantenimento < MIN
 #define END_ALR_STARTER       106
 
-#define ERROR_INVALID_CASSETTE      191     // Errore presenza cassetta
+#define ERROR_INVALID_COLLIMATION_PLATE      191     // Errore presenza accessorio di collimazione non consentito
 
 #define ERROR_INVALID_SMALL_FOCUS   192     // Utilizzo del fuoco piccolo in esposizioni senza ingranditore
 #define ERROR_INVALID_MAG_FUOCO     193     // Ingranditore: si sta usando il fuoco grande per un ingrandimento

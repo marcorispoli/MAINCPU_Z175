@@ -177,12 +177,7 @@ void StartupPage::changePage(int pg, int opt)
 // Finisce lo startup senza successo
 void StartupPage::onExitButton(void)
 {
-    if(ApplicationDatabase.getDataU(_DB_SYSTEM_CONFIGURATION) & _ARCH_GANTRY_DIGITAL)
-        GWindowRoot.setNewPage(_PG_MAIN_DIGITAL,GWindowRoot.curPage,0);
-    else
-        GWindowRoot.setNewPage(_PG_MAIN_ANALOG,GWindowRoot.curPage,0);
-
-
+    GWindowRoot.setNewPage(_PG_MAIN_DIGITAL,GWindowRoot.curPage,0);
 }
 
 
@@ -253,10 +248,7 @@ void StartupPage::timerEvent(QTimerEvent* ev)
                     pConfig->startupCompleted = false;
                     ApplicationDatabase.setData(_DB_STARTUP_FASE, 0);
 
-                    if(pConfig->sys.gantryModel==GANTRY_MODEL_DIGITAL)
-                        GWindowRoot.setNewPage(_PG_MAIN_DIGITAL,GWindowRoot.curPage,0);
-                    else
-                        GWindowRoot.setNewPage(_PG_MAIN_ANALOG,GWindowRoot.curPage,0);
+                    GWindowRoot.setNewPage(_PG_MAIN_DIGITAL,GWindowRoot.curPage,0);
                     PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_SOFT,ERROR_REVISIONS);
                     return;
                 }
@@ -286,10 +278,7 @@ void StartupPage::timerEvent(QTimerEvent* ev)
             pConfig->startupCompleted = true; // Attenzione, lasciarlo dopo onExiButton() che di suo scrive false
             ApplicationDatabase.setData(_DB_STARTUP_FASE, 0);            
 
-            if(pConfig->sys.gantryModel==GANTRY_MODEL_DIGITAL)
-                GWindowRoot.setNewPage(_PG_MAIN_DIGITAL,GWindowRoot.curPage,0);
-            else
-                GWindowRoot.setNewPage(_PG_MAIN_ANALOG,GWindowRoot.curPage,0);
+            GWindowRoot.setNewPage(_PG_MAIN_DIGITAL,GWindowRoot.curPage,0);
 
             // Impostazioni generali al completamento dello startup
             pCollimatore->filtroCmd = Collimatore::FILTRO_Rh;
@@ -384,8 +373,6 @@ void StartupPage::startupNotifySlot(unsigned char id, unsigned char mcccode, QBy
 
             // Il buffer usato è in comune dato che o c'è una scheda o c'è l'altra
             pConfig->rv244=QString("%1.%2").arg((int)buffer[11]).arg((int)buffer[12]);
-            pConfig->rv244A=QString("%1.%2").arg((int)buffer[11]).arg((int)buffer[12]);
-
             pConfig->rvM4Slave=QString("%1.%2").arg((int)buffer[13]).arg((int)buffer[14]);
             pConfig->rv240=QString("%1.%2").arg((int)buffer[15]).arg((int)buffer[16]);
         }

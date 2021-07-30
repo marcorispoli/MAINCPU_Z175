@@ -331,6 +331,8 @@ void _SEQERRORFUNC(int code)
 
     mccGuiNotify(1,MCC_CMD_RAGGI_AEC,data,4);     
 
+    // Reset errori per consentire di eseguire comandi sui dispositivi della PCB190
+    pcb190ResetFault();
 
     // Carica i dati relativi all'esposizione se necessario
     if(!generalConfiguration.demoMode) rxNotifyData(1,code);

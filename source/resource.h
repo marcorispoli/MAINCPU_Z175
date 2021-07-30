@@ -41,14 +41,11 @@
 enum
 {
     _PG_NONE=0,
-    _PG_STARTUP=1,
-    _PG_MAIN_DIGITAL=2,
-    _PG_MAIN_ANALOG=2,
+    _PG_STARTUP,
+    _PG_MAIN_DIGITAL,
     _PG_OPEN_STUDY_DIGITAL,
-    _PG_OPEN_STUDY_ANALOG,
     _PG_PROJECTIONS,
     _PG_BIOPSY_DIGITAL,
-    _PG_BIOPSY_ANALOG,
     _PG_SELLNG,
     _PG_ACR,
     _PG_ALARM,
@@ -76,8 +73,9 @@ enum
     _PG_SERVICE_TOOLS_LENZE,
     _PG_SERVICE_TOOLS_STARTER,
     _PG_SERVICE_TOOLS_INVERTER,
-    _PG_CALIB_ANALOG,
-    _PG_SYSTEM_SETUP
+    _PG_SYSTEM_SETUP,
+    _PG_SERVICE_CALIB_COLLI,
+    _PG_SERVICE_CALIB_PARKING
 
 };
 
@@ -135,7 +133,7 @@ enum
 #define _CLOSED_STUDY_STATUS    0
 #define _OPEN_STUDY_LOCAL       1
 #define _OPEN_STUDY_DICOM       2
-#define _OPEN_STUDY_ANALOG      3
+
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -148,11 +146,14 @@ enum
  _DB_PASSWORD,
  _DB_LINGUA,
  _DB_COLLIMAZIONE,
+ _DB_MANUAL_COLLIMAZIONE,
+
  _DB_COMPRESSOR_PAD,
  _DB_COMPRESSOR_PAD_CODE,
  _DB_ACCESSORY_NAME,
  _DB_MAG_FACTOR,
  _DB_ACCESSORIO,
+ _DB_ACCESSORIO_COLLIMATORE,
  _DB_FORZA,
  _DB_TARGET_FORCE,
  _DB_SPESSORE,
@@ -205,7 +206,7 @@ enum
  _DB_ALLARME_ARM_PUSH, // Diagnostica sui pulsanti di rotazione
  _DB_ALLARME_INFO_STAT,// Messaggi di informazione stato
  _DB_ALLARMI_SYSCONF,  // Allarmi relativi alla configurazione generale del sistema
- _DB_ALLARMI_ANALOGICA, // Allarmi specifici versioni analogiche
+ _DB_ALLARMI_PARCHEGGIO, // Allarmi relativi alle operazioni di parcheggio
  _DB_ALLARMI_ALR_SOFT, // Questo è l'ultimo: non spostare
  // Fine Blocco allarmi_________________________________________________
 
@@ -226,6 +227,7 @@ enum
  _DB_POWER_STAT,
  _DB_REQ_POWEROFF,
  _DB_REVISION_ERROR_STRING,
+ _DB_PARKING_MODE,
 
 
 
@@ -284,8 +286,6 @@ _DB_SERVICE15_STR,
 #define LAST_ALR_CLASS _DB_ALLARMI_ALR_SOFT
 
 
-
-
 // MODI OPERATIVI DI ESPOSIZIONE
 #define _EXPOSURE_MODE_OPERATING_MODE         0
 #define _EXPOSURE_MODE_RX_SHOT_MODE           1
@@ -297,7 +297,6 @@ _DB_SERVICE15_STR,
 #define _EXPOSURE_MODE_CALIB_MODE_TOMO_HOME   7
 #define _EXPOSURE_MODE_CALIB_MODE_EXPOSIMETER 8
 #define _EXPOSURE_MODE_CALIB_MODE_PROFILE     9
-#define _EXPOSURE_MODE_ANALOG_MANUAL_EXPOSURE 10
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // CPU FLAGS

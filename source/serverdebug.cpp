@@ -23,6 +23,15 @@ void serverDebug::activateConnections(void) {
 
 }
 
+/*
+ * if(parametri[0]=="PCB269") target = 0x11;
+    else if(parametri[0]=="PCB204") target = 0x0B;
+    else if(parametri[0]=="PCB190") target = 0x13;
+    else if(parametri[0]=="PCB249U1") target = 0x16;
+    else if(parametri[0]=="PCB249U2") target = 0x15;
+    else if(parametri[0]=="PCB244") target = 0x14;
+    else if(parametri[0]=="PCB244A") target = 0x17;
+ **/
 serverDebug::serverDebug(void) :
     QObject(0)
 {
@@ -32,6 +41,406 @@ serverDebug::serverDebug(void) :
     lastValidFrame.clear();
     cmdGroup.clear();
 
+
+    _deviceRegisterItem item;
+
+    deviceRegisterList.clear();
+
+    //  --------   REGISTRI RELATIVI AL COLLIMATORE  -------------
+    item.tag = "COLLI-GONIOREL";
+    item.comment = "Angolo relativo TRX - ARM";
+    item.deviceId = _CODEID_PCB249U1;
+    item.address = 0x5A;
+    item.data_type = _8bit;
+    item.sign_type = _SIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "COLLI-TRX";
+    item.comment = "Angolo assoluto TRX (0.025°/unit)";
+    item.deviceId = _CODEID_PCB249U1;
+    item.address = 0x5E;
+    item.data_type = _16bit;
+    item.sign_type = _SIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "COLLI-ARM";
+    item.comment = "Angolo di confronto ARM (0.025°/unit)";
+    item.deviceId = _CODEID_PCB249U1;
+    item.address = 0x60;
+    item.data_type = _16bit;
+    item.sign_type = _SIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "COLLI-R-SENS";
+    item.comment = "Posizione lama destra";
+    item.deviceId = _CODEID_PCB249U1;
+    item.address = 0x144;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "COLLI-L-SENS";
+    item.comment = "Posizione lama sinistra";
+    item.deviceId = _CODEID_PCB249U1;
+    item.address = 0x145;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "COLLI-T-SENS";
+    item.comment = "Posizione trapezio";
+    item.deviceId = _CODEID_PCB249U1;
+    item.address = 0x146;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "COLLI-L-ENCODER";
+    item.comment = "Encoder virtuale lama sinistra";
+    item.deviceId = _CODEID_PCB249U1;
+    item.address = 0x159;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "COLLI-R-ENCODER";
+    item.comment = "Encoder virtuale lama destra";
+    item.deviceId = _CODEID_PCB249U1;
+    item.address = 0x15A;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "COLLI-T-ENCODER";
+    item.comment = "Encoder virtuale lama trapezio";
+    item.deviceId = _CODEID_PCB249U1;
+    item.address = 0x15B;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "COLLI-B-SENS";
+    item.comment = "Posizione lama posteriore";
+    item.deviceId = _CODEID_PCB249U2;
+    item.address = 0x55;
+    item.data_type = _16bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "COLLI-F-SENS";
+    item.comment = "Posizione lama posteriore";
+    item.deviceId = _CODEID_PCB249U2;
+    item.address = 0x57;
+    item.data_type = _16bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "COLLI-TARGET-FRONT";
+    item.comment = "Target posizione lama frontale";
+    item.deviceId = _CODEID_PCB249U2;
+    item.address = 0x5C;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "COLLI-TARGET-BACK";
+    item.comment = "Target posizione lama posteriore";
+    item.deviceId = _CODEID_PCB249U2;
+    item.address = 0x5D;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "COLLI-FILTRO-SENS";
+    item.comment = "Posizione filtro";
+    item.deviceId = _CODEID_PCB249U2;
+    item.address = 0x66;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "COLLI-MIRROR-COUNT";
+    item.comment = "Step posizionamento specchio";
+    item.deviceId = _CODEID_PCB249U2;
+    item.address = 0x4f;
+    item.data_type = _16bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "COLLI-MIRROR-STAT";
+    item.comment = "Registro di stato specchio";
+    item.deviceId = _CODEID_PCB249U2;
+    item.address = 0x4e;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "COLLI-LAMP-STAT";
+    item.comment = "Registro di stato luce";
+    item.deviceId = _CODEID_PCB249U2;
+    item.address = 0x6C;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    //  --------   REGISTRI RELATIVI AL COMPRESSORE  -------------
+    item.tag = "CMP-SYS0";
+    item.comment = "Registro SYS_FLAGS0";
+    item.deviceId = _CODEID_PCB269;
+    item.address = 0x20;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "CMP-SYS1";
+    item.comment = "Registro SYS_FLAGS1";
+    item.deviceId = _CODEID_PCB269;
+    item.address = 0x21;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "CMP-SYS2";
+    item.comment = "Registro SYS_FLAGS2";
+    item.deviceId = _CODEID_PCB269;
+    item.address = 0x22;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "CMP-FAULT";
+    item.comment = "Registro codici fault";
+    item.deviceId = _CODEID_PCB269;
+    item.address = 0x27;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "CMP-PADDLE";
+    item.comment = "Registro riconoscimento paddle";
+    item.deviceId = _CODEID_PCB269;
+    item.address = 0x28;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "CMP-SENS-DOSE";
+    item.comment = "Registro sensore di posizione";
+    item.deviceId = _CODEID_PCB269;
+    item.address = 0x2a;
+    item.data_type = _16bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "CMP-DOSE";
+    item.comment = "Registro posizione calibrata";
+    item.deviceId = _CODEID_PCB269;
+    item.address = 0x2c;
+    item.data_type = _16bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "CMP-SFORCE";
+    item.comment = "Registro sensore di forza";
+    item.deviceId = _CODEID_PCB269;
+    item.address = 0x30;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "CMP-FORCE";
+    item.comment = "Registro forza calibrata";
+    item.deviceId = _CODEID_PCB269;
+    item.address = 0x31;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "CMP-TARA";
+    item.comment = "Registro peso del compressore";
+    item.deviceId = _CODEID_PCB269;
+    item.address = 0xA0+7;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "CMP-MAXPOS";
+    item.comment = "Registro massima posizione del carrello";
+    item.deviceId = _CODEID_PCB269;
+    item.address = 0xA0+15;
+    item.data_type = _16bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "CMP-MINFORCE";
+    item.comment = "Registro minima forza di compressione";
+    item.deviceId = _CODEID_PCB269;
+    item.address = 0xA0+33;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "CMP-TARGET";
+    item.comment = "Registro target di compressione";
+    item.deviceId = _CODEID_PCB269;
+    item.address = 0xA0+35;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "CMP-LIMIT";
+    item.comment = "Registro massima compressione";
+    item.deviceId = _CODEID_PCB269;
+    item.address = 0xA0+36;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    //  --------   REGISTRI RELATIVI ALLA PCB190  -------------
+
+    item.tag = "INV-SYS0";
+    item.comment = "Registro SYS_FLAGS0";
+    item.deviceId = _CODEID_PCB190;
+    item.address = 0x20;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "INV-SYS1";
+    item.comment = "Registro SYS_FLAGS1";
+    item.deviceId = _CODEID_PCB190;
+    item.address = 0x21;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "INV-SYS2";
+    item.comment = "Registro SYS_FLAGS2";
+    item.deviceId = _CODEID_PCB190;
+    item.address = 0x22;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "INV-FAULT";
+    item.comment = "Registro codici di errore";
+    item.deviceId = _CODEID_PCB190;
+    item.address = 0x3e;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "INV-RXHV";
+    item.comment = "Registro kV Esposizione";
+    item.deviceId = _CODEID_PCB190;
+    item.address = 0x40;
+    item.data_type = _16bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "INV-RXIANODE";
+    item.comment = "Registro Anodica";
+    item.deviceId = _CODEID_PCB190;
+    item.address = 0x42;
+    item.data_type = _16bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "INV-RXMAS";
+    item.comment = "Registro mAs Esposizione";
+    item.deviceId = _CODEID_PCB190;
+    item.address = 0x44;
+    item.data_type = _16bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "INV-MINHV";
+    item.comment = "Registro valore minimo HV";
+    item.deviceId = _CODEID_PCB190;
+    item.address = 0x46;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "INV-MAXHV";
+    item.comment = "Registro valore massimo HV";
+    item.deviceId = _CODEID_PCB190;
+    item.address = 0x47;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "INV-MINIA";
+    item.comment = "Registro valore minimo I Anodica";
+    item.deviceId = _CODEID_PCB190;
+    item.address = 0x48;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "INV-MAXIA";
+    item.comment = "Registro valore massimo I Anodica";
+    item.deviceId = _CODEID_PCB190;
+    item.address = 0x49;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "INV-RXMAS-FINE";
+    item.comment = "Registro mAs a fine raggi";
+    item.deviceId = _CODEID_PCB190;
+    item.address = 0x4B;
+    item.data_type = _16bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "INV-FUOCO";
+    item.comment = "Registro Fuoco corrente";
+    item.deviceId = _CODEID_PCB190;
+    item.address = 0x57;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "INV-ARSTAT";
+    item.comment = "Registro Status Anodo rotante";
+    item.deviceId = _CODEID_PCB190;
+    item.address = 0xC0;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "INV-AR-MAINRUN";
+    item.comment = "Registro corrente MAIN RUN Anodo rotante";
+    item.deviceId = _CODEID_PCB190;
+    item.address = 0xC8;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "INV-AR-SHIFTRUN";
+    item.comment = "Registro corrente SHIHFT RUN Anodo rotante";
+    item.deviceId = _CODEID_PCB190;
+    item.address = 0xC9;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "INV-AR-MAINKEEP";
+    item.comment = "Registro corrente MAIN KEEP Anodo rotante";
+    item.deviceId = _CODEID_PCB190;
+    item.address = 0xCA;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
+    item.tag = "INV-AR-SHIFTKEEP";
+    item.comment = "Registro corrente SHIFT KEEP Anodo rotante";
+    item.deviceId = _CODEID_PCB190;
+    item.address = 0xCB;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
     return;
 
 }
@@ -340,41 +749,7 @@ void serverDebug::handleDebug(QByteArray data)
         serviceTcp->txData(QByteArray("run              Attiva ciclo automatico dei drivers\r\n"));
         serviceTcp->txData(QByteArray("setArmAng        Imposta l'angolo corrente\r\n"));
         serviceTcp->txData(QByteArray("generateAlarmList  \r\n"));
-        serviceTcp->txData(QByteArray("getPulse  G/P, plog, A/F, odi, STD/LD/HC \r\n"));
-        serviceTcp->txData(QByteArray("setAudio  num \r\n"));
         serviceTcp->txData(QByteArray("----------------------------------------------------------------------------------\r\n"));
-    }else if(data.contains("getPulse")){
-        QList<QByteArray> parametri;
-        parametri = getNextFieldsAfterTag(data, QString("getPulse"));
-        if(parametri.size()!=5) return;
-
-        if(parametri[0]=="G") pGeneratore->setFuocoGrande();
-        else pGeneratore->setFuocoPiccolo();
-        int plog= parametri[1].toInt();
-        int af;
-        if(parametri[2]=="A") af = ANALOG_FILTRO_AUTO;
-        else af = ANALOG_FILTRO_FISSO;
-        int odi = parametri[3].toInt();
-        int tm;
-        if(parametri[4]=="STD") tm = ANALOG_TECH_PROFILE_STD;
-        else if(parametri[4]=="HC") tm = ANALOG_TECH_PROFILE_HC;
-        else tm = ANALOG_TECH_PROFILE_LD;
-
-        int filtro;
-        float kvout;
-        int dmasout;
-        int pulses;
-        int res = pGeneratore->getAecData(plog,af,odi,tm,&filtro,&kvout,&dmasout,&pulses);
-        QString val;
-        if(res==0){
-            QString flt;
-            if(filtro==Collimatore::FILTRO_Mo) flt="Mo";
-            else if(filtro==Collimatore::FILTRO_Rh) flt="Rh";
-            else flt="ND";
-             val = QString("OK: F=%1, KV=%2, DMAS=%3, P=%4\n\r").arg(flt).arg(kvout).arg(dmasout).arg(pulses);
-        }else val = QString("NOK %1\n\r").arg(res);
-        serviceTcp->txData(val.toAscii());
-
     } else if(data.contains("generateAlarmList"))
     {
         paginaAllarmi->exportMessageList();
@@ -425,19 +800,7 @@ void serverDebug::handleDebug(QByteArray data)
     else if(data.contains("testCmd")){
         if(pConfig->startupCompleted) serviceTcp->txData(QByteArray("STARTUP OK\n\r"));
         else serviceTcp->txData(QByteArray("STARTUP NOK\n\r"));
-   }else if(data.contains("setAudio")){
-        QList<QByteArray> parametri;
-        parametri = getNextFieldsAfterTag(data, QString("setAudio"));
-        if(parametri.size()!=1){
-            serviceTcp->txData(QByteArray("Missing message number\n\r"));
-            return;
-        }
-
-        buffer[0] = (unsigned char) parametri[0].toInt();
-        pConsole->pGuiMcc->sendFrame(MCC_AUDIO,1,buffer,1);
-        serviceTcp->txData(QByteArray("OK\n\r"));
-
-    }
+   }
 }
 
 void serverDebug::handleSetCompressorNotify(QByteArray data){
@@ -583,22 +946,19 @@ void serverDebug::handleCompressore(QByteArray data)
     {
         serviceTcp->txData(QByteArray("----------------------------------------------------------------------------------\r\n"));
         serviceTcp->txData(QByteArray("setCalibPos: <offset, klin>  modifica la calibrazione della nacchera \r\n"));
-        serviceTcp->txData(QByteArray("getCalibPos:                 restituisce il valore corrente di calibrazione nacchera \r\n"));
-        serviceTcp->txData(QByteArray("getPadList:                  restituisce una lista dei pad configurabili \r\n"));
-        serviceTcp->txData(QByteArray("                             Un asterisco indica quali pad risultano configurati \r\n"));
-        serviceTcp->txData(QByteArray("setCalibPad: <ofs,kF,peso>   modifica la calibrazione della nacchera \r\n"));
-        serviceTcp->txData(QByteArray("getCalibPad:                 restituisce il valore corrente di calibrazione del pad corrente \r\n"));
-        serviceTcp->txData(QByteArray("setThick: <val>              corregge il calcolo dello spessore alla compressione corrente \r\n"));
-        serviceTcp->txData(QByteArray("setKF: <val>                 imposta il coefficiente di flessione per correggere lo spessore\r\n"));
-        serviceTcp->txData(QByteArray("setWeight: <val>             imposta il peso in (N) \r\n"));
-        serviceTcp->txData(QByteArray("STORE:                       Salva i dati nel file di configurazione \r\n"));
-        serviceTcp->txData(QByteArray("getBattery:                  Legge il valore della tensione di batteria \r\n"));
-        serviceTcp->txData(QByteArray("readPadConfig:               Legge il file padcalib.cnf e aggiorna i drivers \r\n"));
-        serviceTcp->txData(QByteArray("storePadConfid:              Salva i dati di configurazione PAD nel file padclib.cnf \r\n"));
-        serviceTcp->txData(QByteArray("calibThresholds: <val>       Calcola le soglie ideali per il riconoscimento PAD \r\n"));
-        serviceTcp->txData(QByteArray("getTrolley                   Restituisce lo spessore anche non in compressione \r\n"));
-        serviceTcp->txData(QByteArray("setCompressorRelease <val>   Imposta lo stato del rilascio dopo esposizione \r\n"));
+        serviceTcp->txData(QByteArray("getCalibPos:                 restituisce valore calibrazione nacchera \r\n"));
+        serviceTcp->txData(QByteArray("getPadList:                  restituisce lista pad configurabili \r\n"));
+        serviceTcp->txData(QByteArray("setCalibPad: <ofs,kF,peso>   modifica calibrazione della nacchera \r\n"));
+        serviceTcp->txData(QByteArray("getCalibPad:                 restituisce valore calibrazione pad corrente \r\n"));
+        serviceTcp->txData(QByteArray("setThick: <val>              corregge spessore alla compressione corrente \r\n"));
+        serviceTcp->txData(QByteArray("setKF: <val>                 imposta coefficiente di flessione spessore\r\n"));
+        serviceTcp->txData(QByteArray("setLimitForce: <val>         imposta max compressione (range 70:200) \r\n"));
+        serviceTcp->txData(QByteArray("setWeight: <val>             imposta Tara Paddle in (N) \r\n"));
 
+        serviceTcp->txData(QByteArray("getTrolley                   Restituisce posizione trolley \r\n"));
+        serviceTcp->txData(QByteArray("setCompressorRelease <val>   Imposta sblocco automatico dopo raggi-X \r\n"));
+        serviceTcp->txData(QByteArray("readPadConfig:               Legge il file di configurazione \r\n"));
+        serviceTcp->txData(QByteArray("storePadConfid:              Salva il file di configurazione \r\n"));
         serviceTcp->txData(QByteArray("----------------------------------------------------------------------------------\r\n"));
     } else if(data.contains("getTrolley"))
     {
@@ -638,36 +998,36 @@ void serverDebug::handleCompressore(QByteArray data)
     }else if(data.contains("getPadList"))
     {
         handleGetPadList();
-    }else if(data.contains("STORE"))
+    }else if(data.contains("readPadConfig"))
+    {
+        pCompressore->readCompressorConfigFile();
+        pConfig->updatePCB269();
+    }else if(data.contains("storePadConfig"))
     {
         pCompressore->storeConfigFile();
         serviceTcp->txData(QByteArray("DATI SALVATI IN CONFIGURAZIONE!\r\n"));
-    }else if(data.contains("getBattery"))
+    }else if(data.contains("setLimitForce"))
     {
-        serviceTcp->txData(QString("Battery: %1(V)\r\n").arg(pCompressore->battery).toAscii());
-    }else if(data.contains("readPadConfig"))
-    {
-        pCompressore->readPadCfg();
+        QList<QByteArray> parametri;
+
+        parametri = getNextFieldsAfterTag(data, QString("setLimitForce"));
+        if(parametri.size()!=1) serviceTcp->txData(QByteArray("WRONG PARAMETER!\n\r"));
+        if(parametri[0].toInt() > 200){
+            serviceTcp->txData(QByteArray("ERROR: the limit force cannot exceed 200N!\n\r"));
+            return;
+        }
+        if(parametri[0].toInt() < 70){
+            serviceTcp->txData(QByteArray("ERROR: the limit force cannot be lower than 70N!\n\r"));
+            return;
+        }
+
+        // Salva il valore, aggiorna il file di configurazione e aggiorna la periferica
+        pCompressore->config.max_compression_force = parametri[0].toInt();
+        pCompressore->storeConfigFile();
         pConfig->updatePCB269();
 
-        // Visualizza il contenuto
-        for(int i=0; i<10; i++){
-            serviceTcp->txData(QString("THRESHOLD[%1]=%2!\r\n").arg(i).arg(pCompressore->config.thresholds[i]).toAscii());
-        }
-    }else if(data.contains("storePadConfig"))
-    {
-        pCompressore->storePadCfg();
-        serviceTcp->txData(QByteArray("DATI SALVATI NEL FILE PADCALIB.cnf! \r\n"));
-    }else if(data.contains("calibThresholds"))
-    {
-        handleCalibThresholds(data);
-
-        // Visualizza il contenuto
-        for(int i=0; i<10; i++){
-            serviceTcp->txData(QString("THRESHOLD[%1]=%2!\r\n").arg(i).arg(pCompressore->config.thresholds[i]).toAscii());
-        }
-
-        serviceTcp->txData(QByteArray("I dati devono essere salvati e riletti perchÃ¨ siano operativi \r\n"));
+        serviceTcp->txData(QByteArray("Pad Configuration file and peripheral device updated!\n\r"));
+        return;
     }
 
 
@@ -683,12 +1043,7 @@ void serverDebug::handleGetPadList(void)
     for(i=0; i<PAD_ENUM_SIZE; i++)
     {
         if(i>9) stringa = QString("%1)   %2").arg((int) i).arg( pCompressore->getPadName((Pad_Enum) i));
-        else stringa = QString("%1)    %2").arg((int) i).arg( pCompressore->getPadName((Pad_Enum) i));
-        if(
-            (pCompressore->config.pads[i].offset != pCompressore->defPad.offset) ||
-            (pCompressore->config.pads[i].kF != pCompressore->defPad.kF) ||
-            (pCompressore->config.pads[i].peso != pCompressore->defPad.peso)
-           ) stringa.append("  <*>");
+        else stringa = QString("%1)    %2").arg((int) i).arg( pCompressore->getPadName((Pad_Enum) i));       
         serviceTcp->txData(QString("%1\n\r").arg(stringa).toAscii());
     }
     return;
@@ -1009,7 +1364,7 @@ void serverDebug::handleSetCalibTomo(QByteArray data)
 
 void serverDebug::handleGetCalib(QByteArray data)
 {
-    QList<QByteArray> parametri;
+
     QString stringa,tag;
     int i;
 
@@ -1047,7 +1402,10 @@ void serverDebug::handleGetCalib(QByteArray data)
         serviceTcp->txData(stringa.toAscii());
     }
 
-    stringa = QString("OPEN: %1 %2 %3 %4 %5 \n\r").arg(pCollimatore->colliConf.colliOpen.L).arg(pCollimatore->colliConf.colliOpen.R).arg(pCollimatore->colliConf.colliOpen.F).arg(pCollimatore->colliConf.colliOpen.B).arg(pCollimatore->colliConf.colliOpen.T);
+    stringa = QString("OPEN: L=%1 R=%2 F=%3 B=%4 T=%5 \n\r").arg(pCollimatore->colliConf.colliOpen.L).arg(pCollimatore->colliConf.colliOpen.R).arg(pCollimatore->colliConf.colliOpen.F).arg(pCollimatore->colliConf.colliOpen.B).arg(pCollimatore->colliConf.colliOpen.T);
+    serviceTcp->txData(stringa.toAscii());
+
+    stringa = QString("CUSTOM: L=%1 R=%2 F=%3 B=%4 T=%5 \n\r").arg(pCollimatore->customL).arg(pCollimatore->customR).arg(pCollimatore->customF).arg(pCollimatore->customB).arg(pCollimatore->customT);
     serviceTcp->txData(stringa.toAscii());
 
     stringa = QString("\n\rTOMO-W-L-P: ");
@@ -1107,6 +1465,27 @@ void serverDebug::handleGetCalib(QByteArray data)
 
 }
 
+// <pad,Mat,L,R,F,B,T>
+void serverDebug::handleSetCalibCustom(QByteArray data){
+    QList<QByteArray> parametri;
+
+
+    parametri = getNextFieldsAfterTag(data, QString("setCalibCustom"));
+
+    if(parametri.size()<5)
+    {
+        serviceTcp->txData(QByteArray("INVALID PARAMETERS!\n\r"));
+        return;
+    }
+
+    pCollimatore->customL = parametri[0].toInt();
+    pCollimatore->customR = parametri[1].toInt();
+    pCollimatore->customF = parametri[2].toInt();
+    pCollimatore->customB = parametri[3].toInt();
+    pCollimatore->customT = parametri[4].toInt();
+    serviceTcp->txData("OK \n\r");
+    return;
+}
 
 // <pad,Mat,L,R,F,B,T>
 void serverDebug::handleSetCalib2D(QByteArray data)
@@ -2563,16 +2942,17 @@ void serverDebug::handleCollimatore(QByteArray data)
     // HELP
     if(data.contains("?"))
     {
-        serviceTcp->txData(QByteArray("--------- COMANDI COLLIMATORE -------------------------------------------------\r\n"));
+        serviceTcp->txData(QByteArray("--------- CONFIGURAZIONE -------------------------------------------------\r\n"));
         serviceTcp->txData(QByteArray("readColliConf     Rilegge il file di configurazione  \r\n"));
-        serviceTcp->txData(QByteArray("STORE            Salva i dati di collimazione nel file di configurazione\r\n"));
+        serviceTcp->txData(QByteArray("STORE             Salva i dati di collimazione nel file di configurazione\r\n"));
+        serviceTcp->txData(QByteArray("setCalib2D <pad,Mat,L,R,F,B,T> Impostazione collimazioni pad\r\n"));
+        serviceTcp->txData(QByteArray("setCalibCustom <L,R,F,B,T> Impostazione collimazioni custom\r\n"));
+        serviceTcp->txData(QByteArray("setCalibTomo   <Mat,Lama,P/N, n0..n25> <Mat,Front,Back>\r\n"));
+        serviceTcp->txData(QByteArray("getCalib         Restituisce tutta la calibrazione\r\n"));
+        serviceTcp->txData(QByteArray("download         Aggiorna configurazione su periferica\r\n"));
 
-        serviceTcp->txData(QByteArray("\r\n--- COMANDI FILTRO -------------------------\r\n"));
-        serviceTcp->txData(QByteArray("setFiltro [Al/Rh/Ag/Us]    Imposta il filtro\r\n"));
-        serviceTcp->txData(QByteArray("setCalibTomoFiltro <ENA,ang0,ang1,ang2>    Imposta gli angoli di incremento filtro\r\n"));
-        serviceTcp->txData(QByteArray("setCalibFiltro <Filtro,val>    Modifica il valore di calibrazione del filtro\r\n"));
 
-        serviceTcp->txData(QByteArray("\r\n--- COMANDI COLLIMATORE  -------------------------\r\n"));
+        serviceTcp->txData(QByteArray("\r\n--- MODALITA COLLIMATORE  -------------------------\r\n"));
         serviceTcp->txData(QByteArray("getStatus  Restituisce la collimazione correntemente impostata\r\n"));
         serviceTcp->txData(QByteArray("setAuto           Imposta la modalita' di collimazione Automatica\r\n"));
         serviceTcp->txData(QByteArray("setManual         Imposta modalitÃ  di collimazione Manuale\r\n"));
@@ -2583,16 +2963,17 @@ void serverDebug::handleCollimatore(QByteArray data)
         serviceTcp->txData(QByteArray("setF  val _____ Imposta la lama frontale della collimazione corrente  \r\n"));
         serviceTcp->txData(QByteArray("update    _____ Effettua la collimazione con i valori su elencati  \r\n"));
 
+        serviceTcp->txData(QByteArray("\r\n--- COMANDI FILTRO -------------------------\r\n"));
+        serviceTcp->txData(QByteArray("setFiltro [Al/Rh/Ag/Us]    Imposta il filtro\r\n"));
+        serviceTcp->txData(QByteArray("setCalibTomoFiltro <ENA,ang0,ang1,ang2>    Imposta gli angoli di incremento filtro\r\n"));
+        serviceTcp->txData(QByteArray("setCalibFiltro <Filtro,val>    Modifica il valore di calibrazione del filtro\r\n"));
+
         serviceTcp->txData(QByteArray("--- COMANDI SPECCHIO/LUCE  -------------------------\r\n"));
         serviceTcp->txData(QByteArray("setMirror [HOME/OUT]  Imposta lo specchio\r\n"));
         serviceTcp->txData(QByteArray("setLamp [ON/OFF]  Accende /spegne la lampada\r\n"));
         serviceTcp->txData(QByteArray("setCalibMirror                 Modifica gli steps in campo per lo specchio  \r\n"));
 
-        serviceTcp->txData(QByteArray("setCalib2D <pad,Mat,L,R,F,B,T> Impostazione collimazioni pad\r\n"));
-        serviceTcp->txData(QByteArray("setCalibTomo   <Mat,Lama,P/N, n0..n25> <Mat,Front,Back>\r\n"));
-        serviceTcp->txData(QByteArray("getCalib         Restituisce tutta la calibrazione\r\n"));
-        serviceTcp->txData(QByteArray("download         Aggiorna configurazione su periferica\r\n"));
-
+        serviceTcp->txData(QByteArray("--- COMANDI DI SERVIZIO   -------------------------\r\n"));
         serviceTcp->txData(QByteArray("setTrx val      Muove Tubo ad angolo (copia del comando in rotazioni)\r\n"));
         serviceTcp->txData(QByteArray("testColli val   Muove ciclicamente il formato tra open e CLOSED per Val volte\r\n"));
         serviceTcp->txData(QByteArray("-------------------------------------------------------------------------------\r\n"));
@@ -2752,6 +3133,11 @@ void serverDebug::handleCollimatore(QByteArray data)
         handleSetCalib2D(data);
         return;
     }
+    if(data.contains("setCalibCustom"))
+    {
+        handleSetCalibCustom(data);
+        return;
+    }
 
     if(data.contains("setTrx"))
     {
@@ -2822,6 +3208,9 @@ void serverDebug::handleDrivers(QByteArray data)
         serviceTcp->txData(QByteArray("command <target,b1,b2>       Scrive frame di comando\r\n"));
         serviceTcp->txData(QByteArray("special <target,b1,b2>       Scrive frame speciale\r\n"));
         serviceTcp->txData(QByteArray("----------------------------------------------------\r\n"));
+        serviceTcp->txData(QByteArray("register <tag>               Legge un registro predefinito\r\n"));
+        serviceTcp->txData(QByteArray("reglist  <filtro>            Lista dei registri pre definiti\r\n"));
+
     }
     else if(data.contains("freeze")) handleDriverFreeze(TRUE);
     else if(data.contains("run")) handleDriverFreeze(FALSE);
@@ -2831,10 +3220,91 @@ void serverDebug::handleDrivers(QByteArray data)
     else if(data.contains("write16")) handleDriverWrite16(data);
     else if(data.contains("command")) handleDriverCommand(data);
     else if(data.contains("special")) handleDriverSpecial(data);
+    else if(data.contains("register")) handleDriversReadReg(data);
+    else if(data.contains("reglist")) handleDriversTagList(data);
 
 }
 
 
+void serverDebug::handleDriversTagList(QByteArray data)
+{
+    QList<QByteArray> parametri;
+    QString filtro;
+
+    parametri = getNextFieldsAfterTag(data, QString("reglist"));
+    if(parametri.size()==1)
+    {
+        filtro = parametri[0];
+    }else filtro ="";
+
+
+    QString stringa;
+    serviceTcp->txData(QByteArray("PRE-DEFINED REGISTE LIST:\n\r"));
+    for(int ciclo=0; ciclo < deviceRegisterList.size(); ciclo++){
+        if(filtro!=""){
+            if(!deviceRegisterList.at(ciclo).tag.toAscii().contains(filtro.toAscii().data())) continue;
+        }
+        stringa = "- "+ deviceRegisterList.at(ciclo).tag + " > " + deviceRegisterList.at(ciclo).comment + "\r\n";
+        serviceTcp->txData(stringa.toAscii());
+    }
+}
+
+void serverDebug::handleDriversReadReg(QByteArray data)
+{
+    QByteArray buffer;
+
+    isCommand = false;
+    isSpecial = false;
+
+    QList<QByteArray> parametri;
+
+    parametri = getNextFieldsAfterTag(data, QString("register"));
+    if(parametri.size()!=1)
+    {
+        serviceTcp->txData(QByteArray("wrong parametrs\n\r"));
+        return;
+    }
+
+    // Cerca il tag nella lista
+    int ciclo;
+    for(ciclo=0; ciclo < deviceRegisterList.size(); ciclo++){
+        if(parametri[0] == deviceRegisterList.at(ciclo).tag) {
+            break;
+        }
+    }
+
+    if(ciclo == deviceRegisterList.size()){
+         serviceTcp->txData(QByteArray("no register tag matched\n\r"));
+         return;
+    }
+
+    frameTarget = deviceRegisterList.at(ciclo).tag;
+
+
+    // Costruisce il buffer
+    frameD0 = (unsigned char) (deviceRegisterList.at(ciclo).deviceId | SER422_READ);
+    buffer.append(frameD0);
+    frameD1 = (unsigned char) (unsigned char) (0x00FF & deviceRegisterList.at(ciclo).address);
+    if(deviceRegisterList.at(ciclo).address > 255) frameD2 = 1;
+    else frameD2 = 0;
+    buffer.append(frameD1);
+    buffer.append(frameD2);
+
+    if(deviceRegisterList.at(ciclo).data_type==_8bit) frameFormat16 = false;
+    else frameFormat16 = true;
+
+    frameWrite = false;
+    frameData = 0;
+    frameDH = false;
+    frameCompleted = false;
+
+
+    if(mccService(1,SRV_SERIAL_SEND,buffer)== FALSE) serviceTcp->txData("MCC FALLITO");
+    else connect(pConsole,SIGNAL(mccServiceNotify(unsigned char,unsigned char,QByteArray)),this,SLOT(handleDriverSendNotify(unsigned char,unsigned char,QByteArray)),Qt::UniqueConnection);
+
+    return;
+
+}
 
 // Restituisce un intero valutando il formato della stringa
 int serverDebug::getVal(QString val){
@@ -3234,9 +3704,12 @@ void serverDebug::handleDriverSpecial(QByteArray data){
 
 void serverDebug::handleDriverSendNotify(unsigned char id,unsigned char cmd, QByteArray data)
 {
+
     if(cmd!=SRV_SERIAL_SEND) return;
+
     if(frameCompleted){
         disconnect(pConsole,SIGNAL(mccServiceNotify(unsigned char,unsigned char,QByteArray)),this,SLOT(handleDriverSendNotify(unsigned char,unsigned char,QByteArray)));
+        serviceTcp->txData(QByteArray(cmdGroup).append(">"));
         return;
     }
 
@@ -3259,6 +3732,7 @@ void serverDebug::handleDriverSendNotify(unsigned char id,unsigned char cmd, QBy
                 buffer.append((unsigned char) ((frameData & 0xFF00)>>8));
                 mccService(1,SRV_SERIAL_SEND,buffer);
                 frameDH = true;
+                serviceTcp->txData(QByteArray(cmdGroup).append(">"));
                 return;
             }
 
@@ -3279,6 +3753,7 @@ void serverDebug::handleDriverSendNotify(unsigned char id,unsigned char cmd, QBy
                 buffer.append(frameD2);
                 mccService(1,SRV_SERIAL_SEND,buffer);
                 frameDH = true;
+                serviceTcp->txData(QByteArray(cmdGroup).append(">"));
                 return;
             }
         }else{
@@ -3288,6 +3763,7 @@ void serverDebug::handleDriverSendNotify(unsigned char id,unsigned char cmd, QBy
     }
 
     disconnect(pConsole,SIGNAL(mccServiceNotify(unsigned char,unsigned char,QByteArray)),this,SLOT(handleDriverSendNotify(unsigned char,unsigned char,QByteArray)));
+    serviceTcp->txData(QByteArray(cmdGroup).append(">"));
 }
 
 void serverDebug::handleLoader(QByteArray data)
@@ -3376,6 +3852,8 @@ void serverDebug::handleSystem(QByteArray data)
         serviceTcp->txData(QByteArray("setOperatingMode         Attiva la modalitÃ  Operativa\r\n"));                
         serviceTcp->txData(QByteArray("reboot                   Effettua il reboot di entrambi i terminali\r\n"));
         serviceTcp->txData(QByteArray("setPowerOff              Attiva il powerdown \r\n"));
+        serviceTcp->txData(QByteArray("setUnpark                Attiva procedura di unpark \r\n"));
+        serviceTcp->txData(QByteArray("setPark                Attiva procedura di unpark \r\n"));
         serviceTcp->txData(QByteArray("------------------------------------------------------------------------\r\n"));
     } else
     {
@@ -3383,6 +3861,18 @@ void serverDebug::handleSystem(QByteArray data)
         if(data.contains("setIp")){
             QHostAddress host = setIpAddress(10);
             serviceTcp->txData(QString("IP:%1\r\n").arg(host.toString()).toAscii());
+
+        }else if(data.contains("setUnpark")){
+            unsigned char buffer[2];
+            buffer[0]=MCC_PARKING_MODE_COMMANDS_START_UNPARKING;
+            pConsole->pGuiMcc->sendFrame(MCC_PARKING_MODE_COMMANDS,1,buffer, sizeof(buffer));
+
+        }else if(data.contains("setPark")){
+            pConfig->lenzeConfig.startupInParkingMode = true;
+            pConfig->saveLenzeConfig();
+            unsigned char buffer[2];
+            buffer[0]=MCC_PARKING_MODE_COMMANDS_START_PARKING;
+            pConsole->pGuiMcc->sendFrame(MCC_PARKING_MODE_COMMANDS,1,buffer, sizeof(buffer));
 
         }else if(data.contains("setDATE"))
         {

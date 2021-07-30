@@ -10,26 +10,14 @@
 // FUNZIONE DI GESTIONE DELLA RICEZIONE DATI DA CONSOLE
 //
 ///////////////////////////////////////////////////////////////////
+#define GET_SPECIMEN        "GetSpecimen"
+//__________________________________________________________________________________________________
 
 #define GET_GANTRY_TYPE     "GetGantryType"             // Richiesta tipologia di macchina: DMD / DBT
 
 #define SET_SERIAL_NUMBER    "SetSerialNumber"          // Imposta il SN: <OK 0> = OK, <NOK 1> = Wrong param, <NOK 2>= Già assegnato
 #define GET_SERIAL_NUMBER    "GetSerialNumber"          // Chiede il SN:  <OK sernum> = OK, <NOK 1> = SN non assegnato
 #define SET_SERVICE_PSW      "SetServicePsw"            // Imposta la password per i pannelli di service
-
-
-#define SET_AEC_FIELD        "SetAnalogDetectorField"   // Imposta il campo del Detector (solo calibrazione detector)
-#define SET_CALIB_FIELD          "SetCalibField"            // Imposta i tre valori di calibrazione RMI-155 e il coefficiente di accettazione
-#define SET_CALIB_PROFILE_DATA   "SetCalibProfileData"  // Imposta i parametri per l'esposizione ion calibrazione profilo
-
-#define SET_ANALOG_KV_CALIB_TUBE_DATA  "SetAnalogKvCalibTubeData"       // Imposta i dati per l'effettuazione della calibrazione del tubo
-#define SET_ANALOG_IA_CALIB_TUBE_DATA  "SetAnalogIaCalibTubeData"       // Imposta i dati per l'effettuazione della calibrazione del tubo
-#define SET_ANALOG_CALIB_TUBE_OFFSET   "SetAnalogTubeOffset"            // Aggiunge l'offset
-
-// Da realizzare
-#define SET_STORE_ANALOG_CONFIG     "SetStoreAnalogConfig"     // Determina il salvataggio dei parametri nel file di configurazione analogica
-#define SET_STORE_ANALOG_PROFILE    "SetStoreAnalogProfile"    // Salva i profili in memoria nella directory del tubo selezionato
-
 
 
 // Nuovi comandi
@@ -376,11 +364,7 @@ public:
     void setITest(bool status);                 // Attivazione corrente di test Anodica
     void getFilData(void);                      // Legge i dati dal test masmetro
 
-    //_________________________________________________________
-    // MACCHINA ANALOGICA
-    bool handleSetAnalogKvCalibTubeData(protoConsole* frame, protoConsole* answer);
-    bool handleSetAnalogIaCalibTubeData(protoConsole* frame, protoConsole* answer);
-    bool handleSetAnalogCalibTubeOffset(protoConsole* frame, protoConsole* answer);
+
 
     TcpIpServer*     consoleSocketTcp;
 
