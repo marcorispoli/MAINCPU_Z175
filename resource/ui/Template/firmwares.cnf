@@ -1,0 +1,16 @@
+<PACKAGE,12>  //  Revisione Package corrente
+<FILENAME,PACKAGE_ID12.tar>  //  file package istallato
+<MASTER,1.16>  //  Revisione GUI Master
+<SLAVE,1.16>  //  Revisione GUI Slave
+<M4_MASTER,1.9>  //  Revisione M4 Master
+<M4_SLAVE,1.5>  //  Revisione M4 Slave
+<MCC_MASTER,2.2>  //  Revisione MCC driver Master
+<MCC_SLAVE,2.2>  //  Revisione MCC driver Slave
+<LANGUAGE,1.3>  //  language package istallato
+<PCB204,1.9>  //  Revisione PCB204
+<PCB215,8.2>  //  Revisione PCB215
+<PCB190,2.6>  //  Revisione PCB190
+<PCB240,1.8>  //  Revisione PCB240
+<PCB249U1,2.4>  //  Revisione PCB249U1
+<PCB249U2,1.3>  //  Revisione PCB249U2
+<PCB244,1.1>  //  Revisione PCB244

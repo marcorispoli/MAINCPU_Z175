@@ -1,0 +1,18 @@
+VDAC + Combinazione scambio primari
+<"V",3086,0,1>
+
+Definizioni correnti utilizzate nel file
+<"I","A","W","G",80,2145,0.432>
+<"I","B","W","P",55,2117,0.26>
+
+Corrente dedicata alla Tomografia
+<"T","W",180,2318,0.725>
+Definizioni Intervalli Fuoco Grande
+<"M","W","G",0,3600,"A">
+
+Definizioni Intervalli Fuoco Piccolo
+<"M","W","P",0,2500,"B">
+
+Definizioni Intervalli Starter
+<"S","W","G",0,3600>
+

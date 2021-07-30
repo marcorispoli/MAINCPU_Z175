@@ -1,0 +1,16 @@
+<SBLOCCO_COMPRESSORE,1>    // Impostazione sblocco compressore
+<STARTER_TIMEOUT,300>  //  Tempo di corsa starter
+<ACCESSORIO_PAZIENTE,1>    // opzione verifica accessori
+<ACCESSORIO_PAZIENTE_COMBO,1>
+<ACCESSORIO_PAZIENTE_2D,1>
+<ACCESSORIO_PAZIENTE_3D,0>    // opzione verifica accessorio di protezione 3D
+<ACCESSORIO_PAZIENTE_PB,1>
+<PCB190_GNDTEST_ENABLE,1>    // opzione verifica accessorio di protezione
+<PCB190_ITEST,60>  //  I test PCB190
+<PCB190_IFIL,2020>  //  I filamento di riscaldamento
+<PCB190_MAS_ENA,1>    // Abilitazione monitoraggio mAsmetro
+<PCB190_IFIL_ENA,1>    //  Abilitazione monitoraggio corrente di filamento
+<PCB190_HV,1>    //  Abilitazione monitoraggio livelli HV
+<DEMO,0>    //  Attivazione/Disattivazione modalità demo
+<TOMO2F,0>    //  Attivazione/Disattivazione tomo 2F
+<DEAD_MAN,0>    //  Attivazione funzione uomo morto

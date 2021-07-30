@@ -1,0 +1,43 @@
+
+RELEASE 1.1 : 17/07/2020
+
+NEW Nuova struttura pacchetto di istallazione
+BUG: corretto bug risalita compressore in biopsia
+BUG: corretto bug gestione bit di combo
+NEW: Comando GetGantryType(): restituisce DMD
+BUG: Icona Sblocco compressore non allineata tra Master e Slave
+CONFIGURAZIONE: Aggiornato 1F,2F,3F,4F secondo tabelle ma con modalita 1/2/4 shots
+CORRETTA Lingua Italiana (READY / NOT READY in PRONTO, NON PRONTO)
+
+_______________________________________________________________________________________
+23/11/2020
+NEW - AGGIUNTA Configurazione tipo di collimatore per gestire il collimatore nuovo (ASSY 02)
+      Il sistema gestisce due coppie di firmware per il collimatore: una coppia per l'ASSY 01
+      ed una coppia per l'ASSY 02
+BUG - Corretto tool di calibrazione Filtri
+MOD - Modificato default collimazione specchio (REVISIONE 3)
+BUG:- Corretta gestione Calib Mirror relativo al tool di collimazione del Tolkit
+
+
+_______________________________________________________________________________________
+20/12/2020
+
+RILASCIO ID03
+_______________________________________________________________________________________
+
+
+RILASCIO ID04
+28/01/2021
+
+- Scansione 50 gradi per Screen plus: aggiunto 5F
+- Test piombo eliminato in calibrazione: il parametro è comunque presente
+- Starter bassa velocità:
+    di default è spento il mantenimento (già su ID3)
+    in calibrazione, la corrente keep non viene valutata se la modalita è di spegnimento (come atteso)
+- Aggiunto IRS:config per agevolare la configurazione dei parametri nascosti
+- Rimosso lo specchio in campo nel tool di calibrazione del filtro
+- salvato lo stato del rilascio del compressore quando si chiude lo studio
+
+RILASCIO ID05
+
+_______________________________________________________________________________________
