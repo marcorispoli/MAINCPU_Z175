@@ -1594,11 +1594,12 @@ bool Config::sendMccConfigCommand(unsigned char cmd){
             buflen += 10;
         break;
         case CONFIG_BIOPSY:            
-            pData[0] = pBiopsy->config.Z_homePosition; // Distanza base metallica fibra di carbonio
-            pData[1] = pBiopsy->config.offsetPad;   // Offset linea di calibrazione compressore, Staffe compressore
-            pData[2] = pBiopsy->config.margineRisalita; // Margine di sicurezza sulla risalita del compressore
-            pData[3] = pBiopsy->config.marginePosizionamento; // NA
-            buflen += 4;
+            pData[0] = pBiopsy->config.Z_homePosition; // Distanza home to fibra
+            pData[1] = pBiopsy->config.Z_basePosizionatore; // Distanza base metallica fibra di carbonio
+            pData[2] = pBiopsy->config.offsetPad;   // Offset linea di calibrazione compressore, Staffe compressore
+            pData[3] = pBiopsy->config.margineRisalita; // Margine di sicurezza sulla risalita del compressore
+            pData[4] = pBiopsy->config.marginePosizionamento; // NA
+            buflen += 5;
         break;
         case CONFIG_PCB244:           
             pData[0] = 0;

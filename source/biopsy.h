@@ -17,13 +17,13 @@ public:
     int moveHome(int id); // Chiede il movimento verso home
 
     // Movimenti per step
-    bool setStepVal(unsigned char step);
-    bool moveDecZ(void);
-    bool moveIncZ(void);
-    bool moveDecX(void);
-    bool moveIncX(void);
-    bool moveDecY(void);
-    bool moveIncY(void);
+    int setStepVal(unsigned char step);
+    int moveDecZ(int id);
+    int moveIncZ(int id);
+    int moveDecX(int id);
+    int moveIncX(int id);
+    int moveDecY(int id);
+    int moveIncY(int id);
 
 
 signals:
@@ -70,6 +70,8 @@ public:
     // Limiti di movimento
     unsigned char  paddle_margine;  // (mm) distanza staffe paddle - base torretta (mm) calcolata da Gantry
     unsigned char  needle_home;     // (mm) distanza punta ago - home torretta
+    unsigned char  needle_margine;  // Distanza punta ago - fibra di carbonio
+
     unsigned char  max_z_paddle;    // (mm) Massima Z ricalcolata sulla base della posizione del paddle
     unsigned char  abs_max_z;       // (mm) Massima Z assoluta rspetto sia al paddle che all'ago (se presente)
 

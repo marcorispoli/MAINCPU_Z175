@@ -226,7 +226,7 @@ typedef struct
 {
     unsigned short Z_homePosition;          // Posizione del punto Z=0 rispetto alla fibra di carbonio
     unsigned char  offsetPad;               // Offset meccanico Staffe Pad rispetto alla calibrazione(mm)
-    unsigned char  offsetBasePosizionatore; // Offset meccanico base Asse X
+    unsigned char  Z_basePosizionatore;     // Posizione staffa metallica posizionatore rispetto a fibra di carbonio
 
     unsigned char  margineRisalita;         // Margine di risalita (mm)
     unsigned char  marginePosizionamento;   // Margine di sicurezza sul posizionamento (mm)

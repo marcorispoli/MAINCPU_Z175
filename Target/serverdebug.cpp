@@ -2,9 +2,9 @@
 #include "appinclude.h"
 #include "globvar.h"
 
-#define PROMPTH "IRS:>"
-bool trx_loop=false;
-bool trx_loop_stat = false;
+#include "ANALOG/pageOpenAnalogic.h"
+extern AnalogPageOpen* paginaOpenStudyAnalogic;
+
 
 QHostAddress serverDebug::setIpAddress( int val){
     int size = TcpIpServer::hostAddress().toString().length();
@@ -23,15 +23,6 @@ void serverDebug::activateConnections(void) {
 
 }
 
-/*
- * if(parametri[0]=="PCB269") target = 0x11;
-    else if(parametri[0]=="PCB204") target = 0x0B;
-    else if(parametri[0]=="PCB190") target = 0x13;
-    else if(parametri[0]=="PCB249U1") target = 0x16;
-    else if(parametri[0]=="PCB249U2") target = 0x15;
-    else if(parametri[0]=="PCB244") target = 0x14;
-    else if(parametri[0]=="PCB244A") target = 0x17;
- **/
 serverDebug::serverDebug(void) :
     QObject(0)
 {
@@ -41,406 +32,6 @@ serverDebug::serverDebug(void) :
     lastValidFrame.clear();
     cmdGroup.clear();
 
-
-    _deviceRegisterItem item;
-
-    deviceRegisterList.clear();
-
-    //  --------   REGISTRI RELATIVI AL COLLIMATORE  -------------
-    item.tag = "COLLI-GONIOREL";
-    item.comment = "Angolo relativo TRX - ARM";
-    item.deviceId = _CODEID_PCB249U1;
-    item.address = 0x5A;
-    item.data_type = _8bit;
-    item.sign_type = _SIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "COLLI-TRX";
-    item.comment = "Angolo assoluto TRX (0.025∞/unit)";
-    item.deviceId = _CODEID_PCB249U1;
-    item.address = 0x5E;
-    item.data_type = _16bit;
-    item.sign_type = _SIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "COLLI-ARM";
-    item.comment = "Angolo di confronto ARM (0.025∞/unit)";
-    item.deviceId = _CODEID_PCB249U1;
-    item.address = 0x60;
-    item.data_type = _16bit;
-    item.sign_type = _SIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "COLLI-R-SENS";
-    item.comment = "Posizione lama destra";
-    item.deviceId = _CODEID_PCB249U1;
-    item.address = 0x144;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "COLLI-L-SENS";
-    item.comment = "Posizione lama sinistra";
-    item.deviceId = _CODEID_PCB249U1;
-    item.address = 0x145;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "COLLI-T-SENS";
-    item.comment = "Posizione trapezio";
-    item.deviceId = _CODEID_PCB249U1;
-    item.address = 0x146;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "COLLI-L-ENCODER";
-    item.comment = "Encoder virtuale lama sinistra";
-    item.deviceId = _CODEID_PCB249U1;
-    item.address = 0x159;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "COLLI-R-ENCODER";
-    item.comment = "Encoder virtuale lama destra";
-    item.deviceId = _CODEID_PCB249U1;
-    item.address = 0x15A;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "COLLI-T-ENCODER";
-    item.comment = "Encoder virtuale lama trapezio";
-    item.deviceId = _CODEID_PCB249U1;
-    item.address = 0x15B;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "COLLI-B-SENS";
-    item.comment = "Posizione lama posteriore";
-    item.deviceId = _CODEID_PCB249U2;
-    item.address = 0x55;
-    item.data_type = _16bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "COLLI-F-SENS";
-    item.comment = "Posizione lama posteriore";
-    item.deviceId = _CODEID_PCB249U2;
-    item.address = 0x57;
-    item.data_type = _16bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "COLLI-TARGET-FRONT";
-    item.comment = "Target posizione lama frontale";
-    item.deviceId = _CODEID_PCB249U2;
-    item.address = 0x5C;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "COLLI-TARGET-BACK";
-    item.comment = "Target posizione lama posteriore";
-    item.deviceId = _CODEID_PCB249U2;
-    item.address = 0x5D;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "COLLI-FILTRO-SENS";
-    item.comment = "Posizione filtro";
-    item.deviceId = _CODEID_PCB249U2;
-    item.address = 0x66;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "COLLI-MIRROR-COUNT";
-    item.comment = "Step posizionamento specchio";
-    item.deviceId = _CODEID_PCB249U2;
-    item.address = 0x4f;
-    item.data_type = _16bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "COLLI-MIRROR-STAT";
-    item.comment = "Registro di stato specchio";
-    item.deviceId = _CODEID_PCB249U2;
-    item.address = 0x4e;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "COLLI-LAMP-STAT";
-    item.comment = "Registro di stato luce";
-    item.deviceId = _CODEID_PCB249U2;
-    item.address = 0x6C;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    //  --------   REGISTRI RELATIVI AL COMPRESSORE  -------------
-    item.tag = "CMP-SYS0";
-    item.comment = "Registro SYS_FLAGS0";
-    item.deviceId = _CODEID_PCB269;
-    item.address = 0x20;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "CMP-SYS1";
-    item.comment = "Registro SYS_FLAGS1";
-    item.deviceId = _CODEID_PCB269;
-    item.address = 0x21;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "CMP-SYS2";
-    item.comment = "Registro SYS_FLAGS2";
-    item.deviceId = _CODEID_PCB269;
-    item.address = 0x22;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "CMP-FAULT";
-    item.comment = "Registro codici fault";
-    item.deviceId = _CODEID_PCB269;
-    item.address = 0x27;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "CMP-PADDLE";
-    item.comment = "Registro riconoscimento paddle";
-    item.deviceId = _CODEID_PCB269;
-    item.address = 0x28;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "CMP-SENS-DOSE";
-    item.comment = "Registro sensore di posizione";
-    item.deviceId = _CODEID_PCB269;
-    item.address = 0x2a;
-    item.data_type = _16bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "CMP-DOSE";
-    item.comment = "Registro posizione calibrata";
-    item.deviceId = _CODEID_PCB269;
-    item.address = 0x2c;
-    item.data_type = _16bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "CMP-SFORCE";
-    item.comment = "Registro sensore di forza";
-    item.deviceId = _CODEID_PCB269;
-    item.address = 0x30;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "CMP-FORCE";
-    item.comment = "Registro forza calibrata";
-    item.deviceId = _CODEID_PCB269;
-    item.address = 0x31;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "CMP-TARA";
-    item.comment = "Registro peso del compressore";
-    item.deviceId = _CODEID_PCB269;
-    item.address = 0xA0+7;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "CMP-MAXPOS";
-    item.comment = "Registro massima posizione del carrello";
-    item.deviceId = _CODEID_PCB269;
-    item.address = 0xA0+15;
-    item.data_type = _16bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "CMP-MINFORCE";
-    item.comment = "Registro minima forza di compressione";
-    item.deviceId = _CODEID_PCB269;
-    item.address = 0xA0+33;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "CMP-TARGET";
-    item.comment = "Registro target di compressione";
-    item.deviceId = _CODEID_PCB269;
-    item.address = 0xA0+35;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "CMP-LIMIT";
-    item.comment = "Registro massima compressione";
-    item.deviceId = _CODEID_PCB269;
-    item.address = 0xA0+36;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    //  --------   REGISTRI RELATIVI ALLA PCB190  -------------
-
-    item.tag = "INV-SYS0";
-    item.comment = "Registro SYS_FLAGS0";
-    item.deviceId = _CODEID_PCB190;
-    item.address = 0x20;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "INV-SYS1";
-    item.comment = "Registro SYS_FLAGS1";
-    item.deviceId = _CODEID_PCB190;
-    item.address = 0x21;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "INV-SYS2";
-    item.comment = "Registro SYS_FLAGS2";
-    item.deviceId = _CODEID_PCB190;
-    item.address = 0x22;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "INV-FAULT";
-    item.comment = "Registro codici di errore";
-    item.deviceId = _CODEID_PCB190;
-    item.address = 0x3e;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "INV-RXHV";
-    item.comment = "Registro kV Esposizione";
-    item.deviceId = _CODEID_PCB190;
-    item.address = 0x40;
-    item.data_type = _16bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "INV-RXIANODE";
-    item.comment = "Registro Anodica";
-    item.deviceId = _CODEID_PCB190;
-    item.address = 0x42;
-    item.data_type = _16bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "INV-RXMAS";
-    item.comment = "Registro mAs Esposizione";
-    item.deviceId = _CODEID_PCB190;
-    item.address = 0x44;
-    item.data_type = _16bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "INV-MINHV";
-    item.comment = "Registro valore minimo HV";
-    item.deviceId = _CODEID_PCB190;
-    item.address = 0x46;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "INV-MAXHV";
-    item.comment = "Registro valore massimo HV";
-    item.deviceId = _CODEID_PCB190;
-    item.address = 0x47;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "INV-MINIA";
-    item.comment = "Registro valore minimo I Anodica";
-    item.deviceId = _CODEID_PCB190;
-    item.address = 0x48;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "INV-MAXIA";
-    item.comment = "Registro valore massimo I Anodica";
-    item.deviceId = _CODEID_PCB190;
-    item.address = 0x49;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "INV-RXMAS-FINE";
-    item.comment = "Registro mAs a fine raggi";
-    item.deviceId = _CODEID_PCB190;
-    item.address = 0x4B;
-    item.data_type = _16bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "INV-FUOCO";
-    item.comment = "Registro Fuoco corrente";
-    item.deviceId = _CODEID_PCB190;
-    item.address = 0x57;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "INV-ARSTAT";
-    item.comment = "Registro Status Anodo rotante";
-    item.deviceId = _CODEID_PCB190;
-    item.address = 0xC0;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "INV-AR-MAINRUN";
-    item.comment = "Registro corrente MAIN RUN Anodo rotante";
-    item.deviceId = _CODEID_PCB190;
-    item.address = 0xC8;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "INV-AR-SHIFTRUN";
-    item.comment = "Registro corrente SHIHFT RUN Anodo rotante";
-    item.deviceId = _CODEID_PCB190;
-    item.address = 0xC9;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "INV-AR-MAINKEEP";
-    item.comment = "Registro corrente MAIN KEEP Anodo rotante";
-    item.deviceId = _CODEID_PCB190;
-    item.address = 0xCA;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
-
-    item.tag = "INV-AR-SHIFTKEEP";
-    item.comment = "Registro corrente SHIFT KEEP Anodo rotante";
-    item.deviceId = _CODEID_PCB190;
-    item.address = 0xCB;
-    item.data_type = _8bit;
-    item.sign_type = _UNSIGNED;
-    deviceRegisterList.append(item);
     return;
 
 }
@@ -450,7 +41,7 @@ void serverDebug::notificheConnectionHandler(bool stat)
     if(stat)
     {
         // Connessione automatica al servizio di log eventi
-        serviceTcp->txData(QString("---------   INTERFACCIA IRS, Rev %1.%2.%3      -------------\r\n").arg((int)IRS_MAJ).arg((int)IRS_MIN).arg((int)IRS_BETA).toAscii());
+        serviceTcp->txData(QString("---------   ANALOG DEVICE: IRS INTERFACE, Rev %1.%2.%3      -------------\r\n").arg((int)IRS_MAJ).arg((int)IRS_MIN).arg((int)IRS_BETA).toAscii());
         serviceTcp->txData(QByteArray(">"));
     }else
     {
@@ -538,6 +129,10 @@ void serverDebug::serviceRxHandler(QByteArray data)
     {
         cmdGroup="debug: ";
         handleDebug(data);
+    }else if(data.contains("analog:"))
+    {
+        cmdGroup="analog: ";
+        handleAnalog(data);
     }else if(data.contains("?")) // DEVE ESSERE L'ULTIMO
     {
         handleList();
@@ -551,35 +146,10 @@ void serverDebug::serviceRxHandler(QByteArray data)
     return;
 }
 
-/*
- *  Funzione per la visualizzazione dei comandi a shell disponibili
- */
-void serverDebug::handleList(void)
-{
-    serviceTcp->txData(QByteArray("-----------------------------------------------------\r\n"));
-    serviceTcp->txData(QByteArray("system: -------- Comandi generali di sistema \r\n"));
-    serviceTcp->txData(QByteArray("config: -------- Comandi generali di configurazione \r\n"));
-    serviceTcp->txData(QByteArray("drivers:  ------ Comandi diretti ai drivers \r\n"));
-    serviceTcp->txData(QByteArray("collimatore: --- Comandi di gestione del collimatore \r\n"));
-    serviceTcp->txData(QByteArray("compressore: --- Comandi di gestione del compressore \r\n"));
-    serviceTcp->txData(QByteArray("rotazioni: ----- Comandi di gestione delle rotazioni \r\n"));
-    serviceTcp->txData(QByteArray("potter: -------- Comandi di gestione delle funzioni potter\r\n"));
-    serviceTcp->txData(QByteArray("aws: ----------- Comandi relativi alla Console \r\n"));
-    serviceTcp->txData(QByteArray("loader: -------- Comandi relativi al loader \r\n"));
-    serviceTcp->txData(QByteArray("biopsy: -------- Comandi di gestione torretta \r\n"));
-    serviceTcp->txData(QByteArray("generatore: ---- Comandi relativi al generatore \r\n"));
-    serviceTcp->txData(QByteArray("master: -------- Comandi shell su Master \r\n"));
-    serviceTcp->txData(QByteArray("slave: --------- Comandi shell su Slave \r\n"));
-    serviceTcp->txData(QByteArray("canopen: --------- Comandi shell su Slave \r\n"));
-    serviceTcp->txData(QByteArray("debug: --------- Comandi per operazioni di debug \r\n"));
-    serviceTcp->txData(QByteArray("------------------------------------------------------\r\n"));
-
-}
-
-//_____________________________________________________________________________________________________________________________        >>>>>> DEBUG GROUP
 void serverDebug::handleConfig(QByteArray data)
 {
     QString stringa;
+    unsigned char buffer[20];
 
     if(data.contains("?"))
     {
@@ -590,11 +160,11 @@ void serverDebug::handleConfig(QByteArray data)
         serviceTcp->txData(QByteArray("enableStarterKeep [ON/OFF]   ON=Keeping enabled OFF=Keeping disabled\r\n"));
         serviceTcp->txData(QByteArray("setTubeTemp       [lval/hval] lval = reset Tube alarm temp, hval=Trip Tube alarm temp\r\n"));
         serviceTcp->txData(QByteArray("setLanguage       [ITA/ENG..] set the current language\r\n"));
+        serviceTcp->txData(QByteArray("setRtc            Y:[2021/..] M:[01/12] D:[1/31] H:[00/23] m:[0/60] s:[0/60] \r\n"));
         serviceTcp->txData(QByteArray("resetGantry                   reset the factory gantry configuration\r\n"));
-        serviceTcp->txData(QByteArray("resetKvCalib                  reset readback kv calibration file\r\n"));
+        serviceTcp->txData(QByteArray("resetKVread                   reset the KV read calibration file\r\n"));
         serviceTcp->txData(QByteArray("sysBackup         filename    backup master: nome = serial number\r\n"));
         serviceTcp->txData(QByteArray("sysRestore        filename    Restore da home\r\n"));
-
         serviceTcp->txData(QByteArray("----------------------------------------------------------------------------------\r\n"));
     }else if(data.contains("enableAccessory")){
                 if(data.contains("ON")) {
@@ -687,18 +257,47 @@ void serverDebug::handleConfig(QByteArray data)
     }else if(data.contains("setLanguage")){
         handleSetLanguage(data);
     }else if(data.contains("resetGantry")){
+        // Effettua un sync
         QString command = QString("rm /resource/config/sysCfg.cnf");
         system(command.toStdString().c_str());
         command = QString("sync");
         system(command.toStdString().c_str());
-        serviceTcp->txData(QByteArray("DONE!\n\r"));
-    }else if(data.contains("resetKvCalib")){
 
+    }else if(data.contains("resetKVread")){
+        // Effettua un sync
         QString command = QString("rm /resource/config/kvcalib.dat");
         system(command.toStdString().c_str());
         command = QString("sync");
         system(command.toStdString().c_str());
-        serviceTcp->txData(QByteArray("DONE!\n\r"));
+
+    }else if(data.contains("setRtc")){
+        QList<QByteArray> parametri;
+        parametri = getNextFieldsAfterTag(data, QString("setRtc"));
+        if(parametri.size()==0){
+            buffer[0] = 2; // GET RTC
+            pConsole->pGuiMcc->sendFrame(MCC_RTC_COMMANDS,1,buffer,1);
+            serviceTcp->txData(QByteArray("DONE \r\n"));
+            return;
+        }
+        if(parametri.size()!=6) {
+            serviceTcp->txData(QByteArray("MISSING PARAMETERS \r\n"));
+            return;
+        }
+
+        buffer[0] = 1;
+
+        buffer[1] = _RTC_MON;
+        buffer[2] = parametri[1].toInt() & 0xFF; // Anno
+        buffer[3] = (parametri[1].toInt() >> 8) & 0xFF; // Anno
+        buffer[4] = parametri[2].toInt(); // Mese
+        buffer[5] = parametri[3].toInt(); // Giorno
+        buffer[6] = parametri[4].toInt(); // Ora
+        buffer[7] = parametri[5].toInt(); // Minuti
+        buffer[8] = parametri[6].toInt(); // Secondi
+
+        pConsole->pGuiMcc->sendFrame(MCC_RTC_COMMANDS,1,buffer,9);
+        serviceTcp->txData(QByteArray("DONE \r\n"));
+        return;
     }else if(data.contains("sysBackup")){
         QList<QByteArray> parametri = getNextFieldsAfterTag(data, QString("sysBackup"));
 
@@ -723,7 +322,338 @@ void serverDebug::handleConfig(QByteArray data)
         return;
     }
 
+}
 
+/*
+ *  Funzione per la visualizzazione dei comandi a shell disponibili
+ */
+void serverDebug::handleList(void)
+{
+    serviceTcp->txData(QByteArray("-----------------------------------------------------\r\n"));
+    serviceTcp->txData(QByteArray("system: -------- Comandi generali di sistema \r\n"));
+    serviceTcp->txData(QByteArray("drivers:  ------ Comandi diretti ai drivers \r\n"));
+    serviceTcp->txData(QByteArray("collimatore: --- Comandi di gestione del collimatore \r\n"));
+    serviceTcp->txData(QByteArray("compressore: --- Comandi di gestione del compressore \r\n"));
+    serviceTcp->txData(QByteArray("rotazioni: ----- Comandi di gestione delle rotazioni \r\n"));
+    serviceTcp->txData(QByteArray("potter: -------- Comandi di gestione delle funzioni potter\r\n"));
+    serviceTcp->txData(QByteArray("aws: ----------- Comandi relativi alla Console \r\n"));
+    serviceTcp->txData(QByteArray("loader: -------- Comandi relativi al loader \r\n"));
+    serviceTcp->txData(QByteArray("biopsy: -------- Comandi di gestione torretta \r\n"));
+    serviceTcp->txData(QByteArray("generatore: ---- Comandi relativi al generatore \r\n"));
+    serviceTcp->txData(QByteArray("master: -------- Comandi shell su Master \r\n"));
+    serviceTcp->txData(QByteArray("slave: --------- Comandi shell su Slave \r\n"));
+    serviceTcp->txData(QByteArray("canopen: ------- Comandi shell su Slave \r\n"));
+    serviceTcp->txData(QByteArray("analog: -------- Comandi macchina Analogica \r\n"));
+    serviceTcp->txData(QByteArray("debug: --------- Comandi per operazioni di debug \r\n"));
+    serviceTcp->txData(QByteArray("------------------------------------------------------\r\n"));
+
+}
+
+
+
+
+void serverDebug::handleAnalog(QByteArray data)
+{
+
+    unsigned char buffer[10];
+    if(data.contains("?"))
+    {
+        serviceTcp->txData(QByteArray("---------------------------------------------------------\r\n"));
+        serviceTcp->txData(QByteArray("openStudy    Apre lo studio  \r\n"));
+        serviceTcp->txData(QByteArray("closeStudy   Chiude lo studio  \r\n"));
+        serviceTcp->txData(QByteArray("getRev       Chiede la revisione corrente  \r\n"));
+        serviceTcp->txData(QByteArray("getRad       <x1,x5,x25>   \r\n"));
+        serviceTcp->txData(QByteArray("setField     <FRONT,MIDDLE,BACK,OPEN>  \r\n"));
+        serviceTcp->txData(QByteArray("getAccessory Chiede codice accessorio  \r\n"));
+        serviceTcp->txData(QByteArray("getCassette  Chiede stato cassetta  \r\n"));
+        serviceTcp->txData(QByteArray("setCassette   <B/R> B=Busy, R=Ready \r\n"));
+        serviceTcp->txData(QByteArray("testGrid      n n=Cycles number \r\n"));
+        serviceTcp->txData(QByteArray("setOfs        <val>    \r\n"));
+        serviceTcp->txData(QByteArray("getOfs        Chiede il registro offset   \r\n"));
+        serviceTcp->txData(QByteArray("autoOfs       Azzera automaticamente   \r\n"));
+        serviceTcp->txData(QByteArray("initRtc       Inizializza RTC   \r\n"));
+        serviceTcp->txData(QByteArray("setRtc  [MON/TUE/../SUN] [2021/..] [01/12] [1/31] [00/23] [0/60][0/60] \r\n"));
+        serviceTcp->txData(QByteArray("getRtc       chiede data   \r\n"));
+        serviceTcp->txData(QByteArray("---------------------------------------------------------\r\n"));
+    }else if(data.contains("openStudy")){
+        if(paginaOpenStudyAnalogic->openPageRequest()) serviceTcp->txData(QByteArray("DONE \r\n"));
+        else serviceTcp->txData(QByteArray("ERROR! \r\n"));
+
+    }else if(data.contains("closeStudy")){
+        if(paginaOpenStudyAnalogic->closePageRequest()) serviceTcp->txData(QByteArray("DONE \r\n"));
+        else serviceTcp->txData(QByteArray("ERROR! \r\n"));
+
+    }else if(data.contains("setCassette")){
+        QList<QByteArray> parametri;
+        parametri = getNextFieldsAfterTag(data, QString("setCassette"));
+        if(parametri.size()!=1) {
+            serviceTcp->txData(QByteArray("MISSING PARAMETER \r\n"));
+            return;
+        }
+
+        if(parametri[0]=="B") buffer[1]=1;
+        else buffer[1]=0;
+        buffer[0] = MCC_PCB244_A_SET_CASSETTE;
+        pConsole->pGuiMcc->sendFrame(MCC_244_A_FUNCTIONS,1,buffer,2);
+        serviceTcp->txData(QByteArray("DONE \r\n"));
+        return;
+    }else if(data.contains("testGrid")){
+        QList<QByteArray> parametri;
+        parametri = getNextFieldsAfterTag(data, QString("testGrid"));
+        if(parametri.size()!=1) {
+            serviceTcp->txData(QByteArray("MISSING CYCLES NUMBER \r\n"));
+            return;
+        }
+
+        buffer[1]=parametri[0].toInt();
+        if(parametri[0].toInt()>255)    buffer[1]=255;
+
+        buffer[0] = MCC_PCB244_A_ACTIVATE_GRID;
+        pConsole->pGuiMcc->sendFrame(MCC_244_A_FUNCTIONS,1,buffer,2);
+        serviceTcp->txData(QByteArray("DONE \r\n"));
+        return;
+    }else if(data.contains("getRad")){
+        QList<QByteArray> parametri;
+        parametri = getNextFieldsAfterTag(data, QString("getRad"));
+        if(parametri.size()!=1) {
+            serviceTcp->txData(QByteArray("MISSING PARAMETER \r\n"));
+            return;
+        }
+
+
+        if(parametri[0]=="x1"){
+            buffer[0] = MCC_PCB244_A_GET_RADx1;
+            connect(pConsole,SIGNAL(mccPcb244ANotifySgn(unsigned char,unsigned char,QByteArray)),this,SLOT(PCB244A_Notify(unsigned char,unsigned char,QByteArray)),Qt::UniqueConnection);
+            pConsole->pGuiMcc->sendFrame(MCC_244_A_FUNCTIONS,1,buffer,1);
+        }else if(parametri[0]=="x5"){
+            buffer[0] = MCC_PCB244_A_GET_RADx5;
+            connect(pConsole,SIGNAL(mccPcb244ANotifySgn(unsigned char,unsigned char,QByteArray)),this,SLOT(PCB244A_Notify(unsigned char,unsigned char,QByteArray)),Qt::UniqueConnection);
+            pConsole->pGuiMcc->sendFrame(MCC_244_A_FUNCTIONS,1,buffer,1);
+
+        }else if(parametri[0]=="x25"){
+            buffer[0] = MCC_PCB244_A_GET_RADx25;
+            connect(pConsole,SIGNAL(mccPcb244ANotifySgn(unsigned char,unsigned char,QByteArray)),this,SLOT(PCB244A_Notify(unsigned char,unsigned char,QByteArray)),Qt::UniqueConnection);
+            pConsole->pGuiMcc->sendFrame(MCC_244_A_FUNCTIONS,1,buffer,1);
+
+        }else {
+            serviceTcp->txData(QByteArray("INVALID PARAMETER \r\n"));
+            return;
+        }
+
+        serviceTcp->txData(QByteArray("Wait .. \r\n"));
+    }else if(data.contains("getRev")){
+        buffer[0] = MCC_PCB244_A_GET_REV;
+        connect(pConsole,SIGNAL(mccPcb244ANotifySgn(unsigned char,unsigned char,QByteArray)),this,SLOT(PCB244A_Notify(unsigned char,unsigned char,QByteArray)),Qt::UniqueConnection);
+        pConsole->pGuiMcc->sendFrame(MCC_244_A_FUNCTIONS,1,buffer,1);
+
+    }else if(data.contains("getAccessory")){
+        buffer[0] = MCC_PCB244_A_GET_ID;
+        connect(pConsole,SIGNAL(mccPcb244ANotifySgn(unsigned char,unsigned char,QByteArray)),this,SLOT(PCB244A_Notify(unsigned char,unsigned char,QByteArray)),Qt::UniqueConnection);
+        pConsole->pGuiMcc->sendFrame(MCC_244_A_FUNCTIONS,1,buffer,1);
+
+    }else if(data.contains("getCassette")){
+        buffer[0] = MCC_PCB244_A_GET_CASSETTE;
+        connect(pConsole,SIGNAL(mccPcb244ANotifySgn(unsigned char,unsigned char,QByteArray)),this,SLOT(PCB244A_Notify(unsigned char,unsigned char,QByteArray)),Qt::UniqueConnection);
+        pConsole->pGuiMcc->sendFrame(MCC_244_A_FUNCTIONS,1,buffer,1);
+
+    }else if(data.contains("setField")){
+        QList<QByteArray> parametri;
+        parametri = getNextFieldsAfterTag(data, QString("setField"));
+        if(parametri.size()!=1) {
+            serviceTcp->txData(QByteArray("MISSING PARAMETER \r\n"));
+            return;
+        }
+
+        buffer[0] = MCC_PCB244_A_SET_FIELD;
+        if(parametri[0]=="FRONT")          buffer[1] = _ANALOG_DETECTOR_FRONT_FIELD;
+        else if(parametri[0]=="MIDDLE")    buffer[1] = _ANALOG_DETECTOR_MIDDLE_FIELD;
+        else if(parametri[0]=="BACK")      buffer[1] = _ANALOG_DETECTOR_BACK_FIELD;
+        else                               buffer[1] = 255; // Apre tutti i canali
+
+        connect(pConsole,SIGNAL(mccPcb244ANotifySgn(unsigned char,unsigned char,QByteArray)),this,SLOT(PCB244A_Notify(unsigned char,unsigned char,QByteArray)),Qt::UniqueConnection);
+        pConsole->pGuiMcc->sendFrame(MCC_244_A_FUNCTIONS,1,buffer,2);
+
+    }else if(data.contains("setOfs")){
+        QList<QByteArray> parametri;
+        parametri = getNextFieldsAfterTag(data, QString("setOfs"));
+        if(parametri.size()!=1) {
+            serviceTcp->txData(QByteArray("MISSING PARAMETER \r\n"));
+            return;
+        }
+
+        buffer[0] = MCC_PCB244_A_SET_OFFSET;
+        buffer[1] = 1; // SET
+        buffer[2] = (unsigned char) parametri[0].toInt();
+        buffer[3] = (unsigned char)  (parametri[0].toInt() >>8);
+
+        connect(pConsole,SIGNAL(mccPcb244ANotifySgn(unsigned char,unsigned char,QByteArray)),this,SLOT(PCB244A_Notify(unsigned char,unsigned char,QByteArray)),Qt::UniqueConnection);
+        pConsole->pGuiMcc->sendFrame(MCC_244_A_FUNCTIONS,1,buffer,4);
+
+    }else if(data.contains("getOfs")){
+        buffer[0] = MCC_PCB244_A_SET_OFFSET;
+        buffer[1] = 0; // GET
+        buffer[2] = 0;
+        buffer[3] = 0;
+
+        connect(pConsole,SIGNAL(mccPcb244ANotifySgn(unsigned char,unsigned char,QByteArray)),this,SLOT(PCB244A_Notify(unsigned char,unsigned char,QByteArray)),Qt::UniqueConnection);
+        pConsole->pGuiMcc->sendFrame(MCC_244_A_FUNCTIONS,1,buffer,4);
+    }else if(data.contains("autoOfs")){
+
+        buffer[0] = MCC_PCB244_A_SET_OFFSET;
+        buffer[1] = 2; // AUTO OFFSET
+        buffer[2] = 0;
+        buffer[3] = 0;
+        pConsole->pGuiMcc->sendFrame(MCC_244_A_FUNCTIONS,1,buffer,4);
+        serviceTcp->txData(QByteArray("DONE \r\n"));
+        return;
+    }else if(data.contains("initRtc")){
+
+        buffer[0] = 0;
+        pConsole->pGuiMcc->sendFrame(MCC_RTC_COMMANDS,1,buffer,1);
+        serviceTcp->txData(QByteArray("DONE \r\n"));
+        return;
+    }else if(data.contains("setRtc")){
+        QList<QByteArray> parametri;
+        parametri = getNextFieldsAfterTag(data, QString("setRtc"));
+        if(parametri.size()!=7) {
+            serviceTcp->txData(QByteArray("MISSING PARAMETER \r\n"));
+            return;
+        }
+
+        buffer[0] = 1;
+
+        if((parametri[0]=="LUN")||(parametri[0]=="MON")) buffer[1] = _RTC_MON;
+        else if((parametri[0]=="MAR")||(parametri[0]=="TUE")) buffer[1] = _RTC_TUE;
+        else if((parametri[0]=="MER")||(parametri[0]=="WED")) buffer[1] = _RTC_WED;
+        else if((parametri[0]=="GIO")||(parametri[0]=="THU")) buffer[1] = _RTC_THU;
+        else if((parametri[0]=="VEN")||(parametri[0]=="FRI")) buffer[1] = _RTC_FRI;
+        else if((parametri[0]=="SAB")||(parametri[0]=="SAT")) buffer[1] = _RTC_SAT;
+        else {
+            serviceTcp->txData(QByteArray("WRONG DAY \r\n"));
+            return;
+        }
+
+        buffer[2] = parametri[1].toInt() & 0xFF; // Anno
+        buffer[3] = (parametri[1].toInt() >> 8) & 0xFF; // Anno
+        buffer[4] = parametri[2].toInt(); // Mese
+        buffer[5] = parametri[3].toInt(); // Giorno
+        buffer[6] = parametri[4].toInt(); // Ora
+        buffer[7] = parametri[5].toInt(); // Minuti
+        buffer[8] = parametri[6].toInt(); // Secondi
+
+        pConsole->pGuiMcc->sendFrame(MCC_RTC_COMMANDS,1,buffer,9);
+        serviceTcp->txData(QByteArray("DONE \r\n"));
+        return;
+    }else if(data.contains("getRtc")){
+
+        buffer[0] = 2;
+        pConsole->pGuiMcc->sendFrame(MCC_RTC_COMMANDS,1,buffer,1);
+        serviceTcp->txData(QByteArray("DONE \r\n"));
+        return;
+    }
+}
+
+
+
+void serverDebug::PCB244A_Notify(unsigned char id, unsigned char mcccode, QByteArray buffer)
+{
+    unsigned short uval;
+    float val;
+    float val1;
+
+
+    //serviceTcp->txData(QByteArray("ARRIVATO\r\n"));
+    disconnect(pConsole,SIGNAL(mccPcb244ANotifySgn(unsigned char,unsigned char,QByteArray)),this,SLOT(PCB244A_Notify(unsigned char,unsigned char,QByteArray)));
+    if(buffer[0]!=0){
+        serviceTcp->txData(QByteArray("COMMAND FAILED!\r\n"));
+        return;
+    }else{
+        serviceTcp->txData(QByteArray("COMMAND:> "));
+    }
+
+    switch(mcccode){
+    case MCC_PCB244_A_SET_AUTO_OFFSET:
+        break;
+    case MCC_PCB244_A_SET_OFFSET:
+        if(buffer.size()<8) {
+            serviceTcp->txData(QString("INVALID ANSWER FORMAT!\r\n").toAscii());
+            break;
+        }
+        if(buffer[1]==0){
+            // Read section
+            uval = (buffer[2] + 256 * buffer[3]);
+            val =  (float) (buffer[4] + 256 * buffer[5])/4;
+            val1 =  (float) (buffer[6] + 256 * buffer[7])/4;
+            serviceTcp->txData(QString("OFFSET=%1, VFreq_x1=%2(mV), VFreq_x5=%3(mV)\r\n").arg(uval).arg(val*5*1000*2/(1024)).arg(val1*5*1000/(4.9*1024)).toAscii());
+        }else{
+            // Write section
+            uval = (buffer[2] + 256 * buffer[3]);
+            val =  (float) (buffer[4] + 256 * buffer[5])/4;
+            val1 =  (float) (buffer[6] + 256 * buffer[7])/4;
+            serviceTcp->txData(QString("OFFSET=%1, VFreq_x1=%2(mV), VFreq_x5=%3(mV)\r\n").arg(uval).arg(val*5*1000*2/(1024)).arg(val1*5*1000/(4.9*1024)).toAscii());
+        }
+
+        break;
+    case MCC_PCB244_A_GET_REV:
+        if(buffer.size()<3) {
+            serviceTcp->txData(QString("INVALID ANSWER FORMAT!\r\n").toAscii());
+            break;
+        }
+        serviceTcp->txData(QString("REVISIONE PCB244A = %1.%2\r\n").arg((int)buffer[1]).arg((int)buffer[2]).toAscii());
+        break;
+    case MCC_PCB244_A_GET_RADx1:
+        if(buffer.size()<3) {
+            serviceTcp->txData(QString("INVALID ANSWER FORMAT!\r\n").toAscii());
+            break;
+        }
+        val = ((float)buffer[1] + 256 * (float)buffer[2])/4;
+        serviceTcp->txData(QString("RADx1=%1, VFreq=%2(mV)\r\n").arg(val).arg(val*5*1000*2/(1024)).toAscii());
+        break;
+    case MCC_PCB244_A_GET_RADx5:
+        if(buffer.size()<3) {
+            serviceTcp->txData(QString("INVALID ANSWER FORMAT!\r\n").toAscii());
+            break;
+        }
+        val = ((float)buffer[1] + 256 * (float)buffer[2])/4;
+        serviceTcp->txData(QString("RADx5=%1, VFreq=%2(mV)\r\n").arg(val).arg(val*5*1000/(4.9*1024)).toAscii());
+        break;
+    case MCC_PCB244_A_GET_RADx25:
+        if(buffer.size()<3) {
+            serviceTcp->txData(QString("INVALID ANSWER FORMAT!\r\n").toAscii());
+            break;
+        }
+        val = ((float)buffer[1] + 256 * (float)buffer[2])/4;
+        serviceTcp->txData(QString("RADx25=%1, VFreq=%2(mV)\r\n").arg(val).arg(val*5*1000/(4.9*4.9*1024)).toAscii());
+        break;
+    case MCC_PCB244_A_GET_CASSETTE:
+        if(buffer.size()<3) {
+            serviceTcp->txData(QString("INVALID ANSWER FORMAT!\r\n").toAscii());
+            break;
+        }
+        if((buffer[1]) && (!buffer[2]))  serviceTcp->txData(QString("CASSETTA PRESENTE NON ESPOSTA\r\n").toAscii());
+        else if((buffer[1]) && (buffer[2]))  serviceTcp->txData(QString("CASSETTA PRESENTE GIA ESPOSTA\r\n").toAscii());
+        else     serviceTcp->txData(QString("MANCANZA CASSETTA\r\n").toAscii());
+        break;
+    case MCC_PCB244_A_GET_ID:
+        if(buffer.size()<3) {
+            serviceTcp->txData(QString("INVALID ANSWER FORMAT!\r\n").toAscii());
+            break;
+        }
+        switch(buffer[1]){
+        case POTTER_2D:
+            if(buffer[2]==POTTER_DESCR_18x24)  serviceTcp->txData(QString("POTTER 18x24\r\n").toAscii());
+            else serviceTcp->txData(QString("POTTER 24x30\r\n").toAscii());
+            break;
+        case POTTER_MAGNIFIER:
+            serviceTcp->txData(QString("POTTER MAGNIFIER. MAG FACTOR = %1\r\n").arg((int) buffer[3]).toAscii());
+            break;
+        case POTTER_UNDEFINED:
+            serviceTcp->txData(QString("POTTER UNDEFINED\r\n").toAscii());
+            break;
+        }
+
+        break;
+    }
 }
 
 //_____________________________________________________________________________________________________________________________        >>>>>> DEBUG GROUP
@@ -749,7 +679,46 @@ void serverDebug::handleDebug(QByteArray data)
         serviceTcp->txData(QByteArray("run              Attiva ciclo automatico dei drivers\r\n"));
         serviceTcp->txData(QByteArray("setArmAng        Imposta l'angolo corrente\r\n"));
         serviceTcp->txData(QByteArray("generateAlarmList  \r\n"));
+        serviceTcp->txData(QByteArray("getPulse  G/P, plog, A/F, odi, STD/LD/HC \r\n"));
+        serviceTcp->txData(QByteArray("initAudio  \r\n"));
+        serviceTcp->txData(QByteArray("playAudio  num vol\r\n"));
+        serviceTcp->txData(QByteArray("mccTest  \r\n"));
+        serviceTcp->txData(QByteArray("logFlush  \r\n"));
         serviceTcp->txData(QByteArray("----------------------------------------------------------------------------------\r\n"));
+    }else if(data.contains("logFlush")){
+        pSysLog->flush();
+    }else if(data.contains("getPulse")){
+        QList<QByteArray> parametri;
+        parametri = getNextFieldsAfterTag(data, QString("getPulse"));
+        if(parametri.size()!=5) return;
+
+        if(parametri[0]=="G") pGeneratore->setFuocoGrande();
+        else pGeneratore->setFuocoPiccolo();
+        int plog= parametri[1].toInt();
+        int af;
+        if(parametri[2]=="A") af = ANALOG_FILTRO_AUTO;
+        else af = ANALOG_FILTRO_FISSO;
+        int odi = parametri[3].toInt();
+        int tm;
+        if(parametri[4]=="STD") tm = ANALOG_TECH_PROFILE_STD;
+        else if(parametri[4]=="HC") tm = ANALOG_TECH_PROFILE_HC;
+        else tm = ANALOG_TECH_PROFILE_LD;
+
+        int filtro;
+        float kvout;
+        int dmasout;
+        int pulses;
+        int res = pGeneratore->pAECprofiles->getAecData(plog,af,4,odi,tm,pGeneratore->selectedAnodo, pGeneratore->selectedFSize, &filtro,&kvout,&dmasout,&pulses);
+        QString val;
+        if(res==0){
+            QString flt;
+            if(filtro==Collimatore::FILTRO_Mo) flt="Mo";
+            else if(filtro==Collimatore::FILTRO_Rh) flt="Rh";
+            else flt="ND";
+             val = QString("OK: F=%1, KV=%2, DMAS=%3, P=%4\n\r").arg(flt).arg(kvout).arg(dmasout).arg(pulses);
+        }else val = QString("NOK %1\n\r").arg(res);
+        serviceTcp->txData(val.toAscii());
+
     } else if(data.contains("generateAlarmList"))
     {
         paginaAllarmi->exportMessageList();
@@ -800,7 +769,37 @@ void serverDebug::handleDebug(QByteArray data)
     else if(data.contains("testCmd")){
         if(pConfig->startupCompleted) serviceTcp->txData(QByteArray("STARTUP OK\n\r"));
         else serviceTcp->txData(QByteArray("STARTUP NOK\n\r"));
-   }
+   }else if(data.contains("mccTest")){
+        QList<QByteArray> parametri;
+        parametri = getNextFieldsAfterTag(data, QString("mccTest"));
+
+        buffer[0] = parametri[0].toInt();
+        if(parametri.size()==2) buffer[1] = parametri[1].toInt();
+        else buffer[1]=0;
+
+        pConsole->pGuiMcc->sendFrame(MCC_TEST,1,buffer,2);
+        serviceTcp->txData(QByteArray("TEST COMMAND OK\n\r"));
+
+   }else if(data.contains("initAudio")){
+        buffer[0] = 0;
+        buffer[1] = 0;
+        pConsole->pGuiMcc->sendFrame(MCC_AUDIO,1,buffer,2);
+        serviceTcp->txData(QByteArray("AUDIO INIT OK\n\r"));
+
+    }else if(data.contains("playAudio")){
+        QList<QByteArray> parametri;
+        parametri = getNextFieldsAfterTag(data, QString("playAudio"));
+        if(parametri.size()!=2){
+            serviceTcp->txData(QByteArray("Missing message number\n\r"));
+            return;
+        }
+
+        buffer[0] = 1; // Codice x riproduzione messaggi audio
+        buffer[1] = (unsigned char) parametri[0].toInt(); // Codice messaggio
+        buffer[2] = (unsigned char) parametri[1].toInt(); // Volume
+        pConsole->pGuiMcc->sendFrame(MCC_AUDIO,1,buffer,3);
+        serviceTcp->txData(QByteArray("PLAYING..\n\r"));
+    }
 }
 
 void serverDebug::handleSetCompressorNotify(QByteArray data){
@@ -946,19 +945,22 @@ void serverDebug::handleCompressore(QByteArray data)
     {
         serviceTcp->txData(QByteArray("----------------------------------------------------------------------------------\r\n"));
         serviceTcp->txData(QByteArray("setCalibPos: <offset, klin>  modifica la calibrazione della nacchera \r\n"));
-        serviceTcp->txData(QByteArray("getCalibPos:                 restituisce valore calibrazione nacchera \r\n"));
-        serviceTcp->txData(QByteArray("getPadList:                  restituisce lista pad configurabili \r\n"));
-        serviceTcp->txData(QByteArray("setCalibPad: <ofs,kF,peso>   modifica calibrazione della nacchera \r\n"));
-        serviceTcp->txData(QByteArray("getCalibPad:                 restituisce valore calibrazione pad corrente \r\n"));
-        serviceTcp->txData(QByteArray("setThick: <val>              corregge spessore alla compressione corrente \r\n"));
-        serviceTcp->txData(QByteArray("setKF: <val>                 imposta coefficiente di flessione spessore\r\n"));
-        serviceTcp->txData(QByteArray("setLimitForce: <val>         imposta max compressione (range 70:200) \r\n"));
-        serviceTcp->txData(QByteArray("setWeight: <val>             imposta Tara Paddle in (N) \r\n"));
+        serviceTcp->txData(QByteArray("getCalibPos:                 restituisce il valore corrente di calibrazione nacchera \r\n"));
+        serviceTcp->txData(QByteArray("getPadList:                  restituisce una lista dei pad configurabili \r\n"));
+        serviceTcp->txData(QByteArray("                             Un asterisco indica quali pad risultano configurati \r\n"));
+        serviceTcp->txData(QByteArray("setCalibPad: <ofs,kF,peso>   modifica la calibrazione della nacchera \r\n"));
+        serviceTcp->txData(QByteArray("getCalibPad:                 restituisce il valore corrente di calibrazione del pad corrente \r\n"));
+        serviceTcp->txData(QByteArray("setThick: <val>              corregge il calcolo dello spessore alla compressione corrente \r\n"));
+        serviceTcp->txData(QByteArray("setKF: <val>                 imposta il coefficiente di flessione per correggere lo spessore\r\n"));
+        serviceTcp->txData(QByteArray("setWeight: <val>             imposta il peso in (N) \r\n"));
+        serviceTcp->txData(QByteArray("STORE:                       Salva i dati nel file di configurazione \r\n"));
+        serviceTcp->txData(QByteArray("getBattery:                  Legge il valore della tensione di batteria \r\n"));
+        serviceTcp->txData(QByteArray("readPadConfig:               Legge il file padcalib.cnf e aggiorna i drivers \r\n"));
+        serviceTcp->txData(QByteArray("storePadConfid:              Salva i dati di configurazione PAD nel file padclib.cnf \r\n"));
+        serviceTcp->txData(QByteArray("calibThresholds: <val>       Calcola le soglie ideali per il riconoscimento PAD \r\n"));
+        serviceTcp->txData(QByteArray("getTrolley                   Restituisce lo spessore anche non in compressione \r\n"));
+        serviceTcp->txData(QByteArray("setCompressorRelease <val>   Imposta lo stato del rilascio dopo esposizione \r\n"));
 
-        serviceTcp->txData(QByteArray("getTrolley                   Restituisce posizione trolley \r\n"));
-        serviceTcp->txData(QByteArray("setCompressorRelease <val>   Imposta sblocco automatico dopo raggi-X \r\n"));
-        serviceTcp->txData(QByteArray("readPadConfig:               Legge il file di configurazione \r\n"));
-        serviceTcp->txData(QByteArray("storePadConfid:              Salva il file di configurazione \r\n"));
         serviceTcp->txData(QByteArray("----------------------------------------------------------------------------------\r\n"));
     } else if(data.contains("getTrolley"))
     {
@@ -998,36 +1000,36 @@ void serverDebug::handleCompressore(QByteArray data)
     }else if(data.contains("getPadList"))
     {
         handleGetPadList();
-    }else if(data.contains("readPadConfig"))
-    {
-        pCompressore->readCompressorConfigFile();
-        pConfig->updatePCB269();
-    }else if(data.contains("storePadConfig"))
+    }else if(data.contains("STORE"))
     {
         pCompressore->storeConfigFile();
         serviceTcp->txData(QByteArray("DATI SALVATI IN CONFIGURAZIONE!\r\n"));
-    }else if(data.contains("setLimitForce"))
+    }else if(data.contains("getBattery"))
     {
-        QList<QByteArray> parametri;
-
-        parametri = getNextFieldsAfterTag(data, QString("setLimitForce"));
-        if(parametri.size()!=1) serviceTcp->txData(QByteArray("WRONG PARAMETER!\n\r"));
-        if(parametri[0].toInt() > 200){
-            serviceTcp->txData(QByteArray("ERROR: the limit force cannot exceed 200N!\n\r"));
-            return;
-        }
-        if(parametri[0].toInt() < 70){
-            serviceTcp->txData(QByteArray("ERROR: the limit force cannot be lower than 70N!\n\r"));
-            return;
-        }
-
-        // Salva il valore, aggiorna il file di configurazione e aggiorna la periferica
-        pCompressore->config.max_compression_force = parametri[0].toInt();
-        pCompressore->storeConfigFile();
+        serviceTcp->txData(QString("Battery: %1(V)\r\n").arg(pCompressore->battery).toAscii());
+    }else if(data.contains("readPadConfig"))
+    {
+        pCompressore->readPadCfg();
         pConfig->updatePCB269();
 
-        serviceTcp->txData(QByteArray("Pad Configuration file and peripheral device updated!\n\r"));
-        return;
+        // Visualizza il contenuto
+        for(int i=0; i<10; i++){
+            serviceTcp->txData(QString("THRESHOLD[%1]=%2!\r\n").arg(i).arg(pCompressore->config.thresholds[i]).toAscii());
+        }
+    }else if(data.contains("storePadConfig"))
+    {
+        pCompressore->storePadCfg();
+        serviceTcp->txData(QByteArray("DATI SALVATI NEL FILE PADCALIB.cnf! \r\n"));
+    }else if(data.contains("calibThresholds"))
+    {
+        handleCalibThresholds(data);
+
+        // Visualizza il contenuto
+        for(int i=0; i<10; i++){
+            serviceTcp->txData(QString("THRESHOLD[%1]=%2!\r\n").arg(i).arg(pCompressore->config.thresholds[i]).toAscii());
+        }
+
+        serviceTcp->txData(QByteArray("I dati devono essere salvati e riletti perch√® siano operativi \r\n"));
     }
 
 
@@ -1043,7 +1045,12 @@ void serverDebug::handleGetPadList(void)
     for(i=0; i<PAD_ENUM_SIZE; i++)
     {
         if(i>9) stringa = QString("%1)   %2").arg((int) i).arg( pCompressore->getPadName((Pad_Enum) i));
-        else stringa = QString("%1)    %2").arg((int) i).arg( pCompressore->getPadName((Pad_Enum) i));       
+        else stringa = QString("%1)    %2").arg((int) i).arg( pCompressore->getPadName((Pad_Enum) i));
+        if(
+            (pCompressore->config.pads[i].offset != pCompressore->defPad.offset) ||
+            (pCompressore->config.pads[i].kF != pCompressore->defPad.kF) ||
+            (pCompressore->config.pads[i].peso != pCompressore->defPad.peso)
+           ) stringa.append("  <*>");
         serviceTcp->txData(QString("%1\n\r").arg(stringa).toAscii());
     }
     return;
@@ -1364,7 +1371,7 @@ void serverDebug::handleSetCalibTomo(QByteArray data)
 
 void serverDebug::handleGetCalib(QByteArray data)
 {
-
+    QList<QByteArray> parametri;
     QString stringa,tag;
     int i;
 
@@ -1402,10 +1409,7 @@ void serverDebug::handleGetCalib(QByteArray data)
         serviceTcp->txData(stringa.toAscii());
     }
 
-    stringa = QString("OPEN: L=%1 R=%2 F=%3 B=%4 T=%5 \n\r").arg(pCollimatore->colliConf.colliOpen.L).arg(pCollimatore->colliConf.colliOpen.R).arg(pCollimatore->colliConf.colliOpen.F).arg(pCollimatore->colliConf.colliOpen.B).arg(pCollimatore->colliConf.colliOpen.T);
-    serviceTcp->txData(stringa.toAscii());
-
-    stringa = QString("CUSTOM: L=%1 R=%2 F=%3 B=%4 T=%5 \n\r").arg(pCollimatore->customL).arg(pCollimatore->customR).arg(pCollimatore->customF).arg(pCollimatore->customB).arg(pCollimatore->customT);
+    stringa = QString("OPEN: %1 %2 %3 %4 %5 \n\r").arg(pCollimatore->colliConf.colliOpen.L).arg(pCollimatore->colliConf.colliOpen.R).arg(pCollimatore->colliConf.colliOpen.F).arg(pCollimatore->colliConf.colliOpen.B).arg(pCollimatore->colliConf.colliOpen.T);
     serviceTcp->txData(stringa.toAscii());
 
     stringa = QString("\n\rTOMO-W-L-P: ");
@@ -1465,27 +1469,6 @@ void serverDebug::handleGetCalib(QByteArray data)
 
 }
 
-// <pad,Mat,L,R,F,B,T>
-void serverDebug::handleSetCalibCustom(QByteArray data){
-    QList<QByteArray> parametri;
-
-
-    parametri = getNextFieldsAfterTag(data, QString("setCalibCustom"));
-
-    if(parametri.size()<5)
-    {
-        serviceTcp->txData(QByteArray("INVALID PARAMETERS!\n\r"));
-        return;
-    }
-
-    pCollimatore->customL = parametri[0].toInt();
-    pCollimatore->customR = parametri[1].toInt();
-    pCollimatore->customF = parametri[2].toInt();
-    pCollimatore->customB = parametri[3].toInt();
-    pCollimatore->customT = parametri[4].toInt();
-    serviceTcp->txData("OK \n\r");
-    return;
-}
 
 // <pad,Mat,L,R,F,B,T>
 void serverDebug::handleSetCalib2D(QByteArray data)
@@ -1885,36 +1868,6 @@ void serverDebug::handleGetRevisions(void)
 
 
 
-void serverDebug::trxNotifySlot(unsigned char id, unsigned char cmd, QByteArray data){
-    unsigned char buffer[10];
-
-    if(trx_loop==false){
-        disconnect(pConsole,SIGNAL(mccGuiNotify(unsigned char,unsigned char,QByteArray)),this,SLOT(trxNotifySlot(unsigned char,unsigned char,QByteArray)));
-        return;
-    }
-
-    if(id!=255) return;
-    if(cmd == MCC_CMD_TRX){
-        if(trx_loop_stat==false){
-            trx_loop_stat=true;
-            buffer[0]=TRX_MOVE_END_W; // Comando WHOME
-            buffer[1]=MOVE_WAIT_END; // Attende questo comando
-            buffer[2]=0;
-
-            // Invio comando
-            pConsole->pGuiMcc->sendFrame(MCC_CMD_TRX,255,buffer, 3);
-        }else {
-            trx_loop_stat=false;
-            buffer[0]=TRX_MOVE_HOME_W; // Comando WHOME
-            buffer[1]=MOVE_WAIT_END; // Attende questo comando
-            buffer[2]=0;
-
-            // Invio comando
-            pConsole->pGuiMcc->sendFrame(MCC_CMD_TRX,255,buffer, 3);
-        }
-    }
-}
-
 /*
  *
  *  Attivazione procedura di rodaggio. Occorre spegnere la macchina per
@@ -1926,21 +1879,6 @@ void serverDebug::trxNotifySlot(unsigned char id, unsigned char cmd, QByteArray 
  */
 void serverDebug::handleRodaggioTubo(QByteArray data)
 {
-    unsigned char buffer[10];
-    trx_loop = true;
-    trx_loop_stat = false;
-
-    connect(pConsole,SIGNAL(mccGuiNotify(unsigned char,unsigned char,QByteArray)),this,SLOT(trxNotifySlot(unsigned char,unsigned char,QByteArray)),Qt::UniqueConnection);
-
-    buffer[0]=TRX_MOVE_HOME_W; // Comando WHOME
-    buffer[1]=MOVE_WAIT_END; // Attende questo comando
-    buffer[2]=0;
-
-    // Invio comando
-    pConsole->pGuiMcc->sendFrame(MCC_CMD_TRX,255,buffer, 3);
-    return;
-
-
     QList<QByteArray> parametri = getNextFieldsAfterTag(data, QString("LOOP"));
 
     if(parametri.size()!=3){
@@ -1952,7 +1890,7 @@ void serverDebug::handleRodaggioTubo(QByteArray data)
         serviceTcp->txData("Wrong num cycles\n\r");
         return;
     }
-    if(parametri[1].toInt()>26){
+    if(parametri[1].toInt()>22){
         serviceTcp->txData("Wrong Angle\n\r");
         return;
     }
@@ -2069,11 +2007,6 @@ void serverDebug:: handleLoaderUpload(QByteArray data)
         uC = 1;
         tag = "PCB240";
         filename = QString("/home/user/FW240.hex");
-    }else if(parametri[0]=="PCB244") {
-        target = 0x1D;
-        uC = 1;
-        tag = "PCB244";
-        filename = QString("/home/user/FW244.hex");
     }else if(parametri[0]=="PCB244A") {
         target = 0x1A;
         uC = 1;
@@ -2083,7 +2016,7 @@ void serverDebug:: handleLoaderUpload(QByteArray data)
         target = 0x1C;
         uC = 1;
         tag = "PCB190";
-        filename = QString("/home/user/FW190.hex");
+        filename = QString("/home/user/FW190A.hex");
     }else if(parametri[0]=="PCB269") {
         target = 0x1B;
         uC = 1;
@@ -2134,12 +2067,10 @@ void serverDebug::handleSetCRC(QByteArray data){
         filename = QString("/home/user/FW249U2.hex");
     }else if(parametri[0]=="PCB240") {
         filename = QString("/home/user/FW240.hex");
-    }else if(parametri[0]=="PCB244") {
-        filename = QString("/home/user/FW244.hex");
     }else if(parametri[0]=="PCB244A") {
         filename = QString("/home/user/FW244A.hex");
     }else if(parametri[0]=="PCB190") {
-        filename = QString("/home/user/FW190.hex");
+        filename = QString("/home/user/FW190A.hex");
     }else if(parametri[0]=="PCB269") {
         filename = QString("/home/user/FW269.hex");
     }else{
@@ -2186,12 +2117,10 @@ void serverDebug::handleSetRemoteCRC(QByteArray data){
         filename = QString("FW249U2.hex");
     }else if(parametri[0]=="PCB240") {
         filename = QString("FW240.hex");
-    }else if(parametri[0]=="PCB244") {
-        filename = QString("FW244.hex");
     }else if(parametri[0]=="PCB244A") {
         filename = QString("FW244A.hex");
     }else if(parametri[0]=="PCB190") {
-        filename = QString("FW190.hex");
+        filename = QString("FW190A.hex");
     }else if(parametri[0]=="PCB269") {
         filename = QString("FW269.hex");
     }else{
@@ -2310,7 +2239,58 @@ void serverDebug::handleGeneratore(QByteArray data)
         serviceTcp->txData(QByteArray("startDemoN                       Attiva seq Tomo N se in DEMO\r\n"));
         serviceTcp->txData(QByteArray("startDemoI                       Attiva seq Tomo I se in DEMO\r\n"));
         serviceTcp->txData(QByteArray("startDemoW                       Attiva seq Tomo W se in DEMO\r\n"));
+        serviceTcp->txData(QByteArray("getAEC     (int)pl, (int)fm, (int)od, (int)tech   \r\n"));
+        serviceTcp->txData(QByteArray("getDose    (int) mm, (int) offset (int) dmAs, (int) dkv, (int) filtro   \r\n"));
+
         serviceTcp->txData(QByteArray("--------------------------------------------------------------\r\n"));
+    }else if(data.contains("getAEC")){
+        QList<QByteArray> parametri = getNextFieldsAfterTag(data, QString("getAEC"));
+        if(parametri.size() != 4) {
+            serviceTcp->txData(QString("Invalid parameters\n\r").toAscii());
+            return;
+        }
+
+        int plog = parametri[0].toInt();
+        int fm =  parametri[1].toInt();
+        int od = parametri[2].toInt();
+        int tech = parametri[3].toInt();
+        int rxfiltro;
+        float rxkV;
+        int rxdmas;
+        int rxpulses;
+        int errcode = pGeneratore->pAECprofiles->getAecData(plog,fm,4,od,tech,QString("Mo"), (int) Generatore::FUOCO_LARGE, &rxfiltro,&rxkV,&rxdmas,&rxpulses);
+
+        if(errcode){
+            serviceTcp->txData(QString("ERRORE %1 \r\n").arg(errcode).toAscii());
+            return;
+        }
+
+        serviceTcp->txData(QString("FILTRO: %1, KV:%2, MAS:%3, PULSES:%4 \r\n").arg(rxfiltro).arg(rxkV).arg(rxdmas).arg(rxpulses).toAscii());
+        return;
+
+
+    }else if(data.contains("getDose")){
+        QList<QByteArray> parametri = getNextFieldsAfterTag(data, QString("getDose"));
+        if(parametri.size() != 5) {
+            serviceTcp->txData(QString("Invalid parameters\n\r").toAscii());
+            return;
+        }
+
+        int mm = parametri[0].toInt();
+        int offset = parametri[1].toInt();
+        int dmas =  parametri[2].toInt();
+        int dkv = parametri[3].toInt();
+        int filtro = parametri[4].toInt();
+
+        QString dosestr = pGeneratore->pDose->getDoseUgDebug(mm,offset,dmas,dkv,filtro) + "\n\r";
+        serviceTcp->txData(dosestr.toAscii());
+
+        float dose  = pGeneratore->pDose->getDoseUg(mm,offset,dmas,dkv,filtro);
+        if(dose==-1) serviceTcp->txData(QString("DOSE NOT AVAILABLE\r\n").toAscii());
+        else serviceTcp->txData(QString("DOSE (uG)= %1\r\n").arg(dose).toAscii());
+        return;
+
+
     }else if(data.contains("getMAS")){
         serviceTcp->txData(QString("MAS = %1 \r\n").arg(pGeneratore->mAsTest).toAscii());
         serviceTcp->txData(QString("ANODICA = %1 \r\n").arg(pGeneratore->anodicaTest).toAscii());
@@ -2334,68 +2314,6 @@ void serverDebug::handleGeneratore(QByteArray data)
             pGeneratore->updateFuoco();
             serviceTcp->txData(QByteArray("Command executed!\r\n"));
         }
-    }else if(data.contains("manXray"))
-    {
-        if(data.contains("FILE"))
-        {
-            // Monta il file system remoto
-            QString command = QString("/monta.sh");
-            system(command.toStdString().c_str());
-
-            serviceTcp->txData(QString("MANUAL XRAY: FILE ACTIVATION\r\n").toAscii());
-            connect(io,SIGNAL(xrayReqSig(bool)),pGeneratore,SLOT(manualXrayReqSlot(bool)),Qt::UniqueConnection);
-            connect(pConsole,SIGNAL(raggiDataSgn(QByteArray)),this,SLOT(serviceNotifyFineRaggi(QByteArray)),Qt::UniqueConnection);
-            pGeneratore->manAutoIdacInc = false;
-            pGeneratore->manDIdac = 0;
-            pGeneratore->manualMode = true;
-        }else if(data.contains("AUTO"))
-        {
-            QObject::disconnect(io,SIGNAL(xrayReqSig(bool)),pGeneratore,SLOT(manualXrayReqSlot(bool)));
-            serviceTcp->txData(QString("MANUAL XRAY: AUTO ACTIVATION\r\n").toAscii());
-            connect(io,SIGNAL(xrayReqSig(bool)),pGeneratore,SLOT(manualXrayReqAutoSlot(bool)),Qt::UniqueConnection);
-            connect(pConsole,SIGNAL(raggiDataSgn(QByteArray)),this,SLOT(serviceNotifyFineRaggi(QByteArray)),Qt::UniqueConnection);
-
-            pGeneratore->manualMode = true;
-
-            // Inizializzazione dati Auto
-            pGeneratore->manVnom = 0;
-            pGeneratore->manVdac = 0;
-            pGeneratore->manInom = 0;
-            pGeneratore->manIdac = 0;
-            pGeneratore->manAutoIdacInc = true;
-            pGeneratore->manDIdac = 0;
-        }else
-        {
-            pGeneratore->manualMode = false;
-            serviceTcp->txData(QString("MANUAL XRAY OFF \r\n").toAscii());
-            QObject::disconnect(io,SIGNAL(xrayReqSig(bool)),pGeneratore,SLOT(manualXrayReqSlot(bool)));
-            QObject::disconnect(io,SIGNAL(xrayReqSig(bool)),pGeneratore,SLOT(manualXrayReqAutoSlot(bool)));
-            connect(pConsole,SIGNAL(raggiDataSgn(QByteArray)),this,SLOT(serviceNotifyFineRaggi(QByteArray)),Qt::UniqueConnection);
-        }
-    }else if(data.contains("setManReg")){
-        //     Fuoco,Vn,Vdac,In,Idac,dacInc,mAs,Hs,SWA,SWB,GRID,TMO
-        QList<QByteArray> parametri = getNextFieldsAfterTag(data, QString("setManReg"));
-        if(parametri.size() != 12) {
-            serviceTcp->txData(QString("Invalid parameters\n\r").toAscii());
-            return;
-        }
-
-        pGeneratore->manFuoco = parametri[0];
-        pGeneratore->manVnom = parametri[1].toInt();
-        pGeneratore->manVdac = parametri[2].toInt();
-        pGeneratore->manInom = parametri[3].toInt();
-        pGeneratore->manIdac = parametri[4].toInt();
-        pGeneratore->manDIdac = parametri[5].toInt();
-        pGeneratore->manMas = parametri[6].toInt();
-        pGeneratore->manHs = parametri[7].toInt();
-        pGeneratore->manSWA = parametri[8].toInt();
-        pGeneratore->manSWB = parametri[9].toInt();
-        pGeneratore->manGrid = parametri[10].toInt();
-        pGeneratore->manTMO = parametri[11].toInt();
-
-        serviceTcp->txData(QString("Fuoco:%1 Vnom:%2 Vdac:%3 Inom:%4 Idac:%5 dIdac:%6 mAs:%7 HS:%8 SWA:%9 SWB:%10 GRID:%11 TMO:%12 \r\n").arg( pGeneratore->manFuoco).arg( pGeneratore->manVnom).arg( pGeneratore->manVdac).arg( pGeneratore->manInom).arg( pGeneratore->manIdac).arg( pGeneratore->manDIdac).arg( pGeneratore->manMas).arg( pGeneratore->manHs).arg( pGeneratore->manSWA).arg( pGeneratore->manSWB).arg( pGeneratore->manGrid).arg( pGeneratore->manTMO).toAscii());
-
-
     }else if(data.contains("setStarter"))
     {
         if(data.contains(" HS")){
@@ -2498,97 +2416,6 @@ void serverDebug::handleGeneratore(QByteArray data)
         serviceTcp->txData(QString("ELAPSED seconds:%1\r\n").arg(pGeneratore->hutimer_elapsed/1000).toAscii());
 
         return;
-    }else if(data.contains("startDemoN")){
-        unsigned char data[18];
-
-        data[0] =  0;
-        data[1] =  0;
-        data[2] =  0;
-        data[3] =  0;
-        data[4] =  0xE8; // mAs
-        data[5] =  0x3;
-        data[6] =  0;
-        data[7]=0;
-
-        data[8] =  0; // Griglia da aggiungere
-        data[9] =  0;
-        data[10] = 0;
-        data[11] = 0;
-        data[12] = 0;
-
-        data[15] = _TOMO_MODE_NARROW;  //  Modo Narrow
-        data[13] = pConfig->trxConfig.tomo.n.pre_samples;
-        data[14] = pConfig->trxConfig.tomo.n.samples; //  pulses da configurazione
-
-
-
-        // Dead men
-        data[17]=0;
-
-
-        pConsole->pGuiMcc->sendFrame(MCC_CMD_RAGGI_TOMO,1,data,18);
-        pConsole->handleSetXrayLamp("ON");
-        pConsole->handleSetXraySym(true);
-
-    }else if(data.contains("startDemoI")){
-        unsigned char data[18];
-
-        data[0] =  0;
-        data[1] =  0;
-        data[2] =  0;
-        data[3] =  0;
-        data[4] =  0xE8; // mAs
-        data[5] =  0x3;
-        data[6] =  0;
-        data[7]=0;
-
-        data[8] =  0; // Griglia da aggiungere
-        data[9] =  0;
-        data[10] = 0;
-        data[11] = 0;
-        data[12] = 0;
-
-        data[15] = _TOMO_MODE_INTERMEDIATE;  //  Modo Intermediate
-        data[13] = pConfig->trxConfig.tomo.i.pre_samples;
-        data[14] = pConfig->trxConfig.tomo.i.samples; //  pulses da configurazione
-
-        // Dead men
-        data[17]=0;
-
-
-        pConsole->pGuiMcc->sendFrame(MCC_CMD_RAGGI_TOMO,1,data,18);
-        pConsole->handleSetXrayLamp("ON");
-        pConsole->handleSetXraySym(true);
-
-    }else if(data.contains("startDemoW")){
-        unsigned char data[18];
-
-        data[0] =  0;
-        data[1] =  0;
-        data[2] =  0;
-        data[3] =  0;
-        data[4] =  0xE8; // mAs
-        data[5] =  0x3;
-        data[6] =  0;
-        data[7]=0;
-
-        data[8] =  0; // Griglia da aggiungere
-        data[9] =  0;
-        data[10] = 0;
-        data[11] = 0;
-        data[12] = 0;
-
-        data[15] = _TOMO_MODE_WIDE;  //  Modo Wide
-        data[13] = pConfig->trxConfig.tomo.w.pre_samples;
-        data[14] = pConfig->trxConfig.tomo.w.samples; //  pulses da configurazione
-        // Dead men
-        data[17]=0;
-
-
-        pConsole->pGuiMcc->sendFrame(MCC_CMD_RAGGI_TOMO,1,data,18);
-        pConsole->handleSetXrayLamp("ON");
-        pConsole->handleSetXraySym(true);
-
     }
 }
 
@@ -2791,14 +2618,6 @@ void serverDebug::handleRotazioni(QByteArray data)
 
     }else if(data.contains("TRX LOOP"))
     {
-        if(trx_loop){
-            trx_loop = false;
-            disconnect(pConsole,SIGNAL(mccGuiNotify(unsigned char,unsigned char,QByteArray)),this,SLOT(trxNotifySlot(unsigned char,unsigned char,QByteArray)));
-            serviceTcp->txData(QByteArray("TRX LOOP STOP\n\r"));
-            return;
-        }
-
-        serviceTcp->txData(QByteArray("TRX LOOP START\n\r"));
         handleRodaggioTubo(data);
     } else if(data.contains("TRX"))
     {
@@ -2942,17 +2761,16 @@ void serverDebug::handleCollimatore(QByteArray data)
     // HELP
     if(data.contains("?"))
     {
-        serviceTcp->txData(QByteArray("--------- CONFIGURAZIONE -------------------------------------------------\r\n"));
+        serviceTcp->txData(QByteArray("--------- COMANDI COLLIMATORE -------------------------------------------------\r\n"));
         serviceTcp->txData(QByteArray("readColliConf     Rilegge il file di configurazione  \r\n"));
-        serviceTcp->txData(QByteArray("STORE             Salva i dati di collimazione nel file di configurazione\r\n"));
-        serviceTcp->txData(QByteArray("setCalib2D <pad,Mat,L,R,F,B,T> Impostazione collimazioni pad\r\n"));
-        serviceTcp->txData(QByteArray("setCalibCustom <L,R,F,B,T> Impostazione collimazioni custom\r\n"));
-        serviceTcp->txData(QByteArray("setCalibTomo   <Mat,Lama,P/N, n0..n25> <Mat,Front,Back>\r\n"));
-        serviceTcp->txData(QByteArray("getCalib         Restituisce tutta la calibrazione\r\n"));
-        serviceTcp->txData(QByteArray("download         Aggiorna configurazione su periferica\r\n"));
+        serviceTcp->txData(QByteArray("STORE            Salva i dati di collimazione nel file di configurazione\r\n"));
 
+        serviceTcp->txData(QByteArray("\r\n--- COMANDI FILTRO -------------------------\r\n"));
+        serviceTcp->txData(QByteArray("setFiltro [Al/Rh/Ag/Us]    Imposta il filtro\r\n"));
+        serviceTcp->txData(QByteArray("setCalibTomoFiltro <ENA,ang0,ang1,ang2>    Imposta gli angoli di incremento filtro\r\n"));
+        serviceTcp->txData(QByteArray("setCalibFiltro <Filtro,val>    Modifica il valore di calibrazione del filtro\r\n"));
 
-        serviceTcp->txData(QByteArray("\r\n--- MODALITA COLLIMATORE  -------------------------\r\n"));
+        serviceTcp->txData(QByteArray("\r\n--- COMANDI COLLIMATORE  -------------------------\r\n"));
         serviceTcp->txData(QByteArray("getStatus  Restituisce la collimazione correntemente impostata\r\n"));
         serviceTcp->txData(QByteArray("setAuto           Imposta la modalita' di collimazione Automatica\r\n"));
         serviceTcp->txData(QByteArray("setManual         Imposta modalit√  di collimazione Manuale\r\n"));
@@ -2963,19 +2781,19 @@ void serverDebug::handleCollimatore(QByteArray data)
         serviceTcp->txData(QByteArray("setF  val _____ Imposta la lama frontale della collimazione corrente  \r\n"));
         serviceTcp->txData(QByteArray("update    _____ Effettua la collimazione con i valori su elencati  \r\n"));
 
-        serviceTcp->txData(QByteArray("\r\n--- COMANDI FILTRO -------------------------\r\n"));
-        serviceTcp->txData(QByteArray("setFiltro [Al/Rh/Ag/Us]    Imposta il filtro\r\n"));
-        serviceTcp->txData(QByteArray("setCalibTomoFiltro <ENA,ang0,ang1,ang2>    Imposta gli angoli di incremento filtro\r\n"));
-        serviceTcp->txData(QByteArray("setCalibFiltro <Filtro,val>    Modifica il valore di calibrazione del filtro\r\n"));
-
         serviceTcp->txData(QByteArray("--- COMANDI SPECCHIO/LUCE  -------------------------\r\n"));
         serviceTcp->txData(QByteArray("setMirror [HOME/OUT]  Imposta lo specchio\r\n"));
         serviceTcp->txData(QByteArray("setLamp [ON/OFF]  Accende /spegne la lampada\r\n"));
         serviceTcp->txData(QByteArray("setCalibMirror                 Modifica gli steps in campo per lo specchio  \r\n"));
 
-        serviceTcp->txData(QByteArray("--- COMANDI DI SERVIZIO   -------------------------\r\n"));
+        serviceTcp->txData(QByteArray("setCalib2D <pad,Mat,L,R,F,B,T> Impostazione collimazioni pad\r\n"));
+        serviceTcp->txData(QByteArray("setCalibTomo   <Mat,Lama,P/N, n0..n25> <Mat,Front,Back>\r\n"));
+        serviceTcp->txData(QByteArray("getCalib         Restituisce tutta la calibrazione\r\n"));
+        serviceTcp->txData(QByteArray("download         Aggiorna configurazione su periferica\r\n"));
+
         serviceTcp->txData(QByteArray("setTrx val      Muove Tubo ad angolo (copia del comando in rotazioni)\r\n"));
         serviceTcp->txData(QByteArray("testColli val   Muove ciclicamente il formato tra open e CLOSED per Val volte\r\n"));
+
         serviceTcp->txData(QByteArray("-------------------------------------------------------------------------------\r\n"));
     }
 
@@ -3049,7 +2867,7 @@ void serverDebug::handleCollimatore(QByteArray data)
 
         }else
         {
-            serviceTcp->txData(QByteArray("---COLLIMAZIONE MANUALE-----\r\n"));            
+            serviceTcp->txData(QByteArray("---COLLIMAZIONE MANUALE-----\r\n"));
             serviceTcp->txData(QString("LAMA-L:%1\n\r").arg(pCollimatore->manualL).toAscii());
             serviceTcp->txData(QString("LAMA-R:%1\n\r").arg(pCollimatore->manualR).toAscii());
             serviceTcp->txData(QString("LAMA-T:%1\n\r").arg(pCollimatore->manualT).toAscii());
@@ -3133,11 +2951,6 @@ void serverDebug::handleCollimatore(QByteArray data)
         handleSetCalib2D(data);
         return;
     }
-    if(data.contains("setCalibCustom"))
-    {
-        handleSetCalibCustom(data);
-        return;
-    }
 
     if(data.contains("setTrx"))
     {
@@ -3159,25 +2972,25 @@ void serverDebug::handleCollimatore(QByteArray data)
         {
             field = getNextFieldAfterTag(data,"setR ");
             serviceTcp->txData(QString("LAMA DESTRA:%1 \r\n").arg(field.toInt()).toAscii());
-            setManualLameVal("R",field.toInt());            
+            setManualLameVal("R",field.toInt());
 
         }else if(data.contains("setT")) // Imposta le lame correnti
         {
             field = getNextFieldAfterTag(data,"setT ");
             serviceTcp->txData(QString("LAMA TRAPEZIO:%1 \r\n").arg(field.toInt()).toAscii());
-            setManualLameVal("T",field.toInt());            
+            setManualLameVal("T",field.toInt());
 
         }else if(data.contains("setB")) // Imposta le lame correnti
         {
             field = getNextFieldAfterTag(data,"setB ");
             serviceTcp->txData(QString("LAMA POSTERIORE:%1 \r\n").arg(field.toInt()).toAscii());
-            setManualLameVal("B",field.toInt());            
+            setManualLameVal("B",field.toInt());
 
         }else if(data.contains("setF")) // Imposta le lame correnti
         {
             field = getNextFieldAfterTag(data,"setF ");
             serviceTcp->txData(QString("LAMA FRONTALE:%1 \r\n").arg(field.toInt()).toAscii());
-            setManualLameVal("F",field.toInt());           
+            setManualLameVal("F",field.toInt());
         }
     }
 
@@ -3208,9 +3021,6 @@ void serverDebug::handleDrivers(QByteArray data)
         serviceTcp->txData(QByteArray("command <target,b1,b2>       Scrive frame di comando\r\n"));
         serviceTcp->txData(QByteArray("special <target,b1,b2>       Scrive frame speciale\r\n"));
         serviceTcp->txData(QByteArray("----------------------------------------------------\r\n"));
-        serviceTcp->txData(QByteArray("register <tag>               Legge un registro predefinito\r\n"));
-        serviceTcp->txData(QByteArray("reglist  <filtro>            Lista dei registri pre definiti\r\n"));
-
     }
     else if(data.contains("freeze")) handleDriverFreeze(TRUE);
     else if(data.contains("run")) handleDriverFreeze(FALSE);
@@ -3220,91 +3030,10 @@ void serverDebug::handleDrivers(QByteArray data)
     else if(data.contains("write16")) handleDriverWrite16(data);
     else if(data.contains("command")) handleDriverCommand(data);
     else if(data.contains("special")) handleDriverSpecial(data);
-    else if(data.contains("register")) handleDriversReadReg(data);
-    else if(data.contains("reglist")) handleDriversTagList(data);
 
 }
 
 
-void serverDebug::handleDriversTagList(QByteArray data)
-{
-    QList<QByteArray> parametri;
-    QString filtro;
-
-    parametri = getNextFieldsAfterTag(data, QString("reglist"));
-    if(parametri.size()==1)
-    {
-        filtro = parametri[0];
-    }else filtro ="";
-
-
-    QString stringa;
-    serviceTcp->txData(QByteArray("PRE-DEFINED REGISTE LIST:\n\r"));
-    for(int ciclo=0; ciclo < deviceRegisterList.size(); ciclo++){
-        if(filtro!=""){
-            if(!deviceRegisterList.at(ciclo).tag.toAscii().contains(filtro.toAscii().data())) continue;
-        }
-        stringa = "- "+ deviceRegisterList.at(ciclo).tag + " > " + deviceRegisterList.at(ciclo).comment + "\r\n";
-        serviceTcp->txData(stringa.toAscii());
-    }
-}
-
-void serverDebug::handleDriversReadReg(QByteArray data)
-{
-    QByteArray buffer;
-
-    isCommand = false;
-    isSpecial = false;
-
-    QList<QByteArray> parametri;
-
-    parametri = getNextFieldsAfterTag(data, QString("register"));
-    if(parametri.size()!=1)
-    {
-        serviceTcp->txData(QByteArray("wrong parametrs\n\r"));
-        return;
-    }
-
-    // Cerca il tag nella lista
-    int ciclo;
-    for(ciclo=0; ciclo < deviceRegisterList.size(); ciclo++){
-        if(parametri[0] == deviceRegisterList.at(ciclo).tag) {
-            break;
-        }
-    }
-
-    if(ciclo == deviceRegisterList.size()){
-         serviceTcp->txData(QByteArray("no register tag matched\n\r"));
-         return;
-    }
-
-    frameTarget = deviceRegisterList.at(ciclo).tag;
-
-
-    // Costruisce il buffer
-    frameD0 = (unsigned char) (deviceRegisterList.at(ciclo).deviceId | SER422_READ);
-    buffer.append(frameD0);
-    frameD1 = (unsigned char) (unsigned char) (0x00FF & deviceRegisterList.at(ciclo).address);
-    if(deviceRegisterList.at(ciclo).address > 255) frameD2 = 1;
-    else frameD2 = 0;
-    buffer.append(frameD1);
-    buffer.append(frameD2);
-
-    if(deviceRegisterList.at(ciclo).data_type==_8bit) frameFormat16 = false;
-    else frameFormat16 = true;
-
-    frameWrite = false;
-    frameData = 0;
-    frameDH = false;
-    frameCompleted = false;
-
-
-    if(mccService(1,SRV_SERIAL_SEND,buffer)== FALSE) serviceTcp->txData("MCC FALLITO");
-    else connect(pConsole,SIGNAL(mccServiceNotify(unsigned char,unsigned char,QByteArray)),this,SLOT(handleDriverSendNotify(unsigned char,unsigned char,QByteArray)),Qt::UniqueConnection);
-
-    return;
-
-}
 
 // Restituisce un intero valutando il formato della stringa
 int serverDebug::getVal(QString val){
@@ -3343,7 +3072,6 @@ void serverDebug::handleDriverRead8(QByteArray data)
     else if(parametri[0]=="PCB190") target = 0x13;
     else if(parametri[0]=="PCB249U1") target = 0x16;
     else if(parametri[0]=="PCB249U2") target = 0x15;
-    else if(parametri[0]=="PCB244") target = 0x14;
     else if(parametri[0]=="PCB244A") target = 0x17;
     else{
         serviceTcp->txData(QByteArray("invalid target\n\r"));
@@ -3404,7 +3132,6 @@ void serverDebug::handleDriverRead16(QByteArray data){
     else if(parametri[0]=="PCB190") target = 0x13;
     else if(parametri[0]=="PCB249U1") target = 0x16;
     else if(parametri[0]=="PCB249U2") target = 0x15;
-    else if(parametri[0]=="PCB244") target = 0x14;
     else if(parametri[0]=="PCB244A") target = 0x17;
     else{
         serviceTcp->txData(QByteArray("invalid target\n\r"));
@@ -3463,7 +3190,6 @@ void serverDebug::handleDriverWrite8(QByteArray data){
     else if(parametri[0]=="PCB190") target = 0x13;
     else if(parametri[0]=="PCB249U1") target = 0x16;
     else if(parametri[0]=="PCB249U2") target = 0x15;
-    else if(parametri[0]=="PCB244") target = 0x14;
     else if(parametri[0]=="PCB244A") target = 0x17;
     else{
         serviceTcp->txData(QByteArray("invalid target\n\r"));
@@ -3524,7 +3250,6 @@ void serverDebug::handleDriverWrite16(QByteArray data){
     else if(parametri[0]=="PCB190") target = 0x13;
     else if(parametri[0]=="PCB249U1") target = 0x16;
     else if(parametri[0]=="PCB249U2") target = 0x15;
-    else if(parametri[0]=="PCB244") target = 0x14;
     else if(parametri[0]=="PCB244A") target = 0x17;
     else{
         serviceTcp->txData(QByteArray("invalid target\n\r"));
@@ -3589,7 +3314,6 @@ void serverDebug::handleDriverCommand(QByteArray data){
     else if(parametri[0]=="PCB190") target = 0x13;
     else if(parametri[0]=="PCB249U1") target = 0x16;
     else if(parametri[0]=="PCB249U2") target = 0x15;
-    else if(parametri[0]=="PCB244") target = 0x14;
     else if(parametri[0]=="PCB244A") target = 0x17;
     else{
         serviceTcp->txData(QByteArray("invalid target\n\r"));
@@ -3656,7 +3380,6 @@ void serverDebug::handleDriverSpecial(QByteArray data){
     else if(parametri[0]=="PCB190") target = 0x13;
     else if(parametri[0]=="PCB249U1") target = 0x16;
     else if(parametri[0]=="PCB249U2") target = 0x15;
-    else if(parametri[0]=="PCB244") target = 0x14;
     else if(parametri[0]=="PCB244A") target = 0x17;
     else{
         serviceTcp->txData(QByteArray("invalid target\n\r"));
@@ -3704,12 +3427,9 @@ void serverDebug::handleDriverSpecial(QByteArray data){
 
 void serverDebug::handleDriverSendNotify(unsigned char id,unsigned char cmd, QByteArray data)
 {
-
     if(cmd!=SRV_SERIAL_SEND) return;
-
     if(frameCompleted){
         disconnect(pConsole,SIGNAL(mccServiceNotify(unsigned char,unsigned char,QByteArray)),this,SLOT(handleDriverSendNotify(unsigned char,unsigned char,QByteArray)));
-        serviceTcp->txData(QByteArray(cmdGroup).append(">"));
         return;
     }
 
@@ -3732,7 +3452,6 @@ void serverDebug::handleDriverSendNotify(unsigned char id,unsigned char cmd, QBy
                 buffer.append((unsigned char) ((frameData & 0xFF00)>>8));
                 mccService(1,SRV_SERIAL_SEND,buffer);
                 frameDH = true;
-                serviceTcp->txData(QByteArray(cmdGroup).append(">"));
                 return;
             }
 
@@ -3753,7 +3472,6 @@ void serverDebug::handleDriverSendNotify(unsigned char id,unsigned char cmd, QBy
                 buffer.append(frameD2);
                 mccService(1,SRV_SERIAL_SEND,buffer);
                 frameDH = true;
-                serviceTcp->txData(QByteArray(cmdGroup).append(">"));
                 return;
             }
         }else{
@@ -3763,7 +3481,6 @@ void serverDebug::handleDriverSendNotify(unsigned char id,unsigned char cmd, QBy
     }
 
     disconnect(pConsole,SIGNAL(mccServiceNotify(unsigned char,unsigned char,QByteArray)),this,SLOT(handleDriverSendNotify(unsigned char,unsigned char,QByteArray)));
-    serviceTcp->txData(QByteArray(cmdGroup).append(">"));
 }
 
 void serverDebug::handleLoader(QByteArray data)
@@ -3792,17 +3509,11 @@ void serverDebug::handleLoader(QByteArray data)
 void serverDebug::handleSetLanguage(QByteArray data)
 {
     QList<QByteArray> parametri;
-    QString stringa;
+
     parametri = getNextFieldsAfterTag(data, QString("setLanguage"));
-    if(parametri.size()==0)
-    {
-        stringa = QString("Current language: %1\n\r").arg(pConfig->userCnf.languageInterface);
-        serviceTcp->txData(stringa.toAscii());
-        return;
-    }
     if(parametri.size()!=1)
     {
-        serviceTcp->txData(QByteArray("Wrong parameter: insert the uppercase code (ITA,ENG..)\n\r"));
+        serviceTcp->txData(QByteArray("Inserire il codice lingua di 3 lettere maiuscole\n\r"));
         return;
     }
 
@@ -3842,38 +3553,34 @@ void serverDebug::handleSystem(QByteArray data)
     if(data.contains("?"))
     {
         serviceTcp->txData(QByteArray("system:----------------- Comandi di gestione files di configurazione -\r\n"));
-        serviceTcp->txData(QByteArray("setDATE Y M D h m s      imposta data e ora corrente \r\n"));        
+        serviceTcp->txData(QByteArray("setDATE Y M D h m s      imposta data e ora corrente \r\n"));
         serviceTcp->txData(QByteArray("getRevisions             Richiede la configurazione del sistema\r\n"));
-        serviceTcp->txData(QByteArray("setShotMode              Attiva la modalit√  di RX Test\r\n"));
-        serviceTcp->txData(QByteArray("setShotNodetMode         Attiva la modalit√  di RX Test senza detector\r\n"));
-        serviceTcp->txData(QByteArray("setCalibKv               Attiva la modalit√  di calibrazione KV\r\n"));
-        serviceTcp->txData(QByteArray("setCalibIa               Attiva la modalit√  di calibrazione IA\r\n"));
-        serviceTcp->txData(QByteArray("setCalibTomo <sample>    Attiva la modalit√  di calibrazione Tomo\r\n"));
-        serviceTcp->txData(QByteArray("setOperatingMode         Attiva la modalit√  Operativa\r\n"));                
         serviceTcp->txData(QByteArray("reboot                   Effettua il reboot di entrambi i terminali\r\n"));
         serviceTcp->txData(QByteArray("setPowerOff              Attiva il powerdown \r\n"));
-        serviceTcp->txData(QByteArray("setUnpark                Attiva procedura di unpark \r\n"));
-        serviceTcp->txData(QByteArray("setPark                Attiva procedura di unpark \r\n"));
+        serviceTcp->txData(QByteArray("sysLog  [ON/OFF/FLUSH]   Imposta la funzione log \r\n"));
         serviceTcp->txData(QByteArray("------------------------------------------------------------------------\r\n"));
     } else
     {
+        if(data.contains("sysLog")){
+            QList<QByteArray> parametri = getNextFieldsAfterTag(data, QString("sysLog"));
+            if(parametri.size() != 1) {
+                serviceTcp->txData(QString("Invalid parameters\n\r").toAscii());
+                return;
+            }
+            if(parametri[0]=="ON"){
+                pSysLog->activate(false);
+                pSysLog->activate(true);
+                serviceTcp->txData(QByteArray("LOG ACTIVATED AND FLUSHED!\r\n"));
+            }else if(parametri[0]=="OFF"){
+                pSysLog->activate(false);
+                serviceTcp->txData(QByteArray("LOG DISABLED AND FLUSHED!\r\n"));
+            }else{
+                serviceTcp->txData(QByteArray("LOG ACTIVATED AND FLUSHED!\r\n"));
+                pSysLog->activate(false);
+                pSysLog->activate(true);
+            }
 
-        if(data.contains("setIp")){
-            QHostAddress host = setIpAddress(10);
-            serviceTcp->txData(QString("IP:%1\r\n").arg(host.toString()).toAscii());
-
-        }else if(data.contains("setUnpark")){
-            unsigned char buffer[2];
-            buffer[0]=MCC_PARKING_MODE_COMMANDS_START_UNPARKING;
-            pConsole->pGuiMcc->sendFrame(MCC_PARKING_MODE_COMMANDS,1,buffer, sizeof(buffer));
-
-        }else if(data.contains("setPark")){
-            pConfig->lenzeConfig.startupInParkingMode = true;
-            pConfig->saveLenzeConfig();
-            unsigned char buffer[2];
-            buffer[0]=MCC_PARKING_MODE_COMMANDS_START_PARKING;
-            pConsole->pGuiMcc->sendFrame(MCC_PARKING_MODE_COMMANDS,1,buffer, sizeof(buffer));
-
+            return;
         }else if(data.contains("setDATE"))
         {
             if(systemTimeUpdated) {
@@ -3914,35 +3621,10 @@ void serverDebug::handleSystem(QByteArray data)
         }else  if(data.contains("getRevisions"))
         {
             handleGetRevisions();
-        }else if(data.contains("setShotNodetMode"))
-        {
-            pConsole->handleSetShotMode(FALSE);
-        }else if(data.contains("setShotMode"))
-        {
-            pConsole->handleSetShotMode(TRUE);
-        }else if(data.contains("setCalibKv"))
-        {
-            pConsole->handleSetKvCalibMode();
-        }else if(data.contains("setCalibIa"))
-        {
-            pConsole->handleSetIaCalibMode();
-        }else if(data.contains("setCalibTomo"))
-        {
-            field = getNextFieldAfterTag(data,"setCalibTomo ");
-            pConsole->handleSetCalibTomo(field);
-        }else if(data.contains("setOperatingMode"))
-        {
-            pConsole->handleSetOperatingMode();
-        }else if(data.contains("getAlarmInfo"))
-        {
-            handleGetAlarmInfo(data);
         }else if(data.contains("reboot"))
         {
             pConfig->executeReboot();
-        }else if(data.contains("setOutputs"))
-        {
-            handleSetOutputs(data);
-        }  else if(data.contains("setPowerOff")){
+        }else if(data.contains("setPowerOff")){
             QList<QByteArray> parametri = getNextFieldsAfterTag(data, QString("setPowerOff"));
             if(parametri.size() != 1) {
                 serviceTcp->txData(QString("Invalid parameters number \n\r").toAscii());
@@ -3953,8 +3635,12 @@ void serverDebug::handleSystem(QByteArray data)
 
         }
 
+
     }
 }
+
+
+
 
 void serverDebug::handleGetAlarmInfo(QByteArray data)
 {
@@ -4101,150 +3787,6 @@ void serverDebug::handleSetOutputs(QByteArray data)
 
     io->setOutputs(o);
     */
-}
-
-
-
-void serverDebug::handleBiopsy(QByteArray data)
-{
-    QList<QByteArray> parametri;
-    QByteArray cmddata;
-
-    if(data.contains("?"))
-    {
-        serviceTcp->txData(QByteArray("--------------- ACTIVATION ----------------------------\r\n"));
-        serviceTcp->txData(QByteArray("moveXYZ x,y,z         ? X,Y,Z in dmm \r\n"));
-        serviceTcp->txData(QByteArray("moveHome              ? move to 0,0,0 \r\n"));
-        serviceTcp->txData(QByteArray("moveInc    <X|Y|Z>    ? INC Z or Y or Z \r\n"));
-        serviceTcp->txData(QByteArray("moveDec    <X|Y|Z>    ? DEC Z or Y or Z \r\n"));
-        serviceTcp->txData(QByteArray("stepVal    val        ? set the Step value \r\n"));
-        serviceTcp->txData(QByteArray("getStepval            ? return current stepval \r\n"));
-
-        serviceTcp->txData(QByteArray("\r\n------------ WORKFLOW ----------------------------\r\n"));
-        serviceTcp->txData(QByteArray("getLimits               ? return current maxZ \r\n"));
-        serviceTcp->txData(QByteArray("getAdapter            ? return current Adapter Id \r\n"));
-        serviceTcp->txData(QByteArray("getRevision           ? return current revision \r\n"));
-
-
-        serviceTcp->txData(QByteArray("\r\n------------ CALIBRATION FILE -----------------------\r\n"));
-        serviceTcp->txData(QByteArray("setCalHome    val     ? (mm) set  Distanza Home Fibra \r\n"));
-        serviceTcp->txData(QByteArray("setStore              ? Store calib file \r\n"));
-        serviceTcp->txData(QByteArray("showCalibFile         ? Show Calib File \r\n"));
-        serviceTcp->txData(QByteArray("readCalibFile         ? Show Calib File \r\n"));
-
-#ifdef __BIOPSY_SIMULATOR
-        serviceTcp->txData(QByteArray("\n\r BIOPSY SIMULATOR COMMANDS: --------\r\n"));
-        serviceTcp->txData(QByteArray("simConn    [ON/OFF]   ? ON=CONNECTED \r\n"));
-        serviceTcp->txData(QByteArray("simAdapter [n]        ? N=ADAPTER CODE \r\n"));
-        serviceTcp->txData(QByteArray("simSblocco [ON/OFF]   ? ON=UNLOCK \r\n"));
-        serviceTcp->txData(QByteArray("simRST                ? Pulsante RST   \r\n"));
-        serviceTcp->txData(QByteArray("simENT                ? Pulsante ENTER  \r\n"));
-        serviceTcp->txData(QByteArray("simp_1                ? Pulsante +1 \r\n"));
-        serviceTcp->txData(QByteArray("simp10                ? Pulsante +10 \r\n"));
-        serviceTcp->txData(QByteArray("simBK                 ? Pulsante BACK \r\n"));
-        serviceTcp->txData(QByteArray("simXY X,Y             ? JOYSTIC X,Y in (dmm)\r\n"));
-        serviceTcp->txData(QByteArray("-----------------------------------------------------------------\r\n"));
-#endif
-
-    } else
-    {
-
-
-        if(data.contains("setCalFibra")){
-            parametri = getNextFieldsAfterTag(data, QString("setCalFibra"));
-            if(parametri.size()!=1){
-                serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\n"));
-                return;
-            }
-
-            pBiopsy->config.Z_homePosition = parametri[0].toInt();
-            serviceTcp->txData(QString("CALIB DISTANZA FIBRA:%1 (mm)\n\r").arg(pBiopsy->config.Z_homePosition).toAscii().data());
-            return;
-        }
-        if(data.contains("setStore")){
-            if(pBiopsy->storeConfig()){
-                serviceTcp->txData(QString("STORED !\n\r").toAscii().data());
-                pBiopsy->updateConfig();
-            }else serviceTcp->txData(QString("ERROR\n\r").toAscii().data());
-            return;
-        }
-        if(data.contains("showCalibFile")){
-
-            serviceTcp->txData(QString("CALIB HOME:%1 (mm)\n\r").arg(pBiopsy->config.Z_homePosition).toAscii().data());
-            return;
-        }
-        if(data.contains("readCalibFile")){
-            if(pBiopsy->openCfg()){
-                serviceTcp->txData(QString("OK !\n\r").toAscii().data());
-                pBiopsy->updateConfig();
-            }else serviceTcp->txData(QString("ERROR\n\r").toAscii().data());
-            return;
-        }
-
-        if(!pBiopsy->connected){
-            serviceTcp->txData(QByteArray("BIOPSY DEVICE DISCONNECTED!!\n\r"));
-            return;
-        }
-
-        if(data.contains("moveXYZ")){
-            parametri = getNextFieldsAfterTag(data, QString("moveXYZ"));
-            if(parametri.size()!=3) serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\n"));
-
-            int retval = pBiopsy->moveXYZ(parametri.at(0).toUInt(),parametri.at(1).toUInt(),parametri.at(2).toUInt(),0);
-            if(retval!=_BIOPSY_MOVING_NO_ERROR)  serviceTcp->txData(QString("FALLITO COMANDO! Errore:%1\r\n").arg(retval).toAscii().data());
-            else serviceTcp->txData(QByteArray("OK\r\n"));
-
-        }else if(data.contains("moveHome")){
-            int retval = pBiopsy->moveHome(0);
-            if(retval!=_BIOPSY_MOVING_NO_ERROR)  serviceTcp->txData(QString("FALLITO COMANDO! Errore:%1\r\n").arg(retval).toAscii().data());
-            else serviceTcp->txData(QByteArray("OK\r\n"));
-
-        }else if(data.contains("moveInc")){
-            parametri = getNextFieldsAfterTag(data, QString("moveInc"));
-            if(parametri.size()!=1) serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\n"));
-            int retval;
-
-            if((parametri[0]=="X") || (parametri[0]=="x")){
-                retval = pBiopsy->moveIncX(0);
-            }else if((parametri[0]=="Y") || (parametri[0]=="y")){
-                retval = pBiopsy->moveIncY(0);
-            }else if((parametri[0]=="Z") || (parametri[0]=="z")){
-                retval = pBiopsy->moveIncZ(0);
-            }
-            if(retval!=_BIOPSY_MOVING_NO_ERROR)  serviceTcp->txData(QString("FALLITO COMANDO! Errore:%1\r\n").arg(retval).toAscii().data());
-            else serviceTcp->txData(QByteArray("OK\r\n"));
-
-        }else if(data.contains("moveDec")){
-            int retval;
-            parametri = getNextFieldsAfterTag(data, QString("moveDec"));
-            if(parametri.size()!=1) serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\n"));
-            if((parametri[0]=="X") || (parametri[0]=="x")){
-                retval = pBiopsy->moveDecX(0);
-            }else if((parametri[0]=="Y") || (parametri[0]=="y")){
-                retval = pBiopsy->moveDecY(0);
-            }else if((parametri[0]=="Z") || (parametri[0]=="z")){
-                retval = pBiopsy->moveDecZ(0);
-            }
-            if(retval!=_BIOPSY_MOVING_NO_ERROR)  serviceTcp->txData(QString("FALLITO COMANDO! Errore:%1\r\n").arg(retval).toAscii().data());
-            else serviceTcp->txData(QByteArray("OK\r\n"));
-
-        }else if(data.contains("stepVal")){
-            parametri = getNextFieldsAfterTag(data, QString("stepVal"));
-            if(parametri.size()!=1) serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\n"));
-            if(pBiopsy->setStepVal((unsigned char) parametri[0].toInt())==false){
-                serviceTcp->txData(QByteArray("FALLITO COMANDO!\n"));
-            }
-
-        }else if(data.contains("getStepval")){
-            serviceTcp->txData(QString("current stepval: %1\n\r").arg(pBiopsy->stepVal).toAscii().data());
-        }else if(data.contains("getLimits")){
-            serviceTcp->txData(QString("NEEDLE TO HOME:%1\n\rNEEDLE MARGINE:%2\n\rPAD TO BYM:%3\n\rMAX-Z (paddle):%4\n\rABS-MAX-Z:%5\n\r").arg(pBiopsy->needle_home).arg(pBiopsy->needle_margine).arg(pBiopsy->paddle_margine).arg(pBiopsy->max_z_paddle).arg(pBiopsy->abs_max_z).toAscii().data());
-        }else if(data.contains("getAdapter")){
-            serviceTcp->txData(QString("current adapter: %1\n\r").arg(pBiopsy->adapterId).toAscii().data());
-        }else if(data.contains("getRevision")){
-            serviceTcp->txData(QString("current adapter: %1\n\r").arg(pBiopsy->revisione).toAscii().data());
-        }
-    }
 }
 
 
@@ -4406,48 +3948,12 @@ void serverDebug::handlePotter(QByteArray data)
     }else if(data.contains("resetBoard"))
     {
         handleResetPCB244();
-    }
-    else if(data.contains("setGridFreq"))
-    {
-        handleSetGridFreq(data);
-    }else if(data.contains("setGridAmp"))
-    {
-        handleSetGridAmp(data);
-    }else if(data.contains("setGrid3D"))
-    {
-        handleSetGrid3D(data);
     }else if(data.contains("setGrid2D"))
     {
         handleSetGrid2D(data);
     }
 }
 
-/*
-
- */
-void serverDebug::handleSetGrid3D(QByteArray data)
-{
-    QList<QByteArray> parametri;
-
-    parametri = getNextFieldsAfterTag(data, QString("setGrid3D"));
-    if(parametri.size()!=1){
-        serviceTcp->txData(QByteArray("WRONG PARAMETER! Expected ON/OFF\n\r"));
-        return;
-    }
-
-    QByteArray buf;
-
-    if(parametri.at(0)=="ON"){
-        serviceTcp->txData(QByteArray("Grid ON executed\n\r"));
-        buf.append((unsigned char) SRV_START_POTTER_3D_GRID); // Comando di servizio
-    }else{
-        serviceTcp->txData(QByteArray("Grid OFF executed\n\r"));
-        buf.append((unsigned char) SRV_STOP_POTTER_3D_GRID); // Comando di servizio
-    }
-
-    pConsole->pGuiMcc->sendFrame(MCC_SERVICE,0,(unsigned char*) buf.data(), buf.size());
-
-}
 /*
 
  */
@@ -4489,60 +3995,6 @@ void serverDebug::handleResetPCB244(void){
 }
 
 
-void serverDebug::handleSetGridFreq(QByteArray data)
-{
-    QList<QByteArray> parametri;
-
-    parametri = getNextFieldsAfterTag(data, QString("setGridFreq"));
-    if(parametri.size()!=1){
-        serviceTcp->txData(QByteArray("WRONG PARAMETER! Expected frequency [0:255]\n\r"));
-        return;
-    }
-
-
-    int freq = parametri.at(0).toInt();
-    if(freq>255) {
-        serviceTcp->txData(QByteArray("WRONG PARAMETER! Expected frequency [0:255]\n\r"));
-        return;
-    }
-
-    serviceTcp->txData(QString("Grid frequency set to %1\n\r").arg(freq).toAscii());
-
-    QByteArray buf;
-    buf.append((unsigned char) SRV_PCB244_CMD_FREQ_VC); // Comando di servizio
-    buf.append((unsigned char) freq);
-
-    pConsole->pGuiMcc->sendFrame(MCC_SERVICE,0,(unsigned char*) buf.data(), buf.size());
-
-}
-
-void serverDebug::handleSetGridAmp(QByteArray data)
-{
-    QList<QByteArray> parametri;
-
-    parametri = getNextFieldsAfterTag(data, QString("setGridAmp"));
-    if(parametri.size()!=1){
-        serviceTcp->txData(QByteArray("WRONG PARAMETER! Expected amplitude [0:255]\n\r"));
-        return;
-    }
-
-
-    int amp = parametri.at(0).toInt();
-    if(amp>255) {
-        serviceTcp->txData(QByteArray("WRONG PARAMETER! Expected amplitude [0:255]\n\r"));
-        return;
-    }
-
-    serviceTcp->txData(QString("Grid Amplitude set to %1\n\r").arg(amp).toAscii());
-
-    QByteArray buf;
-    buf.append((unsigned char) SRV_PCB244_CMD_AMPL_VC); // Comando di servizio
-    buf.append((unsigned char) amp);
-
-    pConsole->pGuiMcc->sendFrame(MCC_SERVICE,0,(unsigned char*) buf.data(), buf.size());
-
-}
-
 void serverDebug::handleGetTrolleyNotify(unsigned char id,unsigned char cmd, QByteArray data){
 
     if(id!=1) return;
@@ -4556,4 +4008,346 @@ void serverDebug::debugPrint(QString data){
     if(serviceTcp->connection_status==false) return;
     data.prepend("DEBUG:>");
     serviceTcp->txData(data.append("\n\r").toAscii());
+}
+
+
+
+
+
+
+void serverDebug::handleBiopsy(QByteArray data)
+{
+    QList<QByteArray> parametri;
+    QByteArray cmddata;
+    QString stringa;
+
+    if(data.contains("?"))
+    {
+        serviceTcp->txData(QByteArray("--------------- ACTIVATION ----------------------------\r\n"));
+        serviceTcp->txData(QByteArray("moveXYZ x,y,z         ? X,Y,Z in dmm \r\n"));
+        serviceTcp->txData(QByteArray("moveHome              ? move to 0,0,0 \r\n"));
+        serviceTcp->txData(QByteArray("moveInc    <X|Y|Z>    ? INC Z or Y or Z \r\n"));
+        serviceTcp->txData(QByteArray("moveDec    <X|Y|Z>    ? DEC Z or Y or Z \r\n"));
+        serviceTcp->txData(QByteArray("stepVal    val        ? set the Step value \r\n"));
+        serviceTcp->txData(QByteArray("getStepval            ? return current stepval \r\n"));
+
+        serviceTcp->txData(QByteArray("\r\n------------ WORKFLOW ----------------------------\r\n"));
+        serviceTcp->txData(QByteArray("setAgo     val        ? set Ago lenght \r\n"));
+        serviceTcp->txData(QByteArray("getAgo                ? return Ago lenght \r\n"));
+        serviceTcp->txData(QByteArray("getMaxZ               ? return current maxZ \r\n"));
+        serviceTcp->txData(QByteArray("getZlim               ? return current Zlimit \r\n"));
+        serviceTcp->txData(QByteArray("getAdapter            ? return current Adapter Id \r\n"));
+        serviceTcp->txData(QByteArray("getRevision           ? return current revision \r\n"));
+
+        serviceTcp->txData(QByteArray("\r\n------------ LESION CALCULATION---------------------\r\n"));
+        serviceTcp->txData(QByteArray("calcLesione (XRm,YRm XLm,YLm) ..(p)   ? return lesion calculation\r\n"));
+
+        serviceTcp->txData(QByteArray("\r\n------------ CALIBRATION FILE -----------------------\r\n"));
+        serviceTcp->txData(QByteArray("setCalX    val        ? (dmm) set Calib Offset X \r\n"));
+        serviceTcp->txData(QByteArray("setCalY    val        ? (dmm) set Calib Offset Y \r\n"));
+        serviceTcp->txData(QByteArray("setCalZ    val        ? (dmm) set Calib Offset Z \r\n"));
+        serviceTcp->txData(QByteArray("setCalFibra    val    ? (mm) set  Distanza Fibra \r\n"));
+        serviceTcp->txData(QByteArray("setStore              ? Store calib file \r\n"));
+        serviceTcp->txData(QByteArray("showCalibFile         ? Show Calib File \r\n"));
+        serviceTcp->txData(QByteArray("readCalibFile         ? Show Calib File \r\n"));
+
+#ifdef __BIOPSY_SIMULATOR
+        serviceTcp->txData(QByteArray("\n\r BIOPSY SIMULATOR COMMANDS: --------\r\n"));
+        serviceTcp->txData(QByteArray("simConn    [ON/OFF]   ? ON=CONNECTED \r\n"));
+        serviceTcp->txData(QByteArray("simAdapter [n]        ? N=ADAPTER CODE \r\n"));
+        serviceTcp->txData(QByteArray("simSblocco [ON/OFF]   ? ON=UNLOCK \r\n"));
+        serviceTcp->txData(QByteArray("simRST                ? Pulsante RST   \r\n"));
+        serviceTcp->txData(QByteArray("simENT                ? Pulsante ENTER  \r\n"));
+        serviceTcp->txData(QByteArray("simp_1                ? Pulsante +1 \r\n"));
+        serviceTcp->txData(QByteArray("simp10                ? Pulsante +10 \r\n"));
+        serviceTcp->txData(QByteArray("simBK                 ? Pulsante BACK \r\n"));
+        serviceTcp->txData(QByteArray("simXY X,Y             ? JOYSTIC X,Y in (dmm)\r\n"));
+        serviceTcp->txData(QByteArray("-----------------------------------------------------------------\r\n"));
+#endif
+
+    } else
+    {
+        if(data.contains("calcLesione")){
+            parametri = getNextFieldsAfterTag(data, QString("calcLesione"));
+            if(parametri.size()!=8){
+                serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\n"));
+                return;
+            }
+
+            pBiopsy->dmm_ref_m15_JX = (parametri[0].toFloat()/pBiopsy->config.readerKX);
+            pBiopsy->dmm_ref_m15_JY = (parametri[1].toFloat()/pBiopsy->config.readerKY);
+            pBiopsy->dmm_les_m15_JX = (parametri[2].toFloat()/pBiopsy->config.readerKX);
+            pBiopsy->dmm_les_m15_JY = (parametri[3].toFloat()/pBiopsy->config.readerKY);
+            pBiopsy->dmm_ref_p15_JX = (parametri[4].toFloat()/pBiopsy->config.readerKX);
+            pBiopsy->dmm_ref_p15_JY = (parametri[5].toFloat()/pBiopsy->config.readerKY);
+            pBiopsy->dmm_les_p15_JX = (parametri[6].toFloat()/pBiopsy->config.readerKX);
+            pBiopsy->dmm_les_p15_JY = (parametri[7].toFloat()/pBiopsy->config.readerKY);
+
+            pBiopsy->calcLesionPosition();
+            serviceTcp->txData(QString("BIO: X:%1, Y:%2, Z:%3\n\r").arg(pBiopsy->Xbio).arg(pBiopsy->Ybio).arg(pBiopsy->Zbio).toAscii().data());
+            serviceTcp->txData(QString("TORRETTA: X:%1, Y:%2, Z:%3\n\r").arg(pBiopsy->Xlesione_dmm).arg(pBiopsy->Ylesione_dmm).arg(pBiopsy->Zlesione_dmm).toAscii().data());
+            serviceTcp->txData(QString("FIBRA: Z:%1\n\r").arg(pBiopsy->Zfibra_dmm).toAscii().data());
+            return;
+        }
+        if(data.contains("setCalX")){
+            parametri = getNextFieldsAfterTag(data, QString("setCalX"));
+            if(parametri.size()!=1){
+                serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\n"));
+                return;
+            }
+
+            pBiopsy->config.offsetX = parametri[0].toInt();
+            serviceTcp->txData(QString("CALIB OFFSET X:%1 (dmm)\n\r").arg(pBiopsy->config.offsetX).toAscii().data());
+            return;
+        }
+        if(data.contains("setCalY")){
+            parametri = getNextFieldsAfterTag(data, QString("setCalY"));
+            if(parametri.size()!=1){
+                serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\n"));
+                return;
+            }
+
+            pBiopsy->config.offsetY = parametri[0].toInt();
+            serviceTcp->txData(QString("CALIB OFFSET Y:%1 (dmm)\n\r").arg(pBiopsy->config.offsetY).toAscii().data());
+            return;
+        }
+        if(data.contains("setCalZ")){
+            parametri = getNextFieldsAfterTag(data, QString("setCalZ"));
+            if(parametri.size()!=1){
+                serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\n"));
+                return;
+            }
+
+            pBiopsy->config.offsetZ = parametri[0].toInt();
+            serviceTcp->txData(QString("CALIB OFFSET Z:%1 (dmm)\n\r").arg(pBiopsy->config.offsetZ).toAscii().data());
+            return;
+        }
+        if(data.contains("setCalFibra")){
+            parametri = getNextFieldsAfterTag(data, QString("setCalFibra"));
+            if(parametri.size()!=1){
+                serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\n"));
+                return;
+            }
+
+            pBiopsy->config.offsetFibra = parametri[0].toInt();
+            serviceTcp->txData(QString("CALIB DISTANZA FIBRA:%1 (mm)\n\r").arg(pBiopsy->config.offsetFibra).toAscii().data());
+            return;
+        }
+        if(data.contains("setStore")){
+            if(pBiopsy->storeConfig()){
+                serviceTcp->txData(QString("STORED !\n\r").toAscii().data());
+                pBiopsy->updateConfig();
+            }else serviceTcp->txData(QString("ERROR\n\r").toAscii().data());
+            return;
+        }
+        if(data.contains("showCalibFile")){
+            serviceTcp->txData(QString("CALIB OFFSET X:%1 (dmm)\n\r").arg(pBiopsy->config.offsetX).toAscii().data());
+            serviceTcp->txData(QString("CALIB OFFSET Y:%1 (dmm)\n\r").arg(pBiopsy->config.offsetY).toAscii().data());
+            serviceTcp->txData(QString("CALIB OFFSET Z:%1 (dmm)\n\r").arg(pBiopsy->config.offsetZ).toAscii().data());
+            serviceTcp->txData(QString("CALIB DISTANZA FIBRA:%1 (mm)\n\r").arg(pBiopsy->config.offsetFibra).toAscii().data());
+            return;
+        }
+        if(data.contains("readCalibFile")){
+            if(pBiopsy->openCfg()){
+                serviceTcp->txData(QString("OK !\n\r").toAscii().data());
+                pBiopsy->updateConfig();
+            }else serviceTcp->txData(QString("ERROR\n\r").toAscii().data());
+            return;
+        }
+
+        if(!pBiopsy->connected){
+            serviceTcp->txData(QByteArray("BIOPSY DEVICE DISCONNECTED!!\n\r"));
+            return;
+        }
+
+        if(data.contains("moveXYZ")){
+            parametri = getNextFieldsAfterTag(data, QString("moveXYZ"));
+            if(parametri.size()!=3) serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\n"));
+            int retval = pBiopsy->moveXYZ(parametri.at(0).toUInt(),parametri.at(1).toUInt(),parametri.at(2).toUInt());
+            if(retval!=_BIOPSY_MOVING_NO_ERROR)  serviceTcp->txData(QByteArray("FALLITO COMANDO! Errore:%1\r\n").arg(retval));
+            else serviceTcp->txData(QByteArray("OK\r\n"));
+        }else if(data.contains("moveHome")){
+            int retval = pBiopsy->moveHome(0);
+            if(retval!=_BIOPSY_MOVING_NO_ERROR)  serviceTcp->txData(QByteArray("FALLITO COMANDO! Errore:%1\r\n").arg(retval));
+            else serviceTcp->txData(QByteArray("OK\r\n"));
+
+        }else if(data.contains("moveInc")){
+            parametri = getNextFieldsAfterTag(data, QString("moveInc"));
+            if(parametri.size()!=1) serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\n"));
+            if((parametri[0]=="X") || (parametri[0]=="x")){
+                if(pBiopsy->moveIncX()==false){
+                    serviceTcp->txData(QByteArray("FALLITO COMANDO!\n"));
+                }
+
+            }else if((parametri[0]=="Y") || (parametri[0]=="y")){
+                if(pBiopsy->moveIncY()==false){
+                    serviceTcp->txData(QByteArray("FALLITO COMANDO!\n"));
+                }
+
+            }else if((parametri[0]=="Z") || (parametri[0]=="z")){
+                if(pBiopsy->moveIncZ()==false){
+                    serviceTcp->txData(QByteArray("FALLITO COMANDO!\n"));
+                }
+            }
+
+        }else if(data.contains("moveDec")){
+            parametri = getNextFieldsAfterTag(data, QString("moveDec"));
+            if(parametri.size()!=1) serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\n"));
+            if((parametri[0]=="X") || (parametri[0]=="x")){
+                if(pBiopsy->moveDecX()==false){
+                    serviceTcp->txData(QByteArray("FALLITO COMANDO!\n"));
+                }
+            }else if((parametri[0]=="Y") || (parametri[0]=="y")){
+                if(pBiopsy->moveDecY()==false){
+                    serviceTcp->txData(QByteArray("FALLITO COMANDO!\n"));
+                }
+
+            }else if((parametri[0]=="Z") || (parametri[0]=="z")){
+                if(pBiopsy->moveDecZ()==false){
+                    serviceTcp->txData(QByteArray("FALLITO COMANDO!\n"));
+                }
+            }
+
+        }else if(data.contains("stepVal")){
+            parametri = getNextFieldsAfterTag(data, QString("stepVal"));
+            if(parametri.size()!=1) serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\n"));
+            if(pBiopsy->setStepVal((unsigned char) parametri[0].toInt())==false){
+                serviceTcp->txData(QByteArray("FALLITO COMANDO!\n"));
+            }
+
+        }else if(data.contains("setAgo")){
+            parametri = getNextFieldsAfterTag(data, QString("setAgo"));
+            if(parametri.size()!=1) serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\n"));
+            if(pBiopsy->setLunghezzaAgo((unsigned char) parametri[0].toInt())==false){
+                serviceTcp->txData(QByteArray("FALLITO COMANDO!\n"));
+            }
+
+        }else if(data.contains("getAgo")){
+            serviceTcp->txData(QString("Ago Lenght: %1\n\r").arg(pBiopsy->lunghezzaAgo).toAscii().data());
+        }else if(data.contains("getStepval")){
+            serviceTcp->txData(QString("current stepval: %1\n\r").arg(pBiopsy->stepVal).toAscii().data());
+        }else if(data.contains("getMaxZ")){
+            serviceTcp->txData(QString("current max Z (for compressor): %1\n\r").arg(pBiopsy->maxZ_mm).toAscii().data());
+        }else if(data.contains("getZlim")){
+            serviceTcp->txData(QString("current Zlimit (compressor and needle): %1\n\r").arg(pBiopsy->zlim_mm).toAscii().data());
+        }else if(data.contains("getAdapter")){
+            serviceTcp->txData(QString("current adapter: %1\n\r").arg(pBiopsy->adapterId).toAscii().data());
+        }else if(data.contains("getRevision")){
+            serviceTcp->txData(QString("current adapter: %1\n\r").arg(pBiopsy->revisione).toAscii().data());
+        }
+    }
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+void serverDebug::handleBiopsySimulator(QByteArray data)
+{
+#ifdef __BIOPSY_SIMULATOR
+
+    QString stringa;
+    unsigned char buffer[20];
+
+    if(data.contains("simConn")){
+        QList<QByteArray> parametri = getNextFieldsAfterTag(data, QString("simConn"));
+        if(parametri.size() != 1) {
+            stringa = QString("PARAMETRO: ON/OFF \r\n");
+            serviceTcp->txData(stringa.toAscii());
+            return;
+        }
+
+
+        if(parametri[0]=="ON") buffer[1] = 1;
+        else buffer[1] = 0;
+        buffer[0] = 1; // Comando impostazione stato connessione
+        pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_SIMULATOR,1,buffer,2);
+        serviceTcp->txData(QByteArray("DONE \r\n"));
+        return;
+
+    }else if(data.contains("simSblocco")){
+        QList<QByteArray> parametri = getNextFieldsAfterTag(data, QString("simSblocco"));
+        if(parametri.size() != 1) {
+            stringa = QString("PARAMETRO: ON/OFF \r\n");
+            serviceTcp->txData(stringa.toAscii());
+            return;
+        }
+
+        if(parametri[0]=="ON") buffer[1] = 1;
+        else buffer[1] = 0;
+        buffer[0] = 2; // Comando impostazione stato pulsante
+        pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_SIMULATOR,1,buffer,2);
+        serviceTcp->txData(QByteArray("DONE \r\n"));
+        return;
+
+    }else if(data.contains("simAdapter")){
+        QList<QByteArray> parametri = getNextFieldsAfterTag(data, QString("simAdapter"));
+        if(parametri.size() != 1) {
+            stringa = QString("PARAMETRO: num adapter \r\n");
+            serviceTcp->txData(stringa.toAscii());
+            return;
+        }
+
+        buffer[1] = parametri[0].toInt();
+        buffer[0] = 3; // Comando impostazione adattatore
+        pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_SIMULATOR,1,buffer,2);
+        serviceTcp->txData(QByteArray("DONE \r\n"));
+        return;
+
+    }else if(data.contains("simRST")){
+        buffer[0] = 4; // Comando impostazione pulsanti console
+        buffer[1] = _BP_BIOP_PUSH_RESET;
+        pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_SIMULATOR,1,buffer,2);
+        serviceTcp->txData(QByteArray("DONE \r\n"));
+        return;
+
+    }else if(data.contains("simENT")){
+        buffer[0] = 4; // Comando impostazione pulsanti console
+        buffer[1] = _BP_BIOP_PUSH_SEQ;
+        pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_SIMULATOR,1,buffer,2);
+        serviceTcp->txData(QByteArray("DONE \r\n"));
+        return;
+
+    }else if(data.contains("simp_1")){
+        buffer[0] = 4; // Comando impostazione pulsanti console
+        buffer[1] = _BP_BIOP_PUSH_AGO_1;
+        pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_SIMULATOR,1,buffer,2);
+        serviceTcp->txData(QByteArray("DONE \r\n"));
+        return;
+
+    }else if(data.contains("simp10")){
+        buffer[0] = 4; // Comando impostazione pulsanti console
+        buffer[1] = _BP_BIOP_PUSH_AGO_10;
+        pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_SIMULATOR,1,buffer,2);
+        serviceTcp->txData(QByteArray("DONE \r\n"));
+        return;
+
+    }else if(data.contains("simBK")){
+        buffer[0] = 4; // Comando impostazione pulsanti console
+        buffer[1] = _BP_BIOP_PUSH_BACK;
+        pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_SIMULATOR,1,buffer,2);
+        serviceTcp->txData(QByteArray("DONE \r\n"));
+        return;
+
+    }else if(data.contains("simXY")){
+
+        QList<QByteArray> parametri = getNextFieldsAfterTag(data, QString("simXY"));
+        if(parametri.size() != 2) {
+            stringa = QString("PARAMETRO: num adapter \r\n");
+            serviceTcp->txData(stringa.toAscii());
+            return;
+        }
+
+        buffer[0] = 5; // Comando impostazione XY
+        buffer[1] = parametri[0].toInt() & 0xFF;
+        buffer[2] = parametri[0].toInt() / 256 ;
+        buffer[3] = parametri[1].toInt() & 0xFF;
+        buffer[4] = parametri[1].toInt() / 256 ;
+
+
+        pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_SIMULATOR,1,buffer,5);
+        serviceTcp->txData(QByteArray("DONE \r\n"));
+        return;
+
+    }
+
+#endif
 }

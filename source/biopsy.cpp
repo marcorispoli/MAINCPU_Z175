@@ -26,10 +26,11 @@ biopsy::biopsy(QObject *parent) :
 void biopsy::defaultConfigData(void){
 
     // Offset di puntamento
-    config.Z_homePosition = 170;   // (mm) distanza zero torretta - fibra di carbonio
+    config.Z_homePosition = 193;            // (mm) distanza zero torretta - fibra di carbonio
+    config.Z_basePosizionatore = 189;       // Distanza base metallica - fibra di carbonio
 
     // Gestion Movimento Pad
-    config.offsetPad = 50;              // Offset linea di calibrazione posizione - superficie staffe metalliche
+    config.offsetPad = 59;              // Offset linea di calibrazione posizione - superficie staffe metalliche
     config.margineRisalita = 15;        // Margine di sicurezza per impatto con il compressore in risalita
     config.marginePosizionamento = 5;   // Margine di sicurezza impatto con il compressore in puntamento
 
@@ -63,9 +64,11 @@ bool biopsy::openCfg(void)
         dati = Config::getNextArrayFields(&file);
         if(dati.isEmpty()) break;
 
-        // Assegnazione tipologia filtri
         if(dati.at(0)=="Z_HOME"){
             config.Z_homePosition = dati.at(1).toInt();
+
+        }else if(dati.at(0)=="Z_BASE"){
+             config.Z_basePosizionatore = dati.at(1).toInt();
 
         }else if(dati.at(0)=="OFFSET_PAD"){
             config.offsetPad = dati.at(1).toInt();
@@ -96,6 +99,7 @@ bool biopsy::storeConfig(void)
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) return FALSE;
 
     file.write( QString("<Z_HOME, %1>\n").arg((int) config.Z_homePosition).toAscii());
+    file.write( QString("<Z_BASE, %1>\n").arg((int) config.Z_basePosizionatore).toAscii());
 
     file.write( QString("<OFFSET_PAD,%1>\n").arg((int) config.offsetPad).toAscii());
     file.write( QString("<MARGINE_RISALITA,%1>\n").arg((int) config.margineRisalita).toAscii());
@@ -151,6 +155,7 @@ void biopsy::mccStatNotify(unsigned char id_notify,unsigned char cmd, QByteArray
         movingCommand =_BIOPSY_MOVING_NO_COMMAND;
         movingError = _BIOPSY_MOVING_NO_ERROR;
         activationId = 0;
+        needle_home = 0;
 
         // Aggiorna le pagine con nil riconoscimento della Biopsia
         ApplicationDatabase.setData(_DB_ACCESSORIO, (unsigned char) BIOPSY_DEVICE,0);
@@ -241,13 +246,16 @@ void biopsy::calcoloMargini(void){
     ApplicationDatabase.setData(_DB_BIOP_PADDLE_MARGINE,(int) paddle_margine,0);
 
     // Needle margine in mm
-    int margine = config.Z_homePosition - (curZ_dmm/10) + needle_home;
+    int margine = config.Z_homePosition - (curZ_dmm/10) - needle_home;
     if(margine < 0) margine = 0;
+    needle_margine = margine;
     ApplicationDatabase.setData(_DB_BIOP_NEEDLE_MARG,(int) margine,0);
 
+    int max_needle_z = config.Z_homePosition - needle_home - 5;
+
     // Calcolo della massima Z
-    if(max_z_paddle < margine) abs_max_z = max_z_paddle;
-    else abs_max_z = margine;
+    if(max_z_paddle < max_needle_z) abs_max_z = max_z_paddle;
+    else abs_max_z = max_needle_z;
     ApplicationDatabase.setData(_DB_BIOP_MAXZ,(int) abs_max_z,0);
 
 }
@@ -289,6 +297,9 @@ int biopsy::moveHome(int id)
 {
     unsigned char data[1];
 
+    // Azzera l'informazione dell'Ago per il calcolo del margine
+    needle_home = 0;
+
     if(movingCommand > _BIOPSY_MOVING_COMPLETED)
     {
         movingError = _BIOPSY_MOVING_ERROR_BUSY;
@@ -313,7 +324,7 @@ int biopsy::moveHome(int id)
 }
 
 
-bool biopsy::moveDecZ(void)
+int biopsy::moveDecZ(int id)
 {
     unsigned char data[1];
     if(movingCommand > _BIOPSY_MOVING_COMPLETED)
@@ -332,13 +343,14 @@ bool biopsy::moveDecZ(void)
         return FALSE;
     }
 
+    pBiopsy->activationId = id;
     movingCommand = _BIOPSY_MOVING_DECZ;
     movingError   = _BIOPSY_MOVING_NO_ERROR;
     return TRUE;
 }
 
 
-bool biopsy::moveIncZ(void)
+int biopsy::moveIncZ(int id)
 {
     unsigned char data[1];
     if(movingCommand > _BIOPSY_MOVING_COMPLETED)
@@ -357,12 +369,13 @@ bool biopsy::moveIncZ(void)
         return FALSE;
     }
 
+    pBiopsy->activationId = id;
     movingCommand = _BIOPSY_MOVING_INCZ;
     movingError   = _BIOPSY_MOVING_NO_ERROR;
     return TRUE;
 }
 
-bool biopsy::moveDecX(void)
+int biopsy::moveDecX(int id)
 {
     unsigned char data[1];
     if(movingCommand > _BIOPSY_MOVING_COMPLETED)
@@ -381,12 +394,13 @@ bool biopsy::moveDecX(void)
         return FALSE;
     }
 
+    pBiopsy->activationId = id;
     movingCommand = _BIOPSY_MOVING_DECX;
     movingError   = _BIOPSY_MOVING_NO_ERROR;
     return TRUE;
 }
 
-bool biopsy::moveIncX(void)
+int biopsy::moveIncX(int id)
 {
     unsigned char data[1];
     if(movingCommand > _BIOPSY_MOVING_COMPLETED)
@@ -405,12 +419,13 @@ bool biopsy::moveIncX(void)
         return FALSE;
     }
 
+    pBiopsy->activationId = id;
     movingCommand = _BIOPSY_MOVING_INCX;
     movingError   = _BIOPSY_MOVING_NO_ERROR;
     return TRUE;
 }
 
-bool biopsy::moveDecY(void)
+int biopsy::moveDecY(int id)
 {
     unsigned char data[1];
     if(movingCommand > _BIOPSY_MOVING_COMPLETED)
@@ -429,11 +444,12 @@ bool biopsy::moveDecY(void)
         return FALSE;
     }
 
+    pBiopsy->activationId = id;
     movingCommand = _BIOPSY_MOVING_DECY;
     movingError   = _BIOPSY_MOVING_NO_ERROR;
     return TRUE;
 }
-bool biopsy::moveIncY(void)
+int biopsy::moveIncY(int id)
 {
     unsigned char data[1];
     if(movingCommand > _BIOPSY_MOVING_COMPLETED)
@@ -452,18 +468,19 @@ bool biopsy::moveIncY(void)
         return FALSE;
     }
 
+    pBiopsy->activationId = id;
     movingCommand = _BIOPSY_MOVING_INCY;
     movingError   = _BIOPSY_MOVING_NO_ERROR;
     return TRUE;
 }
 
-bool biopsy::setStepVal(unsigned char step)
+int biopsy::setStepVal(unsigned char step)
 {
     unsigned char data[2];
     data[0]=_MCC_BIOPSY_CMD_SET_STEPVAL; // Codice comando
     data[1] = step;
-    if(pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_CMD,1,data,2)==FALSE) return false;
-    return TRUE;
+    if(pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_CMD,1,data,2)==FALSE) return 0;
+    return 1;
 }
 
 

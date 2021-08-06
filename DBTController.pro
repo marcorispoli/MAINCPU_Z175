@@ -163,5 +163,7 @@ RESOURCES += \
     resource/ui/grafica.qrc
 
 OTHER_FILES += \
-    Deploy/RELEASE/Release_Note
+    Deploy/RELEASE/Release_Note \
+    Deploy/PACKAGE/Release_note \
+    Deploy/PACKAGE/Release_note.txt
 

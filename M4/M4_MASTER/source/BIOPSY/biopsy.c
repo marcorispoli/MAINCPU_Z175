@@ -28,7 +28,6 @@
 #define _BYM_MOVE_TO_STEP_DECY      7
 #define _BYM_MOVE_TO_STEP_INCY      8
 
-
 // _________________________________________________________________________________
 //  Prototipi funzioni locali
 static void BIOPSY_manageDriverDisconnectedStatus(void);
@@ -91,7 +90,7 @@ void BIOPSY_driver(uint32_t taskRegisters)
     dati[_BP_MAX_Z_PADDLE] = 0;
 
 
-    while(!mccBiopsyNotify(1,BIOP_NOTIFY_STAT,dati, sizeof(dati))) _time_delay(50);
+    while(!mccBiopsyNotify(1,BIOP_NOTIFY_STAT,dati, sizeof(dati))) _time_delay(200);
     for(int i =0; i< _BP_DATA_LEN; i++){
         chg_dati[i] = dati[i];
     }
@@ -183,8 +182,7 @@ void BIOPSY_manageDriverDisconnectedStatus(void){
     return;
 }
 
-void
-BIOPSY_manageDriverConnectedStatus(void){
+void BIOPSY_manageDriverConnectedStatus(void){
     static unsigned char slot = 0;
 
     static int timer_stat = 2000 /_BYM_CONNECTED_STAT_DELAY;
@@ -214,12 +212,11 @@ BIOPSY_manageDriverConnectedStatus(void){
     }
 
     // Calcolo del margine sul compressore in mm: se il pad non è riconosciuto viene messo al massimo
-    if(generalConfiguration.comprCfg.padSelezionato<PAD_ENUM_SIZE){
+    if(generalConfiguration.comprCfg.padSelezionato >= PAD_ENUM_SIZE){
         dati[_BP_PADDLE_MARGINE] = generalConfiguration.biopsyCfg.conf.Z_homePosition;
-    }else{
-        int pos_posizionatore = generalConfiguration.biopsyCfg.conf.Z_homePosition - generalConfiguration.biopsyCfg.conf.offsetBasePosizionatore;
+    }else{        
         int pos_paddle = _DEVREG(RG215_DOSE,PCB215_CONTEST) - generalConfiguration.biopsyCfg.conf.offsetPad;
-        int margine = pos_posizionatore - pos_paddle;
+        int margine = generalConfiguration.biopsyCfg.conf.Z_basePosizionatore - pos_paddle - generalConfiguration.biopsyCfg.Z/10;
         if(margine < 0) margine = 0;
         if(margine > generalConfiguration.biopsyCfg.conf.Z_homePosition) margine = generalConfiguration.biopsyCfg.conf.Z_homePosition;
         dati[_BP_PADDLE_MARGINE] = (unsigned char) margine;
@@ -511,14 +508,16 @@ bool config_biopsy(bool setmem, unsigned char blocco, unsigned char* buffer, uns
   printf("AGGIORNAMENTO CONFIG BIOPSIA:\n");
 
   printf(" z-Home=%d\n",buffer[0]);
-  printf(" offsetPad=%d\n",buffer[1]);
-  printf(" margineRisalita=%d\n",buffer[2]);
-  printf(" marginePosizionamento=%d\n",buffer[3]);
+  printf(" z-Base=%d\n",buffer[1]);
+  printf(" offsetPad=%d\n",buffer[2]);
+  printf(" margineRisalita=%d\n",buffer[3]);
+  printf(" marginePosizionamento=%d\n",buffer[4]);
 
   generalConfiguration.biopsyCfg.conf.Z_homePosition = buffer[0];
-  generalConfiguration.biopsyCfg.conf.offsetPad = buffer[1];
-  generalConfiguration.biopsyCfg.conf.margineRisalita = buffer[2];
-  generalConfiguration.biopsyCfg.conf.marginePosizionamento = buffer[3];
+  generalConfiguration.biopsyCfg.conf.Z_basePosizionatore = buffer[1];
+  generalConfiguration.biopsyCfg.conf.offsetPad = buffer[2];
+  generalConfiguration.biopsyCfg.conf.margineRisalita = buffer[3];
+  generalConfiguration.biopsyCfg.conf.marginePosizionamento = buffer[4];
 
   // L'impostazione dei margini di posizionamento richiede un aggiornamento
   // dei parametri del compressore chge si deve adeguare a nuovi vincoli

@@ -279,6 +279,11 @@ void ser422_driver(uint32_t initial_data)
       if(rawTx)
       {
          rawTx=FALSE;
+         pSer422PendingCommand->rxdata[0] = rx_buffer[0];
+         pSer422PendingCommand->rxdata[1] = rx_buffer[1];
+         pSer422PendingCommand->rxdata[2] = rx_buffer[2];
+         pSer422PendingCommand->rxdata[3] = rx_buffer[3];
+
          pSer422PendingCommand->retcode=SER422_RAWOK;
          pSer422PendingCommand->data1 = rx_buffer[1];
          pSer422PendingCommand->data2 = rx_buffer[2];
@@ -725,12 +730,14 @@ void Ser422SendRaw(unsigned char addr, unsigned char data1, unsigned char data2,
     buffer[0]=0;
     buffer[1]=0;
     buffer[2]=0;
+    buffer[3]=0;
     return;
   }
 
-  buffer[0]=(0x1F & addr);
-  buffer[1]=frame.data1;
-  buffer[2]=frame.data2;
+  buffer[0]=frame.rxdata[0];
+  buffer[1]=frame.rxdata[1];
+  buffer[2]=frame.rxdata[2];
+  buffer[3]=frame.rxdata[3];
   return;
   
 }

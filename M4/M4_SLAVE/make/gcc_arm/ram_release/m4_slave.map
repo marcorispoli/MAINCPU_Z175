@@ -2210,113 +2210,112 @@ END GROUP
                 0x3f004498       0xe0 ./gcc_arm/ram_release/obj/main.o
                 0x3f004498                device_startup_Task
  .text.main_task
-                0x3f004578      0x55c ./gcc_arm/ram_release/obj/main.o
+                0x3f004578      0x560 ./gcc_arm/ram_release/obj/main.o
                 0x3f004578                main_task
  .text.mainStartProcesses
-                0x3f004ad4       0x34 ./gcc_arm/ram_release/obj/main.o
-                0x3f004ad4                mainStartProcesses
+                0x3f004ad8       0x34 ./gcc_arm/ram_release/obj/main.o
+                0x3f004ad8                mainStartProcesses
  .text.mccOpenPort
-                0x3f004b08       0x12 ./gcc_arm/ram_release/obj/mccClass.o
-                0x3f004b08                mccOpenPort
+                0x3f004b0c       0x12 ./gcc_arm/ram_release/obj/mccClass.o
+                0x3f004b0c                mccOpenPort
  .text.mccSetChecksum
-                0x3f004b1a       0x1e ./gcc_arm/ram_release/obj/mccClass.o
-                0x3f004b1a                mccSetChecksum
+                0x3f004b1e       0x1e ./gcc_arm/ram_release/obj/mccClass.o
+                0x3f004b1e                mccSetChecksum
  .text.mccSendBuffer
-                0x3f004b38       0x8c ./gcc_arm/ram_release/obj/mccClass.o
-                0x3f004b38                mccSendBuffer
+                0x3f004b3c       0x8c ./gcc_arm/ram_release/obj/mccClass.o
+                0x3f004b3c                mccSendBuffer
  .text.mccLibNotify
-                0x3f004bc4       0x5c ./gcc_arm/ram_release/obj/mccClass.o
+                0x3f004bc8       0x5c ./gcc_arm/ram_release/obj/mccClass.o
  .text.mccIsFrameCorrect
-                0x3f004c20       0x28 ./gcc_arm/ram_release/obj/mccClass.o
-                0x3f004c20                mccIsFrameCorrect
+                0x3f004c24       0x28 ./gcc_arm/ram_release/obj/mccClass.o
+                0x3f004c24                mccIsFrameCorrect
  .text.mccRxFrame
-                0x3f004c48       0x32 ./gcc_arm/ram_release/obj/mccClass.o
-                0x3f004c48                mccRxFrame
+                0x3f004c4c       0x32 ./gcc_arm/ram_release/obj/mccClass.o
+                0x3f004c4c                mccRxFrame
  .text.mccGuiNotify
-                0x3f004c7a       0x1a ./gcc_arm/ram_release/obj/mccClass.o
-                0x3f004c7a                mccGuiNotify
+                0x3f004c7e       0x1a ./gcc_arm/ram_release/obj/mccClass.o
+                0x3f004c7e                mccGuiNotify
  .text.getPd4CiA402Status
-                0x3f004c94       0xa2 ./gcc_arm/ram_release/obj/pd4.o
-                0x3f004c94                getPd4CiA402Status
+                0x3f004c98       0xa2 ./gcc_arm/ram_release/obj/pd4.o
+                0x3f004c98                getPd4CiA402Status
  .text.Pd4CiA402ShutdownCommand
-                0x3f004d36       0x5a ./gcc_arm/ram_release/obj/pd4.o
-                0x3f004d36                Pd4CiA402ShutdownCommand
+                0x3f004d3a       0x5a ./gcc_arm/ram_release/obj/pd4.o
+                0x3f004d3a                Pd4CiA402ShutdownCommand
  .text.Pd4CiA402SwitchOnCommand
-                0x3f004d90       0x5a ./gcc_arm/ram_release/obj/pd4.o
-                0x3f004d90                Pd4CiA402SwitchOnCommand
+                0x3f004d94       0x5a ./gcc_arm/ram_release/obj/pd4.o
+                0x3f004d94                Pd4CiA402SwitchOnCommand
  .text.Pd4CiA402DisableVoltageCommand
-                0x3f004dea       0x56 ./gcc_arm/ram_release/obj/pd4.o
-                0x3f004dea                Pd4CiA402DisableVoltageCommand
+                0x3f004dee       0x56 ./gcc_arm/ram_release/obj/pd4.o
+                0x3f004dee                Pd4CiA402DisableVoltageCommand
  .text.Pd4CiA402EnableOperationCommand
-                0x3f004e40       0x62 ./gcc_arm/ram_release/obj/pd4.o
-                0x3f004e40                Pd4CiA402EnableOperationCommand
+                0x3f004e44       0x62 ./gcc_arm/ram_release/obj/pd4.o
+                0x3f004e44                Pd4CiA402EnableOperationCommand
  .text.Pd4CiA402DisableOperationCommand
-                0x3f004ea2       0x62 ./gcc_arm/ram_release/obj/pd4.o
-                0x3f004ea2                Pd4CiA402DisableOperationCommand
+                0x3f004ea6       0x62 ./gcc_arm/ram_release/obj/pd4.o
+                0x3f004ea6                Pd4CiA402DisableOperationCommand
  .text.Pd4CiA402SetControlOD
-                0x3f004f04       0x5a ./gcc_arm/ram_release/obj/pd4.o
-                0x3f004f04                Pd4CiA402SetControlOD
+                0x3f004f08       0x5a ./gcc_arm/ram_release/obj/pd4.o
+                0x3f004f08                Pd4CiA402SetControlOD
  .text.Pd4CiA402SetOperatingOD
-                0x3f004f5e       0x28 ./gcc_arm/ram_release/obj/pd4.o
-                0x3f004f5e                Pd4CiA402SetOperatingOD
+                0x3f004f62       0x28 ./gcc_arm/ram_release/obj/pd4.o
+                0x3f004f62                Pd4CiA402SetOperatingOD
  .text.Pd4CiA402FaultReset
-                0x3f004f86       0x8c ./gcc_arm/ram_release/obj/pd4.o
-                0x3f004f86                Pd4CiA402FaultReset
- *fill*         0x3f005012        0x2 
+                0x3f004f8a       0x8c ./gcc_arm/ram_release/obj/pd4.o
+                0x3f004f8a                Pd4CiA402FaultReset
+ *fill*         0x3f005016        0x2 
  .text.Pd4CiA402QuickStop
-                0x3f005014       0x58 ./gcc_arm/ram_release/obj/pd4.o
-                0x3f005014                Pd4CiA402QuickStop
+                0x3f005018       0x58 ./gcc_arm/ram_release/obj/pd4.o
+                0x3f005018                Pd4CiA402QuickStop
  .text.canopenUploadObjectDictionaryList
-                0x3f00506c       0x54 ./gcc_arm/ram_release/obj/pd4.o
-                0x3f00506c                canopenUploadObjectDictionaryList
+                0x3f005070       0x54 ./gcc_arm/ram_release/obj/pd4.o
+                0x3f005070                canopenUploadObjectDictionaryList
  .text.uploadOjectDictionary
-                0x3f0050c0      0x164 ./gcc_arm/ram_release/obj/pd4.o
-                0x3f0050c0                uploadOjectDictionary
+                0x3f0050c4      0x164 ./gcc_arm/ram_release/obj/pd4.o
+                0x3f0050c4                uploadOjectDictionary
  .text.caricamentoNanojProgram
-                0x3f005224      0x2c8 ./gcc_arm/ram_release/obj/pd4.o
-                0x3f005224                caricamentoNanojProgram
+                0x3f005228      0x2c8 ./gcc_arm/ram_release/obj/pd4.o
+                0x3f005228                caricamentoNanojProgram
  .text.pcb240_driver
-                0x3f0054ec      0x518 ./gcc_arm/ram_release/obj/ser240.o
-                0x3f0054ec                pcb240_driver
+                0x3f0054f0      0x518 ./gcc_arm/ram_release/obj/ser240.o
+                0x3f0054f0                pcb240_driver
  .text.PCB240SendCommand
-                0x3f005a04       0x74 ./gcc_arm/ram_release/obj/ser240.o
-                0x3f005a04                PCB240SendCommand
+                0x3f005a08       0x74 ./gcc_arm/ram_release/obj/ser240.o
+                0x3f005a08                PCB240SendCommand
  .text.pcb240UpdateRevision
-                0x3f005a78       0x6c ./gcc_arm/ram_release/obj/ser240.o
-                0x3f005a78                pcb240UpdateRevision
+                0x3f005a7c       0x6c ./gcc_arm/ram_release/obj/ser240.o
+                0x3f005a7c                pcb240UpdateRevision
  .text.pcb240PowerOffCommand
-                0x3f005ae4       0x58 ./gcc_arm/ram_release/obj/ser240.o
-                0x3f005ae4                pcb240PowerOffCommand
+                0x3f005ae8       0x58 ./gcc_arm/ram_release/obj/ser240.o
+                0x3f005ae8                pcb240PowerOffCommand
  .text.canOpenSlaveInit
-                0x3f005b3c      0x288 ./gcc_arm/ram_release/obj/slave_can.o
-                0x3f005b3c                canOpenSlaveInit
+                0x3f005b40      0x288 ./gcc_arm/ram_release/obj/slave_can.o
+                0x3f005b40                canOpenSlaveInit
  .text.Can_RxErrors_Task
-                0x3f005dc4       0xf4 ./gcc_arm/ram_release/obj/slave_can.o
-                0x3f005dc4                Can_RxErrors_Task
+                0x3f005dc8       0xf4 ./gcc_arm/ram_release/obj/slave_can.o
+                0x3f005dc8                Can_RxErrors_Task
  .text.Inputs_To_Master_Task
-                0x3f005eb8       0xa0 ./gcc_arm/ram_release/obj/slave_can.o
-                0x3f005eb8                Inputs_To_Master_Task
+                0x3f005ebc       0xa0 ./gcc_arm/ram_release/obj/slave_can.o
+                0x3f005ebc                Inputs_To_Master_Task
  .text.Outputs_From_Master_Task
-                0x3f005f58       0x70 ./gcc_arm/ram_release/obj/slave_can.o
-                0x3f005f58                Outputs_From_Master_Task
+                0x3f005f5c       0x70 ./gcc_arm/ram_release/obj/slave_can.o
+                0x3f005f5c                Outputs_From_Master_Task
  .text.trx_tx_Task
-                0x3f005fc8       0x14 ./gcc_arm/ram_release/obj/slave_can.o
-                0x3f005fc8                trx_tx_Task
+                0x3f005fcc       0x14 ./gcc_arm/ram_release/obj/slave_can.o
+                0x3f005fcc                trx_tx_Task
  .text.arm_tx_Task
-                0x3f005fdc       0x14 ./gcc_arm/ram_release/obj/slave_can.o
-                0x3f005fdc                arm_tx_Task
+                0x3f005fe0       0x14 ./gcc_arm/ram_release/obj/slave_can.o
+                0x3f005fe0                arm_tx_Task
  .text.lenze_tx_Task
-                0x3f005ff0        0x4 ./gcc_arm/ram_release/obj/slave_can.o
-                0x3f005ff0                lenze_tx_Task
+                0x3f005ff4        0x4 ./gcc_arm/ram_release/obj/slave_can.o
+                0x3f005ff4                lenze_tx_Task
  .text.sendActuatorFrameToMaster
-                0x3f005ff4       0x3c ./gcc_arm/ram_release/obj/slave_can.o
-                0x3f005ff4                sendActuatorFrameToMaster
+                0x3f005ff8       0x3c ./gcc_arm/ram_release/obj/slave_can.o
+                0x3f005ff8                sendActuatorFrameToMaster
  .text.funcCiA402_QuickStopActive
-                0x3f006030       0x38 ./gcc_arm/ram_release/obj/trx.o
-                0x3f006030                funcCiA402_QuickStopActive
+                0x3f006034       0x38 ./gcc_arm/ram_release/obj/trx.o
+                0x3f006034                funcCiA402_QuickStopActive
  .text._readInputs
-                0x3f006068       0x44 ./gcc_arm/ram_release/obj/trx.o
- *fill*         0x3f0060ac        0x4 
+                0x3f00606c       0x44 ./gcc_arm/ram_release/obj/trx.o
  .text.readTrxPosition
                 0x3f0060b0       0x90 ./gcc_arm/ram_release/obj/trx.o
  .text.funcCiA402_SwitchOnDisabled

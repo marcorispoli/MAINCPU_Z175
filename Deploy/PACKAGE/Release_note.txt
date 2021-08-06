@@ -1,0 +1,2 @@
+DA FARE:
+ - Armonizzare la collimazione Manuale con l'AWS

@@ -22,8 +22,10 @@ bool BiopsyDriverGetStat(unsigned char* statL, unsigned char* statH, bool reset)
     Ser422SendRaw(tx_buffer[0], tx_buffer[1], tx_buffer[2], rx_buffer, 5);
 #endif
 
+
   if(rx_buffer[0]==tx_buffer[0])
   {
+
       *statL = rx_buffer[1];
       *statH = rx_buffer[2];
       return TRUE;

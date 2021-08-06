@@ -647,8 +647,8 @@ void BiopsyPage::buttonActivationNotify(int id, bool status,int opt)
     // Gestione pulsanti di step Z per biopsia
     if(isMaster)
     {
-        if(pbutton == pulsanteBiopStepUp) pBiopsy->moveDecZ();
-        else if(pbutton == pulsanteBiopStepDown) pBiopsy->moveIncZ();
+        if(pbutton == pulsanteBiopStepUp) pBiopsy->moveDecZ(0);
+        else if(pbutton == pulsanteBiopStepDown) pBiopsy->moveIncZ(0);
         else if(pbutton == pulsanteBiopHome) pBiopsy->moveHome(0);
     }
 

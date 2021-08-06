@@ -17,9 +17,8 @@
 // #define GET_BIOPSY_Z        "GetBiopsyZ"
 
 #define SET_BIOPSY_MOVE        "SetBiopsyMove"      // Muove ad un punto qualsiasi XYZ
+#define GET_BIOPSY_DATA        "GetBiopsyData"      // Chiede tutti i dati peculiari della torretta
 #define SET_BIOPSY_CONFIG      "SetBiopsyConfig"    // Configura la biopsia
-#define SET_BIOPSY_PARAM       "SetBiopsyParam"     // Imposta i dati che dipendono dalla AWS
-#define GET_BIOPSY_PARAM       "GetBiopsyParam"     // Chiede tutti i dati peculiari della torretta
 
 
 #define GET_SPECIMEN        "GetSpecimen"
@@ -351,8 +350,7 @@ public:
 
     // GESTIONE BIOPSIA
     void  handleBiopsyMove(protoConsole* frame,protoConsole* answer);      // Posizionamento del cursore
-    void  handleGetBiopsyParam(protoConsole* frame,protoConsole* answer);        // Richiede i dati di posizione della Biopsia
-    void  handleSetBiopsyParam(protoConsole* frame,protoConsole* answer);        // Richiede i dati di posizione della Biopsia
+    void  handleGetBiopsyData(protoConsole* frame,protoConsole* answer);        // Richiede i dati di posizione della Biopsia
     void  handleSetBiopsyConfig(protoConsole* frame,protoConsole* answer);      // Aggiorna la configurazione della calibrazione
 
     int  handleSetLingua(protoConsole* frame);          // Impostazione della lingua

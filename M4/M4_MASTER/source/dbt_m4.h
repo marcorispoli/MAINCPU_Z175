@@ -1,9 +1,9 @@
 #ifndef _DBT_M4_H
 #define _DBT_M4_H
 
-#define REVISIONE "1.4.0"
+#define REVISIONE "1.5.0"
 #define REVMAJ 1
-#define REVMIN 4
+#define REVMIN 5
 #define REV_BETA 0
 
 #define M4_MASTER
@@ -11,22 +11,7 @@
 /*______________________________________________________________________________
 
 
-    REV 1.0 .0
-    FIRMWARE PROCESSORE M4 MASTER, PROGETTO DMD
 
-________________________________________________________________________________
-
-RELEASE 1.1 - 17/07/2020
-   BUG: corretta gestione posizione filtro raw in Tomo
-
-RELEASE 1.2 - 28/01/2021
-   Il posizionamento della tomo in Home avviene con la velocità 2D
-
-________________________________________________________________________________
-RELEASE 1.3 : 25/02/2021
-    - BUG gestione sblocco rotazione per Biopsia:
-        * Con rotazione motorizzata: se si preme il pulsante di sblocco
-          la rotazione si sblocca indipendentemente dalla compressione in corso;
 
 
 _____________________________________________________________________________*/

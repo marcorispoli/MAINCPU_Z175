@@ -544,12 +544,9 @@ void console::consoleRxHandler(QByteArray rxbuffer)
     }else if(comando==SET_BIOPSY_MOVE)
     {
         handleBiopsyMove(&protocollo, &answ);
-    }else if(comando==GET_BIOPSY_PARAM)
+    }else if(comando==GET_BIOPSY_DATA)
     {
-        handleGetBiopsyParam(&protocollo, &answ);
-    }else if(comando==SET_BIOPSY_PARAM)
-    {
-        handleSetBiopsyParam(&protocollo, &answ);
+        handleGetBiopsyData(&protocollo, &answ);
     }else if(comando==SET_BIOPSY_CONFIG)
     {
          handleSetBiopsyConfig(&protocollo, &answ);
@@ -4627,13 +4624,16 @@ bool console::handleSetIaRxData(protoConsole* frame, protoConsole* answer)
 }
 
 /*
-
+    PAR0: X (dmm)
+    PAR1: Y (dmm)
+    PAR2: Z (dmm)
+    PAR3: NEEDLE TO HOME (mm)
 
  */
 void console::handleBiopsyMove(protoConsole* frame, protoConsole* answer)
 {
     // Controllo sulla dimensione dei parametri
-    if(frame->parametri.size() != 3 ) {
+    if(frame->parametri.size() != 4 ) {
         emit consoleTxHandler(answer->answToQByteArray("NOK 1"));
         return;
     }
@@ -4642,18 +4642,21 @@ void console::handleBiopsyMove(protoConsole* frame, protoConsole* answer)
     unsigned short targetY = frame->parametri[1].toUInt(); // dam
     unsigned short targetZ = frame->parametri[2].toUInt(); // dam
 
-    // Se la distanza tra il target e la posizione corrente è <= 1mm
+    // Imposta la distanza della punta dell'ago dalla posizione di home
+    pBiopsy->needle_home = frame->parametri[3].toInt();
+
+    // Se la distanza tra il target e la posizione corrente è <= .5 mm
     // si considera il target già raggiunto
-    if ( (abs(( int) targetX - (int) pBiopsy->curX_dmm) <= 10) &&
-         (abs(( int) targetY - (int) pBiopsy->curY_dmm) <= 10) &&
-         (abs(( int) targetZ - (int) pBiopsy->curZ_dmm) <= 10)
+    if ( (abs(( int) targetX - (int) pBiopsy->curX_dmm) <= 5) &&
+         (abs(( int) targetY - (int) pBiopsy->curY_dmm) <= 5) &&
+         (abs(( int) targetZ - (int) pBiopsy->curZ_dmm) <= 5)
         ){
         emit consoleTxHandler(answer->answToQByteArray("OK 0"));
         return;
     }
 
     // Movimento in Home
-    if( (targetX <= 10) && (targetY <= 10) && (targetZ <= 10) ) {
+    if( (targetX <= 5) && (targetY <= 5) && (targetZ <= 5) ) {
         pBiopsy->moveHome(frame->id);
         emit consoleTxHandler(answer->answToQByteArray("OK 255"));
     }
@@ -4682,7 +4685,7 @@ void console::handleBiopsyMove(protoConsole* frame, protoConsole* answer)
     - Posizione lateralità
 
  */
-void console::handleGetBiopsyParam(protoConsole* frame, protoConsole* answer)
+void console::handleGetBiopsyData(protoConsole* frame, protoConsole* answer)
 {
     QString stringa = "OK ";
     if(pBiopsy->connected)  stringa += QString("1 ");
@@ -4707,27 +4710,7 @@ void console::handleGetBiopsyParam(protoConsole* frame, protoConsole* answer)
     return;
 }
 
-/*
- *  Impostazione di alcuni parametri operativi sotto il controllo della AWS
- *  - Impostazione Distanza punta ago e home in mm
- *
- */
-void console::handleSetBiopsyParam(protoConsole* frame, protoConsole* answer)
-{
-    if(frame->parametri.size() !=1 ){
-        emit consoleTxHandler(answer->answToQByteArray(QString("NOK 1")));
-    }
 
-    // Imposta la distanza della punta dell'ago dalla posizione di home
-    pBiopsy->needle_home = frame->parametri[0].toInt();
-    pBiopsy->calcoloMargini();
-
-    // Riceve tutto il set di parametri ricalcolati
-    handleGetBiopsyParam(frame, answer);
-
-    return ;
-
-}
 
 void console::handleSetBiopsyConfig(protoConsole* frame, protoConsole* answer)
 {

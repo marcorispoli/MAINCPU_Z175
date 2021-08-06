@@ -1135,7 +1135,7 @@ void pcb215VerifyComprData(void)
       if(generalConfiguration.biopsyCfg.connected==TRUE)
       {
         // Ricalcolo del limiti sulla base della configurazione ricevuta
-        padLimitPosition = generalConfiguration.biopsyCfg.conf.offsetPad +  generalConfiguration.biopsyCfg.conf.Z_homePosition - generalConfiguration.biopsyCfg.conf.margineRisalita - generalConfiguration.biopsyCfg.Z/10;
+        padLimitPosition = ( generalConfiguration.biopsyCfg.conf.Z_basePosizionatore - generalConfiguration.biopsyCfg.Z/10 ) + (generalConfiguration.biopsyCfg.conf.offsetPad - generalConfiguration.biopsyCfg.conf.margineRisalita);
       }
       else if(IS_VALID_PAD)
       {
