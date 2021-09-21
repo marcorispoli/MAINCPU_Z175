@@ -240,6 +240,7 @@ public:
 
 public:
     genCnf_Str      genCnf;     // parametri generici di gestione Generatore
+    bool            airTubeModel; // Tubo ad aria
 
     bool            validated;      // La selezione corrente è valida    
     float           selectedKv;     // KV selezionati reali

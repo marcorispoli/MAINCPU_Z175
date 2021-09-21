@@ -1,56 +1,10 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-
 #define APPREVMAJ   1
-#define APPREVMIN   4
+#define APPREVMIN   5
 #define BETAREV     0
 
-// ___________________________________________________________________________________________
-/*
-    RELEASE 1.3.0: 26/02/2021
-
-    - Calibrazione compressore: aggiunto controlli sul risultato della calibrazione
-    - IRS: aggiunto test ciclico sulle lame del collimatore
-    - IRS: aggiunto comandi per il Backup/Restore
-
-    ___________________________________________________________________________________________
-    RELEASE 1.4.0: 28/06/2021
-
-    1) Ristrutturato files di calibrazione compressore:
-       - Sostituiti i files compressore.cnf, calibpad.cnf con pad.cnf;
-       - Nella fase di istallazione il nuovo software leggeraà il contenuto dei
-         vecchi files e li sostituirà con il nuovo.
-
-    2) Aggiunto il PAD PROSTHESIS che sostituisce il D75 a contatto
-    3) Aggiunto compressore 9x9 per ingrandimento
-
-    4) Modificato il formato del file di collimazione.
-       Il file di confiogurazione passa a rev 3. Il file precedente viene letto
-       e gli viene aggiunta la coppia di PAD nuovi.
-
-    5) Aggiunta gestione piastrina di collimazione per Frustoli
-       - Aggiunto sync SetSpecimen
-       - Aggiunto Console: GetSpecimen
-       - Gestione codice Piastrina di collimazione
-       - Attivazione collimazione speciale se Biopsia inserita
-
-       - debug -> piombo / frustoli
-       - Manca aggiunta grafica su pagina biopsia
-       - Manca comunicazione dello stato a AWS
-
-    6)  Aggiunta collimazione Manuale:
-        - Pannello Operativo
-        - Pannello di service
-        - Comandi IRS?
-
-    7) Aggiunta gestione Parcheggio con rotazione Automatica o Manuale
-       - Aggiunto un pannello di calibrazione del punto di parcheggio,
-       - Aggiunti 6 messaggi di allarme/Warning relativi al parcheggio
-
-
-*/
-//////////////////////////////////////////////////////////////////////////////////////////////
 
 #define _LOCAL_SERVICE_PORT  10006
 

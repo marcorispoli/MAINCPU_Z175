@@ -109,6 +109,7 @@ void main_task(uint32_t initial_data)
 
 
  generalConfiguration.isInCompression = false;
+ generalConfiguration.airTubeModel = false; // Inizializza la modalità
 
  mcc_count = 0;
  
@@ -302,6 +303,7 @@ void mainPrintHardwareConfig(void){
 
     if(generalConfiguration.gantryCfg.highSpeedStarter) printf("IAE HIGH SPEED STARTER\n");
     else printf("INTERNAL LOW SPEED STARTER\n");
+
 
 }
 

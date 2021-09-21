@@ -1631,8 +1631,10 @@ bool Config::sendMccConfigCommand(unsigned char cmd){
         case CONFIG_GENERAL:
             if(userCnf.demoMode) pData[0] = 1;
             else pData[0] = 0;
+            if(pGeneratore->airTubeModel) pData[1] = 1;
+            else pData[1] = 0;
 
-            buflen += 1;
+            buflen += 2;
         break;
 
         default:

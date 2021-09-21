@@ -1,9 +1,9 @@
 #ifndef _DBT_M4_H
 #define _DBT_M4_H
 
-#define REVISIONE "1.4.0"
+#define REVISIONE "1.5.0"
 #define REVMAJ 1
-#define REVMIN 4
+#define REVMIN 5
 #define REV_BETA 0
 
 #define M4_MASTER
@@ -200,6 +200,7 @@ typedef struct
     bool                deviceConnected; // Flag di avvenuta configurazione e ricezione delle relative revisioni
     unsigned char       candevice_error_startup; // Errori durante la fase di startup
 
+
     trxConfig_Str       trxCfg;         // Configurazione passata da GUI
     armConfig_Str       armCfg;         // Configurazione passata da GUI
     lenzeConfig_Str     lenzeCfg;       // Configurazione passata da GUI
@@ -233,7 +234,7 @@ typedef struct
     // Loader
     bool loaderOn;      // Flag di loader attivo    
     bool demoMode;      // Se attivo impone la modalità Demo
-
+    bool airTubeModel;  // Gestione Tubo ad Aria
    bool collimator_model_error;
 
 }deviceCfg_Str;

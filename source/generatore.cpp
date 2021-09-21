@@ -494,6 +494,25 @@ bool Generatore::openTube(QString tubeDir)
     // Lettura dati di calibrazione starter
     readStarterFile();
 
+    bool airTube;
+
+    // Impostazione della modalità di sistema di gestione del Tubo ad Aria
+    if(tubeDir.contains("XK1016T"))   airTube=true;
+    else airTube = false;
+
+    // Se la configurazione di sistema è già stata inviata allora occorre riaggiornarla
+    // per consentire al driver del collimatore  di gestire da subito la temperatura del tubo
+    // nella maniera corretta
+    if(airTubeModel != airTube){
+        airTubeModel = airTube;
+        if(pConfig->startupCompleted){
+            pConfig->updateGeneral();
+        }
+    }
+
+
+
+
     return TRUE;
 }
 
