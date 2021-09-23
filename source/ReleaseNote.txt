@@ -5,6 +5,8 @@
     - In generatore.h/cpp è stato discriminato dal nome del tubo il modello ad aria.
       Quando si apre un tubo ad aria viene aggiornato il driver tra i generalConfiguration
     - In Collimatore: la gestione degli allarmi viene fatta localmente e non più testando il flag del collimatore
+    - BUGFIX: l'allarme sensore o temperatura viene gestito dal modulo Generatore nella sua notify.
+    - BUGFIX: aggiornamento temperatura cuffia all'apertura studio
 
     M4_MASTER   1.5
     - Gestione del nuovo flag "generalConfiguration.airTubeModel"

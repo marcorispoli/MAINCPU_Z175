@@ -383,14 +383,16 @@ void Generatore::pcb190Notify(unsigned char id, unsigned char cmd, QByteArray da
         else if(faultIFilamento) dgn_fault_code = GEN_IFIL_FAULT;
         else if(faultFilAmpTemp) dgn_fault_code = GEN_AMPTEMP_FAULT;
         else if(fault_starter)  dgn_fault_code = data[PCB190_FAULTS];
-        else dgn_fault_code=0;
+        else if(pCollimatore->alrCuffia) dgn_fault_code=ERROR_CUFFIA_CALDA;
+        else if(pCollimatore->alrSensCuffia) dgn_fault_code=ERROR_SENS_CUFFIA;
+        else dgn_fault_code = 0;
 
 
         // Attivazione flag generale di fault per impedire l'attivazione raggi
         if(dgn_fault_code) dgn_fault=true;
         else dgn_fault=false;
         PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_GEN,dgn_fault_code);
-        //ApplicationDatabase.setData(_DB_FAULT_CODE_GEN,fault_code,0);
+
 
 
     }

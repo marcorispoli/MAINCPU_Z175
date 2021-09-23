@@ -143,11 +143,11 @@ void Collimatore::pcb249U1Notify(unsigned char id, unsigned char notifyCode, QBy
             }else{                
                 tempCuffia = (int) buffer.at(1);
                 if((tempCuffia<5)||(tempCuffia>69)){
-                    if(!alrSensCuffia) PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_GEN, ERROR_SENS_CUFFIA);
+                    //if(!alrSensCuffia) PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_GEN, ERROR_SENS_CUFFIA);
                     alrSensCuffia = TRUE;
                 }else if(tempCuffia > pConfig->userCnf.tempCuffiaAlr){
                     alrSensCuffia = FALSE;
-                    if(!alrCuffia) PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_GEN, ERROR_CUFFIA_CALDA);
+                    //if(!alrCuffia) PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_GEN, ERROR_CUFFIA_CALDA);
                     alrCuffia = TRUE;
                 }else if((alrCuffia) && (tempCuffia > pConfig->userCnf.tempCuffiaAlrOff)){
                     // Continua a rimanere in allarme fino a discesa
@@ -155,7 +155,7 @@ void Collimatore::pcb249U1Notify(unsigned char id, unsigned char notifyCode, QBy
 
                 }else{
                     // Nessuna condizione di allarme attiva: reset allarmi
-                    if((alrCuffia)||(alrSensCuffia)) PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_GEN, 0);
+                    //if((alrCuffia)||(alrSensCuffia)) PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_GEN, 0);
                     alrCuffia = FALSE;
                     alrSensCuffia = FALSE;
                 }
@@ -163,8 +163,9 @@ void Collimatore::pcb249U1Notify(unsigned char id, unsigned char notifyCode, QBy
             }
 
             // Aggiunta dello status
-            if(tempCuffia>pConfig->userCnf.tempCuffiaAlr) tempCuffia|=0x0200;
-            else if(tempCuffia>pConfig->userCnf.tempCuffiaAlrOff) tempCuffia|=0x0100;
+            if(alrSensCuffia) tempCuffia|=0x0400;
+            else if(tempCuffia > pConfig->userCnf.tempCuffiaAlr) tempCuffia|=0x0200;
+            else if(tempCuffia > pConfig->userCnf.tempCuffiaAlrOff) tempCuffia|=0x0100;
             ApplicationDatabase.setData(_DB_T_CUFFIA,(int)tempCuffia, 0);
 
             // Cambio accessorio

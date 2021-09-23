@@ -400,6 +400,9 @@ void OpenStudyPage::openStudyEvent(void){
     // Aggiornato in funzione della lingua
     languageChanged();
 
+    // Aggiornamento temperatura Cuffia e Anodo
+    setTempCuffia(ApplicationDatabase.getDataI(_DB_T_CUFFIA));
+
     // Inizializzazioni gui guidata da Master
     if(!isMaster) return;
 
@@ -1050,9 +1053,20 @@ void OpenStudyPage::setTempCuffia(int temp)
     QString str;
     float hu;
 
+    // Se c'è un allarme sensore, la temperatura non viene mostrata
+
     // Estrazione status cuffia
     int cuffiaStat = (temp >> 8)& 0x00FF;
     temp = temp &0x00FF;
+
+    // Con errore sensore cuffia non si mostra la temperatura
+    if(cuffiaStat==4) {
+        cuffiaTLabel->labelColor=QColor(_RED_CUFFIA);
+        str = "!!!";
+        cuffiaTLabel->labelText=str;
+        cuffiaTLabel->update();
+        return;
+    }
 
     // 2 = ALLARME, 1=WARNING, 0 = OK
     if(cuffiaStat==2) cuffiaTLabel->labelColor=QColor(_RED_CUFFIA);
