@@ -21,6 +21,134 @@ static bool identificazioneAccessorio(void);
 static bool pcb249U1WaitBusy(int timeout);
 static unsigned char left, right, trap;
 
+// Valori compresi tra 118 (70°) (==0)  e 241 (==70)
+static unsigned char airTemperature[] = {
+    70, //118
+    70,
+    69, //120
+    69,
+    68, //122
+    68,
+    67, //124
+    67,
+    67, //126
+    66,
+    66, //128
+    65,
+    65, //130
+    64,
+    64, //132
+    63,
+    63, //134
+    63,
+    62, //136
+    62,
+    61, //138
+    61,
+    60, //140
+    60,
+    60, //142
+    59,
+    59, //144
+    58,
+    58, //146
+    57,
+    57, //148
+    57,
+    56, //150
+    56,
+    55, //152
+    54,
+    54, //154
+    54,
+    53,   //156
+    53,
+    52,   //158
+    52,
+    51,   //160
+    51,
+    51,   //162
+    50,
+    50,   //164
+    49,
+    49,   //166
+    48,
+    48,   //168
+    48,
+    47,   //170
+    47,
+    46,   //172
+    46,
+    45,   //174
+    45,
+    44,   //176
+    44,
+    43,   //178
+    43,
+    42,   //180
+    42,
+    42,   //182
+    41,
+    41,   //184
+    40,
+    40,   //186
+    39,
+    39,   //188
+    38,
+    38,   //190
+    37,
+    37,   //192
+    36,
+    36,   //194
+    35,
+    35,   //196
+    34,
+    34,   //198
+    33,
+    33,   //200
+    32,
+    32,   //202
+    31,
+    30,   //204
+    30,
+    29,   //206
+    29,
+    28,   //208
+    27,
+    27,   //210
+    26,
+    25,   //212
+    25,
+    24,   //214
+    23,
+    23,   //216
+    22,
+    21,   //218
+    21,
+    20,   //220
+    19,
+    19,   //222
+    18,
+    17,   //224
+    16,
+    16,   //226
+    15,
+    14,   //228
+    13,
+    12,   //230
+    11,
+    10,   //232
+    9,
+    8,   //234
+    7,
+    6,   //236
+    5,
+    4,   //238
+    3,
+    2,   //240
+    1,   //241
+    0    //242
+};
 void pcb249U1_driver(uint32_t taskRegisters)
 {
   int i;
@@ -503,19 +631,17 @@ bool identificazioneAccessorio(void)
 bool pcb249U1UpdateRegisters(void)
 {
   unsigned char data[3];
- 
-  static float temperatura = 255.0;
-  static float temperatura_b = 0;
-  static int back_temperatura = 0;
+  static int back_temperatura = 25;
   
   static bool update = true;
   static int polling_timer = 20;
+  static int temp_timer = 0;
   
   // Restart driver
   if(verifyUpdateRegisters)
   {
     verifyUpdateRegisters = FALSE;
-    temperatura = 255.0;
+    back_temperatura = 25;
     update=true;
   }
 
@@ -530,25 +656,52 @@ bool pcb249U1UpdateRegisters(void)
    // Richiede il codice accessorio   
    if(identificazioneAccessorio()==TRUE) update=TRUE;
    
-   // Richiede la temperatura
-   if(Ser422ReadRegister(_REGID(RG249U1_RG_TEMP),10,&CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   
 
-   // Non considera valori che si riferiscano a temperature sotto lo zero!
-   if((_DEVREGL(RG249U1_RG_TEMP,CONTEST)>140)&&(_DEVREGL(RG249U1_RG_TEMP,CONTEST)<190)){  
-     
-     if(temperatura==255.0) temperatura = (((float) _DEVREGL(RG249U1_RG_TEMP,CONTEST) * 500.0 / 255.0) - 273.0);
-     else temperatura =  temperatura * 0.9 + 0.1 * (((float) _DEVREGL(RG249U1_RG_TEMP,CONTEST) * 500.0 / 255.0) - 273.0);     
-     if(fabs(temperatura_b-temperatura) > 0.5) temperatura_b = temperatura;       
-     int val = (int) round(temperatura_b);
-     if(back_temperatura != val)
-     {
-       back_temperatura = val;
-       printf("TEMPERATURA TUBO: %d\n", back_temperatura);
-       update=TRUE;
-     }
-   }
-   
+   // Gestione temperatura diradata nel tempo
+
+   // Richiede la temperatura
+   if(temp_timer == 0){
+
+       if(Ser422ReadRegister(_REGID(RG249U1_RG_TEMP),10,&CONTEST)==_SER422_NO_ERROR){
+
+
+            float current_temperature;
+            if(generalConfiguration.airTubeModel){
+                 // Gestione della temperatura per il tubo ad aria
+                  unsigned char val = _DEVREGL(RG249U1_RG_TEMP,CONTEST);
+                  if(val < 118) current_temperature = 70;
+                  else if(val>242) current_temperature = 0;
+                  else{
+                      val-=118;
+                      current_temperature = (float) airTemperature[val];
+                  }
+
+            }else{
+                 // Gestione temperatura per tubo ad Olio
+                 unsigned char val = _DEVREGL(RG249U1_RG_TEMP,CONTEST);
+                 if(val <= 140) current_temperature = 0;
+                 else if(val >= 190) current_temperature = 70;
+                 else{
+                     current_temperature = (((float) _DEVREGL(RG249U1_RG_TEMP,CONTEST) * 500.0 / 255.0) - 273.0);
+                 }
+            }
+
+            if(back_temperatura != (int) current_temperature)
+            {
+                back_temperatura = (int) current_temperature;
+                printf("TEMPERATURA TUBO: %d\n", back_temperatura);
+                update=TRUE;
+            }
+
+            // Se la temperatura inizia a salire meglio controllare più frequentemente
+            if(back_temperatura < 40) temp_timer = 20;
+            else temp_timer = 5;
+
+       }
+
+   }else temp_timer--;
+
+
    // Legge il contenuto dell'inclinometro di bordo ma solo se non ci sono movimenti del tubo in corso
    if((generalConfiguration.trxExecution.run == false) ){
        if(Ser422Read16BitRegister(_REGID(RG249U1_GONIO16_TRX),4,&CONTEST) == _SER422_NO_ERROR){
@@ -558,9 +711,6 @@ bool pcb249U1UpdateRegisters(void)
            actuatorsUpdateAngles(); // Richiede di aggiornare l'insieme degli angoli
        }
    }
-
-
-
 
 
    // Aggiornamento comunque a polling
@@ -798,8 +948,8 @@ void colliArrayPrint(void){
   return ;
 #endif
 
-  printf("COLLIMATORE: SETUP TEMPERATURA CUFFIA:\n");
-  printf("TEMP ON:%d  TEMP OFF:%d\n\n\n",generalConfiguration.colliCfg.tempcuffia_on,generalConfiguration.colliCfg.tempcuffia_off);
+  //printf("COLLIMATORE: SETUP TEMPERATURA CUFFIA:\n");
+  //printf("TEMP ON:%d  TEMP OFF:%d\n\n\n",generalConfiguration.colliCfg.tempcuffia_on,generalConfiguration.colliCfg.tempcuffia_off);
 
 
   printf("CONFIGURAZIONE COLLIMATORE DINAMICO:\n");
@@ -848,14 +998,10 @@ bool config_pcb249U1(bool setmem, unsigned char blocco, unsigned char* buffer, u
     generalConfiguration.colliCfg.dynamicArray.tomoFront=buffer[0];
     generalConfiguration.colliCfg.dynamicArray.tomoBack=buffer[1];
 
-    // Formula temperatura cuffia: TRAW = 139 + 0.51 * T(°C)
-    generalConfiguration.colliCfg.tempcuffia_on = ((unsigned char)  ((float)buffer[2] * 0.51 + 139));
-    generalConfiguration.colliCfg.tempcuffia_off = ((unsigned char)  ((float)buffer[3] * 0.51 + 139));
+    // Allarme temperatura cuffia disabilitato nel device per non andare in conflitto con la gestione del tubo ad Aria
 
-    // Scrittura limiti di temperatura cuffia
-    Ser422WriteRegister(_REGID(RG249U1_PR_TEMP_ALR),generalConfiguration.colliCfg.tempcuffia_on, 10,&CONTEST);
-    Ser422WriteRegister(_REGID(RG249U1_PR_TEMP_ALR_OFF),generalConfiguration.colliCfg.tempcuffia_off, 10,&CONTEST);
-
+    //generalConfiguration.colliCfg.tempcuffia_on = ((unsigned char)  ((float)buffer[2] * 0.51 + 139));
+    //generalConfiguration.colliCfg.tempcuffia_off = ((unsigned char)  ((float)buffer[3] * 0.51 + 139));
 
     // Stampa il contenuto della collimazione dinamica
     colliArrayPrint();
@@ -864,6 +1010,17 @@ bool config_pcb249U1(bool setmem, unsigned char blocco, unsigned char* buffer, u
     
   }
   return true;
+}
+
+void pcb249U1SetTubeTemperatureThresholds(unsigned char alarm_on, unsigned char alarm_off, unsigned char fan_on, unsigned char fan_off){
+    // Scrittura limiti di temperatura cuffia
+    Ser422WriteRegister(_REGID(RG249U1_PR_TEMP_ALR),alarm_on, 10,&CONTEST);
+    Ser422WriteRegister(_REGID(RG249U1_PR_TEMP_ALR_OFF),alarm_off, 10,&CONTEST);
+
+    // Scrittura soglie di accensione ventola
+    Ser422WriteRegister(_REGID(RG249U1_PR_TEMP_L),fan_off, 10,&CONTEST);
+    Ser422WriteRegister(_REGID(RG249U1_PR_TEMP_H),fan_on, 10,&CONTEST);
+
 }
 
 void enterFreezeMode(void){

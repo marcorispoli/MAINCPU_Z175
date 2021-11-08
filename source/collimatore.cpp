@@ -140,27 +140,32 @@ void Collimatore::pcb249U1Notify(unsigned char id, unsigned char notifyCode, QBy
                 tempCuffia = 25; // 25Â° in demo
                 alrCuffia = FALSE;
                 alrSensCuffia = FALSE;
-            }else{
-                // Formula temperatura cuffia: TRAW = 139 + 0.51 * T(°C)
+            }else{                
                 tempCuffia = (int) buffer.at(1);
-                if((tempCuffia<5)||(tempCuffia>90)){
-                    if(!alrSensCuffia) PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_GEN, ERROR_SENS_CUFFIA);
+                if((tempCuffia<5)||(tempCuffia>69)){
+                    //if(!alrSensCuffia) PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_GEN, ERROR_SENS_CUFFIA);
                     alrSensCuffia = TRUE;
-                }else if(buffer.at(0) & 0x80)
-                {
+                }else if(tempCuffia > pConfig->userCnf.tempCuffiaAlr){
                     alrSensCuffia = FALSE;
-                    if(!alrCuffia) PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_GEN, ERROR_CUFFIA_CALDA);
+                    //if(!alrCuffia) PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_GEN, ERROR_CUFFIA_CALDA);
                     alrCuffia = TRUE;
-                }else
-                {   if((alrCuffia)||(alrSensCuffia)) PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_GEN, 0);
+                }else if((alrCuffia) && (tempCuffia > pConfig->userCnf.tempCuffiaAlrOff)){
+                    // Continua a rimanere in allarme fino a discesa
+                    alrCuffia = TRUE;
+
+                }else{
+                    // Nessuna condizione di allarme attiva: reset allarmi
+                    //if((alrCuffia)||(alrSensCuffia)) PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_GEN, 0);
                     alrCuffia = FALSE;
                     alrSensCuffia = FALSE;
                 }
+
             }
 
             // Aggiunta dello status
-            if(tempCuffia>pConfig->userCnf.tempCuffiaAlr) tempCuffia|=0x0200;
-            else if(tempCuffia>pConfig->userCnf.tempCuffiaAlrOff) tempCuffia|=0x0100;
+            if(alrSensCuffia) tempCuffia|=0x0400;
+            else if(tempCuffia > pConfig->userCnf.tempCuffiaAlr) tempCuffia|=0x0200;
+            else if(tempCuffia > pConfig->userCnf.tempCuffiaAlrOff) tempCuffia|=0x0100;
             ApplicationDatabase.setData(_DB_T_CUFFIA,(int)tempCuffia, 0);
 
             // Cambio accessorio
@@ -803,7 +808,7 @@ bool Collimatore::readConfigFile(void)
     int i=0;
     colliTomoConf_Str* pTomo;
     int pad;
-    int fileRevision;
+    int fileRevision = COLLI_CNF_REV;
 
     filename =  QString(COLLICFG);
 
@@ -1018,7 +1023,7 @@ bool Collimatore::storeConfigFile(void)
     QString command;
     QString frame;
 
-    int i=0,j=0;
+    int i=0;
 
     filename =  QString(COLLICFG);
     //filenamecpy = "collitemp.cnf";

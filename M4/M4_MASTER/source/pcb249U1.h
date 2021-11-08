@@ -74,10 +74,10 @@ Data di Creazione: 01/11/2014
   #define RG249U1_RG_PROT          2,_PSYS+6    ,_BNK01,_8BIT ,_RD, _VL, (unsigned short)0 // Flag di stato per la collimazione
 
   // Parametri per il controllo della temperatura della cuffia
-  #define RG249U1_PR_TEMP_L        3,_PADDR+0    ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0 // posizionamento 2D, formato User        
-  #define RG249U1_PR_TEMP_H        4,_PADDR+1    ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0 // posizionamento 2D, formato User        
-  #define RG249U1_PR_TEMP_ALR      5,_PADDR+2    ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0 // posizionamento 2D, formato User        
-  #define RG249U1_PR_TEMP_ALR_OFF  6,_PADDR+3    ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0 // posizionamento 2D, formato User        
+  #define RG249U1_PR_TEMP_L        3,_PADDR+0    ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0 // Disattivazione Ventola
+  #define RG249U1_PR_TEMP_H        4,_PADDR+1    ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0 // Attivazione ventola
+  #define RG249U1_PR_TEMP_ALR      5,_PADDR+2    ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0 // Attivazione allarme
+  #define RG249U1_PR_TEMP_ALR_OFF  6,_PADDR+3    ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0 // Disattivazione allarme
 
 
   // Parametri per il posizionamento delle lame in modalità 2D
@@ -243,5 +243,6 @@ volatile _DeviceRegItem_Str  PCB249U1_Registers[]=
   ext unsigned char u1colli_id;
   ext bool u1colli_result;
   ext bool pcb249U1_GetFreeze(void);
+  ext void pcb249U1SetTubeTemperatureThresholds(unsigned char alarm_on, unsigned char alarm_off, unsigned char fan_on, unsigned char fan_off);
 
 #endif

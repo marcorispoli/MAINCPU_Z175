@@ -187,6 +187,7 @@ typedef struct
     bool                deviceConnected; // Flag di avvenuta configurazione e ricezione delle relative revisioni
     unsigned char       candevice_error_startup; // Errori durante la fase di startup
 
+
     trxConfig_Str       trxCfg;         // Configurazione passata da GUI
     armConfig_Str       armCfg;         // Configurazione passata da GUI
     lenzeConfig_Str     lenzeCfg;       // Configurazione passata da GUI
@@ -220,7 +221,7 @@ typedef struct
     // Loader
     bool loaderOn;      // Flag di loader attivo    
     bool demoMode;      // Se attivo impone la modalità Demo
-
+    bool airTubeModel;  // Gestione Tubo ad Aria
    bool collimator_model_error;
 
 }deviceCfg_Str;

@@ -296,8 +296,21 @@ void manageMccConfig(){
         generalConfiguration.demoMode = 0;
         printf(" ----------------  DRIVERS IN OPERATING MODE --------------------- \n");
       }
+      if(mcc_cmd.buffer[3]==1) {
+        generalConfiguration.airTubeModel = true;
+        printf(" ----------------  GESTIONE TUBO AD ARIA --------------------- \n");
 
+        // Nessun allarme attivabile e Fan sempre acceso
+        pcb249U1SetTubeTemperatureThresholds(255, 255, 1, 0);
 
+      }else{
+        generalConfiguration.airTubeModel = false;
+        printf(" ----------------  GESTIONE TUBO AD OLIO --------------------- \n");
+
+        // Nessun allarme attivabile e Fan acceso sopra i 40° e scende sotto i 35
+        pcb249U1SetTubeTemperatureThresholds(255, 255, 159 , 157);
+
+      }
 
      break;
      case CONFIG_PCB190:  

@@ -47,6 +47,14 @@ serverDebug::serverDebug(void) :
     deviceRegisterList.clear();
 
     //  --------   REGISTRI RELATIVI AL COLLIMATORE  -------------
+    item.tag = "COLLI-TEMP";
+    item.comment = "Temperatura della cuffia";
+    item.deviceId = _CODEID_PCB249U1;
+    item.address = 0x38+5;
+    item.data_type = _8bit;
+    item.sign_type = _UNSIGNED;
+    deviceRegisterList.append(item);
+
     item.tag = "COLLI-GONIOREL";
     item.comment = "Angolo relativo TRX - ARM";
     item.deviceId = _CODEID_PCB249U1;

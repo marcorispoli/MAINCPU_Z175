@@ -331,11 +331,10 @@ void Generatore::pcb190Notify(unsigned char id, unsigned char cmd, QByteArray da
 
         // Controllo mAs (solo se gnd Ã¨ ok)
         if(faultGnd==false){
-            int dmas = pConfig->userCnf.correnteAnodicaTest * 5 / 100;
-            if((mAsTest < pConfig->userCnf.correnteAnodicaTest-dmas)||(mAsTest > pConfig->userCnf.correnteAnodicaTest+dmas)) warningMas=true;
+            if((mAsTest < pConfig->userCnf.correnteAnodicaTest - 3) || (mAsTest > pConfig->userCnf.correnteAnodicaTest + 3)) warningMas=true;
             else warningMas = false;
             if(pConfig->userCnf.enableTestMasmetro){
-                if((mAsTest < pConfig->userCnf.correnteAnodicaTest-2*dmas)||(mAsTest > pConfig->userCnf.correnteAnodicaTest+2*dmas)) faultMas=true;
+                if((mAsTest < pConfig->userCnf.correnteAnodicaTest - 5) || (mAsTest > pConfig->userCnf.correnteAnodicaTest + 5)) faultMas=true;
                 else faultMas=false;
             }else faultMas = false;
         }
@@ -383,14 +382,16 @@ void Generatore::pcb190Notify(unsigned char id, unsigned char cmd, QByteArray da
         else if(faultIFilamento) dgn_fault_code = GEN_IFIL_FAULT;
         else if(faultFilAmpTemp) dgn_fault_code = GEN_AMPTEMP_FAULT;
         else if(fault_starter)  dgn_fault_code = data[PCB190_FAULTS];
-        else dgn_fault_code=0;
+        else if(pCollimatore->alrCuffia) dgn_fault_code=ERROR_CUFFIA_CALDA;
+        else if(pCollimatore->alrSensCuffia) dgn_fault_code=ERROR_SENS_CUFFIA;
+        else dgn_fault_code = 0;
 
 
         // Attivazione flag generale di fault per impedire l'attivazione raggi
         if(dgn_fault_code) dgn_fault=true;
         else dgn_fault=false;
         PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_GEN,dgn_fault_code);
-        //ApplicationDatabase.setData(_DB_FAULT_CODE_GEN,fault_code,0);
+
 
 
     }
@@ -493,6 +494,25 @@ bool Generatore::openTube(QString tubeDir)
 
     // Lettura dati di calibrazione starter
     readStarterFile();
+
+    bool airTube;
+
+    // Impostazione della modalità di sistema di gestione del Tubo ad Aria
+    if(tubeDir.contains("XK1016T"))   airTube=true;
+    else airTube = false;
+
+    // Se la configurazione di sistema è già stata inviata allora occorre riaggiornarla
+    // per consentire al driver del collimatore  di gestire da subito la temperatura del tubo
+    // nella maniera corretta
+    if(airTubeModel != airTube){
+        airTubeModel = airTube;
+        if(pConfig->startupCompleted){
+            pConfig->updateGeneral();
+        }
+    }
+
+
+
 
     return TRUE;
 }
