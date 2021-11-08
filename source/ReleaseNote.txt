@@ -7,6 +7,7 @@
     - In Collimatore: la gestione degli allarmi viene fatta localmente e non più testando il flag del collimatore
     - BUGFIX: l'allarme sensore o temperatura viene gestito dal modulo Generatore nella sua notify.
     - BUGFIX: aggiornamento temperatura cuffia all'apertura studio
+    - BUGFIX: aumentato la finestra di tolleranza per il controllo del mAsmetro
 
     M4_MASTER   1.5
     - Gestione del nuovo flag "generalConfiguration.airTubeModel"

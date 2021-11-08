@@ -331,11 +331,10 @@ void Generatore::pcb190Notify(unsigned char id, unsigned char cmd, QByteArray da
 
         // Controllo mAs (solo se gnd è ok)
         if(faultGnd==false){
-            int dmas = pConfig->userCnf.correnteAnodicaTest * 5 / 100;
-            if((mAsTest < pConfig->userCnf.correnteAnodicaTest-dmas)||(mAsTest > pConfig->userCnf.correnteAnodicaTest+dmas)) warningMas=true;
+            if((mAsTest < pConfig->userCnf.correnteAnodicaTest - 3) || (mAsTest > pConfig->userCnf.correnteAnodicaTest + 3)) warningMas=true;
             else warningMas = false;
             if(pConfig->userCnf.enableTestMasmetro){
-                if((mAsTest < pConfig->userCnf.correnteAnodicaTest-2*dmas)||(mAsTest > pConfig->userCnf.correnteAnodicaTest+2*dmas)) faultMas=true;
+                if((mAsTest < pConfig->userCnf.correnteAnodicaTest - 5) || (mAsTest > pConfig->userCnf.correnteAnodicaTest + 5)) faultMas=true;
                 else faultMas=false;
             }else faultMas = false;
         }
