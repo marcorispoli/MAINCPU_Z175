@@ -1791,26 +1791,32 @@ void mccBiopsyCmd(void)
 
 void mccBiopsySimulator(void){
 #ifdef __BIOPSY_SIMULATOR
-    unsigned short X, Y;
+    unsigned short val,X,Y,Z;
 
-    if(mcc_cmd.buffer[0]== 1){ // Impostazione stato della connessione
-        printf("EXEC SIM CONNECTION\n");
+    if(mcc_cmd.buffer[0]== _BYM_SIM_CONNECTION){ // Impostazione stato della connessione
+        printf("BIOPSY SIMULATOR: EXEC SIM CONNECTION = %d\n",mcc_cmd.buffer[1]);
         if(mcc_cmd.buffer[1]==1) SimConnessione(true);
         else SimConnessione(false);
-    }else if(mcc_cmd.buffer[0]== 2){ // Impostazione stato del pulsante di sblocco
-        printf("EXEC SIM SBLOCCO\n");
+    }else if(mcc_cmd.buffer[0]== _BYM_SIM_SBLOCCO){ // Impostazione stato del pulsante di sblocco
+        printf("BIOPSY SIMULATOR: EXEC SIM SBLOCCO = %d\n", mcc_cmd.buffer[1]);
         if(mcc_cmd.buffer[1]==1) SimSetPush(true);
         else SimSetPush(false);
-    }else if(mcc_cmd.buffer[0]== 3){ // Impostazione Adapter Id
-        printf("EXEC SIM ADAPTER\n");
+    }else if(mcc_cmd.buffer[0]== _BYM_SIM_ADAPTER){ // Impostazione Adapter Id
+        printf("BIOPSY SIMULATOR: EXEC SIM ADAPTER = %d\n", mcc_cmd.buffer[1]);
         SimSetAdapter(mcc_cmd.buffer[1]);
-    }else if(mcc_cmd.buffer[0]== 4){ // Simulazione pulsanti console
-        printf("EXEC CONSOLE PUSH\n");
-        SimSetConsolePush(mcc_cmd.buffer[1]);
-    }else if(mcc_cmd.buffer[0]== 5){ // Simulazione pulsanti console
-        printf("EXEC CONSOLE XY\n");
-        // Il dato deve essere in millimetri rispetto al vertice in alto a sinistra (dmm)
-        SimSetJXY(XtoJoysticX(mcc_cmd.buffer[1] + 256 * mcc_cmd.buffer[2]),YtoJoysticY(mcc_cmd.buffer[3] + 256 * mcc_cmd.buffer[4]));
+    }else if(mcc_cmd.buffer[0]== _BYM_SIM_LAT){ // Impostazione Lateralità
+        printf("BIOPSY SIMULATOR: EXEC SIM LATX = %d\n", mcc_cmd.buffer[1]);
+        SimSetLatX(mcc_cmd.buffer[1]);
+    }else if(mcc_cmd.buffer[0]== _BYM_SIM_SH){ // Impostazione Asse SH
+        val = mcc_cmd.buffer[1] + 256 * mcc_cmd.buffer[2];
+        printf("BIOPSY SIMULATOR: EXEC SIM SH, VAL = %d\n", val);
+        SimSetSH((int) val );
+    }else if(mcc_cmd.buffer[0]== _BYM_SIM_SET_CURSOR){ // Impostazione Assi X,Y,Z
+        X = mcc_cmd.buffer[1] + 256 * mcc_cmd.buffer[2];
+        Y = mcc_cmd.buffer[3] + 256 * mcc_cmd.buffer[4];
+        Z = mcc_cmd.buffer[5] + 256 * mcc_cmd.buffer[6];
+        printf("BIOPSY SIMULATOR: EXEC SIM SET XYZ, X = %d, Y=%d, Z=%d \n", X,Y,Z);
+        SimSetXYZ(X,Y,Z);
     }
 #endif
     return;

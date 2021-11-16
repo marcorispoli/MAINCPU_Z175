@@ -14,3 +14,7 @@
     - Gestita l'attivazione del FAN discriminando tra i modelli Olio / aria
     - Annullato il controllo degli allarmi da Cuffia calda su Device.
 
+    ________________________________________________________
+
+    Gestione Biopsia ad approccio laterale
+

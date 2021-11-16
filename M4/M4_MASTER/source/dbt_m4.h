@@ -53,6 +53,7 @@ _____________________________________________________________________________*/
 #define SER422_DRIVER                20,8
 #define FAULT_TASK                   21,7       // Alta priorità
 #define IO_TASK                      23,7       // Alta priorità
+#define BIOPSYM                      24,9      // Simulatore di biosia
 
 #define TOMO_RX_TASK                 50,11
 #define TOMO_AEC_RX_TASK             51,11

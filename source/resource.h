@@ -46,6 +46,7 @@ enum
     _PG_OPEN_STUDY_DIGITAL,
     _PG_PROJECTIONS,
     _PG_BIOPSY_DIGITAL,
+    _PG_BIOPSY_DEVICE,
     _PG_SELLNG,
     _PG_ACR,
     _PG_ALARM,
@@ -226,6 +227,7 @@ _DB_BIOP_LES_X,         // Posizione lesione X
 _DB_BIOP_LES_Y,         // Posizione lesione Y
 _DB_BIOP_LES_Z,         // Posizione lesione Z
 _DB_BIOP_UNLOCK_BUTTON, // Stato pulsante di sblocco
+_DB_BIOP_LAT_X,       // Statoposizione shift asse x
 _DB_BIOP_NEEDLE_MARG,   // Distanza punta ago fibra i carbonio
 _DB_BIOP_MAXZ,          // Massimo spostamento possibile sulla base dei dati
 

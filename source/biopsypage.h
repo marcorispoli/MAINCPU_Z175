@@ -18,21 +18,8 @@ public:
     void timerEvent(QTimerEvent* ev); // Override della classe QObject
     void mousePressEvent(QGraphicsSceneMouseEvent* event); // Override funzione della classe base GWindow
 
-
     void setXrayOn(bool stat); // Attiva il simbolo raggi in corso
     void setCalibOn(bool stat); // Attivazione simboli modo Calibrazione
-
-    /* DA VERIFICARE L'UTILIZZO
-    void setBiopsyMode(void); // Impostazione modalit√  Biopsia
-    void setBiopsyMoveMode(void);
-    void setStandardMode(void); // Impostazione modalit√  Biopsia
-    void changeMode(void);      // Uso interno
-    */
-
-    //void resetBiopMoveButtons(void);
-    //void setEnableMovePage(bool state);
-    //void mainInitBiopVar(void);
-
 
 public slots:
     void InitBiopsyPage(void); // Funzione per entrare nella pagina di Biopsia

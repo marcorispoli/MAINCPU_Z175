@@ -154,6 +154,8 @@ typedef struct
     unsigned short Z;              // Posizione corrente Z
     unsigned short X;              // Posizione corrente X
     unsigned short Y;              // Posizione corrente Y
+    unsigned short SH;              // Posizione corrente Y
+
     unsigned short TGZ;            // Posizione corrente Z
     unsigned short TGX;            // Posizione corrente X
     unsigned short TGYY;           // Posizione corrente Y
@@ -354,5 +356,7 @@ ext bool msEventWaitAny(int mask, LWEVENT_STRUCT* ev, unsigned int ms);
 ext void setOutputs(_SystemOutputs_Str* pSet, _SystemOutputs_Str* pMask); // Impostazione degli Outputs di sistema
 
 ext int nearest(float v);
+ext float absF(float f);
+ext int absI(int i);
 
 #endif

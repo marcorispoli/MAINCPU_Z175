@@ -2,7 +2,7 @@
 #define _DEFINES_H
   
 
-#define __PRODUCTION_COMPILATION
+//#define __PRODUCTION_COMPILATION
 
 //_________________________________________________________________________________
 // DIRETTIVE DI COMPILAZIONE GENERALI
@@ -14,6 +14,7 @@
 //#define _CANDEVICE_SIMULATION // Stub per mancanza CAN BUS su m4_slave
 //#define __APPLICATION_DESKTOP_COMPILE // Compilazione per moduli TS da tavolo: rotazione 180 display, indirizzi CONSOLE a 192.168.30.10, abilitazione PRINT
 //#define __CONSOLE_IP_ADDRESS 10 // MODIFICA l'IP AWS
+#define __BIOPSY_SIMULATOR
 #endif
 //_________________________________________________________________________________
 

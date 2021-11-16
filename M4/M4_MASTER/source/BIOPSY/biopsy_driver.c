@@ -201,6 +201,32 @@ bool BiopsyDriverGetZ(unsigned short* val)
     return FALSE;
 }
 
+/*
+  La funzione chiede info sulla SH corrente
+*/
+bool BiopsyDriverGetSH(unsigned short* val)
+{
+    unsigned char rx_buffer[4];
+    unsigned char tx_buffer[4];
+
+    tx_buffer[0] = 0x90;
+    tx_buffer[1] = 0x2;
+    tx_buffer[2] = 0;
+
+#ifdef __BIOPSY_SIMULATOR
+    sim_serialCommand(tx_buffer,rx_buffer);
+#else
+    Ser422SendRaw(tx_buffer[0], tx_buffer[1], tx_buffer[2], rx_buffer, 5);
+#endif
+
+    if(rx_buffer[0]==tx_buffer[0])
+    {
+        *val = rx_buffer[1] + 256 * rx_buffer[2];
+        return TRUE;
+    }
+
+    return FALSE;
+}
 
 /*
   La funzione chiede info sulla TGX corrente
@@ -563,28 +589,6 @@ bool BiopsyDriverReset(void)
     return FALSE;
 }
 
-bool BiopsyDriverSetZlim(unsigned short val, unsigned short* zlim)
-{
-    unsigned char rx_buffer[4];
-    unsigned char tx_buffer[4];
-
-    tx_buffer[0] = 0x50;
-    tx_buffer[1] = (unsigned char) (val & 0xFF);
-    tx_buffer[2] = (unsigned char) ((val>>8) & 0xFF);
-
-#ifdef __BIOPSY_SIMULATOR
-    sim_serialCommand(tx_buffer,rx_buffer);
-#else
-    Ser422SendRaw(tx_buffer[0], tx_buffer[1], tx_buffer[2], rx_buffer, 5);
-#endif
-
-    if(rx_buffer[0]==tx_buffer[0]){
-        if(zlim)  *zlim =  rx_buffer[1] + 256 * rx_buffer[2];
-        return true;
-    }
-    return FALSE;
-}
-
 
 
 bool BiopsyDriverSetStepVal(unsigned char val, unsigned char* stepval)
@@ -592,7 +596,7 @@ bool BiopsyDriverSetStepVal(unsigned char val, unsigned char* stepval)
     unsigned char rx_buffer[4];
     unsigned char tx_buffer[4];
 
-    tx_buffer[0] = 0x10;
+    tx_buffer[0] = 0x80;
     tx_buffer[1] = val;
     tx_buffer[2] = 0;
 

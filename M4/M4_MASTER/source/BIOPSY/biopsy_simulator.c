@@ -4,22 +4,14 @@
 #ifdef __BIOPSY_SIMULATOR
 
 
-
-
 #define BYM_REVISION 1
 #define BYM_CHKL     0xAA
 #define BYM_CHKH     0xBB
 
 #define _SIM_RESET          1
 #define _SIM_MOVE_XYZ       2
-#define _SIM_MOVE_HOME      3
-#define _SIM_MOVE_STPUP     4
-#define _SIM_MOVE_STPDWN    5
-
-#define _BYM_BUT_RST         0x1
-#define _BYM_BUT_P10         0x2
-#define _BYM_BUT_P1          0x4
-#define _BYM_BUT_P1          0x4
+#define _SIM_MOVE_STPUP     3
+#define _SIM_MOVE_STPDWN    4
 
 
 // Registri Simulatore
@@ -27,7 +19,7 @@ static unsigned char sim_COMMANDS;  // Codice comando in corso
 static bool sim_movimento;          // Comando in corso
 static bool sim_connected;          // Torretta inserita / disinserita
 static bool sim_sblocco;            // Simulazione stato del pulsante di sblocco
-static int  sim_timer_bottoni;       // Tempo di attivazione bottoni
+static int  sim_timer_bottoni;      // Tempo di attivazione bottoni
 
 // Registri Torretta
 static unsigned char bym_StatusH;   // Status register
@@ -36,16 +28,11 @@ static unsigned char bym_StatusL;
 static unsigned int  bym_X;       // Posizione corrente
 static unsigned int  bym_Y;
 static unsigned int  bym_Z;
+static unsigned int  bym_SH;
 
 static unsigned int  bym_TGX;      // Target corrente
 static unsigned int  bym_TGY;
 static unsigned int  bym_TGZ;
-
-static unsigned int  bym_JX;       // Campionamento Joystic
-static unsigned int  bym_JY;
-
-static unsigned char bym_InputB;    // Inputs Bottoni
-static unsigned char bym_InputA;    // Inputs Bottoni
 
 static int           bym_Needle;    // Analogico Needle
 
@@ -107,9 +94,9 @@ void sim_serialCommand(unsigned char* rxdata, unsigned char* txdata){
         txdata[1]=(unsigned char) (bym_TGX & 0xFF);
         txdata[2]=(unsigned char) ((bym_TGX >> 8) & 0xFF);
     }else if((rxdata[0]==0x8F) && (rxdata[1]==0)){
-            txdata[0]=0x8F; // GET_Y
-            txdata[1]=(unsigned char) (bym_Y & 0xFF);
-            txdata[2]=(unsigned char) ((bym_Y >> 8) & 0xFF);
+        txdata[0]=0x8F; // GET_Y
+        txdata[1]=(unsigned char) (bym_Y & 0xFF);
+        txdata[2]=(unsigned char) ((bym_Y >> 8) & 0xFF);
     }else if((rxdata[0]==0x8F) && (rxdata[1]==1)){
         txdata[0]=0x8F; // GET_TGY
         txdata[1]=(unsigned char) (bym_TGY & 0xFF);
@@ -127,6 +114,10 @@ void sim_serialCommand(unsigned char* rxdata, unsigned char* txdata){
         txdata[0]=0x90; // GET_TGZ
         txdata[1]=(unsigned char) (bym_TGZ & 0xFF);
         txdata[2]=(unsigned char) ((bym_TGZ >> 8) & 0xFF);
+    }else if((rxdata[0]==0x90) && (rxdata[1]==2)){
+        txdata[0]=0x90; // GET_SH
+        txdata[1]=(unsigned char) (bym_SH & 0xFF);
+        txdata[2]=(unsigned char) ((bym_SH >> 8) & 0xFF);
     }else if(rxdata[0]==0xD0) {
         txdata[0]=0xD0; // SET_TGZ
         bym_TGZ = rxdata[1] + 256 * rxdata[2];
@@ -136,14 +127,6 @@ void sim_serialCommand(unsigned char* rxdata, unsigned char* txdata){
         txdata[0]=0x10; // MOVE_XYZ()
         bym_StatusL = 0x1;  // MOTOR ON STATUS
         sim_COMMANDS = _SIM_MOVE_XYZ;
-        sim_movimento = true;
-
-        txdata[1]=bym_StatusL;
-        txdata[2]=bym_StatusH;
-    }else if((rxdata[0]==0x10) && (rxdata[1]==3)) {
-        txdata[0]=0x10; // MOVE_HOME()
-        bym_StatusL = 0x1;  // MOTOR ON STATUS
-        sim_COMMANDS = _SIM_MOVE_HOME;
         sim_movimento = true;
 
         txdata[1]=bym_StatusL;
@@ -171,9 +154,8 @@ void sim_BymReset(void){
     bym_X = 0;
     bym_Y = 0;
     bym_Z = 0;
+    bym_SH = 0;
 
-    bym_InputB = 0;
-    bym_InputA = 0;
 }
 
 void sim_DisconnectedStatus(void){
@@ -194,17 +176,13 @@ void sim_ActivationStatus(void){
     bym_Y = bym_TGY;
     bym_Z = bym_TGZ;
 
-    if((bym_X==0) && (bym_Y==0) && (bym_Z==0)) bym_StatusL |= 04; // Home Flag
+    if(((bym_X==0)||(bym_X==2580)||(bym_X==1290)) && (bym_Y==0) && (bym_Z==0)) bym_StatusL |= 04; // Home Flag
     else bym_StatusL |= 02; // Target flag
     sim_movimento = false;
     return;
 }
 
-#define _SIM_RESET          1
-#define _SIM_MOVE_XYZ       2
-#define _SIM_MOVE_HOME      3
-#define _SIM_MOVE_STPUP     4
-#define _SIM_MOVE_STPDWN    5
+
 
 void BIOPSY_simdriver(uint32_t taskRegisters)
 {
@@ -213,24 +191,16 @@ void BIOPSY_simdriver(uint32_t taskRegisters)
     sim_movimento = false;
     sim_COMMANDS = 0;
 
-    bym_JX = 0;
-    bym_JY = 0;
 
     while(1){
         if(!sim_connected) sim_DisconnectedStatus();
         _time_delay(100);
 
-        sim_ManageInputs(); // Gestione Inputs
 
         switch(sim_COMMANDS){
         case _SIM_RESET:
             _time_delay(500);
             sim_BymReset();
-            break;
-
-        case _SIM_MOVE_HOME:
-            bym_TGX = 0;bym_TGY = 0;bym_TGZ = 0;
-            sim_ActivationStatus();
             break;
 
         case _SIM_MOVE_XYZ:
@@ -274,6 +244,28 @@ void SimConnessione(bool stat){
     printf("SIMULATORE BYM:CONNESSIONE >%d\n", stat);
     sim_connected = stat;
 
+}
+void SimSetLatX(unsigned char lat){
+
+    bym_StatusH &= 0xFC;
+    bym_StatusH |= (lat & 0x3);
+
+    if((bym_StatusH &0x3) == _BP_ASSEX_POSITION_LEFT)   printf("SIMULATORE BYM:latX > LEFT\n");
+    else if((bym_StatusH &0x3) == _BP_ASSEX_POSITION_CENTER)   printf("SIMULATORE BYM:latX > CENTER\n");
+    else if((bym_StatusH &0x3) == _BP_ASSEX_POSITION_RIGHT)   printf("SIMULATORE BYM:latX > RIGHT\n");
+    else printf("SIMULATORE BYM:latX > ND\n");
+}
+
+void SimSetSH(int sh){
+    bym_SH = sh;
+    printf("SIMULATORE BYM:SH >%d\n", bym_SH);
+}
+
+void SimSetXYZ(unsigned short X, unsigned short Y, unsigned short Z){
+    bym_X = bym_TGX = X;
+    bym_Y = bym_TGY = Y;
+    bym_Z = bym_TGZ = Z;
+    printf("SIMULATORE BYM:X,Y,Z >[%d,%d,%d]\n", bym_X, bym_Y, bym_Z);
 }
 
 #endif

@@ -4143,14 +4143,11 @@ void serverDebug::handleBiopsy(QByteArray data)
 #ifdef __BIOPSY_SIMULATOR
         serviceTcp->txData(QByteArray("\n\r BIOPSY SIMULATOR COMMANDS: --------\r\n"));
         serviceTcp->txData(QByteArray("simConn    [ON/OFF]   ? ON=CONNECTED \r\n"));
+        serviceTcp->txData(QByteArray("simSetXYZ  X,Y,Z      ? SET THE VIRTUAL CURSOR (dmm) \r\n"));
         serviceTcp->txData(QByteArray("simAdapter [n]        ? N=ADAPTER CODE \r\n"));
-        serviceTcp->txData(QByteArray("simSblocco [ON/OFF]   ? ON=UNLOCK \r\n"));
-        serviceTcp->txData(QByteArray("simRST                ? Pulsante RST   \r\n"));
-        serviceTcp->txData(QByteArray("simENT                ? Pulsante ENTER  \r\n"));
-        serviceTcp->txData(QByteArray("simp_1                ? Pulsante +1 \r\n"));
-        serviceTcp->txData(QByteArray("simp10                ? Pulsante +10 \r\n"));
-        serviceTcp->txData(QByteArray("simBK                 ? Pulsante BACK \r\n"));
-        serviceTcp->txData(QByteArray("simXY X,Y             ? JOYSTIC X,Y in (dmm)\r\n"));
+        serviceTcp->txData(QByteArray("simSblocco [ON/OFF]   ? ON=UNLOCK \r\n"));        
+        serviceTcp->txData(QByteArray("simSH shval           ? SH val in (dmm)\r\n"));
+        serviceTcp->txData(QByteArray("simLat      [L,C,R,N] ? Laterality     \r\n"));
         serviceTcp->txData(QByteArray("-----------------------------------------------------------------\r\n"));
 #endif
 
@@ -4188,28 +4185,39 @@ void serverDebug::handleBiopsy(QByteArray data)
             }else serviceTcp->txData(QString("ERROR\n\r").toAscii().data());
             return;
         }
-
+#ifndef __BIOPSY_SIMULATOR
         if(!pBiopsy->connected){
             serviceTcp->txData(QByteArray("BIOPSY DEVICE DISCONNECTED!!\n\r"));
             return;
         }
-
+#endif
         if(data.contains("moveXYZ")){
-            parametri = getNextFieldsAfterTag(data, QString("moveXYZ"));
-            if(parametri.size()!=3) serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\n"));
-
-            int retval = pBiopsy->moveXYZ(parametri.at(0).toUInt(),parametri.at(1).toUInt(),parametri.at(2).toUInt(),0);
-            if(retval!=_BIOPSY_MOVING_NO_ERROR)  serviceTcp->txData(QString("FALLITO COMANDO! Errore:%1\r\n").arg(retval).toAscii().data());
-            else serviceTcp->txData(QByteArray("OK\r\n"));
+            serviceTcp->txData(QByteArray("TO BE DONE ....\r\n"));
 
         }else if(data.contains("moveHome")){
-            int retval = pBiopsy->moveHome(0);
-            if(retval!=_BIOPSY_MOVING_NO_ERROR)  serviceTcp->txData(QString("FALLITO COMANDO! Errore:%1\r\n").arg(retval).toAscii().data());
-            else serviceTcp->txData(QByteArray("OK\r\n"));
+            parametri = getNextFieldsAfterTag(data, QString("moveHome"));
+            if(parametri.size()!=1){
+                serviceTcp->txData(QByteArray("PARAM ERROR: moveHome [C,L,R]\r\n"));
+                return;
+            }
+            unsigned char lat = (unsigned char) parametri[0].toInt();
+
+            // Determina il target X in funzione della lateralità
+            if(parametri[0] == "L") lat = _BP_ASSEX_POSITION_LEFT;
+            else if(parametri[0] == "R") lat = _BP_ASSEX_POSITION_RIGHT;
+            else if(parametri[0] == "C") lat = _BP_ASSEX_POSITION_CENTER;
+            else {
+                serviceTcp->txData(QByteArray("PARAM ERROR: moveHome [C,L,R]\n"));
+                return;
+            }
+
+            int retval = pBiopsy->requestBiopsyHome(0,lat);
+            if(retval==0)  serviceTcp->txData(QByteArray("BYM already in Home\r\n"));
+            else serviceTcp->txData(QByteArray("DONE \r\n"));
 
         }else if(data.contains("moveInc")){
             parametri = getNextFieldsAfterTag(data, QString("moveInc"));
-            if(parametri.size()!=1) serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\n"));
+            if(parametri.size()!=1) serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\r\n"));
             int retval;
 
             if((parametri[0]=="X") || (parametri[0]=="x")){
@@ -4251,8 +4259,140 @@ void serverDebug::handleBiopsy(QByteArray data)
             serviceTcp->txData(QString("current adapter: %1\n\r").arg(pBiopsy->adapterId).toAscii().data());
         }else if(data.contains("getRevision")){
             serviceTcp->txData(QString("current adapter: %1\n\r").arg(pBiopsy->revisione).toAscii().data());
-        }
+        }else handleBiopsySimulator(data);
     }
+}
+void serverDebug::handleBiopsySimulator(QByteArray data)
+{
+#ifdef __BIOPSY_SIMULATOR
+
+    QString stringa;
+    unsigned char buffer[20];
+
+    if(data.contains("simConn")){
+        QList<QByteArray> parametri = getNextFieldsAfterTag(data, QString("simConn"));
+        if(parametri.size() != 1) {
+            stringa = QString("PARAMETRO: ON/OFF \r\n");
+            serviceTcp->txData(stringa.toAscii());
+            return;
+        }
+
+        // Comando impostazione stato connessione
+        buffer[0] = _BYM_SIM_CONNECTION;
+
+        // Parametro
+        if(parametri[0]=="ON") buffer[1] = 1;
+        else buffer[1] = 0;
+
+        pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_SIMULATOR,1,buffer,2);
+        serviceTcp->txData(QByteArray("DONE \r\n"));
+        return;
+
+    }else if(data.contains("simSetXYZ")){
+
+        QList<QByteArray> parametri = getNextFieldsAfterTag(data, QString("simSetXYZ"));
+        if(parametri.size() != 3) {
+            stringa = QString("PARAMETRO: X,Y,Z \r\n");
+            serviceTcp->txData(stringa.toAscii());
+            return;
+        }
+
+        // Comando impostazione stato connessione
+        buffer[0] = _BYM_SIM_SET_CURSOR;
+
+        buffer[1] = parametri[0].toInt() & 0xFF;
+        buffer[2] = parametri[0].toInt() / 256 ;
+        buffer[3] = parametri[1].toInt() & 0xFF;
+        buffer[4] = parametri[1].toInt() / 256 ;
+        buffer[5] = parametri[2].toInt() & 0xFF;
+        buffer[6] = parametri[2].toInt() / 256 ;
+
+        pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_SIMULATOR,1,buffer,7);
+        serviceTcp->txData(QByteArray("DONE \r\n"));
+        return;
+
+    }
+
+
+    else if(data.contains("simSblocco")){
+        QList<QByteArray> parametri = getNextFieldsAfterTag(data, QString("simSblocco"));
+        if(parametri.size() != 1) {
+            stringa = QString("PARAMETRO: ON/OFF \r\n");
+            serviceTcp->txData(stringa.toAscii());
+            return;
+        }
+
+        // Comando impostazione stato connessione
+        buffer[0] = _BYM_SIM_SBLOCCO;
+
+        if(parametri[0]=="ON") buffer[1] = 1;
+        else buffer[1] = 0;
+
+        pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_SIMULATOR,1,buffer,2);
+        serviceTcp->txData(QByteArray("DONE \r\n"));
+        return;
+
+    }else if(data.contains("simAdapter")){
+        QList<QByteArray> parametri = getNextFieldsAfterTag(data, QString("simAdapter"));
+        if(parametri.size() != 1) {
+            stringa = QString("PARAMETRO: num adapter \r\n");
+            serviceTcp->txData(stringa.toAscii());
+            return;
+        }
+
+        // Comando impostazione stato connessione
+        buffer[0] = _BYM_SIM_ADAPTER;
+
+        buffer[1] = parametri[0].toInt();
+
+        pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_SIMULATOR,1,buffer,2);
+        serviceTcp->txData(QByteArray("DONE \r\n"));
+        return;
+
+    }else if(data.contains("simSH")){
+
+        QList<QByteArray> parametri = getNextFieldsAfterTag(data, QString("simSH"));
+        if(parametri.size() != 1) {
+            stringa = QString("PARAMETRO: SH_VAL \r\n");
+            serviceTcp->txData(stringa.toAscii());
+            return;
+        }
+
+        // Comando impostazione stato connessione
+        buffer[0] = _BYM_SIM_SH;
+
+        buffer[1] = parametri[0].toInt() & 0xFF;
+        buffer[2] = parametri[0].toInt() / 256 ;
+
+        pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_SIMULATOR,1,buffer,3);
+        serviceTcp->txData(QByteArray("DONE \r\n"));
+        return;
+
+    }else if(data.contains("simLat")){
+
+        QList<QByteArray> parametri = getNextFieldsAfterTag(data, QString("simLat"));
+        if(parametri.size() != 1) {
+            stringa = QString("PARAMETRO: [L,C,R,N] \r\n");
+            serviceTcp->txData(stringa.toAscii());
+            return;
+        }
+
+        // Comando impostazione stato connessione
+        buffer[0] = _BYM_SIM_LAT;
+
+        if(parametri[0] == "L") buffer[1] = _BP_ASSEX_POSITION_LEFT;
+        else if(parametri[0] == "C") buffer[1] = _BP_ASSEX_POSITION_CENTER;
+        else if(parametri[0] == "R") buffer[1] = _BP_ASSEX_POSITION_RIGHT;
+        else buffer[1] = _BP_ASSEX_POSITION_ND;
+
+
+        pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_SIMULATOR,1,buffer,2);
+        serviceTcp->txData(QByteArray("DONE \r\n"));
+        return;
+
+    }
+
+#endif
 }
 
 

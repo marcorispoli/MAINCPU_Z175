@@ -3,18 +3,34 @@
 
 #include "application.h"
 
+namespace Ui {
+class biopsyUI;
+}
 
-class biopsy : public QObject
+
+class biopsy : public QWidget
 {
     Q_OBJECT
 public:
-    explicit biopsy(QObject *parent = 0);
+
+    explicit biopsy(int rotview, QWidget *parent = 0);
+    ~biopsy();
+
+    // Timer per gestire il pulsante
+    void timerEvent(QTimerEvent* ev); // Override della classe QObject
+
+    int requestBiopsyHome(int id, unsigned char lat);
+    int requestBiopsyMoveXYZ(unsigned short X, unsigned short Y,unsigned short Z,int id);
     void activateConnections(void);
+
+
     void calcoloMargini(void);
 
     // Movimenti su tre assi
-    int moveXYZ(unsigned short X, unsigned short Y, unsigned short Z, int id); // Chiede il movimento sui tre assi
-    int moveHome(int id); // Chiede il movimento verso home
+    int moveXYZ(unsigned short X, unsigned short Y, unsigned short Z); // Chiede il movimento sui tre assi
+
+    bool testUpsidePosition(unsigned short X);
+    bool isHome(unsigned char lat);
 
     // Movimenti per step
     int setStepVal(unsigned char step);
@@ -31,7 +47,23 @@ signals:
 public slots:
     void mccStatNotify(unsigned char,unsigned char,QByteArray); // Notifica dal driver di gestione sul blocco STAT
 
+    // Funzione associata alle windows
+    void changePage(int pg,  int opt);
+    void valueChanged(int index,int opt);
+
+    void onConfirmButton(void);
+
 public:
+    Ui::biopsyUI *ui;
+    QGraphicsScene *scene;
+    QGraphicsView *view;
+    QGraphicsProxyWidget *proxy;
+    QWidget *parent;
+    int rotview;
+    void initPage(void);
+    void exitPage(void);
+
+
     bool connected;
     biopsyConf_Str config;          // Dati di configurazione
     bool openCfg(void);             // Funzione per l'apertura del file di configurazione
@@ -60,12 +92,17 @@ public:
     #define _BIOPSY_MOVING_ERROR_TIMEOUT    2
     #define _BIOPSY_MOVING_ERROR_TARGET     3
     #define _BIOPSY_MOVING_ERROR_BUSY       6
+    #define _BIOPSY_MOVING_ERROR_X_SCROLLED 7 // Il corpo dell'asse X non si trova in uno dei tre stati possibili
+    #define _BIOPSY_MOVING_WARNING_UPSIDE   8 // Deve avere conferma che il corpo sia posizionato verso l'alto
+    #define _BIOPSY_MOVING_UNDEFINED_ERROR  9 // Il codice sequenza non corrisponde. E' un problema software
+
 
     // Posizione corrente della torretta
     unsigned short curX_dmm;    // (0.1mm) Posizione corrente X
     unsigned short curY_dmm;    // (0.1mm) Posizione corrente Y
     unsigned short curZ_dmm;    // (0.1mm) Posizione corrente Z
     unsigned short curSh_dmm;   // (0.1mm) Posizione corrente Sh
+    unsigned char  curLatX;     // Posizione dislocazione asse X
 
     // Limiti di movimento
     unsigned char  paddle_margine;  // (mm) distanza staffe paddle - base torretta (mm) calcolata da Gantry
@@ -89,14 +126,67 @@ public:
     // Pulsante di sblocco
     bool unlock_button;
 
-    // Pulsante di sblocco
-    unsigned char laterality;
-
     // Dati perifierica collegata
     unsigned char checksum_h;
     unsigned char checksum_l;
     unsigned char revisione;
     unsigned char model;
+
+
+    #define BIOPSY_ACTIVATION_SEQUENCE_DB   _DB_SERVICE1_INT
+    #define BIOPSY_USER_CONFIRMATION_DB     _DB_SERVICE2_INT
+
+
+    // Sequenza guidata ________________________________________
+    #define _REQ_SEQ_NONE           0
+    #define _REQ_SEQ_HOME           1
+    #define _REQ_SEQ_XYZ            2
+
+    #define _REQ_SUBSEQ_HOME_INIT_LEFT      0
+    #define _REQ_SUBSEQ_HOME_INIT_CENTER    1
+    #define _REQ_SUBSEQ_HOME_INIT_RIGHT     2
+    #define _REQ_SUBSEQ_HOME_BUSY           3
+    #define _REQ_SUBSEQ_HOME_EXE_Z          4
+    #define _REQ_SUBSEQ_HOME_WAIT_Z         5
+    #define _REQ_SUBSEQ_HOME_EXE_Y          6
+    #define _REQ_SUBSEQ_HOME_WAIT_Y         7
+
+    #define _REQ_SUBSEQ_HOME_TEST_SCROLL_X          8
+    #define _REQ_SUBSEQ_HOME_EXE_SCROLL_X_LEFT      9
+    #define _REQ_SUBSEQ_HOME_EXE_SCROLL_X_CENTER    10
+    #define _REQ_SUBSEQ_HOME_EXE_SCROLL_X_RIGHT     11
+
+    #define _REQ_SUBSEQ_HOME_EXE_TEST_SCROLL_Y      12
+    #define _REQ_SUBSEQ_HOME_EXE_SCROLL_Y_LEFT      13
+    #define _REQ_SUBSEQ_HOME_EXE_SCROLL_Y_CENTER    14
+    #define _REQ_SUBSEQ_HOME_EXE_SCROLL_Y_RIGHT     15
+
+    #define _REQ_SUBSEQ_HOME_EXE_X                  16
+    #define _REQ_SUBSEQ_HOME_WAIT_X_TO_LEFT         17
+    #define _REQ_SUBSEQ_HOME_WAIT_X_TO_CENTER       18
+    #define _REQ_SUBSEQ_HOME_WAIT_X_TO_RIGHT        19
+    #define _REQ_SUBSEQ_HOME_COMPLETED              20
+
+    int req_sequence;
+    int sub_sequence;
+    int event_req_sequence;
+
+    unsigned char req_home_lat;
+    unsigned short req_X;
+    unsigned short req_Y;
+    unsigned short req_Z;
+    bool user_confirmation;
+    bool bypass_y_scroll;
+
+private:
+    void manageHomeSequence(void);
+    void manageXYZSequence(void);
+    void manageRequestErrors(int error);
+    void nextStepSequence(int tmo);
+    void manageChangeHomeSeq(unsigned char sub_seq);
+    void manageChangeMoveXYZSeq(unsigned char sub_seq);
+    void hideFrames(void);
+
 };
 
 #endif // BIOPSY_H

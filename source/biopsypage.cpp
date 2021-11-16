@@ -649,7 +649,7 @@ void BiopsyPage::buttonActivationNotify(int id, bool status,int opt)
     {
         if(pbutton == pulsanteBiopStepUp) pBiopsy->moveDecZ(0);
         else if(pbutton == pulsanteBiopStepDown) pBiopsy->moveIncZ(0);
-        else if(pbutton == pulsanteBiopHome) pBiopsy->moveHome(0);
+
     }
 
 }
@@ -727,4 +727,5 @@ void BiopsyPage::updateManualActivation(void){
     }
     */
 }
+
 

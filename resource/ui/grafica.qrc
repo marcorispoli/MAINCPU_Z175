@@ -361,4 +361,17 @@
         <file>Sym/InvalidPad.png</file>
         <file>Sym/closed_door_pix.png</file>
     </qresource>
+    <qresource prefix="/BiopsyDevice">
+        <file>BiopsyDevice/BiopsyExecXCenterToHome.png</file>
+        <file>BiopsyDevice/BiopsyExecYToHome.png</file>
+        <file>BiopsyDevice/BiopsyExecZToHome.png</file>
+        <file>BiopsyDevice/BiopsyExecXLeftToHome.png</file>
+        <file>BiopsyDevice/BiopsyExecXRightToHome.png</file>
+        <file>BiopsyDevice/BiopsyScrollCenter.png</file>
+        <file>BiopsyDevice/BiopsyScrollLeft.png</file>
+        <file>BiopsyDevice/BiopsyScrollRight.png</file>
+        <file>BiopsyDevice/BiopsyScrollYCenter.png</file>
+        <file>BiopsyDevice/BiopsyScrollYLeft.png</file>
+        <file>BiopsyDevice/BiopsyScrollYRight.png</file>
+    </qresource>
 </RCC>

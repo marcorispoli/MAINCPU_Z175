@@ -150,7 +150,8 @@ FORMS += \
     source/Service/Tools/lenze.ui \
     source/Service/Tools/inverter.ui \
     source/Service/Calib/calibColli.ui \
-    source/Service/Calib/calibParking.ui
+    source/Service/Calib/calibParking.ui \
+    source/biopsy.ui
 
 
 

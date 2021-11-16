@@ -205,27 +205,28 @@ typedef enum
 #define _BP_MOTION_END      2 // Risultato del movimento appena terminato
 #define _BP_PUSH_SBLOCCO    3 // Stato del pulsante di sblocco
 #define _BP_ADAPTER_ID      4 // Codice holder riconosciuto
+#define _BP_ASSEX_POSITION  5 // Dislocamento asse-X
 
 // Posizione torretta in dmm
-#define _BP_XL              5
-#define _BP_XH              6
-#define _BP_YL              7
-#define _BP_YH              8
-#define _BP_ZL              9
-#define _BP_ZH              10
-#define _BP_SHL             11
-#define _BP_SHH             12
+#define _BP_XL              6
+#define _BP_XH              7
+#define _BP_YL              8
+#define _BP_YH              9
+#define _BP_ZL              10
+#define _BP_ZH              11
+#define _BP_SHL             12
+#define _BP_SHH             13
 
-#define _BP_PADDLE_MARGINE  13 // Distanza compressore da base torretta
-#define _BP_MAX_Z_PADDLE    14 // Massima Z sulla base del margine PADDLE
+#define _BP_PADDLE_MARGINE  14 // Distanza compressore da base torretta
+#define _BP_MAX_Z_PADDLE    15 // Massima Z sulla base del margine PADDLE
 
 // Dati per la revisione e checksum
-#define _BP_CHKH            15
-#define _BP_CHKL            16
-#define _BP_REVIS           17
-#define _BP_MODEL           18
+#define _BP_CHKH            16
+#define _BP_CHKL            17
+#define _BP_REVIS           18
+#define _BP_MODEL           19
 //______________________________
-#define _BP_DATA_LEN        19
+#define _BP_DATA_LEN        20
 //_____________________________
 
 // Codici relativi al tipo di adapter ID
@@ -234,6 +235,12 @@ typedef enum
 #define _BP_ADAPTER_A               2
 #define _BP_ADAPTER_B               3
 #define _BP_ADAPTER_SHORT           4
+
+#define _BP_ASSEX_POSITION_ND       0
+#define _BP_ASSEX_POSITION_LEFT     3
+#define _BP_ASSEX_POSITION_CENTER   2
+#define _BP_ASSEX_POSITION_RIGHT    1
+
 
 // Codici relativi allo stato della connessione
 #define _BP_CONNESSIONE_DISCONNECTED            0
@@ -278,7 +285,14 @@ typedef enum
 #define _MCC_BIOPSY_CMD_SET_STEPVAL 9
 #define _MCC_BIOPSY_CMD_SET_ZLIMIT  10
 
-
+//____________________________________________________________
+// CODICI COMANDI SIMULATORE DI BIOPSIA SE COMPILATO
+#define _BYM_SIM_CONNECTION     1
+#define _BYM_SIM_SBLOCCO        2
+#define _BYM_SIM_ADAPTER        3
+#define _BYM_SIM_SH             4
+#define _BYM_SIM_LAT            5
+#define _BYM_SIM_SET_CURSOR     6
 
 //________________________________________________________________________
 typedef enum

@@ -37,9 +37,6 @@ ext bool BiopsyDriverGetRevision(unsigned char* val);
 ext bool BiopsyDriverGetChecksum(unsigned char* chkl, unsigned char* chkh);
 ext bool BiopsyDriverReset(void);
 
-// Joystic
-ext bool BiopsyDriverGetJoyX(unsigned short* val);
-ext bool BiopsyDriverGetJoyY(unsigned short* val);
 
 // Needle
 ext bool BiopsyDriverGetNeedle(unsigned short* val);
@@ -48,6 +45,7 @@ ext bool BiopsyDriverGetNeedle(unsigned short* val);
 ext bool BiopsyDriverGetX(unsigned short* val);
 ext bool BiopsyDriverGetY(unsigned short* val);
 ext bool BiopsyDriverGetZ(unsigned short* val);
+ext bool BiopsyDriverGetSH(unsigned short* val);
 
 // Targets
 ext bool BiopsyDriverGetTGX(unsigned short* val);
@@ -68,7 +66,6 @@ ext bool BiopsyDriverMoveDecY(unsigned char* statusL, unsigned char* statusH);
 ext bool BiopsyDriverMoveIncY(unsigned char* statusL, unsigned char* statusH);
 
 // Registers
-ext bool BiopsyDriverSetZlim(unsigned short val, unsigned short* zlim);
 ext bool BiopsyDriverSetStepVal(unsigned char val, unsigned char* stepval);
 
 

@@ -200,6 +200,7 @@ int main(int argc, char *argv[])
     ApplicationDatabase.append((int) 0);            // _DB_BIOP_LES_Y
     ApplicationDatabase.append((int) 0);            // _DB_BIOP_LES_Z
     ApplicationDatabase.append((int) 0);            // _DB_BIOP_UNLOCK_BUTTON
+    ApplicationDatabase.append((unsigned char) 0);  // _DB_BIOP_LAT_X
 
     ApplicationDatabase.append((int) 0);            // _DB_BIOP_NEEDLE_MARG
     ApplicationDatabase.append((int) 0);            // _DB_BIOP_MAXZ
@@ -295,7 +296,7 @@ int main(int argc, char *argv[])
         pCollimatore =  new Collimatore();
         pGeneratore =   new Generatore();
         pPotter =       new Potter();
-        pBiopsy =       new biopsy();
+        pBiopsy =       new biopsy(rotView);
         pConsole =      new console();
         pToConsole =    new protoToConsole();
         pDebug =        new serverDebug();
@@ -309,6 +310,7 @@ int main(int argc, char *argv[])
         // Creazione IO di sistema
         io = new sysIO(FALSE);
         pConfig = new Config(FALSE);
+        pBiopsy = new biopsy(rotView);
     }
 
     #define LEFT_ARROW_FRAME  8,0,0,100,0,100,100,0,100

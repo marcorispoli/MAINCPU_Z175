@@ -17,6 +17,8 @@
 // #define GET_BIOPSY_Z        "GetBiopsyZ"
 
 #define SET_BIOPSY_MOVE        "SetBiopsyMove"      // Muove ad un punto qualsiasi XYZ
+#define SET_BIOPSY_HOME        "SetBiopsyHome"      // Muove a home
+
 #define GET_BIOPSY_DATA        "GetBiopsyData"      // Chiede tutti i dati peculiari della torretta
 #define SET_BIOPSY_CONFIG      "SetBiopsyConfig"    // Configura la biopsia
 
@@ -349,7 +351,9 @@ public:
     bool handleSetIaRxData(protoConsole* frame, protoConsole* answer);
 
     // GESTIONE BIOPSIA
-    void  handleBiopsyMove(protoConsole* frame,protoConsole* answer);      // Posizionamento del cursore
+    void  handleBiopsyMoveXYZ(protoConsole* frame,protoConsole* answer);      // Posizionamento del cursore a XYZ
+    void  handleBiopsyMoveHome(protoConsole* frame,protoConsole* answer);      // Posizionamento del cursore a Home
+
     void  handleGetBiopsyData(protoConsole* frame,protoConsole* answer);        // Richiede i dati di posizione della Biopsia
     void  handleSetBiopsyConfig(protoConsole* frame,protoConsole* answer);      // Aggiorna la configurazione della calibrazione
 

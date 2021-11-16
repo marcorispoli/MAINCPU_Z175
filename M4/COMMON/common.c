@@ -59,6 +59,15 @@ void setOutputs(_SystemOutputs_Str* pSet, _SystemOutputs_Str* pMask)
 int nearest(float v){
   int val = (int) v;
   if((v-(float) val)>0.5) return val+1;
-  else return val;    
+  else return val;
+}
+
+float absF(float f){
+    if(f>=0) return f;
+    else return -f;
+}
+int absI(int i){
+    if(i>=0) return i;
+    else return -i;
 }
 /* EOF */

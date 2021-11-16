@@ -145,6 +145,7 @@ void BIOPSY_manageDriverDisconnectedStatus(void){
     if(generalConfiguration.biopsyCfg.statusL & 0x01) return;
 
     // Con la torretta disconnessa occorre verificare se è stata resettata
+    /*
     if(!generalConfiguration.biopsyCfg.connected){
 
         // Verifica se la torretta non è ancora stata resettata (dovrebbe esserlo!!)
@@ -154,6 +155,7 @@ void BIOPSY_manageDriverDisconnectedStatus(void){
             return;
         }
     }
+    */
 
     // Lo stato della torretta ora è di connessione, ma occorre completare ancora qualche passaggio
     generalConfiguration.biopsyCfg.connected = true;
@@ -211,6 +213,10 @@ void BIOPSY_manageDriverConnectedStatus(void){
         dati[_BP_PUSH_SBLOCCO] = _BP_PUSH_SBLOCCO_DISATTIVO;
     }
 
+    // Determina la posizione di dislocazione dell'asse X
+    dati[_BP_ASSEX_POSITION] = generalConfiguration.biopsyCfg.statusH &0x3;
+
+
     // Calcolo del margine sul compressore in mm: se il pad non è riconosciuto viene messo al massimo
     if(generalConfiguration.comprCfg.padSelezionato >= PAD_ENUM_SIZE){
         dati[_BP_PADDLE_MARGINE] = generalConfiguration.biopsyCfg.conf.Z_homePosition;
@@ -244,6 +250,7 @@ void BIOPSY_manageDriverConnectedStatus(void){
         if(!BiopsyDriverGetX(&generalConfiguration.biopsyCfg.X)) return;
         if(!BiopsyDriverGetY(&generalConfiguration.biopsyCfg.Y)) return;
         if(!BiopsyDriverGetZ(&generalConfiguration.biopsyCfg.Z)) return;
+        if(!BiopsyDriverGetZ(&generalConfiguration.biopsyCfg.SH)) return;
 
         dati[_BP_XL] = (unsigned char) (generalConfiguration.biopsyCfg.X & 0x00FF);
         dati[_BP_XH] = (unsigned char) (generalConfiguration.biopsyCfg.X >> 8);
@@ -251,15 +258,13 @@ void BIOPSY_manageDriverConnectedStatus(void){
         dati[_BP_YH] = (unsigned char) (generalConfiguration.biopsyCfg.Y >> 8);
         dati[_BP_ZL] = (unsigned char) (generalConfiguration.biopsyCfg.Z & 0x00FF);
         dati[_BP_ZH] = (unsigned char) (generalConfiguration.biopsyCfg.Z >> 8);
+        dati[_BP_SHL] = (unsigned char) (generalConfiguration.biopsyCfg.SH & 0x00FF);
+        dati[_BP_SHH] = (unsigned char) (generalConfiguration.biopsyCfg.SH >> 8);
 
     }else if(slot==3){
 
         // Scrittura zlimit sul target sulla base della distanza dal paddle
-        int z_limit = generalConfiguration.biopsyCfg.Z + (int) dati[_BP_PADDLE_MARGINE] * 10;
-        if(z_limit > generalConfiguration.biopsyCfg.conf.Z_homePosition * 10)
-            z_limit = generalConfiguration.biopsyCfg.conf.Z_homePosition * 10;
-        if(!BiopsyDriverSetZlim((unsigned short) z_limit, 0 ));
-        dati[_BP_MAX_Z_PADDLE] = z_limit / 10;
+        // int z_limit = generalConfiguration.biopsyCfg.Z + (int) dati[_BP_PADDLE_MARGINE] * 10; // Margine di impatto con il compressore
 
         // Scrittura dello stepval
         if(!BiopsyDriverSetStepVal(generalConfiguration.biopsyCfg.stepVal, 0 ));
@@ -413,6 +418,18 @@ void BIOPSY_manageActivationLoop(void){
 
     // Azzeramento bit resettabili
     BiopsyDriverGetStat(&generalConfiguration.biopsyCfg.statusL, &generalConfiguration.biopsyCfg.statusH, true);
+
+    // Acquisisce posizione attuale
+    BiopsyDriverGetX(&generalConfiguration.biopsyCfg.X);
+    BiopsyDriverGetY(&generalConfiguration.biopsyCfg.Y);
+    BiopsyDriverGetZ(&generalConfiguration.biopsyCfg.Z);
+
+    dati[_BP_XL] = (unsigned char) (generalConfiguration.biopsyCfg.X & 0x00FF);
+    dati[_BP_XH] = (unsigned char) (generalConfiguration.biopsyCfg.X >> 8);
+    dati[_BP_YL] = (unsigned char) (generalConfiguration.biopsyCfg.Y & 0x00FF);
+    dati[_BP_YH] = (unsigned char) (generalConfiguration.biopsyCfg.Y >> 8);
+    dati[_BP_ZL] = (unsigned char) (generalConfiguration.biopsyCfg.Z & 0x00FF);
+    dati[_BP_ZH] = (unsigned char) (generalConfiguration.biopsyCfg.Z >> 8);
 
     activationCommands =_BYM_NO_COMMAND;
     driverStatus = _BYM_DRIVER_STAT_CONNECTED;

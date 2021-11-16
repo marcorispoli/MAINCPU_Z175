@@ -29,8 +29,10 @@ Data di Creazione: 19/06/2014
         ext void SimConnessione(bool stat);
         ext void SimSetPush(bool stat);
         ext void SimSetAdapter(int id);
-        ext void SimSetConsolePush(unsigned char push);
-        ext void SimSetJXY(unsigned short X, unsigned short Y);
+        ext void SimSetLatX(unsigned char lat);
+        ext void SimSetSH(int sh);
+        ext void SimSetXYZ(unsigned short X, unsigned short Y, unsigned short Z);
+
 
     #endif
 

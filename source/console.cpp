@@ -543,7 +543,10 @@ void console::consoleRxHandler(QByteArray rxbuffer)
         else emit consoleTxHandler(answ.cmdToQByteArray("OK"));
     }else if(comando==SET_BIOPSY_MOVE)
     {
-        handleBiopsyMove(&protocollo, &answ);
+        handleBiopsyMoveXYZ(&protocollo, &answ);
+    }else if(comando==SET_BIOPSY_HOME)
+    {
+        handleBiopsyMoveHome(&protocollo, &answ);
     }else if(comando==GET_BIOPSY_DATA)
     {
         handleGetBiopsyData(&protocollo, &answ);
@@ -4627,45 +4630,68 @@ bool console::handleSetIaRxData(protoConsole* frame, protoConsole* answer)
     PAR0: X (dmm)
     PAR1: Y (dmm)
     PAR2: Z (dmm)
-    PAR3: NEEDLE TO HOME (mm)
-
+    PAR3: LAT = R,L,C
  */
-void console::handleBiopsyMove(protoConsole* frame, protoConsole* answer)
+void console::handleBiopsyMoveXYZ(protoConsole* frame, protoConsole* answer)
 {
     // Controllo sulla dimensione dei parametri
     if(frame->parametri.size() != 4 ) {
-        emit consoleTxHandler(answer->answToQByteArray("NOK 1"));
+        emit consoleTxHandler(answer->answToQByteArray("NOK 1 ERRORE NUMERO DI PARAMETRI: ->  X,Y,Z,LAT"));
+        return;
+    }
+    unsigned char lat;
+
+    if(frame->parametri[3]=="L") lat = _BP_ASSEX_POSITION_LEFT;
+    else if(frame->parametri[3]=="C") lat = _BP_ASSEX_POSITION_CENTER;
+    else if(frame->parametri[3]=="R") lat = _BP_ASSEX_POSITION_RIGHT;
+    else {
+        emit consoleTxHandler(answer->answToQByteArray("NOK 2 ERRORE VALORE PARAMETRO: -> [L/C/R]"));
         return;
     }
 
-    unsigned short targetX = frame->parametri[0].toUInt(); // dam
-    unsigned short targetY = frame->parametri[1].toUInt(); // dam
-    unsigned short targetZ = frame->parametri[2].toUInt(); // dam
-
-    // Imposta la distanza della punta dell'ago dalla posizione di home
-    pBiopsy->needle_home = frame->parametri[3].toInt();
-
-    // Se la distanza tra il target e la posizione corrente è <= .5 mm
-    // si considera il target già raggiunto
-    if ( (abs(( int) targetX - (int) pBiopsy->curX_dmm) <= 5) &&
-         (abs(( int) targetY - (int) pBiopsy->curY_dmm) <= 5) &&
-         (abs(( int) targetZ - (int) pBiopsy->curZ_dmm) <= 5)
-        ){
-        emit consoleTxHandler(answer->answToQByteArray("OK 0"));
+    // Movimento a posizione arbitraria: la lateralità deve corrispondere!
+    if(lat != pBiopsy->curLatX){
+        emit consoleTxHandler(answer->answToQByteArray("NOK 3 ERRORE LATERALITA' NON CORRISPONDENTE"));
         return;
     }
 
-    // Movimento in Home
-    if( (targetX <= 5) && (targetY <= 5) && (targetZ <= 5) ) {
-        pBiopsy->moveHome(frame->id);
-        emit consoleTxHandler(answer->answToQByteArray("OK 255"));
-    }
+    unsigned short X = frame->parametri[0].toUInt(); // dam
+    unsigned short Y = frame->parametri[1].toUInt(); // dam
+    unsigned short Z = frame->parametri[2].toUInt(); // dam
 
-   // Movimento a posizione arbitraria
-    pBiopsy->moveXYZ(targetX, targetY, targetZ, frame->id);
-    emit consoleTxHandler(answer->answToQByteArray("OK 255"));
+
+    int ret =  pBiopsy->requestBiopsyMoveXYZ(X,Y,Z,frame->id);
+    if(ret==0) emit consoleTxHandler(answer->answToQByteArray("OK 0"));
+    else if(ret>0) emit consoleTxHandler(answer->answToQByteArray("OK 255"));
+    else emit consoleTxHandler(answer->answToQByteArray("NOK 4"));
+
     return;
 
+}
+
+void console::handleBiopsyMoveHome(protoConsole* frame, protoConsole* answer)
+{
+    if(frame->parametri.size() != 1 ) {
+        emit consoleTxHandler(answer->answToQByteArray("NOK 1 ERRORE NUMERO DI PARAMETRI: ->  LAT"));
+        return;
+    }
+
+    unsigned char lat;
+
+    if(frame->parametri[0]=="L") lat = _BP_ASSEX_POSITION_LEFT;
+    else if(frame->parametri[0]=="C") lat = _BP_ASSEX_POSITION_CENTER;
+    else if(frame->parametri[0]=="R") lat = _BP_ASSEX_POSITION_RIGHT;
+    else {
+        emit consoleTxHandler(answer->answToQByteArray("NOK 2 ERRORE VALORE PARAMETRO: -> [L/C/R]"));
+        return;
+    }
+
+    int ret = pBiopsy->requestBiopsyHome(frame->id,lat);
+    if(ret==0) emit consoleTxHandler(answer->answToQByteArray("OK 0"));
+    else if(ret>0) emit consoleTxHandler(answer->answToQByteArray("OK 255"));
+    else emit consoleTxHandler(answer->answToQByteArray("NOK 3"));
+
+    return;
 }
 
 /* 
@@ -4704,7 +4730,6 @@ void console::handleGetBiopsyData(protoConsole* frame, protoConsole* answer)
     stringa += QString("%1 ").arg((int) pBiopsy->adapterId);
     if(pBiopsy->unlock_button) stringa += QString("1 ");
     else stringa += QString("0 ");
-    stringa += QString("%1 ").arg((int) pBiopsy->laterality);
 
     emit consoleTxHandler(answer->answToQByteArray(stringa));
     return;

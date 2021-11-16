@@ -105,6 +105,8 @@ public slots:
     void handleMoveArm(QString tag, QByteArray data);
 
     void handleBiopsy(QByteArray data);
+    void handleBiopsySimulator(QByteArray data);
+
 
 
     void handleSetAlarm(QByteArray data, bool selfreset);
