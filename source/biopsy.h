@@ -135,6 +135,7 @@ public:
 
     #define BIOPSY_ACTIVATION_SEQUENCE_DB   _DB_SERVICE1_INT
     #define BIOPSY_USER_CONFIRMATION_DB     _DB_SERVICE2_INT
+    #define BIOPSY_ACTIVATION_TITLE_DB      _DB_SERVICE1_STR
 
 
     // Sequenza guidata ________________________________________
@@ -142,9 +143,7 @@ public:
     #define _REQ_SEQ_HOME           1
     #define _REQ_SEQ_XYZ            2
 
-    #define _REQ_SUBSEQ_HOME_INIT_LEFT      0
-    #define _REQ_SUBSEQ_HOME_INIT_CENTER    1
-    #define _REQ_SUBSEQ_HOME_INIT_RIGHT     2
+    #define _REQ_SUBSEQ_HOME_INIT           0
     #define _REQ_SUBSEQ_HOME_BUSY           3
     #define _REQ_SUBSEQ_HOME_EXE_Z          4
     #define _REQ_SUBSEQ_HOME_WAIT_Z         5
@@ -166,6 +165,21 @@ public:
     #define _REQ_SUBSEQ_HOME_WAIT_X_TO_CENTER       18
     #define _REQ_SUBSEQ_HOME_WAIT_X_TO_RIGHT        19
     #define _REQ_SUBSEQ_HOME_COMPLETED              20
+
+
+    #define _REQ_SUBSEQ_XYZ_INIT                    0
+    #define _REQ_SUBSEQ_XYZ_EXE_X                   1
+    #define _REQ_SUBSEQ_XYZ_WAIT_X                  2
+    #define _REQ_SUBSEQ_XYZ_EXE_Y                   3
+    #define _REQ_SUBSEQ_XYZ_WAIT_Y                  4
+    #define _REQ_SUBSEQ_XYZ_EXE_Z                   5
+    #define _REQ_SUBSEQ_XYZ_WAIT_Z                  6
+    #define _REQ_SUBSEQ_XYZ_EXE_SCROLL_Y_LEFT       7
+    #define _REQ_SUBSEQ_XYZ_EXE_SCROLL_Y_RIGHT      8
+    #define _REQ_SUBSEQ_XYZ_EXE_SCROLL_Y_CENTER     9
+
+    #define _REQ_SUBSEQ_XYZ_BUSY                    20
+    #define _REQ_SUBSEQ_XYZ_COMPLETED               21
 
     int req_sequence;
     int sub_sequence;

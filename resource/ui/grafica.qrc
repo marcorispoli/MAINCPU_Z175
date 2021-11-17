@@ -373,5 +373,8 @@
         <file>BiopsyDevice/BiopsyScrollYCenter.png</file>
         <file>BiopsyDevice/BiopsyScrollYLeft.png</file>
         <file>BiopsyDevice/BiopsyScrollYRight.png</file>
+        <file>BiopsyDevice/BiopsyExecZToTarget.png</file>
+        <file>BiopsyDevice/BiopsyExecXToTarget.png</file>
+        <file>BiopsyDevice/BiopsyExecYToTarget.png</file>
     </qresource>
 </RCC>

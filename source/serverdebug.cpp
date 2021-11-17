@@ -4192,7 +4192,16 @@ void serverDebug::handleBiopsy(QByteArray data)
         }
 #endif
         if(data.contains("moveXYZ")){
-            serviceTcp->txData(QByteArray("TO BE DONE ....\r\n"));
+            parametri = getNextFieldsAfterTag(data, QString("moveXYZ"));
+            if(parametri.size()!=3){
+                serviceTcp->txData(QByteArray("PARAM ERROR: moveXYZ X,Y,Z \r\n"));
+                return;
+            }
+
+            int retval = pBiopsy->requestBiopsyMoveXYZ(parametri[0].toInt(), parametri[1].toInt(),parametri[2].toInt(), 0);
+            if(retval==0)  serviceTcp->txData(QByteArray("BYM already in Target\r\n"));
+            else if(retval<0) serviceTcp->txData(QString("Error condition %1\r\n").arg(retval).toAscii());
+            else serviceTcp->txData(QByteArray("DONE \r\n"));
 
         }else if(data.contains("moveHome")){
             parametri = getNextFieldsAfterTag(data, QString("moveHome"));

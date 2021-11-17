@@ -49,6 +49,10 @@ biopsy::biopsy(int rotview, QWidget *parent) :
     ui->frameMoveYToHome->setGeometry(0,0,800,480);
     ui->frameMoveZToHome->setGeometry(0,0,800,480);
 
+    ui->frameMoveZToTarget->setGeometry(0,0,800,480);
+    ui->frameMoveYToTarget->setGeometry(0,0,800,480);
+    ui->frameMoveXToTarget->setGeometry(0,0,800,480);
+
     hideFrames();
 
     connected = FALSE;
@@ -132,25 +136,25 @@ void biopsy::hideFrames(void){
     ui->frameMoveScrollYCenter->hide();
     ui->frameMoveScrollYLeft->hide();
     ui->frameMoveScrollYRight->hide();
+
     ui->frameMoveXCenterToHome->hide();
     ui->frameMoveXLeftToHome->hide();
     ui->frameMoveXRightToHome->hide();
     ui->frameMoveYToHome->hide();
     ui->frameMoveZToHome->hide();
+
+    ui->frameMoveZToTarget->hide();
+    ui->frameMoveYToTarget->hide();
+    ui->frameMoveXToTarget->hide();
 }
 
 void biopsy::manageChangeHomeSeq(unsigned char sub_seq)
 {
     switch(sub_seq){
-    case _REQ_SUBSEQ_HOME_INIT_LEFT:
-        ui->StartupTitleLabel->setText("ACTIVATION TO HOME LEFT SIDE");
+    case _REQ_SUBSEQ_HOME_INIT:
+        ui->StartupTitleLabel->setText(ApplicationDatabase.getDataS(BIOPSY_ACTIVATION_TITLE_DB));
         break;
-    case _REQ_SUBSEQ_HOME_INIT_CENTER:
-        ui->StartupTitleLabel->setText("ACTIVATION TO HOME CENTER SIDE");
-        break;
-    case _REQ_SUBSEQ_HOME_INIT_RIGHT:
-        ui->StartupTitleLabel->setText("ACTIVATION TO HOME RIGHT SIDE");
-        break;
+
     case _REQ_SUBSEQ_HOME_BUSY:
         break;
     case _REQ_SUBSEQ_HOME_EXE_Z:
@@ -211,7 +215,45 @@ void biopsy::manageChangeHomeSeq(unsigned char sub_seq)
 }
 void biopsy::manageChangeMoveXYZSeq(unsigned char sub_seq)
 {
+    switch(sub_seq){
+    case _REQ_SUBSEQ_XYZ_INIT:
+        ui->StartupTitleLabel->setText(ApplicationDatabase.getDataS(BIOPSY_ACTIVATION_TITLE_DB));
+        break;
 
+    case _REQ_SUBSEQ_XYZ_BUSY:
+        break;
+    case _REQ_SUBSEQ_XYZ_EXE_Z:
+        hideFrames();
+        break;
+    case _REQ_SUBSEQ_XYZ_WAIT_Z:
+        ui->frameMoveZToTarget->show();
+        break;
+    case _REQ_SUBSEQ_XYZ_EXE_Y:
+        hideFrames();
+        break;
+    case _REQ_SUBSEQ_XYZ_WAIT_Y:
+        ui->frameMoveYToTarget->show();
+        break;
+    case _REQ_SUBSEQ_XYZ_EXE_X:
+        hideFrames();
+        break;
+    case _REQ_SUBSEQ_XYZ_WAIT_X:
+        ui->frameMoveXToTarget->show();
+        break;
+    case _REQ_SUBSEQ_XYZ_COMPLETED:
+        break;
+
+    case _REQ_SUBSEQ_XYZ_EXE_SCROLL_Y_LEFT:
+        ui->frameMoveScrollYLeft->show();
+        break;
+    case _REQ_SUBSEQ_XYZ_EXE_SCROLL_Y_RIGHT:
+        ui->frameMoveScrollYRight->show();
+        break;
+    case _REQ_SUBSEQ_XYZ_EXE_SCROLL_Y_CENTER:
+        ui->frameMoveScrollYCenter->show();
+        break;
+
+    }
 }
 
 void biopsy::valueChanged(int index,int opt)
@@ -227,7 +269,6 @@ void biopsy::valueChanged(int index,int opt)
     case BIOPSY_USER_CONFIRMATION_DB:
         user_confirmation = true;
         break;
-
     }
 }
 
@@ -266,9 +307,7 @@ void biopsy::manageHomeSequence(void){
     switch(sub_sequence){
 
     // Inizializzazione della sequenza
-    case _REQ_SUBSEQ_HOME_INIT_LEFT:
-    case _REQ_SUBSEQ_HOME_INIT_RIGHT:
-    case _REQ_SUBSEQ_HOME_INIT_CENTER:
+    case _REQ_SUBSEQ_HOME_INIT:
 
         user_confirmation = false;
 
@@ -464,7 +503,148 @@ void biopsy::manageHomeSequence(void){
 
 
 void biopsy::manageXYZSequence(void){
+    switch(sub_sequence){
+
+    // Inizializzazione della sequenza
+    case _REQ_SUBSEQ_XYZ_INIT:
+        user_confirmation = false;
+
+        // Assegna la fase in corso
+        if(movingCommand > _BIOPSY_MOVING_COMPLETED){
+            sub_sequence = _REQ_SUBSEQ_XYZ_BUSY;
+            nextStepSequence(1);
+            return;
+        }
+
+        // Verifica se ci può essere rischio di impatto
+        if(testUpsidePosition(req_X)){
+            if(curLatX == _BP_ASSEX_POSITION_LEFT) sub_sequence = _REQ_SUBSEQ_XYZ_EXE_SCROLL_Y_LEFT;
+            else if(curLatX == _BP_ASSEX_POSITION_RIGHT) sub_sequence = _REQ_SUBSEQ_XYZ_EXE_SCROLL_Y_RIGHT;
+            else sub_sequence = _REQ_SUBSEQ_XYZ_EXE_SCROLL_Y_CENTER;
+        } else sub_sequence = _REQ_SUBSEQ_XYZ_EXE_X;
+
+        nextStepSequence(1);
+        break;
+
+    // Richiede il posizionamento dell'asse Y
+    case _REQ_SUBSEQ_XYZ_EXE_SCROLL_Y_LEFT:
+    case _REQ_SUBSEQ_XYZ_EXE_SCROLL_Y_RIGHT:
+    case _REQ_SUBSEQ_XYZ_EXE_SCROLL_Y_CENTER:
+
+        // Attende che l'utente confermi correttamente la regolazione dell'asse X
+        if(!user_confirmation){
+              event_req_sequence = startTimer(100);
+              return;
+        }
+
+        sub_sequence = _REQ_SUBSEQ_XYZ_EXE_X;
+        nextStepSequence(1);
+        break;
+
+
+    case _REQ_SUBSEQ_XYZ_EXE_X:
+
+        // Avvia il comando di posizionamento X
+        moveXYZ(req_X, curY_dmm, curZ_dmm);
+        if( movingError != _BIOPSY_MOVING_NO_ERROR){
+            manageRequestErrors(movingError);
+            return;
+        }
+
+        sub_sequence = _REQ_SUBSEQ_XYZ_WAIT_X;
+        nextStepSequence(100);
+        break;
+
+    case _REQ_SUBSEQ_XYZ_WAIT_X:
+
+        if(movingCommand > _BIOPSY_MOVING_COMPLETED){
+              event_req_sequence = startTimer(100);
+              return;
+        }
+
+        // Comando terminato
+        if(movingError != _BIOPSY_MOVING_NO_ERROR){
+            manageRequestErrors(movingError);
+            return;
+        }
+
+        sub_sequence = _REQ_SUBSEQ_XYZ_EXE_Y;
+        nextStepSequence(1);
+        break;
+
+    case _REQ_SUBSEQ_XYZ_EXE_Y:
+
+        // Avvia il comando di posizionamento X
+        moveXYZ(curX_dmm, req_Y, curZ_dmm);
+        if( movingError != _BIOPSY_MOVING_NO_ERROR){
+            manageRequestErrors(movingError);
+            return;
+        }
+
+        sub_sequence = _REQ_SUBSEQ_XYZ_WAIT_Y;
+        nextStepSequence(100);
+        break;
+
+    case _REQ_SUBSEQ_XYZ_WAIT_Y:
+
+        if(movingCommand > _BIOPSY_MOVING_COMPLETED){
+              event_req_sequence = startTimer(100);
+              return;
+        }
+
+        // Comando terminato
+        if(movingError != _BIOPSY_MOVING_NO_ERROR){
+            manageRequestErrors(movingError);
+            return;
+        }
+
+        sub_sequence = _REQ_SUBSEQ_XYZ_EXE_Z;
+        nextStepSequence(1);
+        break;
+
+    case _REQ_SUBSEQ_XYZ_EXE_Z:
+
+        // Avvia il comando di posizionamento X
+        moveXYZ(curX_dmm, curY_dmm, req_Z);
+        if( movingError != _BIOPSY_MOVING_NO_ERROR){
+            manageRequestErrors(movingError);
+            return;
+        }
+
+        sub_sequence = _REQ_SUBSEQ_XYZ_WAIT_Z;
+        nextStepSequence(100);
+        break;
+
+    case _REQ_SUBSEQ_XYZ_WAIT_Z:
+
+        if(movingCommand > _BIOPSY_MOVING_COMPLETED){
+              event_req_sequence = startTimer(100);
+              return;
+        }
+
+        // Comando terminato
+        if(movingError != _BIOPSY_MOVING_NO_ERROR){
+            manageRequestErrors(movingError);
+            return;
+        }
+
+        sub_sequence = _REQ_SUBSEQ_XYZ_COMPLETED;
+        nextStepSequence(1);
+        break;
+
+    case _REQ_SUBSEQ_XYZ_COMPLETED:
+
+        // Notifica di fine movimento
+        if(activationId) pToConsole->endCommandAck(activationId, movingError);
+        activationId = 0;
+        GWindowRoot.setNewPage(GWindowRoot.parentPage,GWindowRoot.curPage,0);
+        break;
+    }
 }
+
+
+
+
 void biopsy::manageRequestErrors(int error){
 }
 
@@ -489,18 +669,19 @@ int biopsy::requestBiopsyHome(int id, unsigned char lat){
     // Determina il target X in funzione della lateralità
     if(lat == _BP_ASSEX_POSITION_LEFT){
         req_X = 2580;
-        sub_sequence = _REQ_SUBSEQ_HOME_INIT_LEFT;
+        ApplicationDatabase.setData(BIOPSY_ACTIVATION_TITLE_DB,QString("BIOPSY ACTIVATED TO HOME LEFT SIDE"),0);
     }else if(lat == _BP_ASSEX_POSITION_CENTER){
         req_X = 1290;
-        sub_sequence = _REQ_SUBSEQ_HOME_INIT_CENTER;
+        ApplicationDatabase.setData(BIOPSY_ACTIVATION_TITLE_DB,QString("BIOPSY ACTIVATED TO HOME CENTER SIDE"),0);
     }else if(lat == _BP_ASSEX_POSITION_RIGHT){
         req_X = 0;
-        sub_sequence = _REQ_SUBSEQ_HOME_INIT_RIGHT;
+        ApplicationDatabase.setData(BIOPSY_ACTIVATION_TITLE_DB,QString("BIOPSY ACTIVATED TO HOME RIGHT SIDE"),0);
     }
 
     // Prepara la sequenza di gestione del movimento
     activationId = id;
     req_sequence = _REQ_SEQ_HOME;
+    sub_sequence = _REQ_SUBSEQ_HOME_INIT;
 
     // Apre la pagina grafica di gestione delle attivazioni
     GWindowRoot.setNewPage(_PG_BIOPSY_DEVICE,GWindowRoot.curPage,0);
@@ -511,6 +692,28 @@ int biopsy::requestBiopsyHome(int id, unsigned char lat){
 }
 
 int biopsy::requestBiopsyMoveXYZ(unsigned short X, unsigned short Y,unsigned short Z,int id){
+
+    // Se la lateralità non è definita non consente di muovere
+    if(curLatX == _BP_ASSEX_POSITION_ND) return -1;
+
+    // Se si trova già in posizione esce subito
+    if( (abs(curX_dmm-X) < 5) && (abs(curY_dmm-Y) < 5) && (abs(curZ_dmm-Z) < 5) ) return 0;
+
+
+    activationId = id;
+    req_X = X;
+    req_Y = Y;
+    req_Z = Z;
+    ApplicationDatabase.setData(BIOPSY_ACTIVATION_TITLE_DB,QString("BIOPSY ACTIVATED TO TARGET: %1,%2,%3").arg(req_X).arg(req_Y).arg(req_Z),0);
+
+    // Prepara la sequenza di gestione del movimento
+    req_sequence = _REQ_SEQ_XYZ;
+    sub_sequence = _REQ_SUBSEQ_XYZ_INIT;
+
+    // Apre la pagina grafica di gestione delle attivazioni
+    GWindowRoot.setNewPage(_PG_BIOPSY_DEVICE,GWindowRoot.curPage,0);
+    nextStepSequence(1);
+    return 1;
 
 }
 
