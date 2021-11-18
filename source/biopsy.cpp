@@ -813,6 +813,10 @@ bool biopsy::storeConfig(void)
     return true;
 }
 
+// To be completed
+int biopsy::calibrateSh(void){
+    return (int) 150 - (int) curSh_dmm ;
+}
 
 void biopsy::mccStatNotify(unsigned char id_notify,unsigned char cmd, QByteArray data)
 {
@@ -881,12 +885,13 @@ void biopsy::mccStatNotify(unsigned char id_notify,unsigned char cmd, QByteArray
     curX_dmm = data.at(_BP_XL) + 256 * data.at(_BP_XH) ;
     curY_dmm = data.at(_BP_YL) + 256 * data.at(_BP_YH) ;
     curZ_dmm = data.at(_BP_ZL) + 256 * data.at(_BP_ZH) ;
+
     curSh_dmm= data.at(_BP_SHL) + 256 * data.at(_BP_SHH) ;
 
     ApplicationDatabase.setData(_DB_BIOP_X,(int) curX_dmm,0);
     ApplicationDatabase.setData(_DB_BIOP_Y,(int) curY_dmm,0);
     ApplicationDatabase.setData(_DB_BIOP_Z,(int) curZ_dmm,0);
-    ApplicationDatabase.setData(_DB_BIOP_SH,(int) curSh_dmm,0);
+    ApplicationDatabase.setData(_DB_BIOP_SH,(int) calibrateSh(),0);
 
     // Calcolo del Margine tra Paddle e Staffa metallica
     paddle_margine  = data.at(_BP_PADDLE_MARGINE);

@@ -25,6 +25,9 @@ Data di Creazione: 19/06/2014
 #define  _ADAPTER_A_LEVEL_H         550
 #define  _ADAPTER_A_LEVEL_L         750
 
+#define  _ADAPTER_B_LEVEL_H         400
+#define  _ADAPTER_B_LEVEL_L         200
+
 #define  _ADAPTER_SHORT_LEVEL_H     100
 #define  _ADAPTER_SHORT_LEVEL_L     0
 

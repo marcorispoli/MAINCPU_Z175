@@ -197,27 +197,22 @@
         <file>Service_Tools/lenze_background.png</file>
     </qresource>
     <qresource prefix="/BiopsyPage">
-        <file>BiopsyPage/allarme_holder.png</file>
-        <file>BiopsyPage/biopsy_holder.png</file>
-        <file>BiopsyPage/biopsy_manual_dwn_C.png</file>
-        <file>BiopsyPage/biopsy_manual_dwn_Y.png</file>
-        <file>BiopsyPage/biopsy_manual_up_C.png</file>
-        <file>BiopsyPage/biopsy_manual_up_Y.png</file>
         <file>BiopsyPage/biopsy_demo.png</file>
         <file>BiopsyPage/biopsy_xray.png</file>
         <file>BiopsyPage/imageIcon.png</file>
         <file>BiopsyPage/calib_pix.png</file>
         <file>BiopsyPage/rotPixY.png</file>
         <file>BiopsyPage/rotPixC.png</file>
-        <file>BiopsyPage/linea_margine.png</file>
-        <file>BiopsyPage/buttonsY.png</file>
-        <file>BiopsyPage/buttonsC.png</file>
-        <file>BiopsyPage/background_biopsy_Y.png</file>
-        <file>BiopsyPage/background_biopsy_C.png</file>
-        <file>BiopsyPage/buttonsCnoHome.png</file>
-        <file>BiopsyPage/buttonsYnoHome.png</file>
         <file>BiopsyPage/specimen_l.png</file>
         <file>BiopsyPage/specimen_r.png</file>
+        <file>BiopsyPage/homeC.png</file>
+        <file>BiopsyPage/homeR.png</file>
+        <file>BiopsyPage/undefXScroll.png</file>
+        <file>BiopsyPage/homeL.png</file>
+        <file>BiopsyPage/homeCaccessorio.png</file>
+        <file>BiopsyPage/homeLaccessorio.png</file>
+        <file>BiopsyPage/homeRaccessorio.png</file>
+        <file>BiopsyPage/BiopsyPointerArrow.png</file>
     </qresource>
     <qresource prefix="/StartupPage">
         <file>StartupPage/startup_tc.png</file>

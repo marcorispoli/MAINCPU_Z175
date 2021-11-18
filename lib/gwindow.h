@@ -219,6 +219,7 @@ public:
     ~GLabel() {}
 
     void setPlainText(char* testo);
+    void setPosition(qreal X, qreal Y);
     void setVisible(bool stat);
 
 

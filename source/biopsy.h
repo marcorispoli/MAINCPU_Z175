@@ -200,6 +200,7 @@ private:
     void manageChangeHomeSeq(unsigned char sub_seq);
     void manageChangeMoveXYZSeq(unsigned char sub_seq);
     void hideFrames(void);
+    int calibrateSh(void);
 
 };
 

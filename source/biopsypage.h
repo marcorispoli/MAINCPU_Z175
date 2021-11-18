@@ -41,11 +41,9 @@ private:
         timerDisableButton = startTimer(t);
     }
 
-    bool enableBiopMoveButtons;  // Abilitazione pagina movimenti manuali
+
     bool localStudy;    // Definisce se lo studio è locale o con PC
     QColor studyColor;   // Colore relativo allo studio in corso
-
-
 
 
     // Testo per Intestazione
@@ -83,54 +81,28 @@ private:
     GPush* pulsanteAlarmOn;
 
     // Testo per campo XYZ
-    GLabel* biopXValue;
-    GLabel* biopYValue;
-    GLabel* biopZValue;
-    GLabel* biopMargineValue;
-    GLabel* biopMaxZValue;
-    GLabel* biopHolderValue;
+    GLabel* biopXYZValue;
+
 
     void setBiopXYZ(void);
-    void updateHolder(void);
-    void updateManualActivation(void);
-
-    // Testo per campo accessorio biopsia
-    //GLabel* biopAgoLabel;
-    //GLabel* biopAgoValue;
-    //void setBiopAgo(void);
-
-   // bool warningBiopAdapterVisible;
-   // QGraphicsPixmapItem* warningBiopAdapter_Pix;
-   // void setWarningBiopAdapter(bool stat);
-
-
-    // Pulsanti movimento manuale
-    GPush* pulsanteBiopStepUp;
-    GPush* pulsanteBiopStepDown;
-    GPush* pulsanteBiopHome;
-    QGraphicsPixmapItem* buttonsPix;
-
-    // Labels
-    /*
-    GLabel* funcBiopMoveLabel;
-    GLabel* margBiopMoveLabel;
-    GLabel* zBiopMoveLabel;
-    GLabel* margBiopMoveValue;
-    GLabel* zBiopMoveValue;
-    void setBiopMoveMargValue(void);
-    void setBiopMoveZValue(void);
-*/
+    void updateBiopsyView(void);
+    void updateCursorPointer(void);
+    QGraphicsPixmapItem* cursorPix;
+    GLabel* cursorValue;
+    GLabel* tubeTempValue;
 
     QGraphicsPixmapItem* xrayPix;
     QGraphicsPixmapItem* calibPix;
     QGraphicsPixmapItem* demoPix;
-    QGraphicsPixmapItem* rotPix;
 
     bool specimenMode;
     bool specimenLeft;
 
     bool xRayStat;
     bool isOpen;
+
+    void setTubeTemp(void);
+    void setInfoPanelView(bool stat);
 };
 
 #endif // BIOPSYPAGE_H

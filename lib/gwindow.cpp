@@ -735,3 +735,9 @@ void GLabel::setVisible(bool stat)
     if(stat) this->show();
     else this->hide();
 }
+void GLabel::setPosition(qreal X, qreal Y)
+{
+    labelBound.setX((qreal) X);
+    labelBound.setY((qreal) Y);
+    update();
+}

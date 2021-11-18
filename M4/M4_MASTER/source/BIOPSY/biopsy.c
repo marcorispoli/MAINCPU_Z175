@@ -233,7 +233,7 @@ void BIOPSY_manageDriverConnectedStatus(void){
         if(!BiopsyDriverGetNeedle(&generalConfiguration.biopsyCfg.adapterId)) return;
 
         // Conversione valori NEEDLE -> IDENTIFICATORE
-        if((generalConfiguration.biopsyCfg.adapterId >= _ADAPTER_NEEDLE_LEVEL_L) && (generalConfiguration.biopsyCfg.adapterId <= _ADAPTER_NEEDLE_LEVEL_L))
+        if((generalConfiguration.biopsyCfg.adapterId >= _ADAPTER_NEEDLE_LEVEL_L) && (generalConfiguration.biopsyCfg.adapterId <= _ADAPTER_NEEDLE_LEVEL_H))
             dati[_BP_ADAPTER_ID] = _BP_ADAPTER_NEEDLE;
         else if((generalConfiguration.biopsyCfg.adapterId >= _ADAPTER_A_LEVEL_L) && (generalConfiguration.biopsyCfg.adapterId <= _ADAPTER_A_LEVEL_H))
             dati[_BP_ADAPTER_ID] = _BP_ADAPTER_A;
@@ -250,7 +250,7 @@ void BIOPSY_manageDriverConnectedStatus(void){
         if(!BiopsyDriverGetX(&generalConfiguration.biopsyCfg.X)) return;
         if(!BiopsyDriverGetY(&generalConfiguration.biopsyCfg.Y)) return;
         if(!BiopsyDriverGetZ(&generalConfiguration.biopsyCfg.Z)) return;
-        if(!BiopsyDriverGetZ(&generalConfiguration.biopsyCfg.SH)) return;
+        if(!BiopsyDriverGetSH(&generalConfiguration.biopsyCfg.SH)) return;
 
         dati[_BP_XL] = (unsigned char) (generalConfiguration.biopsyCfg.X & 0x00FF);
         dati[_BP_XH] = (unsigned char) (generalConfiguration.biopsyCfg.X >> 8);
