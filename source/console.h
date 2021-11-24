@@ -16,11 +16,10 @@
 // #define SET_BIOPSY_HOME     "SetBiopsyHome"
 // #define GET_BIOPSY_Z        "GetBiopsyZ"
 
-#define SET_BIOPSY_MOVE        "SetBiopsyMove"      // Muove ad un punto qualsiasi XYZ
-#define SET_BIOPSY_HOME        "SetBiopsyHome"      // Muove a home
-
-#define GET_BIOPSY_DATA        "GetBiopsyData"      // Chiede tutti i dati peculiari della torretta
-#define SET_BIOPSY_CONFIG      "SetBiopsyConfig"    // Configura la biopsia
+#define SET_BIOPSY_EXTENDED_MOVE        "SetBiopsyExtendedMove"      // Muove ad un punto qualsiasi XYZ
+#define SET_BIOPSY_EXTENDED_HOME        "SetBiopsyExtendedHome"      // Muove a home
+#define GET_BIOPSY_EXTENDED_DATA        "GetBiopsyExtendedData"      // Chiede tutti i dati peculiari della torretta
+#define SET_BIOPSY_CONFIG      "SetBiopsyConfig"    // Configura la biopsia: da completare
 
 
 #define GET_SPECIMEN        "GetSpecimen"
@@ -183,7 +182,8 @@ signals:
     void mccPcb190Notify(unsigned char id, unsigned char code, QByteArray buffer); // segnale da connettere per ricevere notifiche dal driver PCB190/M$
     void mccPcb215Notify(unsigned char id, unsigned char code, QByteArray buffer); // segnale da connettere per ricevere notifiche dal driver PCB215/M4
     void mccPcb249U1Notify(unsigned char id, unsigned char code, QByteArray buffer); // segnale da connettere per ricevere notifiche dal driver PCB249U1/M4
-    void mccBiopsyNotify(unsigned char id, unsigned char code, QByteArray buffer); // segnale da connettere per ricevere notifiche dal driver PCB249U1/M4
+    void mccBiopsyStandardNotify(unsigned char id, unsigned char code, QByteArray buffer);
+    void mccBiopsyExtendedNotify(unsigned char id, unsigned char code, QByteArray buffer);
     void mccServiceNotify(unsigned char id, unsigned char code, QByteArray buffer); // segnale da connettere per ricevere notifiche dal driver PCB249U1/M4
     void mccLoaderNotify(unsigned char id, unsigned char code, QByteArray buffer); // segnale da connettere per ricevere notifiche dal driver PCB249U1/M4
     void raggiDataSgn(QByteArray data); // Emissione info dati dopo raggi
@@ -206,7 +206,9 @@ public slots:
     void emitPcb190Notify(unsigned char id, unsigned char code, QByteArray buffer) { emit mccPcb190Notify(id,code,buffer);} // Emette il segnale di notifica MCC
     void emitPcb215Notify(unsigned char id, unsigned char code, QByteArray buffer) { emit mccPcb215Notify(id,code,buffer);} // Emette il segnale di notifica MCC
     void emitPcb249U1Notify(unsigned char id, unsigned char code, QByteArray buffer) { emit mccPcb249U1Notify(id,code,buffer);} // Emette il segnale di notifica MCC
-    void emitBiopsyNotify(unsigned char id, unsigned char code, QByteArray buffer) { emit mccBiopsyNotify(id,code,buffer);} // Emette il segnale di notifica MCC
+    void emitBiopsyStandardNotify(unsigned char id, unsigned char code, QByteArray buffer) { emit mccBiopsyStandardNotify(id,code,buffer);} // Emette il segnale di notifica MCC
+    void emitBiopsyExtendedNotify(unsigned char id, unsigned char code, QByteArray buffer) { emit mccBiopsyExtendedNotify(id,code,buffer);} // Emette il segnale di notifica MCC
+
     void emitServiceNotify(unsigned char id, unsigned char code, QByteArray buffer) { emit mccServiceNotify(id,code,buffer);} // Emette il segnale di notifica MCC
     void emitLoaderNotify(unsigned char id, unsigned char code, QByteArray buffer) { emit mccLoaderNotify(id,code,buffer);} // Emette il segnale di notifica MCC
     void emitRaggiData(QByteArray data) {emit raggiDataSgn(data);}
@@ -350,11 +352,12 @@ public:
     bool handleSetIdacTomoData(protoConsole* frame, protoConsole* answer);
     bool handleSetIaRxData(protoConsole* frame, protoConsole* answer);
 
-    // GESTIONE BIOPSIA
-    void  handleBiopsyMoveXYZ(protoConsole* frame,protoConsole* answer);      // Posizionamento del cursore a XYZ
-    void  handleBiopsyMoveHome(protoConsole* frame,protoConsole* answer);      // Posizionamento del cursore a Home
+    // GESTIONE BIOPSIA ESTESA
+    void  handleBiopsyExtendedMoveXYZ(protoConsole* frame,protoConsole* answer);      // Posizionamento del cursore a XYZ
+    void  handleBiopsyExtendedMoveHome(protoConsole* frame,protoConsole* answer);      // Posizionamento del cursore a Home
+    void  handleGetBiopsyExtendedData(protoConsole* frame,protoConsole* answer);        // Richiede i dati di posizione della Biopsia
 
-    void  handleGetBiopsyData(protoConsole* frame,protoConsole* answer);        // Richiede i dati di posizione della Biopsia
+    // GESTIONE BIOPSIA STANDARD
     void  handleSetBiopsyConfig(protoConsole* frame,protoConsole* answer);      // Aggiorna la configurazione della calibrazione
 
     int  handleSetLingua(protoConsole* frame);          // Impostazione della lingua

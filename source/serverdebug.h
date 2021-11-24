@@ -104,7 +104,8 @@ public slots:
     void handleMoveTrx(QString tag, QByteArray data);
     void handleMoveArm(QString tag, QByteArray data);
 
-    void handleBiopsy(QByteArray data);
+    void handleStandardBiopsy(QByteArray data);
+    void handleExtendedBiopsy(QByteArray data);
     void handleBiopsySimulator(QByteArray data);
 
 

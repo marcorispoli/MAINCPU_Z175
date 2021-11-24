@@ -406,9 +406,7 @@ void protoToConsole::logMessages(QString msg)
 // Funzione di notifica per classi esterne
 void  protoToConsole::sendNotificheTcp(QByteArray frame)
 {
-
-
-    if(!notificheConnected) return;
+    // if(!notificheConnected) return;
     emit notificheTxHandler(frame);
 }
 
@@ -451,8 +449,10 @@ void protoToConsole::setConfigChanged(_configCode config){
     case protoToConsole::ACCESSORIO:
 
         cmd.addParam(QString("POTTER")); // Parola chiave
-        if(pBiopsy->connected) cmd.addParam(QString("BP %1").arg(pBiopsy->adapterId));
-        else if(pPotter->getPotId()==POTTER_2D)  cmd.addParam(QString("2D 0"));
+        if(ApplicationDatabase.getDataU(_DB_ACCESSORIO) == BIOPSY_DEVICE){
+            if(pConfig->sys.biopsyType == BYM_STANDARD_DEVICE) cmd.addParam(QString("BP %1").arg(pBiopsyStandard->accessorio));
+            else cmd.addParam(QString("BPLAT 0"));
+        }else if(pPotter->getPotId()==POTTER_2D)  cmd.addParam(QString("2D 0"));
         else if(pPotter->getPotId()==POTTER_TOMO)  cmd.addParam(QString("3D 0"));
         else if(pPotter->getPotId()==POTTER_MAGNIFIER)  cmd.addParam(QString("MG %1").arg(pCompressore->config.fattoreIngranditore[pPotter->getPotFactor()]));
         else  cmd.addParam(QString("ND 0"));
@@ -464,10 +464,39 @@ void protoToConsole::setConfigChanged(_configCode config){
     return;
 }
 
-void protoToConsole::setBiopsyPosition(int curX, int curY, int curZ, int curSh){
+/*
+ *  Connessione
+ *  [ON/OFF]
+ *
+ *
+ */
+void protoToConsole::setBiopsyExtendedData(){
     protoConsole cmd(1,UNICODE_FORMAT);
-    cmd.addParam(QString("%1 %2 %3 %4").arg(curX).arg(curY).arg(curZ).arg(curSh));
-    sendNotificheTcp(cmd.cmdToQByteArray(NOTIFY_SET_BIOPSY_POSITION));
+
+    QString stringa;
+
+    // Stato della connessione
+    if(pBiopsyExtended->connected) stringa = "CONNECTED ";
+    else stringa = "DISCONNECTED ";
+
+    // Lateralità rilevata
+    if(pBiopsyExtended->curLatX == _BP_ASSEX_POSITION_LEFT) stringa += "X_L ";
+    else if(pBiopsyExtended->curLatX == _BP_ASSEX_POSITION_RIGHT) stringa += "X_R ";
+    else if(pBiopsyExtended->curLatX == _BP_ASSEX_POSITION_CENTER) stringa += "X_C ";
+    else stringa += "X_N ";
+
+    // Adapter
+    if(pBiopsyExtended->adapterId == _BP_ADAPTER_A) stringa += "AD_A ";
+    else if(pBiopsyExtended->adapterId == _BP_ADAPTER_B) stringa += "AD_B ";
+    else if(pBiopsyExtended->adapterId == _BP_ADAPTER_C) stringa += "AD_C ";
+    else stringa += "AD_ND ";
+
+    // Coordinate
+    stringa += QString("X=%1 Y=%2 Z=%3 SH=%4 ").arg(ApplicationDatabase.getDataI(_DB_BIOP_X)).arg(ApplicationDatabase.getDataI(_DB_BIOP_Y)).arg(ApplicationDatabase.getDataI(_DB_BIOP_Z)).arg(ApplicationDatabase.getDataI(_DB_BIOP_SH));
+
+
+    cmd.addParam(stringa);
+    sendNotificheTcp(cmd.cmdToQByteArray(NOTIFY_SET_BIOPSY_EXTENDED_DATA));
     return;
 }
 

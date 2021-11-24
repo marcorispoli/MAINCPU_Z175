@@ -517,7 +517,8 @@ void serverDebug::serviceRxHandler(QByteArray data)
     }else if(data.contains("biopsy:"))
     {
         cmdGroup="biopsy: ";
-        handleBiopsy(data);
+        if(pConfig->sys.biopsyType== BYM_STANDARD_DEVICE)  handleStandardBiopsy(data);
+        else handleExtendedBiopsy(data);
     }else if(data.contains("loader:"))
     {
         cmdGroup="loader: ";
@@ -4112,42 +4113,29 @@ void serverDebug::handleSetOutputs(QByteArray data)
 }
 
 
+void serverDebug::handleStandardBiopsy(QByteArray data){
 
-void serverDebug::handleBiopsy(QByteArray data)
+}
+
+void serverDebug::handleExtendedBiopsy(QByteArray data)
 {
     QList<QByteArray> parametri;
-    QByteArray cmddata;
 
     if(data.contains("?"))
     {
         serviceTcp->txData(QByteArray("--------------- ACTIVATION ----------------------------\r\n"));
         serviceTcp->txData(QByteArray("moveXYZ x,y,z         ? X,Y,Z in dmm \r\n"));
         serviceTcp->txData(QByteArray("moveHome              ? move to 0,0,0 \r\n"));
-        serviceTcp->txData(QByteArray("moveInc    <X|Y|Z>    ? INC Z or Y or Z \r\n"));
-        serviceTcp->txData(QByteArray("moveDec    <X|Y|Z>    ? DEC Z or Y or Z \r\n"));
-        serviceTcp->txData(QByteArray("stepVal    val        ? set the Step value \r\n"));
-        serviceTcp->txData(QByteArray("getStepval            ? return current stepval \r\n"));
 
-        serviceTcp->txData(QByteArray("\r\n------------ WORKFLOW ----------------------------\r\n"));
-        serviceTcp->txData(QByteArray("getLimits               ? return current maxZ \r\n"));
-        serviceTcp->txData(QByteArray("getAdapter            ? return current Adapter Id \r\n"));
-        serviceTcp->txData(QByteArray("getRevision           ? return current revision \r\n"));
-
-
-        serviceTcp->txData(QByteArray("\r\n------------ CALIBRATION FILE -----------------------\r\n"));
-        serviceTcp->txData(QByteArray("setCalHome    val     ? (mm) set  Distanza Home Fibra \r\n"));
-        serviceTcp->txData(QByteArray("setStore              ? Store calib file \r\n"));
-        serviceTcp->txData(QByteArray("showCalibFile         ? Show Calib File \r\n"));
-        serviceTcp->txData(QByteArray("readCalibFile         ? Show Calib File \r\n"));
 
 #ifdef __BIOPSY_SIMULATOR
         serviceTcp->txData(QByteArray("\n\r BIOPSY SIMULATOR COMMANDS: --------\r\n"));
         serviceTcp->txData(QByteArray("simConn    [ON/OFF]   ? ON=CONNECTED \r\n"));
         serviceTcp->txData(QByteArray("simSetXYZ  X,Y,Z      ? SET THE VIRTUAL CURSOR (dmm) \r\n"));
-        serviceTcp->txData(QByteArray("simAdapter [n]        ? N=ADAPTER CODE \r\n"));
+        serviceTcp->txData(QByteArray("simAdapter [A/B/C/O/S]? SET ADAPTER CODE \r\n"));
         serviceTcp->txData(QByteArray("simSblocco [ON/OFF]   ? ON=UNLOCK \r\n"));        
-        serviceTcp->txData(QByteArray("simSH shval           ? SH val in (dmm)\r\n"));
-        serviceTcp->txData(QByteArray("simLat      [L,C,R,N] ? Laterality     \r\n"));
+        serviceTcp->txData(QByteArray("simSH      shval      ? SH val in (dmm)\r\n"));
+        serviceTcp->txData(QByteArray("simLat     [L,C,R,N]  ? Laterality     \r\n"));
         serviceTcp->txData(QByteArray("-----------------------------------------------------------------\r\n"));
 #endif
 
@@ -4155,38 +4143,9 @@ void serverDebug::handleBiopsy(QByteArray data)
     {
 
 
-        if(data.contains("setCalFibra")){
-            parametri = getNextFieldsAfterTag(data, QString("setCalFibra"));
-            if(parametri.size()!=1){
-                serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\n"));
-                return;
-            }
 
-            pBiopsy->config.Z_homePosition = parametri[0].toInt();
-            serviceTcp->txData(QString("CALIB DISTANZA FIBRA:%1 (mm)\n\r").arg(pBiopsy->config.Z_homePosition).toAscii().data());
-            return;
-        }
-        if(data.contains("setStore")){
-            if(pBiopsy->storeConfig()){
-                serviceTcp->txData(QString("STORED !\n\r").toAscii().data());
-                pBiopsy->updateConfig();
-            }else serviceTcp->txData(QString("ERROR\n\r").toAscii().data());
-            return;
-        }
-        if(data.contains("showCalibFile")){
-
-            serviceTcp->txData(QString("CALIB HOME:%1 (mm)\n\r").arg(pBiopsy->config.Z_homePosition).toAscii().data());
-            return;
-        }
-        if(data.contains("readCalibFile")){
-            if(pBiopsy->openCfg()){
-                serviceTcp->txData(QString("OK !\n\r").toAscii().data());
-                pBiopsy->updateConfig();
-            }else serviceTcp->txData(QString("ERROR\n\r").toAscii().data());
-            return;
-        }
 #ifndef __BIOPSY_SIMULATOR
-        if(!pBiopsy->connected){
+        if(!pBiopsyExtended->connected){
             serviceTcp->txData(QByteArray("BIOPSY DEVICE DISCONNECTED!!\n\r"));
             return;
         }
@@ -4198,7 +4157,7 @@ void serverDebug::handleBiopsy(QByteArray data)
                 return;
             }
 
-            int retval = pBiopsy->requestBiopsyMoveXYZ(parametri[0].toInt(), parametri[1].toInt(),parametri[2].toInt(), 0);
+            int retval = pBiopsyExtended->requestBiopsyMoveXYZ(parametri[0].toInt(), parametri[1].toInt(),parametri[2].toInt(), 0);
             if(retval==0)  serviceTcp->txData(QByteArray("BYM already in Target\r\n"));
             else if(retval<0) serviceTcp->txData(QString("Error condition %1\r\n").arg(retval).toAscii());
             else serviceTcp->txData(QByteArray("DONE \r\n"));
@@ -4220,54 +4179,14 @@ void serverDebug::handleBiopsy(QByteArray data)
                 return;
             }
 
-            int retval = pBiopsy->requestBiopsyHome(0,lat);
+            int retval = pBiopsyExtended->requestBiopsyHome(0,lat);
             if(retval==0)  serviceTcp->txData(QByteArray("BYM already in Home\r\n"));
             else serviceTcp->txData(QByteArray("DONE \r\n"));
 
-        }else if(data.contains("moveInc")){
-            parametri = getNextFieldsAfterTag(data, QString("moveInc"));
-            if(parametri.size()!=1) serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\r\n"));
-            int retval;
-
-            if((parametri[0]=="X") || (parametri[0]=="x")){
-                retval = pBiopsy->moveIncX(0);
-            }else if((parametri[0]=="Y") || (parametri[0]=="y")){
-                retval = pBiopsy->moveIncY(0);
-            }else if((parametri[0]=="Z") || (parametri[0]=="z")){
-                retval = pBiopsy->moveIncZ(0);
-            }
-            if(retval!=_BIOPSY_MOVING_NO_ERROR)  serviceTcp->txData(QString("FALLITO COMANDO! Errore:%1\r\n").arg(retval).toAscii().data());
-            else serviceTcp->txData(QByteArray("OK\r\n"));
-
-        }else if(data.contains("moveDec")){
-            int retval;
-            parametri = getNextFieldsAfterTag(data, QString("moveDec"));
-            if(parametri.size()!=1) serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\n"));
-            if((parametri[0]=="X") || (parametri[0]=="x")){
-                retval = pBiopsy->moveDecX(0);
-            }else if((parametri[0]=="Y") || (parametri[0]=="y")){
-                retval = pBiopsy->moveDecY(0);
-            }else if((parametri[0]=="Z") || (parametri[0]=="z")){
-                retval = pBiopsy->moveDecZ(0);
-            }
-            if(retval!=_BIOPSY_MOVING_NO_ERROR)  serviceTcp->txData(QString("FALLITO COMANDO! Errore:%1\r\n").arg(retval).toAscii().data());
-            else serviceTcp->txData(QByteArray("OK\r\n"));
-
-        }else if(data.contains("stepVal")){
-            parametri = getNextFieldsAfterTag(data, QString("stepVal"));
-            if(parametri.size()!=1) serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\n"));
-            if(pBiopsy->setStepVal((unsigned char) parametri[0].toInt())==false){
-                serviceTcp->txData(QByteArray("FALLITO COMANDO!\n"));
-            }
-
-        }else if(data.contains("getStepval")){
-            serviceTcp->txData(QString("current stepval: %1\n\r").arg(pBiopsy->stepVal).toAscii().data());
-        }else if(data.contains("getLimits")){
-            serviceTcp->txData(QString("NEEDLE TO HOME:%1\n\rNEEDLE MARGINE:%2\n\rPAD TO BYM:%3\n\rMAX-Z (paddle):%4\n\rABS-MAX-Z:%5\n\r").arg(pBiopsy->needle_home).arg(pBiopsy->needle_margine).arg(pBiopsy->paddle_margine).arg(pBiopsy->max_z_paddle).arg(pBiopsy->abs_max_z).toAscii().data());
         }else if(data.contains("getAdapter")){
-            serviceTcp->txData(QString("current adapter: %1\n\r").arg(pBiopsy->adapterId).toAscii().data());
+            serviceTcp->txData(QString("current adapter: %1\n\r").arg(pBiopsyExtended->adapterId).toAscii().data());
         }else if(data.contains("getRevision")){
-            serviceTcp->txData(QString("current adapter: %1\n\r").arg(pBiopsy->revisione).toAscii().data());
+            serviceTcp->txData(QString("current adapter: %1\n\r").arg(pBiopsyExtended->revisione).toAscii().data());
         }else handleBiopsySimulator(data);
     }
 }
@@ -4344,7 +4263,7 @@ void serverDebug::handleBiopsySimulator(QByteArray data)
     }else if(data.contains("simAdapter")){
         QList<QByteArray> parametri = getNextFieldsAfterTag(data, QString("simAdapter"));
         if(parametri.size() != 1) {
-            stringa = QString("PARAMETRO: num adapter \r\n");
+            stringa = QString("PARAMETRO: [A/B/C/O/S] \r\n");
             serviceTcp->txData(stringa.toAscii());
             return;
         }
@@ -4352,7 +4271,11 @@ void serverDebug::handleBiopsySimulator(QByteArray data)
         // Comando impostazione stato connessione
         buffer[0] = _BYM_SIM_ADAPTER;
 
-        buffer[1] = parametri[0].toInt();
+        if(parametri[0] == "A") buffer[1] = _BYM_SYM_ADAPTER_A;
+        else if(parametri[0] == "B") buffer[1] = _BYM_SYM_ADAPTER_B;
+        else if(parametri[0] == "C") buffer[1] = _BYM_SYM_ADAPTER_C;
+        else if(parametri[0] == "O") buffer[1] = _BYM_SYM_ADAPTER_O;
+        else if(parametri[0] == "S") buffer[1] = _BYM_SYM_ADAPTER_S;
 
         pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_SIMULATOR,1,buffer,2);
         serviceTcp->txData(QByteArray("DONE \r\n"));

@@ -233,15 +233,19 @@ void BIOPSY_simdriver(uint32_t taskRegisters)
 void SimSetPush(bool stat){
     sim_sblocco = stat;
     printf("SIMULATORE BYM:PULSANTE SBLOCCO >%d\n", sim_sblocco);
+
+    if(sim_sblocco) bym_StatusH |= 0x40;
+    else bym_StatusH &= 0xBF;
 }
 
 
 void SimSetAdapter(int id){
 
-    if(id == _BP_ADAPTER_OPEN) bym_Needle = (_ADAPTER_OPEN_LEVEL_L + _ADAPTER_OPEN_LEVEL_H)/2;
-    else if(id == _BP_ADAPTER_SHORT) bym_Needle = (_ADAPTER_SHORT_LEVEL_L + _ADAPTER_SHORT_LEVEL_H)/2;
-    else if(id == _BP_ADAPTER_A) bym_Needle = (_ADAPTER_A_LEVEL_L + _ADAPTER_A_LEVEL_H)/2;
-    else if(id == _BP_ADAPTER_B) bym_Needle = (_ADAPTER_B_LEVEL_L + _ADAPTER_B_LEVEL_H)/2;
+    if(id == _BYM_SYM_ADAPTER_O) bym_Needle = (_ADAPTER_OPEN_LEVEL_L + _ADAPTER_OPEN_LEVEL_H)/2;
+    else if(id == _BYM_SYM_ADAPTER_S) bym_Needle = (_ADAPTER_SHORT_LEVEL_L + _ADAPTER_SHORT_LEVEL_H)/2;
+    else if(id == _BYM_SYM_ADAPTER_A) bym_Needle = (_ADAPTER_A_LEVEL_L + _ADAPTER_A_LEVEL_H)/2;
+    else if(id == _BYM_SYM_ADAPTER_B) bym_Needle = (_ADAPTER_B_LEVEL_L + _ADAPTER_B_LEVEL_H)/2;
+    else if(id == _BYM_SYM_ADAPTER_C) bym_Needle = (_ADAPTER_C_LEVEL_L + _ADAPTER_C_LEVEL_H)/2;
 
     printf("SIMULATORE BYM:NEEDLE >%d\n", bym_Needle);
 }

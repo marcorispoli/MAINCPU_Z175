@@ -35,7 +35,7 @@ public:
     #define NOTIFY_SEND_ABORT_PROJECTION       "AbortProjection"        // Notifica l'AWS con l'avvenuta cancellazione della selezione
 
     #define NOTIFY_REQUEST_POWER_OFF            "RequestPowerOff"
-    #define NOTIFY_SET_BIOPSY_POSITION          "SetBiopsyPosition"
+    #define NOTIFY_SET_BIOPSY_EXTENDED_DATA     "SetBiopsyExtendedData"
 
 typedef enum
 {
@@ -59,7 +59,7 @@ public:
     void notifyProjectionSelection(QString projection); // Notifica la AWS dell'avvenuta selezione
     void notifyAbortProjection(void); // Notifica la AWS dell'avvenuta selezione
     void notifyRequestPowerOff(void);
-    void setBiopsyPosition(int curX, int curY, int curZ, int curSh);
+    void setBiopsyExtendedData();
     void setSpecimen(bool stat);
 
     void endCommandAck(unsigned char id, unsigned char code); // Acnowledge per fine comando

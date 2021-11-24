@@ -307,6 +307,9 @@ void mainPrintHardwareConfig(void){
     if(generalConfiguration.gantryCfg.highSpeedStarter) printf("IAE HIGH SPEED STARTER\n");
     else printf("INTERNAL LOW SPEED STARTER\n");
 
+    if(generalConfiguration.gantryCfg.biopsyType == BYM_STANDARD_DEVICE) printf("BYM STANDARD DEVICE\n");
+    else printf("BYM EXTENDED DEVICE\n");
+
 
 }
 

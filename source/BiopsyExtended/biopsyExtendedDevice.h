@@ -1,20 +1,20 @@
-#ifndef BIOPSY_H
-#define BIOPSY_H
+#ifndef BIOPSY_EXTENDED_H
+#define BIOPSY_EXTENDED_H
 
-#include "application.h"
+#include "../application.h"
 
 namespace Ui {
 class biopsyUI;
 }
 
 
-class biopsy : public QWidget
+class biopsyExtendedDevice : public QWidget
 {
     Q_OBJECT
 public:
 
-    explicit biopsy(int rotview, QWidget *parent = 0);
-    ~biopsy();
+    explicit biopsyExtendedDevice(int rotview, QWidget *parent = 0);
+    ~biopsyExtendedDevice();
 
     // Timer per gestire il pulsante
     void timerEvent(QTimerEvent* ev); // Override della classe QObject
@@ -87,14 +87,11 @@ public:
     #define _BIOPSY_MOVING_INCY             9
 
     int  movingError;
-    #define _BIOPSY_MOVING_NO_ERROR         0
-    #define _BIOPSY_MOVING_ERROR_MCC        1
-    #define _BIOPSY_MOVING_ERROR_TIMEOUT    2
-    #define _BIOPSY_MOVING_ERROR_TARGET     3
-    #define _BIOPSY_MOVING_ERROR_BUSY       6
-    #define _BIOPSY_MOVING_ERROR_X_SCROLLED 7 // Il corpo dell'asse X non si trova in uno dei tre stati possibili
-    #define _BIOPSY_MOVING_WARNING_UPSIDE   8 // Deve avere conferma che il corpo sia posizionato verso l'alto
-    #define _BIOPSY_MOVING_UNDEFINED_ERROR  9 // Il codice sequenza non corrisponde. E' un problema software
+    #define _BIOPSY_MOVING_NO_ERROR         0    
+    #define _BIOPSY_MOVING_ERROR_TIMEOUT    1
+    #define _BIOPSY_MOVING_ERROR_TARGET     2
+    #define _BIOPSY_MOVING_ERROR_BUSY       3
+    #define _BIOPSY_MOVING_UNDEFINED_ERROR  4 // Il codice sequenza non corrisponde. E' un problema software
 
 
     // Posizione corrente della torretta
@@ -143,8 +140,7 @@ public:
     #define _REQ_SEQ_HOME           1
     #define _REQ_SEQ_XYZ            2
 
-    #define _REQ_SUBSEQ_HOME_INIT           0
-    #define _REQ_SUBSEQ_HOME_BUSY           3
+    #define _REQ_SUBSEQ_HOME_INIT           0    
     #define _REQ_SUBSEQ_HOME_EXE_Z          4
     #define _REQ_SUBSEQ_HOME_WAIT_Z         5
     #define _REQ_SUBSEQ_HOME_EXE_Y          6
@@ -178,7 +174,7 @@ public:
     #define _REQ_SUBSEQ_XYZ_EXE_SCROLL_Y_RIGHT      8
     #define _REQ_SUBSEQ_XYZ_EXE_SCROLL_Y_CENTER     9
 
-    #define _REQ_SUBSEQ_XYZ_BUSY                    20
+
     #define _REQ_SUBSEQ_XYZ_COMPLETED               21
 
     int req_sequence;
@@ -204,4 +200,4 @@ private:
 
 };
 
-#endif // BIOPSY_H
+#endif // BIOPSY_EXTENDED_H

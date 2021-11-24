@@ -1,16 +1,17 @@
-#include "application.h"
-#include "appinclude.h"
-#include "globvar.h"
+#include "../application.h"
+#include "../appinclude.h"
+#include "../globvar.h"
 #include "ui_biopsy.h"
 
-#define UI_PAGINA _PG_BIOPSY_DEVICE
+#define UI_PAGINA _PG_BIOPSY_EXTENDED_DEVICE
 
 
-void biopsy::activateConnections(void){
-    connect(pConsole, SIGNAL(mccBiopsyNotify(unsigned char,unsigned char,QByteArray)), this, SLOT(mccStatNotify(unsigned char,unsigned char,QByteArray)),Qt::UniqueConnection);
+void biopsyExtendedDevice::activateConnections(void){
+    if(pConfig->sys.biopsyType != BYM_EXTENDED_DEVICE) return;
+    connect(pConsole, SIGNAL(mccBiopsyExtendedNotify(unsigned char,unsigned char,QByteArray)), this, SLOT(mccStatNotify(unsigned char,unsigned char,QByteArray)),Qt::UniqueConnection);
 }
 
-biopsy::biopsy(int rotview, QWidget *parent) :
+biopsyExtendedDevice::biopsyExtendedDevice(int rotview, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::biopsyUI)
 {
@@ -60,6 +61,9 @@ biopsy::biopsy(int rotview, QWidget *parent) :
     checksum_l=0;
     revisione=0;
 
+    // Solo il Master gestisce il device
+    if(!isMaster) return;
+
     // Nel caso in cui ci fosse un errore nel file o il file non
     // esiste vengono caricati dei valori di default
     openCfg();
@@ -72,13 +76,13 @@ biopsy::biopsy(int rotview, QWidget *parent) :
     bypass_y_scroll = false;
 
 }
-biopsy::~biopsy()
+biopsyExtendedDevice::~biopsyExtendedDevice()
 {
     delete ui;
 }
 
 // Funzione agganciata ai sistemi di menu custom
-void biopsy::changePage(int pg,  int opt)
+void biopsyExtendedDevice::changePage(int pg,  int opt)
 {
     if(UI_PAGINA==pg)
     {
@@ -107,7 +111,7 @@ void biopsy::changePage(int pg,  int opt)
 
 }
 
-void biopsy::initPage(void){
+void biopsyExtendedDevice::initPage(void){
 
     // Impostazione Dati generali
     ui->StartupTitleLabel->setText("Biopsy Activation Page");
@@ -121,14 +125,14 @@ void biopsy::initPage(void){
 }
 
 // Operazioni da compiere all'uscita dalla pagina
-void biopsy::exitPage(void){
+void biopsyExtendedDevice::exitPage(void){
 
     disconnect(&ApplicationDatabase,SIGNAL(dbDataChanged(int,int)), this,SLOT(valueChanged(int,int)));
     if(!isMaster) return;
     return;
 }
 
-void biopsy::hideFrames(void){
+void biopsyExtendedDevice::hideFrames(void){
 
     ui->frameMoveScrollCenter->hide();
     ui->frameMoveScrollLeft->hide();
@@ -148,15 +152,13 @@ void biopsy::hideFrames(void){
     ui->frameMoveXToTarget->hide();
 }
 
-void biopsy::manageChangeHomeSeq(unsigned char sub_seq)
+void biopsyExtendedDevice::manageChangeHomeSeq(unsigned char sub_seq)
 {
     switch(sub_seq){
     case _REQ_SUBSEQ_HOME_INIT:
         ui->StartupTitleLabel->setText(ApplicationDatabase.getDataS(BIOPSY_ACTIVATION_TITLE_DB));
         break;
 
-    case _REQ_SUBSEQ_HOME_BUSY:
-        break;
     case _REQ_SUBSEQ_HOME_EXE_Z:
         hideFrames();
         break;
@@ -213,15 +215,14 @@ void biopsy::manageChangeHomeSeq(unsigned char sub_seq)
 
     }
 }
-void biopsy::manageChangeMoveXYZSeq(unsigned char sub_seq)
+void biopsyExtendedDevice::manageChangeMoveXYZSeq(unsigned char sub_seq)
 {
     switch(sub_seq){
     case _REQ_SUBSEQ_XYZ_INIT:
         ui->StartupTitleLabel->setText(ApplicationDatabase.getDataS(BIOPSY_ACTIVATION_TITLE_DB));
         break;
 
-    case _REQ_SUBSEQ_XYZ_BUSY:
-        break;
+
     case _REQ_SUBSEQ_XYZ_EXE_Z:
         hideFrames();
         break;
@@ -256,7 +257,7 @@ void biopsy::manageChangeMoveXYZSeq(unsigned char sub_seq)
     }
 }
 
-void biopsy::valueChanged(int index,int opt)
+void biopsyExtendedDevice::valueChanged(int index,int opt)
 {
     unsigned char seq, subseq;
     switch(index){
@@ -272,7 +273,7 @@ void biopsy::valueChanged(int index,int opt)
     }
 }
 
-void biopsy::timerEvent(QTimerEvent* ev)
+void biopsyExtendedDevice::timerEvent(QTimerEvent* ev)
 {
 
     if(ev->timerId() == event_req_sequence)
@@ -290,7 +291,7 @@ void biopsy::timerEvent(QTimerEvent* ev)
 
 }
 
-void biopsy::nextStepSequence(int tmo){
+void biopsyExtendedDevice::nextStepSequence(int tmo){
     // Aggiorna i display con la fase in corso
     int val = (req_sequence << 8) | (sub_sequence&0xFF);
     ApplicationDatabase.setData(BIOPSY_ACTIVATION_SEQUENCE_DB, (int) val, DBase::_DB_FORCE_SGN);
@@ -299,7 +300,7 @@ void biopsy::nextStepSequence(int tmo){
     event_req_sequence = startTimer(1);
 }
 
-void biopsy::manageHomeSequence(void){
+void biopsyExtendedDevice::manageHomeSequence(void){
 
     // GWindowRoot.setNewPage(_PG_ALARM,GWindowRoot.curPage,0);    
     //GWindowRoot.parentPage;
@@ -312,9 +313,12 @@ void biopsy::manageHomeSequence(void){
         user_confirmation = false;
 
         // Assegna la fase in corso
-        if(movingCommand > _BIOPSY_MOVING_COMPLETED) sub_sequence = _REQ_SUBSEQ_HOME_BUSY;
-        else sub_sequence = _REQ_SUBSEQ_HOME_EXE_Z;
+        if(movingCommand > _BIOPSY_MOVING_COMPLETED) {
+            manageRequestErrors(_BIOPSY_MOVING_ERROR_BUSY);
+            return;
+        }
 
+        sub_sequence = _REQ_SUBSEQ_HOME_EXE_Z;
         nextStepSequence(1);
         break;
 
@@ -476,17 +480,7 @@ void biopsy::manageHomeSequence(void){
         GWindowRoot.setNewPage(GWindowRoot.parentPage,GWindowRoot.curPage,0);
         break;
 
-    case _REQ_SUBSEQ_HOME_BUSY:
-        // Attende il termine del comando in corso
-        if(movingCommand > _BIOPSY_MOVING_COMPLETED)
-        {
-            event_req_sequence = startTimer(100);
-            return;
-        }
 
-        sub_sequence = _REQ_SUBSEQ_HOME_EXE_Z;
-        nextStepSequence(1);
-        break;
 
     // _________________________________________________
     defaut:
@@ -502,17 +496,17 @@ void biopsy::manageHomeSequence(void){
 }
 
 
-void biopsy::manageXYZSequence(void){
+void biopsyExtendedDevice::manageXYZSequence(void){
     switch(sub_sequence){
 
     // Inizializzazione della sequenza
     case _REQ_SUBSEQ_XYZ_INIT:
         user_confirmation = false;
 
+
         // Assegna la fase in corso
-        if(movingCommand > _BIOPSY_MOVING_COMPLETED){
-            sub_sequence = _REQ_SUBSEQ_XYZ_BUSY;
-            nextStepSequence(1);
+        if(movingCommand > _BIOPSY_MOVING_COMPLETED) {
+            manageRequestErrors(_BIOPSY_MOVING_ERROR_BUSY);
             return;
         }
 
@@ -644,8 +638,16 @@ void biopsy::manageXYZSequence(void){
 
 
 
+/*
+ *  Elenco codici errore gestiti
 
-void biopsy::manageRequestErrors(int error){
+ */
+void biopsyExtendedDevice::manageRequestErrors(int error){
+
+    pToConsole->endCommandAck(activationId, error);
+
+    // Attiva una finestra di allarme
+    //PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_ARM,ARM_ERROR_INVALID_STATUS,TRUE);
 }
 
 /*
@@ -657,7 +659,7 @@ void biopsy::manageRequestErrors(int error){
  *  *  1: comando in esecuzione
  *  * -1: errore lateralità
  */
-int biopsy::requestBiopsyHome(int id, unsigned char lat){
+int biopsyExtendedDevice::requestBiopsyHome(int id, unsigned char lat){
 
     // Se si trova già in home finisce subito
     if(isHome(lat)) return 0;
@@ -684,17 +686,15 @@ int biopsy::requestBiopsyHome(int id, unsigned char lat){
     sub_sequence = _REQ_SUBSEQ_HOME_INIT;
 
     // Apre la pagina grafica di gestione delle attivazioni
-    GWindowRoot.setNewPage(_PG_BIOPSY_DEVICE,GWindowRoot.curPage,0);
+    GWindowRoot.setNewPage(_PG_BIOPSY_EXTENDED_DEVICE,GWindowRoot.curPage,0);
     nextStepSequence(1);
     return 1;
 
 
 }
 
-int biopsy::requestBiopsyMoveXYZ(unsigned short X, unsigned short Y,unsigned short Z,int id){
+int biopsyExtendedDevice::requestBiopsyMoveXYZ(unsigned short X, unsigned short Y,unsigned short Z,int id){
 
-    // Se la lateralità non è definita non consente di muovere
-    if(curLatX == _BP_ASSEX_POSITION_ND) return -1;
 
     // Se si trova già in posizione esce subito
     if( (abs(curX_dmm-X) < 5) && (abs(curY_dmm-Y) < 5) && (abs(curZ_dmm-Z) < 5) ) return 0;
@@ -711,20 +711,20 @@ int biopsy::requestBiopsyMoveXYZ(unsigned short X, unsigned short Y,unsigned sho
     sub_sequence = _REQ_SUBSEQ_XYZ_INIT;
 
     // Apre la pagina grafica di gestione delle attivazioni
-    GWindowRoot.setNewPage(_PG_BIOPSY_DEVICE,GWindowRoot.curPage,0);
+    GWindowRoot.setNewPage(_PG_BIOPSY_EXTENDED_DEVICE,GWindowRoot.curPage,0);
     nextStepSequence(1);
     return 1;
 
 }
 
-void biopsy::onConfirmButton(void){
+void biopsyExtendedDevice::onConfirmButton(void){
     if(isMaster) user_confirmation = true;
     else ApplicationDatabase.setData(BIOPSY_USER_CONFIRMATION_DB,(int) 1, DBase::_DB_FORCE_SGN); // trigger to master
 }
 
 //________________________________________________________________________________________________________________
 
-void biopsy::defaultConfigData(void){
+void biopsyExtendedDevice::defaultConfigData(void){
 
     // Offset di puntamento
     config.Z_homePosition = 193;            // (mm) distanza zero torretta - fibra di carbonio
@@ -738,7 +738,7 @@ void biopsy::defaultConfigData(void){
 }
 
 
-bool biopsy::openCfg(void)
+bool biopsyExtendedDevice::openCfg(void)
 {
     QString filename;
     QList<QString> dati;
@@ -791,7 +791,7 @@ bool biopsy::openCfg(void)
  *
  *  Salva il file di configurazione della biopsia
  */
-bool biopsy::storeConfig(void)
+bool biopsyExtendedDevice::storeConfig(void)
 {
     QString filename;
 
@@ -814,15 +814,17 @@ bool biopsy::storeConfig(void)
 }
 
 // To be completed
-int biopsy::calibrateSh(void){
+int biopsyExtendedDevice::calibrateSh(void){
     return (int) 150 - (int) curSh_dmm ;
 }
 
-void biopsy::mccStatNotify(unsigned char id_notify,unsigned char cmd, QByteArray data)
+void biopsyExtendedDevice::mccStatNotify(unsigned char id_notify,unsigned char cmd, QByteArray data)
 {
     unsigned char errore;
     static unsigned char    bp_motion=0;
-    static int              bp_movecommand=0;
+    static int              bp_movecommand = 0;
+    static int              bCalibratedSh = -10;
+    bool update_aws = false;
 
     if(id_notify!=1) return;
     //if(pConfig->startupCompleted == false) return;
@@ -861,7 +863,7 @@ void biopsy::mccStatNotify(unsigned char id_notify,unsigned char cmd, QByteArray
         // Aggiorna le pagine con nil riconoscimento della Biopsia
         ApplicationDatabase.setData(_DB_ACCESSORIO, (unsigned char) BIOPSY_DEVICE,0);
         ApplicationDatabase.setData(_DB_ACCESSORY_NAME,QString(QApplication::translate("BIOPSY","NOME ACCESSORIO", 0, QApplication::UnicodeUTF8)),0);        
-
+        update_aws = true;
     }
 
     // Pulsante di sblocco Braccio e funzioni biopsia
@@ -870,6 +872,7 @@ void biopsy::mccStatNotify(unsigned char id_notify,unsigned char cmd, QByteArray
     ApplicationDatabase.setData(_DB_BIOP_UNLOCK_BUTTON,(int) data.at(_BP_PUSH_SBLOCCO),0);
 
     // Lateralità rilevata
+    if(curLatX != data.at(_BP_ASSEX_POSITION)) update_aws = true;
     curLatX = data.at(_BP_ASSEX_POSITION);
     ApplicationDatabase.setData(_DB_BIOP_LAT_X,(int) data.at(_BP_ASSEX_POSITION),0);
     if( (curLatX == _BP_ASSEX_POSITION_CENTER) && (curX_dmm < 2263)  && (curX_dmm > 317)) bypass_y_scroll = true;
@@ -877,7 +880,7 @@ void biopsy::mccStatNotify(unsigned char id_notify,unsigned char cmd, QByteArray
     //  Riconoscimento dell'adapter
     if(adapterId != data.at(_BP_ADAPTER_ID)){
         adapterId = data.at(_BP_ADAPTER_ID);
-        pToConsole->setConfigChanged(pToConsole->ACCESSORIO);
+        update_aws = true;
         ApplicationDatabase.setData(_DB_BIOP_ADAPTER_ID,(int) data.at(_BP_ADAPTER_ID),0);
     }
 
@@ -885,13 +888,16 @@ void biopsy::mccStatNotify(unsigned char id_notify,unsigned char cmd, QByteArray
     curX_dmm = data.at(_BP_XL) + 256 * data.at(_BP_XH) ;
     curY_dmm = data.at(_BP_YL) + 256 * data.at(_BP_YH) ;
     curZ_dmm = data.at(_BP_ZL) + 256 * data.at(_BP_ZH) ;
-
     curSh_dmm= data.at(_BP_SHL) + 256 * data.at(_BP_SHH) ;
-
+    int calibratedSh = calibrateSh();
+    if( (calibratedSh > bCalibratedSh + 5) || (calibratedSh < bCalibratedSh - 5)){
+        update_aws = true;
+        bCalibratedSh = calibratedSh;
+    }
     ApplicationDatabase.setData(_DB_BIOP_X,(int) curX_dmm,0);
     ApplicationDatabase.setData(_DB_BIOP_Y,(int) curY_dmm,0);
     ApplicationDatabase.setData(_DB_BIOP_Z,(int) curZ_dmm,0);
-    ApplicationDatabase.setData(_DB_BIOP_SH,(int) calibrateSh(),0);
+    ApplicationDatabase.setData(_DB_BIOP_SH,(int) calibratedSh,0);
 
     // Calcolo del Margine tra Paddle e Staffa metallica
     paddle_margine  = data.at(_BP_PADDLE_MARGINE);
@@ -931,20 +937,22 @@ void biopsy::mccStatNotify(unsigned char id_notify,unsigned char cmd, QByteArray
             }else  movingError = _BIOPSY_MOVING_NO_ERROR;
 
             movingCommand =_BIOPSY_MOVING_COMPLETED;
-
+            update_aws = true;
         break;
 
 
     } // data.at(_DB_MOTION)
 
 
+    // Aggiornamento AWS
+    if(update_aws) pToConsole->setBiopsyExtendedData();
 }
 
 /*
  *  Sulla base dei dati presenti si calcolano i vari
  *  parametri di limitazione al movimento
  */
-void biopsy::calcoloMargini(void){
+void biopsyExtendedDevice::calcoloMargini(void){
 
     // Paddle Margine è calcolato dal driver
     ApplicationDatabase.setData(_DB_BIOP_PADDLE_MARGINE,(int) paddle_margine,0);
@@ -965,7 +973,7 @@ void biopsy::calcoloMargini(void){
 }
 
 // Restituisce TRUE se la destinazione attraversa l'area di possibile impatto
-bool biopsy::testUpsidePosition(unsigned short X){
+bool biopsyExtendedDevice::testUpsidePosition(unsigned short X){
 
     // Con il bypass attivo non si richiede la rotazione dell'asse Y
     if(bypass_y_scroll) return false;
@@ -994,7 +1002,7 @@ bool biopsy::testUpsidePosition(unsigned short X){
     return false;
 }
 
-int biopsy::moveXYZ(unsigned short X, unsigned short Y, unsigned short Z)
+int biopsyExtendedDevice::moveXYZ(unsigned short X, unsigned short Y, unsigned short Z)
 {
     unsigned char data[15];
 
@@ -1016,7 +1024,7 @@ int biopsy::moveXYZ(unsigned short X, unsigned short Y, unsigned short Z)
     if(pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_CMD,1,data,7)==FALSE)
     {
         movingCommand =_BIOPSY_MOVING_COMPLETED;
-        movingError = _BIOPSY_MOVING_ERROR_MCC;
+        movingError = _BIOPSY_MOVING_UNDEFINED_ERROR;
         return movingError;
     }
 
@@ -1025,7 +1033,7 @@ int biopsy::moveXYZ(unsigned short X, unsigned short Y, unsigned short Z)
     return _BIOPSY_MOVING_NO_ERROR;
 }
 
-bool biopsy::isHome(unsigned char lat){
+bool biopsyExtendedDevice::isHome(unsigned char lat){
     if( lat != curLatX) return false;
     if(curY_dmm > 5)  return false;
     if(curZ_dmm > 5)  return false;
@@ -1038,7 +1046,7 @@ bool biopsy::isHome(unsigned char lat){
 }
 
 
-int biopsy::moveDecZ(int id)
+int biopsyExtendedDevice::moveDecZ(int id)
 {
     unsigned char data[1];
     if(movingCommand > _BIOPSY_MOVING_COMPLETED)
@@ -1053,18 +1061,18 @@ int biopsy::moveDecZ(int id)
     if(pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_CMD,1,data,1)==FALSE)
     {
         movingCommand =_BIOPSY_MOVING_COMPLETED;
-        movingError = _BIOPSY_MOVING_ERROR_MCC;
+        movingError = _BIOPSY_MOVING_UNDEFINED_ERROR;
         return FALSE;
     }
 
-    pBiopsy->activationId = id;
+    activationId = id;
     movingCommand = _BIOPSY_MOVING_DECZ;
     movingError   = _BIOPSY_MOVING_NO_ERROR;
     return TRUE;
 }
 
 
-int biopsy::moveIncZ(int id)
+int biopsyExtendedDevice::moveIncZ(int id)
 {
     unsigned char data[1];
     if(movingCommand > _BIOPSY_MOVING_COMPLETED)
@@ -1079,17 +1087,17 @@ int biopsy::moveIncZ(int id)
     if(pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_CMD,1,data,1)==FALSE)
     {
         movingCommand =_BIOPSY_MOVING_COMPLETED;
-        movingError = _BIOPSY_MOVING_ERROR_MCC;
+        movingError = _BIOPSY_MOVING_UNDEFINED_ERROR;
         return FALSE;
     }
 
-    pBiopsy->activationId = id;
+    activationId = id;
     movingCommand = _BIOPSY_MOVING_INCZ;
     movingError   = _BIOPSY_MOVING_NO_ERROR;
     return TRUE;
 }
 
-int biopsy::moveDecX(int id)
+int biopsyExtendedDevice::moveDecX(int id)
 {
     unsigned char data[1];
     if(movingCommand > _BIOPSY_MOVING_COMPLETED)
@@ -1104,17 +1112,17 @@ int biopsy::moveDecX(int id)
     if(pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_CMD,1,data,1)==FALSE)
     {
         movingCommand =_BIOPSY_MOVING_COMPLETED;
-        movingError = _BIOPSY_MOVING_ERROR_MCC;
+        movingError = _BIOPSY_MOVING_UNDEFINED_ERROR;
         return FALSE;
     }
 
-    pBiopsy->activationId = id;
+    activationId = id;
     movingCommand = _BIOPSY_MOVING_DECX;
     movingError   = _BIOPSY_MOVING_NO_ERROR;
     return TRUE;
 }
 
-int biopsy::moveIncX(int id)
+int biopsyExtendedDevice::moveIncX(int id)
 {
     unsigned char data[1];
     if(movingCommand > _BIOPSY_MOVING_COMPLETED)
@@ -1129,17 +1137,17 @@ int biopsy::moveIncX(int id)
     if(pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_CMD,1,data,1)==FALSE)
     {
         movingCommand =_BIOPSY_MOVING_COMPLETED;
-        movingError = _BIOPSY_MOVING_ERROR_MCC;
+        movingError = _BIOPSY_MOVING_UNDEFINED_ERROR;
         return FALSE;
     }
 
-    pBiopsy->activationId = id;
+    activationId = id;
     movingCommand = _BIOPSY_MOVING_INCX;
     movingError   = _BIOPSY_MOVING_NO_ERROR;
     return TRUE;
 }
 
-int biopsy::moveDecY(int id)
+int biopsyExtendedDevice::moveDecY(int id)
 {
     unsigned char data[1];
     if(movingCommand > _BIOPSY_MOVING_COMPLETED)
@@ -1154,16 +1162,16 @@ int biopsy::moveDecY(int id)
     if(pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_CMD,1,data,1)==FALSE)
     {
         movingCommand =_BIOPSY_MOVING_COMPLETED;
-        movingError = _BIOPSY_MOVING_ERROR_MCC;
+        movingError = _BIOPSY_MOVING_UNDEFINED_ERROR;
         return FALSE;
     }
 
-    pBiopsy->activationId = id;
+    activationId = id;
     movingCommand = _BIOPSY_MOVING_DECY;
     movingError   = _BIOPSY_MOVING_NO_ERROR;
     return TRUE;
 }
-int biopsy::moveIncY(int id)
+int biopsyExtendedDevice::moveIncY(int id)
 {
     unsigned char data[1];
     if(movingCommand > _BIOPSY_MOVING_COMPLETED)
@@ -1178,17 +1186,17 @@ int biopsy::moveIncY(int id)
     if(pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_CMD,1,data,1)==FALSE)
     {
         movingCommand =_BIOPSY_MOVING_COMPLETED;
-        movingError = _BIOPSY_MOVING_ERROR_MCC;
+        movingError = _BIOPSY_MOVING_UNDEFINED_ERROR;
         return FALSE;
     }
 
-    pBiopsy->activationId = id;
+    activationId = id;
     movingCommand = _BIOPSY_MOVING_INCY;
     movingError   = _BIOPSY_MOVING_NO_ERROR;
     return TRUE;
 }
 
-int biopsy::setStepVal(unsigned char step)
+int biopsyExtendedDevice::setStepVal(unsigned char step)
 {
     unsigned char data[2];
     data[0]=_MCC_BIOPSY_CMD_SET_STEPVAL; // Codice comando
@@ -1198,7 +1206,7 @@ int biopsy::setStepVal(unsigned char step)
 }
 
 
-bool biopsy::updateConfig(void)
+bool biopsyExtendedDevice::updateConfig(void)
 {
     // Invia la configurazione al driver per aggiornarlo in diretta
     return pConfig->sendMccConfigCommand(CONFIG_BIOPSY);

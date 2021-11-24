@@ -2,7 +2,6 @@
 #include "application.h"
 #include "appinclude.h"
 #include "globvar.h"
-#include "biopsypage.h"
 #include "startuppage.h"
 
 #include "Service/servicepanelmenu.h"
@@ -204,7 +203,10 @@ int main(int argc, char *argv[])
 
     ApplicationDatabase.append((int) 0);            // _DB_BIOP_NEEDLE_MARG
     ApplicationDatabase.append((int) 0);            // _DB_BIOP_MAXZ
-
+    ApplicationDatabase.append("");                 // _DB_BIOP_MARG,  solo Standard model
+    ApplicationDatabase.append("");                 // _DB_BIOP_HOLDER, Solo Standard model
+    ApplicationDatabase.append("");                 // _DB_BIOP_AGO, Solo Standard model
+    ApplicationDatabase.append((unsigned char) 0);  // _DB_BIOP_MANUAL_ENA Solo Standard
 
     ApplicationDatabase.append((unsigned char) 0);  // CAMPO DEMO_MODE
     ApplicationDatabase.append((unsigned char) 0);  // CAMPO DEAD_MEN
@@ -296,7 +298,8 @@ int main(int argc, char *argv[])
         pCollimatore =  new Collimatore();
         pGeneratore =   new Generatore();
         pPotter =       new Potter();
-        pBiopsy =       new biopsy(rotView);
+        pBiopsyStandard =  new biopsyStandardDevice();
+        pBiopsyExtended =  new biopsyExtendedDevice(rotView);
         pConsole =      new console();
         pToConsole =    new protoToConsole();
         pDebug =        new serverDebug();
@@ -310,7 +313,8 @@ int main(int argc, char *argv[])
         // Creazione IO di sistema
         io = new sysIO(FALSE);
         pConfig = new Config(FALSE);
-        pBiopsy = new biopsy(rotView);
+
+        pBiopsyExtended =  new biopsyExtendedDevice(rotView);
     }
 
     #define LEFT_ARROW_FRAME  8,0,0,100,0,100,100,0,100
@@ -318,7 +322,10 @@ int main(int argc, char *argv[])
 
     pagina_language = new PageLanguages( &mainApplication, PageLanguages::_LNG_ENG, true,_BACKGROUND_Y_PG_SELLNG,_BACKGROUND_C_PG_SELLNG,TRUE, 800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_SELLNG,GWindow::setPointPath(LEFT_ARROW_FRAME),(int)_PG_MAIN_DIGITAL,(int)_PG_SELLNG);
     paginaMainDigital = new MainPage(true,QString(_BACKGROUND_Y_PG_MAIN),QString(_BACKGROUND_C_PG_MAIN),TRUE,800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_MAIN_DIGITAL,GWindow::setPointPath(LEFT_ARROW_FRAME),(int)_PG_SERVICE_MENU,(int)_PG_MAIN_DIGITAL);
-    paginaBiopsyDigital = new BiopsyPage(true,QString("_BACKGROUND_Y_PG_MAIN"),QString(""),TRUE,800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_ACR,GWindow::setPointPath(LEFT_ARROW_FRAME),(int)_PG_BIOPSY_DIGITAL,(int)_PG_BIOPSY_DIGITAL);
+
+    paginaBiopsyStandard = new BiopsyStandardPage(true,QString("_BACKGROUND_Y_PG_MAIN"),QString(""),TRUE,800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_ACR,GWindow::setPointPath(LEFT_ARROW_FRAME),(int)_PG_BIOPSY_STANDARD_PAGE,(int)_PG_BIOPSY_STANDARD_PAGE);
+    paginaBiopsyExtended = new BiopsyExtendedPage(true,QString("_BACKGROUND_Y_PG_MAIN"),QString(""),TRUE,800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_ACR,GWindow::setPointPath(LEFT_ARROW_FRAME),(int)_PG_BIOPSY_EXTENDED_PAGE,(int)_PG_BIOPSY_EXTENDED_PAGE);
+
     paginaOpenStudyDigital = new OpenStudyPage(false,QString(""),QString(""),TRUE,800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_OPEN_STUDY_DIGITAL,GWindow::setPointPath(LEFT_ARROW_FRAME),(int)_PG_OPEN_STUDY_DIGITAL,(int)_PG_OPEN_STUDY_DIGITAL);
     paginaProjections = new ProjectionPage(false,QString(""),QString(""),TRUE,800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_PROJECTIONS,GWindow::setPointPath(LEFT_ARROW_FRAME),(int)_PG_OPEN_STUDY_DIGITAL,(int)_PG_PROJECTIONS);
 
@@ -354,7 +361,6 @@ int main(int argc, char *argv[])
     QObject::connect(&GWindowRoot,SIGNAL(pushActivationSgn(int,bool,int)), paginaAllarmi,SLOT(buttonActivationNotify(int,bool,int)),Qt::UniqueConnection);
     QObject::connect(&ApplicationDatabase,SIGNAL(dbDataChanged(int,int)), paginaAllarmi,SLOT(valueChanged(int,int)),Qt::UniqueConnection);
     QObject::connect(&GWindowRoot,SIGNAL(pushActivationSgn(int,bool,int)), &echoDisplay,SLOT(buttonChanged(int,bool,int)),Qt::UniqueConnection);
-    //GPush::pushRefresh(DBase::_DB_NO_ECHO|DBase::_DB_NO_ACTION);
 
 
     // Inizializzazioni Master
@@ -373,7 +379,8 @@ int main(int argc, char *argv[])
         pCollimatore->activateConnections();
         pGeneratore->activateConnections();
         pPotter->activateConnections();
-        pBiopsy->activateConnections();
+        pBiopsyStandard->activateConnections();
+        pBiopsyExtended->activateConnections();
         pConsole->activateConnections();
         pToConsole->activateConnections();
         pDebug->activateConnections();

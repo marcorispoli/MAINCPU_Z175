@@ -9,6 +9,7 @@
 typedef struct
 {
    unsigned short   detectorType;           // Codice detector type
+   unsigned short   biopsyType;             // Definisce il tipo di biopsia utilizzato
    bool             armMotor;               // Presenza della rotazione motorizzata o del freno
    bool             trxMotor;               // Presenza Pendolazione
    bool             highSpeedStarter;       // Abilitazione presenza Starter IAE

@@ -719,32 +719,42 @@ void PageAlarms::createMessageList(void){
 
 
     // ___________________      _DB_ALLARMI_BIOPSIA ____________________________________________________________________________________________________________________________________________
+
     classitem.className=QString("00000");
     classitem.classDescription=QString("ERRORI RELATIVI ALLA BIOPSIA");
     classitem.errlist.clear();
 
     erritem.codestr = QString("00001");
-    erritem.codeval = ERROR_BIOP_MOVE_X;
-    erritem.errmsg  = QString(QApplication::translate("ERRORE-BIOPSIA","BIOPSIA:ERRORE MOVIMENTO ASSE X", 0, QApplication::UnicodeUTF8));
+    erritem.codeval = _BIOPSY_MOVING_ERROR_TIMEOUT;
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-BIOPSIA","BIOPSIA:ERRORE MOVIMENTO CURSORE", 0, QApplication::UnicodeUTF8));
     erritem.errpix =  QPixmap(ERR_PIX);
-    erritem.errdescr= QString("The X  didn't complete the activation properly");
+    erritem.errdescr= QString("The cursor  didn't complete the activation properly");
     classitem.errlist.append(erritem);
 
     erritem.codestr = QString("00002");
-    erritem.codeval = ERROR_BIOP_MOVE_Y;
-    erritem.errmsg  = QString(QApplication::translate("ERRORE-BIOPSIA","BIOPSIA:ERRORE MOVIMENTO ASSE Y", 0, QApplication::UnicodeUTF8));
+    erritem.codeval = _BIOPSY_MOVING_ERROR_TIMEOUT;
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-BIOPSIA","BIOPSIA: TIMEOUT MOVIMENTO", 0, QApplication::UnicodeUTF8));
     erritem.errpix =  QPixmap(ERR_PIX);
-    erritem.errdescr= QString("The Y  didn't complete the activation properly");
+    erritem.errdescr= QString("Timeout during Biopsy activation");
     classitem.errlist.append(erritem);
 
     erritem.codestr = QString("00003");
-    erritem.codeval = ERROR_BIOP_MOVE_Z;
-    erritem.errmsg  = QString(QApplication::translate("ERRORE-BIOPSIA","BIOPSIA:ERRORE MOVIMENTO ASSE Z", 0, QApplication::UnicodeUTF8));
+    erritem.codeval = _BIOPSY_MOVING_ERROR_BUSY;
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-BIOPSIA","BIOPSIA: BUSY", 0, QApplication::UnicodeUTF8));
     erritem.errpix =  QPixmap(ERR_PIX);
-    erritem.errdescr= QString("The Z  didn't complete the activation properly");
+    erritem.errdescr= QString("A command is pending or the system queue is busy");
     classitem.errlist.append(erritem);
 
+    erritem.codestr = QString("00004");
+    erritem.codeval = _BIOPSY_MOVING_UNDEFINED_ERROR;
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-BIOPSIA","BIOPSIA: UNDEFINED ERROR", 0, QApplication::UnicodeUTF8));
+    erritem.errpix =  QPixmap(ERR_PIX);
+    erritem.errdescr= QString("An undefined error condition is detected");
+    classitem.errlist.append(erritem);
+
+
     errors.replace(_DB_ALLARMI_BIOPSIA-FIRST_ALR_CLASS,classitem);
+
     //___________________________________________________________________________________________________________________________________________________________________
 
     // ___________________      _DB_ALLARMI_ALR_ARM ____________________________________________________________________________________________________________________________________________

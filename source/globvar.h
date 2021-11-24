@@ -18,7 +18,7 @@ ext TcpIpClient*     slaveTcp;
 ext EchoDisplay      echoDisplay;  // Sviluppa il protocollo di mirroring tra i display
 ext MainPage*        paginaMainDigital;
 ext OpenStudyPage*   paginaOpenStudyDigital;
-ext BiopsyPage*      paginaBiopsyDigital;
+
 ext ProjectionPage*  paginaProjections;
 ext PageLanguages*   pagina_language;
 ext PageACR*         paginaAcr;
@@ -50,7 +50,11 @@ ext Potter* pPotter;
 
 ext bool systemTimeUpdated;
 ext Loader* pLoader;
-ext biopsy* pBiopsy;
+
+ext biopsyStandardDevice* pBiopsyStandard;
+ext biopsyExtendedDevice* pBiopsyExtended;
+ext BiopsyStandardPage*   paginaBiopsyStandard;
+ext BiopsyExtendedPage*   paginaBiopsyExtended;
 
 ext QString _CONSOLE_IP;
 ext QString _MASTER_IP;

@@ -712,7 +712,8 @@ void OpenStudyPage::valueChanged(int index,int opt)
         if(!isMaster) return;
 
         if(ApplicationDatabase.getDataU(index)==BIOPSY_DEVICE){
-            GWindowRoot.setNewPage(_PG_BIOPSY_DIGITAL,GWindowRoot.curPage,0);
+            if(pConfig->sys.biopsyType == BYM_STANDARD_DEVICE) GWindowRoot.setNewPage(_PG_BIOPSY_STANDARD_PAGE,GWindowRoot.curPage,0);
+            else GWindowRoot.setNewPage(_PG_BIOPSY_EXTENDED_PAGE,GWindowRoot.curPage,0);
         }
 
         break;

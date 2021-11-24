@@ -34,7 +34,7 @@ return;
         potterValidFactor = FALSE;
 
         // Se la Biopsia è presente allora il codice accessorio è impostato dalla biopsia
-        if((data.at(0)==POTTER_UNDEFINED)&&(pBiopsy->connected==FALSE)) {
+        if((data.at(0)==POTTER_UNDEFINED)&&(ApplicationDatabase.getDataU(_DB_ACCESSORIO) != BIOPSY_DEVICE)) {
             ApplicationDatabase.setData(_DB_ACCESSORIO, (unsigned char) data.at(0),0);
             ApplicationDatabase.setData(_DB_ACCESSORY_NAME,QString(QApplication::translate("POTTER","ACCESSORIO NON DEFINITO", 0, QApplication::UnicodeUTF8)),0);
             potter = POTTER_UNDEFINED;

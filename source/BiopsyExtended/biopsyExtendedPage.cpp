@@ -1,13 +1,9 @@
-#include "biopsypage.h"
+#define BIOPSY_EXTENDED_PAGE_C
+#include "../application.h"
+#include "../appinclude.h"
+#include "../globvar.h"
 
-#define BIOPSY_PAGE_C
-#include "application.h"
-#include "appinclude.h"
-#include "globvar.h"
-
-
-//pagina0 = new MainPage(true,QString(_BACKGROUND_Y_PG_MAIN),QString(_BACKGROUND_C_PG_MAIN),TRUE,800,480,rotView,pagina0->setPointPath(RIGHT_ARROW_FRAME),(int)_PG_ACR,pagina0->setPointPath(LEFT_ARROW_FRAME),(int)_PG_SERVICE_MENU,(int)_PG_MAIN);
-BiopsyPage::BiopsyPage(bool local, QString bgl, QString bgs , bool showLogo, int w,int h, qreal angolo,QPainterPath pn, int pgpn, QPainterPath pp, int pgpp, int pg) : GWindow(bgl,showLogo,w,h, angolo,pn,pgpn,pp,pgpp,pg)
+BiopsyExtendedPage::BiopsyExtendedPage(bool local, QString bgl, QString bgs , bool showLogo, int w,int h, qreal angolo,QPainterPath pn, int pgpn, QPainterPath pp, int pgpp, int pg) : GWindow(bgl,showLogo,w,h, angolo,pn,pgpn,pp,pgpp,pg)
 {
     QFont font;
 
@@ -53,11 +49,6 @@ BiopsyPage::BiopsyPage(bool local, QString bgl, QString bgs , bool showLogo, int
     intestazioneValue = new GLabel(this,QRectF(BOUND_BIOPSY_INTESTAZIONE ),font,studyColor,"",Qt::AlignCenter);
 
 
-    // Campo XYZ
-    #define BOUND_BIOPSY_X      78,83,62,20   // TESTO PER CAMPO X BIOPSIA
-    #define BOUND_BIOPSY_Y      143,83,62,20   // TESTO PER CAMPO Y BIOPSIA
-    #define BOUND_BIOPSY_Z      78,104,107,20  // TESTO PER CAMPO Z BIOPSIA
-
     font.setPointSize(30);
     font.setStretch(35);
     biopXYZValue = new GLabel(this,QRectF(70,87,154,34),font,QColor(_W_TEXT),"",Qt::AlignCenter);
@@ -86,14 +77,14 @@ BiopsyPage::BiopsyPage(bool local, QString bgl, QString bgs , bool showLogo, int
 
 
     // Pulsante Immagine 2D
-    pulsanteImgOn = new GPush((GWindow*) this, QPixmap("://BiopsyPage/BiopsyPage/imageIcon.png"),QPixmap("://BiopsyPage/BiopsyPage/imageIcon.png"),setPointPath(8,700,3,800,3,800,100,700,100),700,3,0,0);
+    pulsanteImgOn = new GPush((GWindow*) this, QPixmap("://BiopsyExtended/BiopsyExtended/imageIcon.png"),QPixmap("://BiopsyExtended/BiopsyExtended/imageIcon.png"),setPointPath(8,700,3,800,3,800,100,700,100),700,3,0,0);
     pulsanteImgOn->setEnable(true);
     pulsanteImgOn->setVisible(false);
     pulsanteImgOn->setOptions(DBase::_DB_NO_ECHO); // pulsante utilizzato esclusivamente dal terminale proprietario
 
     // Simbolo raggi
-    xrayPix = addPixmap(QPixmap("://BiopsyPage/BiopsyPage/biopsy_xray.png"));
-    xrayPix->setPos(0,0);
+    xrayPix = addPixmap(QPixmap("://BiopsyExtended/BiopsyExtended/Xray.png"));
+    xrayPix->setPos(310,35);
 
     // Simbolo Demo
     demoPix = addPixmap(QPixmap(""));
@@ -104,7 +95,7 @@ BiopsyPage::BiopsyPage(bool local, QString bgl, QString bgs , bool showLogo, int
     calibPix->setPos(0,0);
 
     // Cursore SH
-    cursorPix = addPixmap(QPixmap("://BiopsyPage/BiopsyPage/BiopsyPointerArrow.png"));
+    cursorPix = addPixmap(QPixmap("://BiopsyExtended/BiopsyExtended/BiopsyPointerArrow.png"));
     cursorPix->setPos(118,286);
     cursorPix->hide();
 
@@ -116,12 +107,12 @@ BiopsyPage::BiopsyPage(bool local, QString bgl, QString bgs , bool showLogo, int
     isOpen = false;
 }
 
-BiopsyPage::~BiopsyPage()
+BiopsyExtendedPage::~BiopsyExtendedPage()
 {
    // this->killTimer(timerWDG);
 }
 
-void BiopsyPage::setOpenStudy(void){
+void BiopsyExtendedPage::setOpenStudy(void){
     // Aggancia il database
     connect(&ApplicationDatabase,SIGNAL(dbDataChanged(int,int)), this,SLOT(valueChanged(int,int)),Qt::UniqueConnection);
     connect(&ApplicationDatabase,SIGNAL(dbDataChanged(int,int)), paginaImmagine,SLOT(valueChanged(int,int)),Qt::UniqueConnection);
@@ -133,7 +124,7 @@ void BiopsyPage::setOpenStudy(void){
     InitBiopsyPage();
 
 }
-void BiopsyPage::setCloseStudy(void){
+void BiopsyExtendedPage::setCloseStudy(void){
     // Sgancia il database
     disconnect(&ApplicationDatabase,SIGNAL(dbDataChanged(int,int)), this,SLOT(valueChanged(int,int)));
     disconnect(&ApplicationDatabase,SIGNAL(dbDataChanged(int,int)), paginaImmagine,SLOT(valueChanged(int,int)));
@@ -152,7 +143,7 @@ void BiopsyPage::setCloseStudy(void){
  *  della Biopsia.
  *
  */
-void BiopsyPage::InitBiopsyPage(void)
+void BiopsyExtendedPage::InitBiopsyPage(void)
 {    
 
     // Discrimina fra modalità frustoli e standard
@@ -164,10 +155,10 @@ void BiopsyPage::InitBiopsyPage(void)
 
     if(specimenMode){
         if(angolo > 0){
-            setBackground("://BiopsyPage/BiopsyPage/specimen_r.png");
+            setBackground("://BiopsyExtended/BiopsyExtended/specimen_r.png");
             specimenLeft = false;
         }  else if(angolo <= 0){
-            setBackground("://BiopsyPage/BiopsyPage/specimen_l.png");
+            setBackground("://BiopsyExtended/BiopsyExtended/specimen_l.png");
             specimenLeft = true;
         }
 
@@ -228,7 +219,7 @@ void BiopsyPage::InitBiopsyPage(void)
 
 // Questa funzione viene chiamata ogni volta che viene ricevuto il segnale di cambio
 // pagina dalla Classe Base. Viene utilizzata per effettuare tutte le inizializzazioni del caso
-void BiopsyPage::childStatusPage(bool stat,int opt)
+void BiopsyExtendedPage::childStatusPage(bool stat,int opt)
 {
     if(stat==false){
         if(timerDisableButton) {
@@ -255,7 +246,7 @@ void BiopsyPage::childStatusPage(bool stat,int opt)
     }
 }
 
-void BiopsyPage::timerEvent(QTimerEvent* ev)
+void BiopsyExtendedPage::timerEvent(QTimerEvent* ev)
 {
     if(ev->timerId()==timerDisableButton)
     {
@@ -278,7 +269,7 @@ void BiopsyPage::timerEvent(QTimerEvent* ev)
 }
 
 
-void BiopsyPage::mousePressEvent(QGraphicsSceneMouseEvent* event)
+void BiopsyExtendedPage::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
 
     // Ogni azione di interazione TS viene filtrata per evitare rimbalzi
@@ -290,7 +281,7 @@ void BiopsyPage::mousePressEvent(QGraphicsSceneMouseEvent* event)
 }
 
 
-void BiopsyPage::setIntestazione()
+void BiopsyExtendedPage::setIntestazione()
 {
     QString stringa = ApplicationDatabase.getDataS(_DB_CALIB_SYM) ;
 
@@ -311,7 +302,7 @@ void BiopsyPage::setIntestazione()
 
 }
 
-void BiopsyPage::setArmAngolo(void)
+void BiopsyExtendedPage::setArmAngolo(void)
 {
     QString str;
 
@@ -323,7 +314,7 @@ void BiopsyPage::setArmAngolo(void)
     armValue->update();
 }
 
-void BiopsyPage::setTrxAngolo(void)
+void BiopsyExtendedPage::setTrxAngolo(void)
 {
     QString str;
 
@@ -331,10 +322,10 @@ void BiopsyPage::setTrxAngolo(void)
 
     if(specimenMode){
         if((angolo > 0) && (specimenLeft==true)){
-            setBackground("://BiopsyPage/BiopsyPage/specimen_r.png");
+            setBackground("://BiopsyExtended/BiopsyExtended/specimen_r.png");
             specimenLeft = false;
         }  else if((angolo <= 0)&& (specimenLeft==false)){
-            setBackground("://BiopsyPage/BiopsyPage/specimen_l.png");
+            setBackground("://BiopsyExtended/BiopsyExtended/specimen_l.png");
             specimenLeft = true;
         }
 
@@ -362,7 +353,7 @@ void BiopsyPage::setTrxAngolo(void)
 }
 
 
-void BiopsyPage::setBiopXYZ(void)
+void BiopsyExtendedPage::setBiopXYZ(void)
 {
     biopXYZValue->labelText=QString("X:%1, Y:%2, Z:%3").arg(ApplicationDatabase.getDataI(_DB_BIOP_X)).arg(ApplicationDatabase.getDataI(_DB_BIOP_Y)).arg(ApplicationDatabase.getDataI(_DB_BIOP_Z));
     biopXYZValue->update();
@@ -370,7 +361,7 @@ void BiopsyPage::setBiopXYZ(void)
 }
 
 
-void BiopsyPage::setCompressione(void)
+void BiopsyExtendedPage::setCompressione(void)
 {
 
     unsigned int val = ApplicationDatabase.getDataI(_DB_FORZA);
@@ -386,7 +377,7 @@ void BiopsyPage::setCompressione(void)
 }
 
 
-void BiopsyPage::setSpessore(void)
+void BiopsyExtendedPage::setSpessore(void)
 {
     unsigned int val = ApplicationDatabase.getDataI(_DB_SPESSORE);
 
@@ -403,7 +394,7 @@ void BiopsyPage::setSpessore(void)
 
 
 // FUNZIONE DI AGGIORNAMENTO CAMPI VALORE CONNESSO AI CAMPI DEL DATABASE
-void BiopsyPage::valueChanged(int index,int opt)
+void BiopsyExtendedPage::valueChanged(int index,int opt)
 {
 
     switch(index)
@@ -427,6 +418,7 @@ void BiopsyPage::valueChanged(int index,int opt)
         setArmAngolo();
         break;
 
+    case _DB_BIOP_UNLOCK_BUTTON:
     case _DB_BIOP_LAT_X:
     case _DB_BIOP_ADAPTER_ID:
         updateBiopsyView();
@@ -487,11 +479,6 @@ void BiopsyPage::valueChanged(int index,int opt)
         setIntestazione();
         break;
 
-    case _DB_BIOP_UNLOCK_BUTTON:
-        /*
-        if(ApplicationDatabase.getDataU(_DB_BIOP_UNLOCK_BUTTON)) rotPix->show();
-        else   rotPix->hide();*/
-        break;
 
     case _DB_STUDY_STAT:
         if(!ApplicationDatabase.getDataU(index)) setCloseStudy();
@@ -525,7 +512,7 @@ void BiopsyPage::valueChanged(int index,int opt)
 }
 
 
-void BiopsyPage::buttonActivationNotify(int id, bool status,int opt)
+void BiopsyExtendedPage::buttonActivationNotify(int id, bool status,int opt)
 {
 
     GPush* pbutton = (GPush*) GWindowRoot.pushList.at(id);
@@ -553,12 +540,12 @@ void BiopsyPage::buttonActivationNotify(int id, bool status,int opt)
 
 
 // Rinfresca tutte le label cambiate
-void BiopsyPage::languageChanged()
+void BiopsyExtendedPage::languageChanged()
 {
     setIntestazione();
 }
 
-void BiopsyPage::updateCursorPointer(void){
+void BiopsyExtendedPage::updateCursorPointer(void){
 
     int sh = ApplicationDatabase.getDataI(_DB_BIOP_SH);
     if(sh < -170) sh = -170;
@@ -570,20 +557,28 @@ void BiopsyPage::updateCursorPointer(void){
     cursorValue->update();
 }
 
-void BiopsyPage::updateBiopsyView(void){
+void BiopsyExtendedPage::updateBiopsyView(void){
     int adapter = ApplicationDatabase.getDataI(_DB_BIOP_ADAPTER_ID);
+
+    // Se il bottone di sblocco è premuto ha la precedenza
+    if(ApplicationDatabase.getDataI(_DB_BIOP_UNLOCK_BUTTON)){
+        if(ApplicationDatabase.getDataI(_DB_FORZA)) setBackground("://BiopsyExtended/BiopsyExtended/unlockWindowNotPermitted.png");
+        else setBackground("://BiopsyExtended/BiopsyExtended/unlockWindow.png");
+        setInfoPanelView(true);
+        return;
+    }
 
     switch(ApplicationDatabase.getDataI(_DB_BIOP_LAT_X)){
     case _BP_ASSEX_POSITION_ND:
-        setBackground("://BiopsyPage/BiopsyPage/undefXScroll.png");
+        setBackground("://BiopsyExtended/BiopsyExtended/undefXScroll.png");
         setInfoPanelView(true);
         break;
     case _BP_ASSEX_POSITION_LEFT:
         if((adapter == _BP_ADAPTER_OPEN) || (adapter == _BP_ADAPTER_SHORT)){
-            setBackground("://BiopsyPage/BiopsyPage/homeL.png");
+            setBackground("://BiopsyExtended/BiopsyExtended/homeL.png");
             setInfoPanelView(true);
         }else{
-            setBackground("://BiopsyPage/BiopsyPage/homeLaccessorio.png");
+            setBackground("://BiopsyExtended/BiopsyExtended/homeLaccessorio.png");
             setInfoPanelView(false);
             // Aggiorna la posizione attuale del cursore SH
             updateCursorPointer();
@@ -591,10 +586,10 @@ void BiopsyPage::updateBiopsyView(void){
         break;
     case _BP_ASSEX_POSITION_CENTER:
         if((adapter == _BP_ADAPTER_OPEN) || (adapter == _BP_ADAPTER_SHORT)){
-            setBackground("://BiopsyPage/BiopsyPage/homeC.png");
+            setBackground("://BiopsyExtended/BiopsyExtended/homeC.png");
             setInfoPanelView(true);
         }else{
-            setBackground("://BiopsyPage/BiopsyPage/homeCaccessorio.png");
+            setBackground("://BiopsyExtended/BiopsyExtended/homeCaccessorio.png");
             setInfoPanelView(false);
             // Aggiorna la posizione attuale del cursore SH
             updateCursorPointer();
@@ -602,10 +597,10 @@ void BiopsyPage::updateBiopsyView(void){
         break;
     case _BP_ASSEX_POSITION_RIGHT:
         if((adapter == _BP_ADAPTER_OPEN) || (adapter == _BP_ADAPTER_SHORT)){
-            setBackground("://BiopsyPage/BiopsyPage/homeR.png");
+            setBackground("://BiopsyExtended/BiopsyExtended/homeR.png");
             setInfoPanelView(true);
         }else{
-            setBackground("://BiopsyPage/BiopsyPage/homeRaccessorio.png");
+            setBackground("://BiopsyExtended/BiopsyExtended/homeRaccessorio.png");
             setInfoPanelView(false);
             // Aggiorna la posizione attuale del cursore SH
             updateCursorPointer();
@@ -617,7 +612,7 @@ void BiopsyPage::updateBiopsyView(void){
 
 }
 
-void BiopsyPage::setTubeTemp(void){
+void BiopsyExtendedPage::setTubeTemp(void){
     QString str;
     float hu;
 
@@ -650,7 +645,7 @@ void BiopsyPage::setTubeTemp(void){
 }
 
 // Visualizza o disattiva il pannello informativo
-void BiopsyPage::setInfoPanelView(bool stat){
+void BiopsyExtendedPage::setInfoPanelView(bool stat){
     if(stat){
         // Pannello info ON
         tubeTempValue->show();

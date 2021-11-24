@@ -45,8 +45,6 @@ enum
     _PG_MAIN_DIGITAL,
     _PG_OPEN_STUDY_DIGITAL,
     _PG_PROJECTIONS,
-    _PG_BIOPSY_DIGITAL,
-    _PG_BIOPSY_DEVICE,
     _PG_SELLNG,
     _PG_ACR,
     _PG_ALARM,
@@ -76,7 +74,10 @@ enum
     _PG_SERVICE_TOOLS_INVERTER,
     _PG_SYSTEM_SETUP,
     _PG_SERVICE_CALIB_COLLI,
-    _PG_SERVICE_CALIB_PARKING
+    _PG_SERVICE_CALIB_PARKING,
+    _PG_BIOPSY_EXTENDED_DEVICE,
+    _PG_BIOPSY_EXTENDED_PAGE,
+    _PG_BIOPSY_STANDARD_PAGE
 
 };
 
@@ -230,7 +231,10 @@ _DB_BIOP_UNLOCK_BUTTON, // Stato pulsante di sblocco
 _DB_BIOP_LAT_X,       // Statoposizione shift asse x
 _DB_BIOP_NEEDLE_MARG,   // Distanza punta ago fibra i carbonio
 _DB_BIOP_MAXZ,          // Massimo spostamento possibile sulla base dei dati
-
+_DB_BIOP_MARG,          // Solo Standard model
+_DB_BIOP_HOLDER,        // Solo Standard model
+_DB_BIOP_AGO,           // Solo Standard model
+_DB_BIOP_MANUAL_ENA,    // Solo Standard model
 
 _DB_DEMO_MODE,
 _DB_DEAD_MEN,

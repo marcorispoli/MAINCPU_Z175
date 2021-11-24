@@ -231,9 +231,9 @@ typedef enum
 
 // Codici relativi al tipo di adapter ID
 #define _BP_ADAPTER_OPEN            0
-#define _BP_ADAPTER_NEEDLE          1
-#define _BP_ADAPTER_A               2
-#define _BP_ADAPTER_B               3
+#define _BP_ADAPTER_A               1
+#define _BP_ADAPTER_B               2
+#define _BP_ADAPTER_C               3
 #define _BP_ADAPTER_SHORT           4
 
 #define _BP_ASSEX_POSITION_ND       0
@@ -293,6 +293,13 @@ typedef enum
 #define _BYM_SIM_SH             4
 #define _BYM_SIM_LAT            5
 #define _BYM_SIM_SET_CURSOR     6
+
+#define _BYM_SYM_ADAPTER_A      1
+#define _BYM_SYM_ADAPTER_B      2
+#define _BYM_SYM_ADAPTER_C      3
+#define _BYM_SYM_ADAPTER_O      4
+#define _BYM_SYM_ADAPTER_S      5
+
 
 //________________________________________________________________________
 typedef enum
@@ -434,10 +441,11 @@ typedef enum
 
     MCC_PCB249U1_NOTIFY,     // Notifica ad A5 da parte di PCB249U1
 
-    MCC_SERVICE_NOTIFY,      // Notifica ad A5 da parte di Service
-    MCC_LOADER_NOTIFY,       // Notifica ad A5 da parte di Loader
-    MCC_BIOP_NOTIFY,         // Notifica da Biopsia
-    MCC_PCB190_NOTIFY,       // Notifiche da driver della scheda PCB190
+    MCC_SERVICE_NOTIFY,       // Notifica ad A5 da parte di Service
+    MCC_LOADER_NOTIFY,        // Notifica ad A5 da parte di Loader
+    MCC_BIOP_STANDARD_NOTIFY, // Notifica da Biopsia Standard
+    MCC_BIOP_EXTENDED_NOTIFY, // Notifica da Biopsia Extended
+    MCC_PCB190_NOTIFY,        // Notifiche da driver della scheda PCB190
 
     // Sezione dedicata ai test
     MCC_TEST,
@@ -452,7 +460,6 @@ typedef enum
     MCC_GET_ARM_INPUTS,
     MCC_GET_LENZE_INPUTS,
     MCC_PARKING_MODE_COMMANDS
-
 
 
 }_MccGuiToDevice_Cmd;

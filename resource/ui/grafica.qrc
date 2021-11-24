@@ -196,24 +196,6 @@
         <file>Service_Tools/lenze_driver.png</file>
         <file>Service_Tools/lenze_background.png</file>
     </qresource>
-    <qresource prefix="/BiopsyPage">
-        <file>BiopsyPage/biopsy_demo.png</file>
-        <file>BiopsyPage/biopsy_xray.png</file>
-        <file>BiopsyPage/imageIcon.png</file>
-        <file>BiopsyPage/calib_pix.png</file>
-        <file>BiopsyPage/rotPixY.png</file>
-        <file>BiopsyPage/rotPixC.png</file>
-        <file>BiopsyPage/specimen_l.png</file>
-        <file>BiopsyPage/specimen_r.png</file>
-        <file>BiopsyPage/homeC.png</file>
-        <file>BiopsyPage/homeR.png</file>
-        <file>BiopsyPage/undefXScroll.png</file>
-        <file>BiopsyPage/homeL.png</file>
-        <file>BiopsyPage/homeCaccessorio.png</file>
-        <file>BiopsyPage/homeLaccessorio.png</file>
-        <file>BiopsyPage/homeRaccessorio.png</file>
-        <file>BiopsyPage/BiopsyPointerArrow.png</file>
-    </qresource>
     <qresource prefix="/StartupPage">
         <file>StartupPage/startup_tc.png</file>
         <file>StartupPage/startup_arm.png</file>
@@ -356,20 +338,61 @@
         <file>Sym/InvalidPad.png</file>
         <file>Sym/closed_door_pix.png</file>
     </qresource>
-    <qresource prefix="/BiopsyDevice">
-        <file>BiopsyDevice/BiopsyExecXCenterToHome.png</file>
-        <file>BiopsyDevice/BiopsyExecYToHome.png</file>
-        <file>BiopsyDevice/BiopsyExecZToHome.png</file>
-        <file>BiopsyDevice/BiopsyExecXLeftToHome.png</file>
-        <file>BiopsyDevice/BiopsyExecXRightToHome.png</file>
-        <file>BiopsyDevice/BiopsyScrollCenter.png</file>
-        <file>BiopsyDevice/BiopsyScrollLeft.png</file>
-        <file>BiopsyDevice/BiopsyScrollRight.png</file>
-        <file>BiopsyDevice/BiopsyScrollYCenter.png</file>
-        <file>BiopsyDevice/BiopsyScrollYLeft.png</file>
-        <file>BiopsyDevice/BiopsyScrollYRight.png</file>
-        <file>BiopsyDevice/BiopsyExecZToTarget.png</file>
-        <file>BiopsyDevice/BiopsyExecXToTarget.png</file>
-        <file>BiopsyDevice/BiopsyExecYToTarget.png</file>
+    <qresource prefix="/BiopsyStandard">
+        <file>BiopsyStandard/allarme_holder.png</file>
+        <file>BiopsyStandard/background_biopsy_C.png</file>
+        <file>BiopsyStandard/background_biopsy_Y.png</file>
+        <file>BiopsyStandard/biopsy_demo.png</file>
+        <file>BiopsyStandard/biopsy_holder.png</file>
+        <file>BiopsyStandard/biopsy_manual_dwn_C.png</file>
+        <file>BiopsyStandard/biopsy_manual_dwn_Y.png</file>
+        <file>BiopsyStandard/biopsy_manual_up_C.png</file>
+        <file>BiopsyStandard/biopsy_manual_up_Y.png</file>
+        <file>BiopsyStandard/biopsy_xray.png</file>
+        <file>BiopsyStandard/buttonsC.png</file>
+        <file>BiopsyStandard/buttonsCnoHome.png</file>
+        <file>BiopsyStandard/buttonsY.png</file>
+        <file>BiopsyStandard/buttonsYnoHome.png</file>
+        <file>BiopsyStandard/calib_pix.png</file>
+        <file>BiopsyStandard/imageIcon.png</file>
+        <file>BiopsyStandard/linea_margine.png</file>
+        <file>BiopsyStandard/linea_margine_back.png</file>
+        <file>BiopsyStandard/rotPixC.png</file>
+        <file>BiopsyStandard/rotPixY.png</file>
+        <file>BiopsyStandard/specimen_l.png</file>
+        <file>BiopsyStandard/specimen_r.png</file>
+    </qresource>
+    <qresource prefix="/BiopsyExtended">
+        <file>BiopsyExtended/biopsy_demo.png</file>
+        <file>BiopsyExtended/BiopsyExecXCenterToHome.png</file>
+        <file>BiopsyExtended/BiopsyExecXLeftToHome.png</file>
+        <file>BiopsyExtended/BiopsyExecXRightToHome.png</file>
+        <file>BiopsyExtended/BiopsyExecXToTarget.png</file>
+        <file>BiopsyExtended/BiopsyExecYToHome.png</file>
+        <file>BiopsyExtended/BiopsyExecYToTarget.png</file>
+        <file>BiopsyExtended/BiopsyExecZToHome.png</file>
+        <file>BiopsyExtended/BiopsyExecZToTarget.png</file>
+        <file>BiopsyExtended/BiopsyPointerArrow.png</file>
+        <file>BiopsyExtended/BiopsyScrollCenter.png</file>
+        <file>BiopsyExtended/BiopsyScrollLeft.png</file>
+        <file>BiopsyExtended/BiopsyScrollRight.png</file>
+        <file>BiopsyExtended/BiopsyScrollYCenter.png</file>
+        <file>BiopsyExtended/BiopsyScrollYLeft.png</file>
+        <file>BiopsyExtended/BiopsyScrollYRight.png</file>
+        <file>BiopsyExtended/biopsy_xray.png</file>
+        <file>BiopsyExtended/calib_pix.png</file>
+        <file>BiopsyExtended/homeC.png</file>
+        <file>BiopsyExtended/homeCaccessorio.png</file>
+        <file>BiopsyExtended/homeL.png</file>
+        <file>BiopsyExtended/homeLaccessorio.png</file>
+        <file>BiopsyExtended/homeR.png</file>
+        <file>BiopsyExtended/homeRaccessorio.png</file>
+        <file>BiopsyExtended/imageIcon.png</file>
+        <file>BiopsyExtended/specimen_l.png</file>
+        <file>BiopsyExtended/specimen_r.png</file>
+        <file>BiopsyExtended/undefXScroll.png</file>
+        <file>BiopsyExtended/unlockWindow.png</file>
+        <file>BiopsyExtended/unlockWindowNotPermitted.png</file>
+        <file>BiopsyExtended/Xray.png</file>
     </qresource>
 </RCC>

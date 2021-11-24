@@ -1,17 +1,17 @@
-#ifndef BIOPSYPAGE_H
-#define BIOPSYPAGE_H
+#ifndef BIOPSY_EXTENDED_PAGE_H
+#define BIOPSY_EXTENDED_PAGE_H
 
-#include "application.h"
+#include "../application.h"
 
 #include <QObject>
 
-class BiopsyPage : public GWindow
+class BiopsyExtendedPage : public GWindow
 {
     Q_OBJECT
 
 public:
-    BiopsyPage(bool ls, QString bg,QString bgs ,bool showLogo, int w,int h, qreal angolo,QPainterPath pn, int pgpn, QPainterPath pp, int pgpp, int pg);
-    virtual ~BiopsyPage();
+    BiopsyExtendedPage(bool ls, QString bg,QString bgs ,bool showLogo, int w,int h, qreal angolo,QPainterPath pn, int pgpn, QPainterPath pp, int pgpp, int pg);
+    virtual ~BiopsyExtendedPage();
     void childStatusPage(bool stat,int param); // Override funzione della classe base GWindow
                                                 // Al cambio pagina riporta lo stato di attivazione
 
@@ -105,4 +105,4 @@ private:
     void setInfoPanelView(bool stat);
 };
 
-#endif // BIOPSYPAGE_H
+#endif // BIOPSY_EXTENDED_PAGE_H

@@ -201,7 +201,12 @@ void console::consoleRxHandler(QByteArray rxbuffer)
         return;
     }else if(comando==GET_POTTER)
     {
-        if(pBiopsy->connected) emit consoleTxHandler(answ.answToQByteArray(QString("BP %1").arg(pBiopsy->adapterId)));
+        if(ApplicationDatabase.getDataU(_DB_ACCESSORIO) == BIOPSY_DEVICE){
+            if(pConfig->sys.biopsyType == BYM_STANDARD_DEVICE)
+                emit consoleTxHandler(answ.answToQByteArray(QString("BP %1").arg(pBiopsyStandard->accessorio)));
+            else
+                emit consoleTxHandler(answ.answToQByteArray(QString("BPEXT 0")));
+        }
         else if(pPotter->getPotId()==POTTER_2D)  emit consoleTxHandler(answ.answToQByteArray("2D 0"));
         else if(pPotter->getPotId()==POTTER_TOMO)  emit consoleTxHandler(answ.answToQByteArray("3D 0"));
         else if(pPotter->getPotId()==POTTER_MAGNIFIER)  emit consoleTxHandler(answ.answToQByteArray(QString("MG %1").arg(pCompressore->config.fattoreIngranditore[pPotter->getPotFactor()])));        
@@ -541,15 +546,15 @@ void console::consoleRxHandler(QByteArray rxbuffer)
     {
         if(handleSetIaRxData(&protocollo, &answ)==FALSE) emit consoleTxHandler(answ.cmdToQByteArray("NOK"));
         else emit consoleTxHandler(answ.cmdToQByteArray("OK"));
-    }else if(comando==SET_BIOPSY_MOVE)
+    }else if(comando==SET_BIOPSY_EXTENDED_MOVE)
     {
-        handleBiopsyMoveXYZ(&protocollo, &answ);
-    }else if(comando==SET_BIOPSY_HOME)
+        handleBiopsyExtendedMoveXYZ(&protocollo, &answ);
+    }else if(comando==SET_BIOPSY_EXTENDED_HOME)
     {
-        handleBiopsyMoveHome(&protocollo, &answ);
-    }else if(comando==GET_BIOPSY_DATA)
+        handleBiopsyExtendedMoveHome(&protocollo, &answ);
+    }else if(comando==GET_BIOPSY_EXTENDED_DATA)
     {
-        handleGetBiopsyData(&protocollo, &answ);
+        handleGetBiopsyExtendedData(&protocollo, &answ);
     }else if(comando==SET_BIOPSY_CONFIG)
     {
          handleSetBiopsyConfig(&protocollo, &answ);
@@ -1628,7 +1633,7 @@ void console::handleSetArm(int target,int minimo, int massimo,int id)
 
 
     // Se c'è la biopsia il massimo angolo attivabile è 90°
-    if(pBiopsy->connected){
+    if(ApplicationDatabase.getDataU(_DB_ACCESSORIO) == BIOPSY_DEVICE){
         if(abs(target)>90){
             answ.addParam(QString("%1").arg((int)ARM_RANGE_ERROR));
             emit consoleTxHandler(answ.cmdToQByteArray("NOK 9"));
@@ -1956,7 +1961,7 @@ void console::RxStart(void)
 
     // Controllo Angolo Braccio
     // Attenzione questo controllo non e' piu' valido con la Biopsia
-    if((pBiopsy->connected==FALSE)&&((angolo_corrente>xSequence.arm_max) || (angolo_corrente<xSequence.arm_min)))
+    if((ApplicationDatabase.getDataU(_DB_ACCESSORIO) != BIOPSY_DEVICE)&&((angolo_corrente>xSequence.arm_max) || (angolo_corrente<xSequence.arm_min)))
     {
         ret.clear();
         ret.append(ERROR_ANGOLO_ARM);
@@ -1967,7 +1972,7 @@ void console::RxStart(void)
     }
 
     // Controllo Su Potter
-    if((!pPotter->isValid())&&(pBiopsy->connected==FALSE))
+    if((!pPotter->isValid())&&(ApplicationDatabase.getDataU(_DB_ACCESSORIO) != BIOPSY_DEVICE))
     {
         ret.clear();
         ret.append(ERROR_INVALID_POTTER);
@@ -2040,7 +2045,7 @@ void console::Rx2DSequence(void)
     QByteArray ret;
 
 
-    if(pBiopsy->connected){
+    if(ApplicationDatabase.getDataU(_DB_ACCESSORIO) == BIOPSY_DEVICE){
         // In biopsia il flag deve sempre essere azzerato a scanso di equivoci
         xSequence.isCombo=false;
     }else{
@@ -2109,7 +2114,7 @@ void console::Rx2DSequence(void)
     }else{
 
         // Ingranditore e Biopsia non necessitano di protezione paziente
-        if((!pPotter->isMagnifier())&&(!pBiopsy->connected)){
+        if((!pPotter->isMagnifier())&&(ApplicationDatabase.getDataU(_DB_ACCESSORIO) != BIOPSY_DEVICE)){
             if(pConfig->userCnf.enableCheckAccessorio){
                 if((pCollimatore->accessorio!=COLLI_ACCESSORIO_PROTEZIONE_PAZIENTE_2D)&&(pCollimatore->accessorio!=COLLI_ACCESSORIO_PROTEZIONE_PAZIENTE_3D)){
                     PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_RAGGI, ERROR_MISSA_PROT_PAZIENTE,TRUE); // Self resetting
@@ -2156,7 +2161,7 @@ void console::Rx2DSequence(void)
     data[12] = pGeneratore->minI;
 
     // Gestione dello sblocco del compressore: NON IN BIOPSIA e non in combo
-    if(pBiopsy->connected) data[13] = 0;
+    if(ApplicationDatabase.getDataU(_DB_ACCESSORIO) == BIOPSY_DEVICE) data[13] = 0;
     else if (xSequence.isCombo) data[13] = 0;
     else if(pConfig->userCnf.enableSblocco) data[13] = 1;
     else data[13]=0;
@@ -2634,7 +2639,7 @@ void console::Rx3DSequence(void)
     QByteArray ret;
 
 
-    if(pBiopsy->connected){
+    if(ApplicationDatabase.getDataU(_DB_ACCESSORIO) == BIOPSY_DEVICE){
         // In biopsia il flag deve sempre essere azzerato a scanso di equivoci
         xSequence.isCombo=false;
     }else{
@@ -2762,7 +2767,7 @@ void console::Rx3DSequence(void)
     }
 
     // Gestione dello sblocco del compressore: NON IN BIOPSIA e non in combo
-    if(pBiopsy->connected) data[17] = 0;
+    if(ApplicationDatabase.getDataU(_DB_ACCESSORIO) == BIOPSY_DEVICE) data[17] = 0;
     else if (xSequence.isCombo) data[17] = 0;
     else if(pConfig->userCnf.enableSblocco) data[17] = 1;
     else data[17]=0;
@@ -3202,13 +3207,21 @@ void mccMasterCom::mccRxHandler(_MccFrame_Str mccframe)
 
 
 
-        case MCC_BIOP_NOTIFY: // Notifiche da Driver PCB215
+        case MCC_BIOP_STANDARD_NOTIFY:
 
         bufdata.clear();
         for(ciclo=0; ciclo<mccframe.buffer[1]; ciclo++ )
            bufdata.append(mccframe.buffer[2+ciclo]);
-        pConsole->emitBiopsyNotify(mccframe.id, mccframe.buffer[0],bufdata);
+        pConsole->emitBiopsyStandardNotify(mccframe.id, mccframe.buffer[0],bufdata);
         break;
+
+        case MCC_BIOP_EXTENDED_NOTIFY:
+
+         bufdata.clear();
+         for(ciclo=0; ciclo<mccframe.buffer[1]; ciclo++ )
+            bufdata.append(mccframe.buffer[2+ciclo]);
+         pConsole->emitBiopsyExtendedNotify(mccframe.id, mccframe.buffer[0],bufdata);
+         break;
 
         case MCC_CONFIG_NOTIFY: // Notifica configuratore M4
 
@@ -4627,31 +4640,26 @@ bool console::handleSetIaRxData(protoConsole* frame, protoConsole* answer)
 }
 
 /*
-    PAR0: X (dmm)
-    PAR1: Y (dmm)
-    PAR2: Z (dmm)
-    PAR3: LAT = R,L,C
+ *  Comando di movimento cursori Biopsia:
+ *  Parametri: [X,Y,Z,]
+ *  Risposta:
+ *      -> OK 0 Già in posizione;
+        -> OK 255: comando attivato, completamento differito
+        -> NOK 1: numero parametri errato
+        -> NOK 2: lateralità non definita
+ *
  */
-void console::handleBiopsyMoveXYZ(protoConsole* frame, protoConsole* answer)
+void console::handleBiopsyExtendedMoveXYZ(protoConsole* frame, protoConsole* answer)
 {
     // Controllo sulla dimensione dei parametri
-    if(frame->parametri.size() != 4 ) {
-        emit consoleTxHandler(answer->answToQByteArray("NOK 1 ERRORE NUMERO DI PARAMETRI: ->  X,Y,Z,LAT"));
-        return;
-    }
-    unsigned char lat;
-
-    if(frame->parametri[3]=="L") lat = _BP_ASSEX_POSITION_LEFT;
-    else if(frame->parametri[3]=="C") lat = _BP_ASSEX_POSITION_CENTER;
-    else if(frame->parametri[3]=="R") lat = _BP_ASSEX_POSITION_RIGHT;
-    else {
-        emit consoleTxHandler(answer->answToQByteArray("NOK 2 ERRORE VALORE PARAMETRO: -> [L/C/R]"));
+    if(frame->parametri.size() != 3 ) {
+        emit consoleTxHandler(answer->answToQByteArray("NOK 1 ERRORE NUMERO DI PARAMETRI: ->  X,Y,Z"));
         return;
     }
 
     // Movimento a posizione arbitraria: la lateralità deve corrispondere!
-    if(lat != pBiopsy->curLatX){
-        emit consoleTxHandler(answer->answToQByteArray("NOK 3 ERRORE LATERALITA' NON CORRISPONDENTE"));
+    if(pBiopsyExtended->curLatX == _BP_ASSEX_POSITION_ND){
+        emit consoleTxHandler(answer->answToQByteArray("NOK 2 ERRORE LATERALITA' NON ATTIVA"));
         return;
     }
 
@@ -4659,17 +4667,25 @@ void console::handleBiopsyMoveXYZ(protoConsole* frame, protoConsole* answer)
     unsigned short Y = frame->parametri[1].toUInt(); // dam
     unsigned short Z = frame->parametri[2].toUInt(); // dam
 
-
-    int ret =  pBiopsy->requestBiopsyMoveXYZ(X,Y,Z,frame->id);
-    if(ret==0) emit consoleTxHandler(answer->answToQByteArray("OK 0"));
-    else if(ret>0) emit consoleTxHandler(answer->answToQByteArray("OK 255"));
-    else emit consoleTxHandler(answer->answToQByteArray("NOK 4"));
+    if( pBiopsyExtended->requestBiopsyMoveXYZ(X,Y,Z,frame->id)==0) emit consoleTxHandler(answer->answToQByteArray("OK 0"));
+    else emit consoleTxHandler(answer->answToQByteArray("OK 255"));
 
     return;
 
 }
 
-void console::handleBiopsyMoveHome(protoConsole* frame, protoConsole* answer)
+/*
+    Comando di impostazione (con attivazione) della Home:
+    Parametro: [L/C/R] Left / Center / Right
+
+    Risposta:
+        -> OK 0 Già in posizione;
+        -> OK 255: comando attivato, completamento differito
+        -> NOK 1: numero parametri errato
+        -> NOK 2: parametro non conforme
+
+ */
+void console::handleBiopsyExtendedMoveHome(protoConsole* frame, protoConsole* answer)
 {
     if(frame->parametri.size() != 1 ) {
         emit consoleTxHandler(answer->answToQByteArray("NOK 1 ERRORE NUMERO DI PARAMETRI: ->  LAT"));
@@ -4686,52 +4702,43 @@ void console::handleBiopsyMoveHome(protoConsole* frame, protoConsole* answer)
         return;
     }
 
-    int ret = pBiopsy->requestBiopsyHome(frame->id,lat);
-    if(ret==0) emit consoleTxHandler(answer->answToQByteArray("OK 0"));
-    else if(ret>0) emit consoleTxHandler(answer->answToQByteArray("OK 255"));
-    else emit consoleTxHandler(answer->answToQByteArray("NOK 3"));
+
+    if(pBiopsyExtended->requestBiopsyHome(frame->id,lat)==0) emit consoleTxHandler(answer->answToQByteArray("OK 0"));
+    else  emit consoleTxHandler(answer->answToQByteArray("OK 255"));
 
     return;
 }
 
 /* 
     Restituisce i seguenti parametri funzionali della Biopsia:
-    - Stato della Connessione
-
-    - Modello della torretta
-    - Distanza Z-Home fibra di carbonio in mm
-    - Posizione del cursore XYZ in dmm;
-    - Posizione del cursore del cuneo in dmm;
-    - Distanza attuale Base torretta  Staffe del compressore in mm;
-    - Distanza punta ago e home come ricevuto da AWS
-    - Massima Z calcolata dal Gantry sulla base della distanza dal compressore
-    - Massima Z assoluta come la minore tra impatto ago e impatto compressore
-    - Codice Adattatore
-    - Stato del pulsante di sblocco
-    - Posizione lateralità
+    -> "OK [CONNECTED/DISCONNED] [X_L / X_R / X_C / X_N] [AD_A / AD_B / AD_C / AD_ND] [X,Y,Z,SH]"
 
  */
-void console::handleGetBiopsyData(protoConsole* frame, protoConsole* answer)
+void console::handleGetBiopsyExtendedData(protoConsole* frame, protoConsole* answer)
 {
     QString stringa = "OK ";
-    if(pBiopsy->connected)  stringa += QString("1 ");
-    else stringa += QString("0 ");
 
-    stringa += QString("%1 ").arg((int) pBiopsy->model);
-    stringa += QString("%1 ").arg((int) pBiopsy->config.Z_homePosition);
-    stringa += QString("%1 ").arg((int) pBiopsy->curX_dmm);
-    stringa += QString("%1 ").arg((int) pBiopsy->curY_dmm);
-    stringa += QString("%1 ").arg((int) pBiopsy->curZ_dmm);
-    stringa += QString("%1 ").arg((int) pBiopsy->curSh_dmm);
-    stringa += QString("%1 ").arg((int) pBiopsy->paddle_margine);
-    stringa += QString("%1 ").arg((int) pBiopsy->needle_home);
-    stringa += QString("%1 ").arg((int) pBiopsy->max_z_paddle);
-    stringa += QString("%1 ").arg((int) pBiopsy->abs_max_z);
-    stringa += QString("%1 ").arg((int) pBiopsy->adapterId);
-    if(pBiopsy->unlock_button) stringa += QString("1 ");
-    else stringa += QString("0 ");
 
+    // Stato della connessione
+    if(pBiopsyExtended->connected) stringa += "CONNECTED ";
+    else stringa += "DISCONNECTED ";
+
+    // Lateralità rilevata
+    if(pBiopsyExtended->curLatX == _BP_ASSEX_POSITION_LEFT) stringa += "X_L ";
+    else if(pBiopsyExtended->curLatX == _BP_ASSEX_POSITION_RIGHT) stringa += "X_R ";
+    else if(pBiopsyExtended->curLatX == _BP_ASSEX_POSITION_CENTER) stringa += "X_C ";
+    else stringa += "X_N ";
+
+    // Adapter
+    if(pBiopsyExtended->adapterId == _BP_ADAPTER_A) stringa += "AD_A ";
+    else if(pBiopsyExtended->adapterId == _BP_ADAPTER_B) stringa += "AD_B ";
+    else if(pBiopsyExtended->adapterId == _BP_ADAPTER_C) stringa += "AD_C ";
+    else stringa += "AD_ND ";
+
+    // Coordinate
+    stringa += QString("X=%1 Y=%2 Z=%3 SH=%4 ").arg(ApplicationDatabase.getDataI(_DB_BIOP_X)).arg(ApplicationDatabase.getDataI(_DB_BIOP_Y)).arg(ApplicationDatabase.getDataI(_DB_BIOP_Z)).arg(ApplicationDatabase.getDataI(_DB_BIOP_SH));
     emit consoleTxHandler(answer->answToQByteArray(stringa));
+
     return;
 }
 

@@ -207,13 +207,10 @@ void Config::selectOperatingPage(){
 
 
     if(ApplicationDatabase.getDataU(_DB_ACCESSORIO)==BIOPSY_DEVICE){
-         //GWindowRoot.setNewPage(_PG_BIOPSY_DIGITAL,DBase::_DB_NO_ECHO);
-         GWindowRoot.setNewPage(_PG_BIOPSY_DIGITAL,GWindowRoot.curPage,0);
-         // paginaBiopsyDigital->setOpenStudy();
+        if(pConfig->sys.biopsyType == BYM_STANDARD_DEVICE)   GWindowRoot.setNewPage(_PG_BIOPSY_STANDARD_PAGE,GWindowRoot.curPage,0);
+        else GWindowRoot.setNewPage(_PG_BIOPSY_EXTENDED_PAGE,GWindowRoot.curPage,0);
     }else{
-         //GWindowRoot.setNewPage(_PG_OPEN_STUDY_DIGITAL,DBase::_DB_NO_ECHO);
          GWindowRoot.setNewPage(_PG_OPEN_STUDY_DIGITAL,GWindowRoot.curPage,0);
-         // paginaOpenStudyDigital->setOpenStudy();
     }
 
 }
@@ -230,7 +227,7 @@ void Config::selectMainPage(){
 
 // SE IL FIL EDI CONFIGURAZIONE NON VIENE TROVATO O RISULTASSE
 // ILLEGGIBILE ALLORA IL SISTEMA APRIRA' LA FINESTRA DI FACTORY INIT
-#define SYS_ITEMS 4
+#define SYS_ITEMS 5
 bool Config::openSysCfg(void)
 {
     QList<QString> dati;
@@ -241,7 +238,7 @@ bool Config::openSysCfg(void)
     sys.armMotor    =   true;                   // Presenza rotazione motorizzata/freno
     sys.trxMotor    =   true;                   // Presenza pendolazione
     sys.highSpeedStarter = true;                // Presenza starter alta velocità
-
+    sys.biopsyType = BYM_STANDARD_DEVICE;       // Modalità standard di default
 
     // Verifica se esiste il file: se non esiste lo crea dai defaults
     QFile file(QString(SYSCFG).toAscii());
@@ -280,6 +277,10 @@ bool Config::openSysCfg(void)
             nItems++;
             if(dati.at(1)=="1") sys.highSpeedStarter = true; // IAE
             else sys.highSpeedStarter = false; // Starter Low Speed interno
+        }else if(dati.at(0)=="BIOPSY_TYPE"){
+            nItems++;
+            if(dati.at(1)=="STANDARD") sys.biopsyType = BYM_STANDARD_DEVICE;
+            else sys.biopsyType = BYM_EXTENDED_DEVICE;
         }
 
     }
@@ -323,6 +324,10 @@ bool Config::saveSysCfg(void)
     // Ozione uso starter alta velocità
     if(sys.highSpeedStarter) file.write("<HS_STARTER,1>    // opzione utilizzo hs starter\n");
     else file.write("<HS_STARTER,0>    // opzione utilizzo hs starter\n");
+
+    if(sys.biopsyType == BYM_STANDARD_DEVICE) file.write("<BIOPSY_TYPE,STANDARD>    // opzione tipo bym\n");
+    else file.write("<BIOPSY_TYPE,EXTENDED>    // opzione tipo bym\n");
+
 
     file.close();
     file.flush();
@@ -1593,13 +1598,19 @@ bool Config::sendMccConfigCommand(unsigned char cmd){
             }
             buflen += 10;
         break;
-        case CONFIG_BIOPSY:            
-            pData[0] = pBiopsy->config.Z_homePosition; // Distanza home to fibra
-            pData[1] = pBiopsy->config.Z_basePosizionatore; // Distanza base metallica fibra di carbonio
-            pData[2] = pBiopsy->config.offsetPad;   // Offset linea di calibrazione compressore, Staffe compressore
-            pData[3] = pBiopsy->config.margineRisalita; // Margine di sicurezza sulla risalita del compressore
-            pData[4] = pBiopsy->config.marginePosizionamento; // NA
-            buflen += 5;
+        case CONFIG_BIOPSY:
+            pData[0] = (unsigned char) pConfig->sys.biopsyType;
+
+            if(pConfig->sys.biopsyType == BYM_STANDARD_DEVICE){
+                pData[1] = pBiopsyStandard->config.Z_homePosition; // Distanza home to fibra
+                pData[2] = pBiopsyStandard->config.Z_basePosizionatore; // Distanza base metallica fibra di carbonio
+                pData[3] = pBiopsyStandard->config.offsetPad;   // Offset linea di calibrazione compressore, Staffe compressore
+                pData[4] = pBiopsyStandard->config.margineRisalita; // Margine di sicurezza sulla risalita del compressore
+                pData[5] = pBiopsyStandard->config.marginePosizionamento; // NA
+                buflen += 6;
+            }else{
+                buflen += 1;
+            }
         break;
         case CONFIG_PCB244:           
             pData[0] = 0;

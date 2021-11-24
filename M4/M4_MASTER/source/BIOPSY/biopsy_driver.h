@@ -19,14 +19,14 @@ Data di Creazione: 19/06/2014
 #endif
 
 
-#define  _ADAPTER_NEEDLE_LEVEL_H    1100
-#define  _ADAPTER_NEEDLE_LEVEL_L    950
+#define  _ADAPTER_A_LEVEL_H         1100
+#define  _ADAPTER_A_LEVEL_L         950
 
-#define  _ADAPTER_A_LEVEL_H         550
-#define  _ADAPTER_A_LEVEL_L         750
+#define  _ADAPTER_B_LEVEL_H         750
+#define  _ADAPTER_B_LEVEL_L         550
 
-#define  _ADAPTER_B_LEVEL_H         400
-#define  _ADAPTER_B_LEVEL_L         200
+#define  _ADAPTER_C_LEVEL_H         400
+#define  _ADAPTER_C_LEVEL_L         200
 
 #define  _ADAPTER_SHORT_LEVEL_H     100
 #define  _ADAPTER_SHORT_LEVEL_L     0

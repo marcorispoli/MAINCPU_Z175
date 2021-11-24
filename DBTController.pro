@@ -46,11 +46,9 @@ HEADERS += \
     source/potter.h \
     lib/msgbox.h \
     source/loader.h \
-    source/biopsy.h \
     shared_a5_m4/shared.h \
     source/Service/servicepanelmenu.h \
     source/Service/Calib/calibmenu.h \
-    source/biopsypage.h \
     source/startuppage.h \
     source/Service/Calib/calibcompressorposition.h \
     lib/numericpad.h \
@@ -74,7 +72,11 @@ HEADERS += \
     source/Service/Tools/invertertool.h \
     source/print.h \
     source/Service/Calib/calibColli.h \
-    source/Service/Calib/calibParking.h
+    source/Service/Calib/calibParking.h \
+    source/BiopsyExtended/biopsyExtendedPage.h \
+    source/BiopsyExtended/biopsyExtendedDevice.h \
+    source/BiopsyStandard/biopsyStandardPage.h \
+    source/BiopsyStandard/biopsyStandardDevice.h
 
 SOURCES += \
     source/main.cpp \
@@ -102,10 +104,8 @@ SOURCES += \
     source/potter.cpp \
     lib/msgbox.cpp \
     source/loader.cpp \
-    source/biopsy.cpp \
     source/Service/servicepanelmenu.cpp \
     source/Service/Calib/calibmenu.cpp \
-    source/biopsypage.cpp \
     source/startuppage.cpp \
     source/Service/Calib/calibcompressorposition.cpp \
     lib/numericpad.cpp \
@@ -126,7 +126,11 @@ SOURCES += \
     source/Service/Tools/invertertool.cpp \
     source/print.cpp \
     source/Service/Calib/calibColli.cpp \
-    source/Service/Calib/calibParking.cpp
+    source/Service/Calib/calibParking.cpp \
+    source/BiopsyExtended/biopsyExtendedPage.cpp \
+    source/BiopsyExtended/biopsyExtendedDevice.cpp \
+    source/BiopsyStandard/biopsyStandardPage.cpp \
+    source/BiopsyStandard/biopsyStandardDevice.cpp
 
 
 FORMS += \
@@ -151,7 +155,7 @@ FORMS += \
     source/Service/Tools/inverter.ui \
     source/Service/Calib/calibColli.ui \
     source/Service/Calib/calibParking.ui \
-    source/biopsy.ui
+    source/BiopsyExtended/biopsy.ui
 
 
 
