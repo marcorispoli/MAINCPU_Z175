@@ -396,9 +396,9 @@ void biopsyExtendedDevice::manageHomeSequence(void){
 
         // Verifica se si deve richiedere lo scroll dell'asse X
         if(req_home_lat != curLatX) {
-            if(req_home_lat == _BP_ASSEX_POSITION_LEFT) sub_sequence = _REQ_SUBSEQ_HOME_EXE_SCROLL_X_LEFT;
-            else if(req_home_lat == _BP_ASSEX_POSITION_RIGHT) sub_sequence = _REQ_SUBSEQ_HOME_EXE_SCROLL_X_RIGHT;
-            else if(req_home_lat == _BP_ASSEX_POSITION_CENTER) sub_sequence = _REQ_SUBSEQ_HOME_EXE_SCROLL_X_CENTER;
+            if(req_home_lat == _BP_EXT_ASSEX_POSITION_LEFT) sub_sequence = _REQ_SUBSEQ_HOME_EXE_SCROLL_X_LEFT;
+            else if(req_home_lat == _BP_EXT_ASSEX_POSITION_RIGHT) sub_sequence = _REQ_SUBSEQ_HOME_EXE_SCROLL_X_RIGHT;
+            else if(req_home_lat == _BP_EXT_ASSEX_POSITION_CENTER) sub_sequence = _REQ_SUBSEQ_HOME_EXE_SCROLL_X_CENTER;
         }else sub_sequence = _REQ_SUBSEQ_HOME_EXE_TEST_SCROLL_Y;
         nextStepSequence(1);
         break;
@@ -421,9 +421,9 @@ void biopsyExtendedDevice::manageHomeSequence(void){
         // Verifica se Y deve essere ruotato
         user_confirmation = false;
         if(testUpsidePosition(req_X)){
-            if(req_home_lat == _BP_ASSEX_POSITION_LEFT) sub_sequence = _REQ_SUBSEQ_HOME_EXE_SCROLL_Y_LEFT;
-            else if(req_home_lat == _BP_ASSEX_POSITION_RIGHT) sub_sequence = _REQ_SUBSEQ_HOME_EXE_SCROLL_Y_RIGHT;
-            else if(req_home_lat == _BP_ASSEX_POSITION_CENTER) sub_sequence = _REQ_SUBSEQ_HOME_EXE_SCROLL_Y_CENTER;
+            if(req_home_lat == _BP_EXT_ASSEX_POSITION_LEFT) sub_sequence = _REQ_SUBSEQ_HOME_EXE_SCROLL_Y_LEFT;
+            else if(req_home_lat == _BP_EXT_ASSEX_POSITION_RIGHT) sub_sequence = _REQ_SUBSEQ_HOME_EXE_SCROLL_Y_RIGHT;
+            else if(req_home_lat == _BP_EXT_ASSEX_POSITION_CENTER) sub_sequence = _REQ_SUBSEQ_HOME_EXE_SCROLL_Y_CENTER;
         } else sub_sequence = _REQ_SUBSEQ_HOME_EXE_X;
         nextStepSequence(1);
         break;
@@ -450,9 +450,9 @@ void biopsyExtendedDevice::manageHomeSequence(void){
             return;
         }
 
-        if(req_home_lat == _BP_ASSEX_POSITION_LEFT) sub_sequence = _REQ_SUBSEQ_HOME_WAIT_X_TO_LEFT;
-        else if(req_home_lat == _BP_ASSEX_POSITION_RIGHT) sub_sequence = _REQ_SUBSEQ_HOME_WAIT_X_TO_RIGHT;
-        else if(req_home_lat == _BP_ASSEX_POSITION_CENTER) sub_sequence = _REQ_SUBSEQ_HOME_WAIT_X_TO_CENTER;
+        if(req_home_lat == _BP_EXT_ASSEX_POSITION_LEFT) sub_sequence = _REQ_SUBSEQ_HOME_WAIT_X_TO_LEFT;
+        else if(req_home_lat == _BP_EXT_ASSEX_POSITION_RIGHT) sub_sequence = _REQ_SUBSEQ_HOME_WAIT_X_TO_RIGHT;
+        else if(req_home_lat == _BP_EXT_ASSEX_POSITION_CENTER) sub_sequence = _REQ_SUBSEQ_HOME_WAIT_X_TO_CENTER;
         nextStepSequence(100);
         break;
 
@@ -512,8 +512,8 @@ void biopsyExtendedDevice::manageXYZSequence(void){
 
         // Verifica se ci può essere rischio di impatto
         if(testUpsidePosition(req_X)){
-            if(curLatX == _BP_ASSEX_POSITION_LEFT) sub_sequence = _REQ_SUBSEQ_XYZ_EXE_SCROLL_Y_LEFT;
-            else if(curLatX == _BP_ASSEX_POSITION_RIGHT) sub_sequence = _REQ_SUBSEQ_XYZ_EXE_SCROLL_Y_RIGHT;
+            if(curLatX == _BP_EXT_ASSEX_POSITION_LEFT) sub_sequence = _REQ_SUBSEQ_XYZ_EXE_SCROLL_Y_LEFT;
+            else if(curLatX == _BP_EXT_ASSEX_POSITION_RIGHT) sub_sequence = _REQ_SUBSEQ_XYZ_EXE_SCROLL_Y_RIGHT;
             else sub_sequence = _REQ_SUBSEQ_XYZ_EXE_SCROLL_Y_CENTER;
         } else sub_sequence = _REQ_SUBSEQ_XYZ_EXE_X;
 
@@ -669,13 +669,13 @@ int biopsyExtendedDevice::requestBiopsyHome(int id, unsigned char lat){
     req_Z = 0;
 
     // Determina il target X in funzione della lateralità
-    if(lat == _BP_ASSEX_POSITION_LEFT){
+    if(lat == _BP_EXT_ASSEX_POSITION_LEFT){
         req_X = 2580;
         ApplicationDatabase.setData(BIOPSY_ACTIVATION_TITLE_DB,QString("BIOPSY ACTIVATED TO HOME LEFT SIDE"),0);
-    }else if(lat == _BP_ASSEX_POSITION_CENTER){
+    }else if(lat == _BP_EXT_ASSEX_POSITION_CENTER){
         req_X = 1290;
         ApplicationDatabase.setData(BIOPSY_ACTIVATION_TITLE_DB,QString("BIOPSY ACTIVATED TO HOME CENTER SIDE"),0);
-    }else if(lat == _BP_ASSEX_POSITION_RIGHT){
+    }else if(lat == _BP_EXT_ASSEX_POSITION_RIGHT){
         req_X = 0;
         ApplicationDatabase.setData(BIOPSY_ACTIVATION_TITLE_DB,QString("BIOPSY ACTIVATED TO HOME RIGHT SIDE"),0);
     }
@@ -834,11 +834,10 @@ void biopsyExtendedDevice::mccStatNotify(unsigned char id_notify,unsigned char c
 
 
     // Se il sistema risulta NON connesso non fa altro..
-    if(data.at(_BP_CONNESSIONE)==_BP_CONNESSIONE_DISCONNECTED)
+    if(data.at(_BP_EXT_CONNESSIONE)==_BP_EXT_CONNESSIONE_DISCONNECTED)
     {
         connected = FALSE;
         bypass_y_scroll = false;
-        model = _BP_MODEL_UNDEFINED;        
         if(movingCommand > _BIOPSY_MOVING_COMPLETED){
             movingCommand =_BIOPSY_MOVING_COMPLETED;
             movingError = _BIOPSY_MOVING_ERROR_TIMEOUT;
@@ -851,10 +850,10 @@ void biopsyExtendedDevice::mccStatNotify(unsigned char id_notify,unsigned char c
 
         // Riconoscimento torretta di Biopsia inserita
         connected = TRUE;
-        checksum_h=data[_BP_CHKH];
-        checksum_l=data[_BP_CHKL];
-        revisione=data[_BP_REVIS];
-        model = data[_BP_MODEL];
+        checksum_h=data[_BP_EXT_CHKH];
+        checksum_l=data[_BP_EXT_CHKL];
+        revisione=data[_BP_EXT_REVIS];
+
 
         movingCommand =_BIOPSY_MOVING_NO_COMMAND;
         movingError = _BIOPSY_MOVING_NO_ERROR;
@@ -867,28 +866,28 @@ void biopsyExtendedDevice::mccStatNotify(unsigned char id_notify,unsigned char c
     }
 
     // Pulsante di sblocco Braccio e funzioni biopsia
-    if(data.at(_BP_PUSH_SBLOCCO) == _BP_PUSH_SBLOCCO_ATTIVO) unlock_button = true;
+    if(data.at(_BP_EXT_PUSH_SBLOCCO) == _BP_EXT_PUSH_SBLOCCO_ATTIVO) unlock_button = true;
     else unlock_button = false;
-    ApplicationDatabase.setData(_DB_BIOP_UNLOCK_BUTTON,(int) data.at(_BP_PUSH_SBLOCCO),0);
+    ApplicationDatabase.setData(_DB_BIOP_UNLOCK_BUTTON,(int) data.at(_BP_EXT_PUSH_SBLOCCO),0);
 
     // Lateralità rilevata
-    if(curLatX != data.at(_BP_ASSEX_POSITION)) update_aws = true;
-    curLatX = data.at(_BP_ASSEX_POSITION);
-    ApplicationDatabase.setData(_DB_BIOP_LAT_X,(int) data.at(_BP_ASSEX_POSITION),0);
-    if( (curLatX == _BP_ASSEX_POSITION_CENTER) && (curX_dmm < 2263)  && (curX_dmm > 317)) bypass_y_scroll = true;
+    if(curLatX != data.at(_BP_EXT_ASSEX_POSITION)) update_aws = true;
+    curLatX = data.at(_BP_EXT_ASSEX_POSITION);
+    ApplicationDatabase.setData(_DB_BIOP_LAT_X,(int) data.at(_BP_EXT_ASSEX_POSITION),0);
+    if( (curLatX == _BP_EXT_ASSEX_POSITION_CENTER) && (curX_dmm < 2263)  && (curX_dmm > 317)) bypass_y_scroll = true;
 
     //  Riconoscimento dell'adapter
-    if(adapterId != data.at(_BP_ADAPTER_ID)){
-        adapterId = data.at(_BP_ADAPTER_ID);
+    if(adapterId != data.at(_BP_EXT_ADAPTER_ID)){
+        adapterId = data.at(_BP_EXT_ADAPTER_ID);
         update_aws = true;
-        ApplicationDatabase.setData(_DB_BIOP_ADAPTER_ID,(int) data.at(_BP_ADAPTER_ID),0);
+        ApplicationDatabase.setData(_DB_BIOP_ADAPTER_ID,(int) data.at(_BP_EXT_ADAPTER_ID),0);
     }
 
     // Posizione attuale cursore
-    curX_dmm = data.at(_BP_XL) + 256 * data.at(_BP_XH) ;
-    curY_dmm = data.at(_BP_YL) + 256 * data.at(_BP_YH) ;
-    curZ_dmm = data.at(_BP_ZL) + 256 * data.at(_BP_ZH) ;
-    curSh_dmm= data.at(_BP_SHL) + 256 * data.at(_BP_SHH) ;
+    curX_dmm = data.at(_BP_EXT_XL) + 256 * data.at(_BP_EXT_XH) ;
+    curY_dmm = data.at(_BP_EXT_YL) + 256 * data.at(_BP_EXT_YH) ;
+    curZ_dmm = data.at(_BP_EXT_ZL) + 256 * data.at(_BP_EXT_ZH) ;
+    curSh_dmm= data.at(_BP_EXT_SHL) + 256 * data.at(_BP_EXT_SHH) ;
     int calibratedSh = calibrateSh();
     if( (calibratedSh > bCalibratedSh + 5) || (calibratedSh < bCalibratedSh - 5)){
         update_aws = true;
@@ -900,15 +899,15 @@ void biopsyExtendedDevice::mccStatNotify(unsigned char id_notify,unsigned char c
     ApplicationDatabase.setData(_DB_BIOP_SH,(int) calibratedSh,0);
 
     // Calcolo del Margine tra Paddle e Staffa metallica
-    paddle_margine  = data.at(_BP_PADDLE_MARGINE);
-    max_z_paddle  = data.at(_BP_MAX_Z_PADDLE);
+    paddle_margine  = data.at(_BP_EXT_PADDLE_MARGINE);
+    max_z_paddle  = data.at(_BP_EXT_MAX_Z_PADDLE);
 
     // Ricalcolo dei vari parametri di limitazione
     calcoloMargini();
 
-    if(bp_motion!=data.at(_BP_MOTION)){
-        PRINT(QString("BIOPSIA: BP_MOTION=%1").arg((int) data.at(_BP_MOTION)));
-        bp_motion = data.at(_BP_MOTION);
+    if(bp_motion!=data.at(_BP_EXT_MOTION)){
+        PRINT(QString("BIOPSIA: BP_MOTION=%1").arg((int) data.at(_BP_EXT_MOTION)));
+        bp_motion = data.at(_BP_EXT_MOTION);
     }
 
     if(bp_movecommand!=movingCommand){
@@ -917,21 +916,21 @@ void biopsyExtendedDevice::mccStatNotify(unsigned char id_notify,unsigned char c
     }
 
     // ______________________________ Aggiornamento stato di posizionamento in corso _________________________________________________
-    switch(data.at(_BP_MOTION))
+    switch(data.at(_BP_EXT_MOTION))
     {
 
-        case _BP_MOTION_ON:
+        case _BP_EXT_MOTION_ON:
             PRINT(QString("BIOPSIA:CONFERMA ATTIVAZIONE MOVIMENTO"));
             bypass_y_scroll = false;
         break;
 
-        case _BP_MOTION_TERMINATED:
+        case _BP_EXT_MOTION_TERMINATED:
 
             // Valutazione del risultato del movimento
-            if(data.at(_BP_MOTION_END) == _BP_ERROR_POSITIONINIG)
+            if(data.at(_BP_EXT_MOTION_END) == _BP_EXT_ERROR_POSITIONINIG)
             {
                 movingError = _BIOPSY_MOVING_ERROR_TARGET;
-            }else if(data.at(_BP_MOTION_END) == _BP_TIMEOUT_COMANDO)
+            }else if(data.at(_BP_EXT_MOTION_END) == _BP_EXT_TIMEOUT_COMANDO)
             {
                 movingError = _BIOPSY_MOVING_ERROR_TIMEOUT;
             }else  movingError = _BIOPSY_MOVING_NO_ERROR;
@@ -981,13 +980,13 @@ bool biopsyExtendedDevice::testUpsidePosition(unsigned short X){
     int xh,xl;
     xh = 2580;
     xl = 0;
-    if(curLatX == _BP_ASSEX_POSITION_LEFT){
+    if(curLatX == _BP_EXT_ASSEX_POSITION_LEFT){
         xh = 2580;
         xl = 1460;
-    }else if(curLatX == _BP_ASSEX_POSITION_CENTER){
+    }else if(curLatX == _BP_EXT_ASSEX_POSITION_CENTER){
         xh = 2263;
         xl = 317;
-    }else if(curLatX == _BP_ASSEX_POSITION_RIGHT){
+    }else if(curLatX == _BP_EXT_ASSEX_POSITION_RIGHT){
         xh = 1120;
         xl = 0;
     }
@@ -1013,7 +1012,7 @@ int biopsyExtendedDevice::moveXYZ(unsigned short X, unsigned short Y, unsigned s
         return movingError;
     }
 
-    data[0]=_MCC_BIOPSY_CMD_MOVE_XYZ; // Codice comando
+    data[0]=_MCC_EXT_BIOPSY_CMD_MOVE_XYZ; // Codice comando
     data[1]=(unsigned char) (X & 0x00FF);
     data[2]=(unsigned char) (X >>8);
     data[3]=(unsigned char) (Y & 0x00FF);
@@ -1037,10 +1036,10 @@ bool biopsyExtendedDevice::isHome(unsigned char lat){
     if( lat != curLatX) return false;
     if(curY_dmm > 5)  return false;
     if(curZ_dmm > 5)  return false;
-    if((curLatX == _BP_ASSEX_POSITION_LEFT) && (curX_dmm < 2575))    return false;
-    if((curLatX == _BP_ASSEX_POSITION_CENTER) && (curX_dmm < 1285))  return false;
-    if((curLatX == _BP_ASSEX_POSITION_CENTER) && (curX_dmm > 1295))  return false;
-    if((curLatX == _BP_ASSEX_POSITION_RIGHT) && (curX_dmm > 5))      return false;
+    if((curLatX == _BP_EXT_ASSEX_POSITION_LEFT) && (curX_dmm < 2575))    return false;
+    if((curLatX == _BP_EXT_ASSEX_POSITION_CENTER) && (curX_dmm < 1285))  return false;
+    if((curLatX == _BP_EXT_ASSEX_POSITION_CENTER) && (curX_dmm > 1295))  return false;
+    if((curLatX == _BP_EXT_ASSEX_POSITION_RIGHT) && (curX_dmm > 5))      return false;
 
     return true;
 }
@@ -1057,7 +1056,7 @@ int biopsyExtendedDevice::moveDecZ(int id)
     }
 
 
-    data[0]=_MCC_BIOPSY_CMD_MOVE_DECZ; // Codice comando
+    data[0]=_MCC_EXT_BIOPSY_CMD_MOVE_DECZ; // Codice comando
     if(pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_CMD,1,data,1)==FALSE)
     {
         movingCommand =_BIOPSY_MOVING_COMPLETED;
@@ -1083,7 +1082,7 @@ int biopsyExtendedDevice::moveIncZ(int id)
     }
 
 
-    data[0]=_MCC_BIOPSY_CMD_MOVE_INCZ; // Codice comando
+    data[0]=_MCC_EXT_BIOPSY_CMD_MOVE_INCZ; // Codice comando
     if(pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_CMD,1,data,1)==FALSE)
     {
         movingCommand =_BIOPSY_MOVING_COMPLETED;
@@ -1108,7 +1107,7 @@ int biopsyExtendedDevice::moveDecX(int id)
     }
 
 
-    data[0]=_MCC_BIOPSY_CMD_MOVE_DECX; // Codice comando
+    data[0]=_MCC_EXT_BIOPSY_CMD_MOVE_DECX; // Codice comando
     if(pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_CMD,1,data,1)==FALSE)
     {
         movingCommand =_BIOPSY_MOVING_COMPLETED;
@@ -1133,7 +1132,7 @@ int biopsyExtendedDevice::moveIncX(int id)
     }
 
 
-    data[0]=_MCC_BIOPSY_CMD_MOVE_INCX; // Codice comando
+    data[0]=_MCC_EXT_BIOPSY_CMD_MOVE_INCX; // Codice comando
     if(pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_CMD,1,data,1)==FALSE)
     {
         movingCommand =_BIOPSY_MOVING_COMPLETED;
@@ -1158,7 +1157,7 @@ int biopsyExtendedDevice::moveDecY(int id)
     }
 
 
-    data[0]=_MCC_BIOPSY_CMD_MOVE_DECY; // Codice comando
+    data[0]=_MCC_EXT_BIOPSY_CMD_MOVE_DECY; // Codice comando
     if(pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_CMD,1,data,1)==FALSE)
     {
         movingCommand =_BIOPSY_MOVING_COMPLETED;
@@ -1182,7 +1181,7 @@ int biopsyExtendedDevice::moveIncY(int id)
     }
 
 
-    data[0]=_MCC_BIOPSY_CMD_MOVE_INCY; // Codice comando
+    data[0]=_MCC_EXT_BIOPSY_CMD_MOVE_INCY; // Codice comando
     if(pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_CMD,1,data,1)==FALSE)
     {
         movingCommand =_BIOPSY_MOVING_COMPLETED;
@@ -1199,7 +1198,7 @@ int biopsyExtendedDevice::moveIncY(int id)
 int biopsyExtendedDevice::setStepVal(unsigned char step)
 {
     unsigned char data[2];
-    data[0]=_MCC_BIOPSY_CMD_SET_STEPVAL; // Codice comando
+    data[0]=_MCC_EXT_BIOPSY_CMD_SET_STEPVAL; // Codice comando
     data[1] = step;
     if(pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_CMD,1,data,2)==FALSE) return 0;
     return 1;

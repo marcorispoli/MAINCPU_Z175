@@ -141,7 +141,7 @@ typedef struct
 typedef struct
 {
     // API esterne al driver
-    biopsyConf_Str conf;        // Configurazione
+    biopsyConfExtended_Str conf;        // Configurazione
     bool connected;             // Dispositivo collegato
     bool armEna;                // braccio abilitato ai movimenti (lift ARM)
 

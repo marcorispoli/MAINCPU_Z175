@@ -480,15 +480,15 @@ void protoToConsole::setBiopsyExtendedData(){
     else stringa = "DISCONNECTED ";
 
     // Lateralità rilevata
-    if(pBiopsyExtended->curLatX == _BP_ASSEX_POSITION_LEFT) stringa += "X_L ";
-    else if(pBiopsyExtended->curLatX == _BP_ASSEX_POSITION_RIGHT) stringa += "X_R ";
-    else if(pBiopsyExtended->curLatX == _BP_ASSEX_POSITION_CENTER) stringa += "X_C ";
+    if(pBiopsyExtended->curLatX == _BP_EXT_ASSEX_POSITION_LEFT) stringa += "X_L ";
+    else if(pBiopsyExtended->curLatX == _BP_EXT_ASSEX_POSITION_RIGHT) stringa += "X_R ";
+    else if(pBiopsyExtended->curLatX == _BP_EXT_ASSEX_POSITION_CENTER) stringa += "X_C ";
     else stringa += "X_N ";
 
     // Adapter
-    if(pBiopsyExtended->adapterId == _BP_ADAPTER_A) stringa += "AD_A ";
-    else if(pBiopsyExtended->adapterId == _BP_ADAPTER_B) stringa += "AD_B ";
-    else if(pBiopsyExtended->adapterId == _BP_ADAPTER_C) stringa += "AD_C ";
+    if(pBiopsyExtended->adapterId == _BP_EXT_ADAPTER_A) stringa += "AD_A ";
+    else if(pBiopsyExtended->adapterId == _BP_EXT_ADAPTER_B) stringa += "AD_B ";
+    else if(pBiopsyExtended->adapterId == _BP_EXT_ADAPTER_C) stringa += "AD_C ";
     else stringa += "AD_ND ";
 
     // Coordinate

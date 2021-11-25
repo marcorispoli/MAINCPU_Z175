@@ -569,12 +569,12 @@ void BiopsyExtendedPage::updateBiopsyView(void){
     }
 
     switch(ApplicationDatabase.getDataI(_DB_BIOP_LAT_X)){
-    case _BP_ASSEX_POSITION_ND:
+    case _BP_EXT_ASSEX_POSITION_ND:
         setBackground("://BiopsyExtended/BiopsyExtended/undefXScroll.png");
         setInfoPanelView(true);
         break;
-    case _BP_ASSEX_POSITION_LEFT:
-        if((adapter == _BP_ADAPTER_OPEN) || (adapter == _BP_ADAPTER_SHORT)){
+    case _BP_EXT_ASSEX_POSITION_LEFT:
+        if((adapter == _BP_EXT_ADAPTER_OPEN) || (adapter == _BP_EXT_ADAPTER_SHORT)){
             setBackground("://BiopsyExtended/BiopsyExtended/homeL.png");
             setInfoPanelView(true);
         }else{
@@ -584,8 +584,8 @@ void BiopsyExtendedPage::updateBiopsyView(void){
             updateCursorPointer();
         }
         break;
-    case _BP_ASSEX_POSITION_CENTER:
-        if((adapter == _BP_ADAPTER_OPEN) || (adapter == _BP_ADAPTER_SHORT)){
+    case _BP_EXT_ASSEX_POSITION_CENTER:
+        if((adapter == _BP_EXT_ADAPTER_OPEN) || (adapter == _BP_EXT_ADAPTER_SHORT)){
             setBackground("://BiopsyExtended/BiopsyExtended/homeC.png");
             setInfoPanelView(true);
         }else{
@@ -595,8 +595,8 @@ void BiopsyExtendedPage::updateBiopsyView(void){
             updateCursorPointer();
         }
         break;
-    case _BP_ASSEX_POSITION_RIGHT:
-        if((adapter == _BP_ADAPTER_OPEN) || (adapter == _BP_ADAPTER_SHORT)){
+    case _BP_EXT_ASSEX_POSITION_RIGHT:
+        if((adapter == _BP_EXT_ADAPTER_OPEN) || (adapter == _BP_EXT_ADAPTER_SHORT)){
             setBackground("://BiopsyExtended/BiopsyExtended/homeR.png");
             setInfoPanelView(true);
         }else{

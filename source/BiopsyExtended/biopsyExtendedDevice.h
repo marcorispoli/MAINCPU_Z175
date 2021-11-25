@@ -65,7 +65,7 @@ public:
 
 
     bool connected;
-    biopsyConf_Str config;          // Dati di configurazione
+    biopsyConfExtended_Str config;          // Dati di configurazione
     bool openCfg(void);             // Funzione per l'apertura del file di configurazione
     bool storeConfig(void);         // Salva la configurazione
     void defaultConfigData(void);
@@ -127,7 +127,6 @@ public:
     unsigned char checksum_h;
     unsigned char checksum_l;
     unsigned char revisione;
-    unsigned char model;
 
 
     #define BIOPSY_ACTIVATION_SEQUENCE_DB   _DB_SERVICE1_INT

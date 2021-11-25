@@ -34,7 +34,7 @@ public slots:
 
 public:
     bool connected;
-    biopsyConf_Str config;          // Dati di configurazione
+    biopsyConfStandard_Str config;          // Dati di configurazione
     bool openCfg(void);             // Funzione per l'apertura del file di configurazione
     bool storeConfig(void);         // Salva la configurazione
     bool updateConfig(void);        // Aggioirna M4 con i valori correnti

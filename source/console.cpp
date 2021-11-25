@@ -4658,7 +4658,7 @@ void console::handleBiopsyExtendedMoveXYZ(protoConsole* frame, protoConsole* ans
     }
 
     // Movimento a posizione arbitraria: la lateralità deve corrispondere!
-    if(pBiopsyExtended->curLatX == _BP_ASSEX_POSITION_ND){
+    if(pBiopsyExtended->curLatX == _BP_EXT_ASSEX_POSITION_ND){
         emit consoleTxHandler(answer->answToQByteArray("NOK 2 ERRORE LATERALITA' NON ATTIVA"));
         return;
     }
@@ -4694,9 +4694,9 @@ void console::handleBiopsyExtendedMoveHome(protoConsole* frame, protoConsole* an
 
     unsigned char lat;
 
-    if(frame->parametri[0]=="L") lat = _BP_ASSEX_POSITION_LEFT;
-    else if(frame->parametri[0]=="C") lat = _BP_ASSEX_POSITION_CENTER;
-    else if(frame->parametri[0]=="R") lat = _BP_ASSEX_POSITION_RIGHT;
+    if(frame->parametri[0]=="L") lat = _BP_EXT_ASSEX_POSITION_LEFT;
+    else if(frame->parametri[0]=="C") lat = _BP_EXT_ASSEX_POSITION_CENTER;
+    else if(frame->parametri[0]=="R") lat = _BP_EXT_ASSEX_POSITION_RIGHT;
     else {
         emit consoleTxHandler(answer->answToQByteArray("NOK 2 ERRORE VALORE PARAMETRO: -> [L/C/R]"));
         return;
@@ -4724,15 +4724,15 @@ void console::handleGetBiopsyExtendedData(protoConsole* frame, protoConsole* ans
     else stringa += "DISCONNECTED ";
 
     // Lateralità rilevata
-    if(pBiopsyExtended->curLatX == _BP_ASSEX_POSITION_LEFT) stringa += "X_L ";
-    else if(pBiopsyExtended->curLatX == _BP_ASSEX_POSITION_RIGHT) stringa += "X_R ";
-    else if(pBiopsyExtended->curLatX == _BP_ASSEX_POSITION_CENTER) stringa += "X_C ";
+    if(pBiopsyExtended->curLatX == _BP_EXT_ASSEX_POSITION_LEFT) stringa += "X_L ";
+    else if(pBiopsyExtended->curLatX == _BP_EXT_ASSEX_POSITION_RIGHT) stringa += "X_R ";
+    else if(pBiopsyExtended->curLatX == _BP_EXT_ASSEX_POSITION_CENTER) stringa += "X_C ";
     else stringa += "X_N ";
 
     // Adapter
-    if(pBiopsyExtended->adapterId == _BP_ADAPTER_A) stringa += "AD_A ";
-    else if(pBiopsyExtended->adapterId == _BP_ADAPTER_B) stringa += "AD_B ";
-    else if(pBiopsyExtended->adapterId == _BP_ADAPTER_C) stringa += "AD_C ";
+    if(pBiopsyExtended->adapterId == _BP_EXT_ADAPTER_A) stringa += "AD_A ";
+    else if(pBiopsyExtended->adapterId == _BP_EXT_ADAPTER_B) stringa += "AD_B ";
+    else if(pBiopsyExtended->adapterId == _BP_EXT_ADAPTER_C) stringa += "AD_C ";
     else stringa += "AD_ND ";
 
     // Coordinate

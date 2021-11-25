@@ -4171,9 +4171,9 @@ void serverDebug::handleExtendedBiopsy(QByteArray data)
             unsigned char lat = (unsigned char) parametri[0].toInt();
 
             // Determina il target X in funzione della lateralità
-            if(parametri[0] == "L") lat = _BP_ASSEX_POSITION_LEFT;
-            else if(parametri[0] == "R") lat = _BP_ASSEX_POSITION_RIGHT;
-            else if(parametri[0] == "C") lat = _BP_ASSEX_POSITION_CENTER;
+            if(parametri[0] == "L") lat = _BP_EXT_ASSEX_POSITION_LEFT;
+            else if(parametri[0] == "R") lat = _BP_EXT_ASSEX_POSITION_RIGHT;
+            else if(parametri[0] == "C") lat = _BP_EXT_ASSEX_POSITION_CENTER;
             else {
                 serviceTcp->txData(QByteArray("PARAM ERROR: moveHome [C,L,R]\n"));
                 return;
@@ -4312,10 +4312,10 @@ void serverDebug::handleBiopsySimulator(QByteArray data)
         // Comando impostazione stato connessione
         buffer[0] = _BYM_SIM_LAT;
 
-        if(parametri[0] == "L") buffer[1] = _BP_ASSEX_POSITION_LEFT;
-        else if(parametri[0] == "C") buffer[1] = _BP_ASSEX_POSITION_CENTER;
-        else if(parametri[0] == "R") buffer[1] = _BP_ASSEX_POSITION_RIGHT;
-        else buffer[1] = _BP_ASSEX_POSITION_ND;
+        if(parametri[0] == "L") buffer[1] = _BP_EXT_ASSEX_POSITION_LEFT;
+        else if(parametri[0] == "C") buffer[1] = _BP_EXT_ASSEX_POSITION_CENTER;
+        else if(parametri[0] == "R") buffer[1] = _BP_EXT_ASSEX_POSITION_RIGHT;
+        else buffer[1] = _BP_EXT_ASSEX_POSITION_ND;
 
 
         pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_SIMULATOR,1,buffer,2);

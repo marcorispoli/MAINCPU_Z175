@@ -189,101 +189,112 @@ typedef enum
 }_MccPCB249U1Notify_Code;
 
 
-
-
-
-
+// _____________________________________________________________________
+// Codici per notifiche Biopsia Standard
+#define _BP_STD_CONNESSIONE 0
+#define _BP_STD_SBLOCCO     1
+#define _BP_STD_ACCESSORIO  2
+#define _BP_STD_ZL          3
+#define _BP_STD_ZH          4
+#define _BP_STD_MOTION      5
+#define _BP_STD_MOTION_END  6
+#define _BP_STD_CHKH        7
+#define _BP_STD_CHKL        8
+#define _BP_STD_REVIS       9
+#define _BP_STD_MAX_Z       10
+#define _BP_STD_DATA_LEN    11
 
 
 
 
 // _____________________________________________________________________
-// Codici per notifiche Biopsia
-// Contenuto notifica m4-A5 biopsia
-#define _BP_CONNESSIONE     0 // Stato della connessione
-#define _BP_MOTION          1 // Stato dell'attivazione in corso
-#define _BP_MOTION_END      2 // Risultato del movimento appena terminato
-#define _BP_PUSH_SBLOCCO    3 // Stato del pulsante di sblocco
-#define _BP_ADAPTER_ID      4 // Codice holder riconosciuto
-#define _BP_ASSEX_POSITION  5 // Dislocamento asse-X
+// Codici per notifiche Biopsia estesa
+#define _BP_EXT_CONNESSIONE     0 // Stato della connessione
+#define _BP_EXT_MOTION          1 // Stato dell'attivazione in corso
+#define _BP_EXT_MOTION_END      2 // Risultato del movimento appena terminato
+#define _BP_EXT_PUSH_SBLOCCO    3 // Stato del pulsante di sblocco
+#define _BP_EXT_ADAPTER_ID      4 // Codice holder riconosciuto
+#define _BP_EXT_ASSEX_POSITION  5 // Dislocamento asse-X
 
 // Posizione torretta in dmm
-#define _BP_XL              6
-#define _BP_XH              7
-#define _BP_YL              8
-#define _BP_YH              9
-#define _BP_ZL              10
-#define _BP_ZH              11
-#define _BP_SHL             12
-#define _BP_SHH             13
+#define _BP_EXT_XL              6
+#define _BP_EXT_XH              7
+#define _BP_EXT_YL              8
+#define _BP_EXT_YH              9
+#define _BP_EXT_ZL              10
+#define _BP_EXT_ZH              11
+#define _BP_EXT_SHL             12
+#define _BP_EXT_SHH             13
 
-#define _BP_PADDLE_MARGINE  14 // Distanza compressore da base torretta
-#define _BP_MAX_Z_PADDLE    15 // Massima Z sulla base del margine PADDLE
+#define _BP_EXT_PADDLE_MARGINE  14 // Distanza compressore da base torretta
+#define _BP_EXT_MAX_Z_PADDLE    15 // Massima Z sulla base del margine PADDLE
 
 // Dati per la revisione e checksum
-#define _BP_CHKH            16
-#define _BP_CHKL            17
-#define _BP_REVIS           18
-#define _BP_MODEL           19
+#define _BP_EXT_CHKH            16
+#define _BP_EXT_CHKL            17
+#define _BP_EXT_REVIS           18
+#define _BP_EXT_MODEL           19
 //______________________________
-#define _BP_DATA_LEN        20
+#define _BP_EXT_DATA_LEN        20
+
+
 //_____________________________
 
 // Codici relativi al tipo di adapter ID
-#define _BP_ADAPTER_OPEN            0
-#define _BP_ADAPTER_A               1
-#define _BP_ADAPTER_B               2
-#define _BP_ADAPTER_C               3
-#define _BP_ADAPTER_SHORT           4
+#define _BP_EXT_ADAPTER_OPEN            0
+#define _BP_EXT_ADAPTER_A               1
+#define _BP_EXT_ADAPTER_B               2
+#define _BP_EXT_ADAPTER_C               3
+#define _BP_EXT_ADAPTER_SHORT           4
 
-#define _BP_ASSEX_POSITION_ND       0
-#define _BP_ASSEX_POSITION_LEFT     3
-#define _BP_ASSEX_POSITION_CENTER   2
-#define _BP_ASSEX_POSITION_RIGHT    1
+#define _BP_EXT_ASSEX_POSITION_ND       0
+#define _BP_EXT_ASSEX_POSITION_LEFT     3
+#define _BP_EXT_ASSEX_POSITION_CENTER   2
+#define _BP_EXT_ASSEX_POSITION_RIGHT    1
 
 
 // Codici relativi allo stato della connessione
-#define _BP_CONNESSIONE_DISCONNECTED            0
-#define _BP_CONNESSIONE_CONNECTED               1
+#define _BP_EXT_CONNESSIONE_DISCONNECTED            0
+#define _BP_EXT_CONNESSIONE_CONNECTED               1
 
 // Codici relativi allo stato del movimento
-#define _BP_NO_MOTION                     0
-#define _BP_MOTION_ON                     1
-#define _BP_MOTION_TERMINATED             2
+#define _BP_EXT_NO_MOTION                     0
+#define _BP_EXT_MOTION_ON                     1
+#define _BP_EXT_MOTION_TERMINATED             2
 
 // Codici risultato movimento
-#define _BP_TIMEOUT_COMANDO     1
-#define _BP_ERROR_POSITIONINIG  2
-#define _BP_POSITIONINIG_OK     3
+#define _BP_EXT_TIMEOUT_COMANDO     1
+#define _BP_EXT_ERROR_POSITIONINIG  2
+#define _BP_EXT_POSITIONINIG_OK     3
 
 // Codici pulsante di sblocco
-#define _BP_PUSH_SBLOCCO_DISATTIVO           0
-#define _BP_PUSH_SBLOCCO_ATTIVO              1
+#define _BP_EXT_PUSH_SBLOCCO_DISATTIVO           0
+#define _BP_EXT_PUSH_SBLOCCO_ATTIVO              1
 
 // Codici relativo al modello di torretta
-#define _BP_MODEL_UNDEFINED     0
-#define _BP_MODEL_UPRIGHT       1
-#define _BP_MODEL_LATERAL       2
+#define _BP_EXT_MODEL_UNDEFINED     0
+#define _BP_EXT_MODEL_UPRIGHT       1
+#define _BP_EXT_MODEL_LATERAL       2
 
 // Codici relativo alla lateralità
-#define _BP_LATERALITY_DISABLED  0
-#define _BP_LATERALITY_UNDEFINED 1
-#define _BP_LATERALITY_UPRIGHT   2
-#define _BP_LATERALITY_LEFT      3
-#define _BP_LATERALITY_RIGHT     4
+#define _BP_EXT_LATERALITY_DISABLED  0
+#define _BP_EXT_LATERALITY_UNDEFINED 1
+#define _BP_EXT_LATERALITY_UPRIGHT   2
+#define _BP_EXT_LATERALITY_LEFT      3
+#define _BP_EXT_LATERALITY_RIGHT     4
 
 // __________________________________________________________
 // CODICI COMANDO BIOPSIA (DA GUI A M4): MCC_BIOPSY_CMD
-#define _MCC_BIOPSY_CMD_MOVE_HOME   1
-#define _MCC_BIOPSY_CMD_MOVE_XYZ    2
-#define _MCC_BIOPSY_CMD_MOVE_INCX   3
-#define _MCC_BIOPSY_CMD_MOVE_DECX   4
-#define _MCC_BIOPSY_CMD_MOVE_INCY   5
-#define _MCC_BIOPSY_CMD_MOVE_DECY   6
-#define _MCC_BIOPSY_CMD_MOVE_INCZ   7
-#define _MCC_BIOPSY_CMD_MOVE_DECZ   8
-#define _MCC_BIOPSY_CMD_SET_STEPVAL 9
-#define _MCC_BIOPSY_CMD_SET_ZLIMIT  10
+#define _MCC_EXT_BIOPSY_CMD_MOVE_HOME   1
+#define _MCC_EXT_BIOPSY_CMD_MOVE_XYZ    2
+#define _MCC_EXT_BIOPSY_CMD_MOVE_INCX   3
+#define _MCC_EXT_BIOPSY_CMD_MOVE_DECX   4
+#define _MCC_EXT_BIOPSY_CMD_MOVE_INCY   5
+#define _MCC_EXT_BIOPSY_CMD_MOVE_DECY   6
+#define _MCC_EXT_BIOPSY_CMD_MOVE_INCZ   7
+#define _MCC_EXT_BIOPSY_CMD_MOVE_DECZ   8
+#define _MCC_EXT_BIOPSY_CMD_SET_STEPVAL 9
+#define _MCC_EXT_BIOPSY_CMD_SET_ZLIMIT  10
 
 //____________________________________________________________
 // CODICI COMANDI SIMULATORE DI BIOPSIA SE COMPILATO

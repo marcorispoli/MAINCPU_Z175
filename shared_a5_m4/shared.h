@@ -222,7 +222,7 @@ typedef struct
 }pcb190Conf_Str;
 
 
-// Configurazione biopsia
+// Configurazione biopsia standard
 typedef struct
 {
     unsigned short Z_homePosition;          // Posizione del punto Z=0 rispetto alla fibra di carbonio
@@ -232,7 +232,19 @@ typedef struct
     unsigned char  margineRisalita;         // Margine di risalita (mm)
     unsigned char  marginePosizionamento;   // Margine di sicurezza sul posizionamento (mm)
 
-}biopsyConf_Str;
+}biopsyConfStandard_Str;
+
+// Configurazione biopsia estesa
+typedef struct
+{
+    unsigned short Z_homePosition;          // Posizione del punto Z=0 rispetto alla fibra di carbonio
+    unsigned char  offsetPad;               // Offset meccanico Staffe Pad rispetto alla calibrazione(mm)
+    unsigned char  Z_basePosizionatore;     // Posizione staffa metallica posizionatore rispetto a fibra di carbonio
+
+    unsigned char  margineRisalita;         // Margine di risalita (mm)
+    unsigned char  marginePosizionamento;   // Margine di sicurezza sul posizionamento (mm)
+
+}biopsyConfExtended_Str;
 
 
 // STRUTTURA INPUT DA PCB240 

@@ -245,10 +245,14 @@ bool mccPCB190Notify(unsigned char id,unsigned char mcccode,unsigned char* buffe
 {
     return mccLibNotify(MCC_PCB190_NOTIFY,id,mcccode,buffer,buflen);
 }      
-bool mccBiopsyNotify(unsigned char id,unsigned char mcccode,unsigned char* buffer, int buflen)
+bool mccBiopsyStandardNotify(unsigned char id,unsigned char mcccode,unsigned char* buffer, int buflen)
 {
-    return mccLibNotify(MCC_BIOP_NOTIFY,id,mcccode,buffer,buflen);
+    return mccLibNotify(MCC_BIOP_STANDARD_NOTIFY,id,mcccode,buffer,buflen);
 }          
+bool mccBiopsyExtendedNotify(unsigned char id,unsigned char mcccode,unsigned char* buffer, int buflen)
+{
+    return mccLibNotify(MCC_BIOP_EXTENDED_NOTIFY,id,mcccode,buffer,buflen);
+}
 
 bool mccConfigNotify(unsigned char id,unsigned char mcccode,unsigned char* buffer, int buflen)
 {
