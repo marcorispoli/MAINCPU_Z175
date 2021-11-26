@@ -1085,7 +1085,7 @@ void pcb215VerifyComprData(void)
 
   // Verificase se c'è la torretta ed è cambiata la z corrente per ricalcolare
   // la posizione massima del compressore in risalita
-  if(generalConfiguration.biopsyCfg.connected==TRUE)
+  if(generalConfiguration.biopsyCfg.biopsyConnected==TRUE)
   {
     int dif = biopsyZ - generalConfiguration.biopsyCfg.Z;
     if((dif>=10) || (dif<= -10))
@@ -1096,7 +1096,7 @@ void pcb215VerifyComprData(void)
   }
   
   // Gestione modi di compressione
-  if((POTTER==POTTER_UNDEFINED)&&(generalConfiguration.biopsyCfg.connected==FALSE)) // Potter scoperto
+  if((POTTER==POTTER_UNDEFINED)&&(generalConfiguration.biopsyCfg.biopsyConnected==FALSE)) // Potter scoperto
   {
     if(!IS_VALID_PAD) Ser422WriteRegister(_REGID(POSITION_LOW_MODO_0), 30,4,&CONTEST);
     else
@@ -1132,7 +1132,7 @@ void pcb215VerifyComprData(void)
   // e aggiorna il dispositivo
   if(updateLimitPos)
   {
-      if(generalConfiguration.biopsyCfg.connected==TRUE)
+      if(generalConfiguration.biopsyCfg.biopsyConnected==TRUE)
       {
         // Ricalcolo del limiti sulla base della configurazione ricevuta
         padLimitPosition = ( generalConfiguration.biopsyCfg.conf.Z_basePosizionatore - generalConfiguration.biopsyCfg.Z/10 ) + (generalConfiguration.biopsyCfg.conf.offsetPad - generalConfiguration.biopsyCfg.conf.margineRisalita);
@@ -1262,7 +1262,7 @@ bool classifyPad(void)
   }
   
   // <TBD> Classificazione PAD BIOP_3D
-  if(generalConfiguration.biopsyCfg.connected==TRUE)
+  if(generalConfiguration.biopsyCfg.biopsyConnected==TRUE)
   {
     if(i==_BIOP_3D_LEVEL)
       generalConfiguration.comprCfg.padSelezionato = PAD_BIOP_3D;

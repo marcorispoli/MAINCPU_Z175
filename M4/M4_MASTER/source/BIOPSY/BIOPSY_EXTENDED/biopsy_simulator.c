@@ -260,9 +260,9 @@ void SimSetLatX(unsigned char lat){
     bym_StatusH &= 0xFC;
     bym_StatusH |= (lat & 0x3);
 
-    if((bym_StatusH &0x3) == _BP_ASSEX_POSITION_LEFT)   printf("SIMULATORE BYM:latX > LEFT\n");
-    else if((bym_StatusH &0x3) == _BP_ASSEX_POSITION_CENTER)   printf("SIMULATORE BYM:latX > CENTER\n");
-    else if((bym_StatusH &0x3) == _BP_ASSEX_POSITION_RIGHT)   printf("SIMULATORE BYM:latX > RIGHT\n");
+    if((bym_StatusH &0x3) == _BP_EXT_ASSEX_POSITION_LEFT)   printf("SIMULATORE BYM:latX > LEFT\n");
+    else if((bym_StatusH &0x3) == _BP_EXT_ASSEX_POSITION_CENTER)   printf("SIMULATORE BYM:latX > CENTER\n");
+    else if((bym_StatusH &0x3) == _BP_EXT_ASSEX_POSITION_RIGHT)   printf("SIMULATORE BYM:latX > RIGHT\n");
     else printf("SIMULATORE BYM:latX > ND\n");
 }
 

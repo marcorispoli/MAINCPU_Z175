@@ -37,9 +37,11 @@ INCLUDE += $(SHARED_DIR)
 INCLUDE += $(LIBRARY_ROOTDIR)/$(CONFIG)/mcc
 
 
-SOURCES += $(SRC_DIR)/BIOPSY/biopsy.c
-SOURCES += $(SRC_DIR)/BIOPSY/biopsy_driver.c
-SOURCES += $(SRC_DIR)/BIOPSY/biopsy_simulator.c
+SOURCES += $(SRC_BYM)/BIOPSY_EXTENDED/biopsyExtended.c
+SOURCES += $(SRC_BYM)/BIOPSY_EXTENDED/biopsyExtended_driver.c
+SOURCES += $(SRC_BYM)/BIOPSY_EXTENDED/biopsy_simulator.c
+SOURCES += $(SRC_BYM)/BIOPSY_STANDARD/biopsyStandard.c
+SOURCES += $(SRC_BYM)/biopsy_startup.c
 SOURCES += $(SRC_DIR)/fault.c
 SOURCES += $(SRC_DIR)/loader.c
 SOURCES += $(SRC_DIR)/master_can.c 

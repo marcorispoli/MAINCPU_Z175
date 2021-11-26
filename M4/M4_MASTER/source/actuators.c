@@ -287,7 +287,7 @@ int actuatorsArmMove(int angolo){
 
     // Correzione per la limitazione dell'angolo di movimento a 90°
     int target_angolo;
-    if(generalConfiguration.biopsyCfg.connected){
+    if(generalConfiguration.biopsyCfg.biopsyConnected){
         if(angolo > 90) target_angolo = 90;
         else if (angolo < -90) target_angolo = -90;
         else target_angolo = angolo;
@@ -349,14 +349,14 @@ void actuatorsManualArmMove(unsigned char mode){
         // Verifica quale input è attivo
         if(SystemInputs.CPU_ROT_CW){
 
-            if((generalConfiguration.biopsyCfg.connected) && (generalConfiguration.armExecution.dAngolo >= 900)) return;
-            else if(generalConfiguration.biopsyCfg.connected) angolo =   90 - (generalConfiguration.armExecution.dAngolo/10) ;
+            if((generalConfiguration.biopsyCfg.biopsyConnected) && (generalConfiguration.armExecution.dAngolo >= 900)) return;
+            else if(generalConfiguration.biopsyCfg.biopsyConnected) angolo =   90 - (generalConfiguration.armExecution.dAngolo/10) ;
             else angolo = 180;
 
         }else if(SystemInputs.CPU_ROT_CCW){
 
-            if((generalConfiguration.biopsyCfg.connected) && (generalConfiguration.armExecution.dAngolo <= -900)) return;
-            else if(generalConfiguration.biopsyCfg.connected) angolo =   -90 - (generalConfiguration.armExecution.dAngolo/10) ;
+            if((generalConfiguration.biopsyCfg.biopsyConnected) && (generalConfiguration.armExecution.dAngolo <= -900)) return;
+            else if(generalConfiguration.biopsyCfg.biopsyConnected) angolo =   -90 - (generalConfiguration.armExecution.dAngolo/10) ;
             else angolo = -180;
 
         }else return;
@@ -778,7 +778,7 @@ void actuatorsManageEnables(void){
     else SystemOutputs.CPU_PEND_ENA = 1;
 
 
-    if((generalConfiguration.biopsyCfg.connected) && (!generalConfiguration.biopsyCfg.armEna)){
+    if((generalConfiguration.biopsyCfg.biopsyConnected) && (!generalConfiguration.biopsyCfg.biopsyArmEna)){
         // In caso di Biopsia connessa, ogni attivazione del braccio
         // e del Lenze deve essere autorizzata dallo sblocco
         SystemOutputs.CPU_ROT_ENA=0;

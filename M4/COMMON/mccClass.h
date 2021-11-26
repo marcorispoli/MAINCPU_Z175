@@ -52,7 +52,8 @@ ext bool mccPCB215Notify(unsigned char id,unsigned char mcccode,unsigned char* b
 ext bool mccActuatorNotify(unsigned char id,unsigned char mcccode,unsigned char* buffer, int buflen);
 ext bool mccPCB244ANotify(unsigned char id,unsigned char mcccode,unsigned char* buffer, int buflen);
 ext bool mccPCB249U1Notify(unsigned char id,unsigned char mcccode,unsigned char* buffer, int buflen);
-ext bool mccBiopsyNotify(unsigned char id,unsigned char mcccode,unsigned char* buffer, int buflen);
+ext bool mccBiopsyStandardNotify(unsigned char id,unsigned char mcccode,unsigned char* buffer, int buflen);
+ext bool mccBiopsyExtendedNotify(unsigned char id,unsigned char mcccode,unsigned char* buffer, int buflen);
 ext bool mccServiceNotify(unsigned char id,unsigned char mcccode,unsigned char* buffer, int buflen);
 ext bool mccLoaderNotify(unsigned char id,unsigned char mcccode,unsigned char* buffer, int buflen);
 ext bool mccInputsNotify(unsigned char id,unsigned char mcccode,unsigned char* buffer, int buflen);

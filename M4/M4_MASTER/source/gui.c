@@ -506,6 +506,10 @@ void manageMccConfig(){
             case MCC_BIOPSY_CMD:
                 mccBiopsyCmd();
             break;
+            case MCC_BIOPSY_STD_XYZ:
+                mccBiopsyStdXYZ();
+            break;
+
 
           case MCC_CMD_RAGGI_STD :
             printf("MCC_RAGGI STANDARD\n");
@@ -1749,41 +1753,42 @@ void mccBiopsyCmd(void)
 {
   unsigned short X,Y,Z,val;
 
-  if(generalConfiguration.biopsyCfg.connected==FALSE) return;
+  if(generalConfiguration.biopsyCfg.biopsyConnected==FALSE) return;
 
   switch(mcc_cmd.buffer[0]){
-  case _MCC_BIOPSY_CMD_MOVE_HOME:
-      biopsyMoveHome();
+  case _MCC_EXT_BIOPSY_CMD_MOVE_HOME:
+      //biopsyMoveHome();
       break;
-  case _MCC_BIOPSY_CMD_MOVE_XYZ:
+  case _MCC_EXT_BIOPSY_CMD_MOVE_XYZ:
       X=mcc_cmd.buffer[1]+256*mcc_cmd.buffer[2];
       Y=mcc_cmd.buffer[3]+256*mcc_cmd.buffer[4];
       Z=mcc_cmd.buffer[5]+256*mcc_cmd.buffer[6];
-      biopsyMoveXYZ(X, Y,Z);
+      biopsyExtendedMoveXYZ(X, Y,Z);
       break;
-  case _MCC_BIOPSY_CMD_MOVE_INCX:
-      biopsyStepIncX();
+  case _MCC_EXT_BIOPSY_CMD_MOVE_INCX:
+      //biopsyStepIncX();
       break;
-  case _MCC_BIOPSY_CMD_MOVE_DECX:
-      biopsyStepDecX();
+  case _MCC_EXT_BIOPSY_CMD_MOVE_DECX:
+      //biopsyStepDecX();
       break;
-  case _MCC_BIOPSY_CMD_MOVE_INCY:
-      biopsyStepIncY();
+  case _MCC_EXT_BIOPSY_CMD_MOVE_INCY:
+      //biopsyStepIncY();
       break;
-  case _MCC_BIOPSY_CMD_MOVE_DECY:
-      biopsyStepDecY();
+  case _MCC_EXT_BIOPSY_CMD_MOVE_DECY:
+      //biopsyStepDecY();
       break;
-  case _MCC_BIOPSY_CMD_MOVE_INCZ:
-      biopsyStepIncZ();
+  case _MCC_EXT_BIOPSY_CMD_MOVE_INCZ:
+      //biopsyStepIncZ();
       break;
-  case _MCC_BIOPSY_CMD_MOVE_DECZ:
-      biopsyStepDecZ();
+  case _MCC_EXT_BIOPSY_CMD_MOVE_DECZ:
+      //biopsyStepDecZ();
       break;
-  case _MCC_BIOPSY_CMD_SET_STEPVAL:
-      generalConfiguration.biopsyCfg.stepVal =  mcc_cmd.buffer[1];
+  case _MCC_EXT_BIOPSY_CMD_SET_STEPVAL:
+      generalConfiguration.biopsyCfg.extendedConf.stepVal =  mcc_cmd.buffer[1];
       break;
-
-
+  case _MCC_EXT_BIOPSY_CMD_SET_BUZZER:
+      BiopsyDriverSetBuzzer();
+      break;
   }
 
   return;
@@ -2101,5 +2106,69 @@ void mcc_unparking_mode(void)
 
   return ;
 }
+
+/*
+  Questa funzione imposta il movimento della Biopsia (se presente)
+  nei suoi tre assi XYZ (opzionali)
+
+Buffer Dati:
+  mcc_cmd.buffer[0]: XGO (1=muove X)
+  mcc_cmd.buffer[1]: X L
+  mcc_cmd.buffer[2]: X H
+  mcc_cmd.buffer[3]: YGO (1=muove X)
+  mcc_cmd.buffer[4]: Y L
+  mcc_cmd.buffer[5]: Y H
+  mcc_cmd.buffer[6]: ZGO (1=muove X)
+  mcc_cmd.buffer[7]: Z L
+  mcc_cmd.buffer[8]: Z H
+
+  mcc_cmd.buffer[9]: ZlimitGO
+  mcc_cmd.buffer[10]: Zl L
+
+  mcc_cmd.buffer[11]: ZlesioneGO
+  mcc_cmd.buffer[12]: Zles L
+
+  mcc_cmd.buffer[13]: ZlagoGO
+  mcc_cmd.buffer[14]: Zlago L
+
+*/
+void mccBiopsyStdXYZ(void)
+{
+  if(generalConfiguration.biopsyCfg.biopsyConnected==FALSE) return;
+
+  // Verifica se si tratta del comando di incremento
+  if(mcc_cmd.len==2)
+  {
+    biopsyStandardStepZ(mcc_cmd.buffer[0],mcc_cmd.buffer[1]);
+    printf("BIOP STEPS");
+    return;
+  }
+  unsigned short X=mcc_cmd.buffer[1]+256*mcc_cmd.buffer[2];
+  unsigned short Y=mcc_cmd.buffer[4]+256*mcc_cmd.buffer[5];
+  unsigned short Z=mcc_cmd.buffer[7]+256*mcc_cmd.buffer[8];
+
+  if(mcc_cmd.buffer[9]) // ZlimitGO
+  {
+    // <TBD> aggiungere risposta in caso di comando fallito
+    biopsyStandardSetZLimit(mcc_cmd.buffer[10]);
+  }
+
+  if(mcc_cmd.buffer[11]) // Zlesione
+  {
+    // <TBD> aggiungere risposta in caso di comando fallito
+    biopsyStandardSetZLesione(mcc_cmd.buffer[12]);
+  }
+
+  if(mcc_cmd.buffer[13]) // ZLago
+  {
+    // <TBD> aggiungere risposta in caso di comando fallito
+    biopsyStandardSetLago(mcc_cmd.buffer[14]);
+  }
+
+  // Movimento
+  biopsyStandardSetXYZ(X,mcc_cmd.buffer[0], Y, mcc_cmd.buffer[3], Z, mcc_cmd.buffer[6]);
+  return;
+}
+
 
 /* EOF */

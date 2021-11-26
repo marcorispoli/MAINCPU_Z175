@@ -119,7 +119,6 @@ void systemPage::initPage(void){
     ApplicationDatabase.setData(_DB_SERVICE3_INT,(int) pConfig->sys.armMotor,DBase::_DB_FORCE_SGN);
     ApplicationDatabase.setData(_DB_SERVICE4_INT,(int) pConfig->sys.detectorType,DBase::_DB_FORCE_SGN);
     ApplicationDatabase.setData(_DB_SERVICE5_INT,(int) pConfig->sys.trxMotor,DBase::_DB_FORCE_SGN);
-    ApplicationDatabase.setData(_DB_SERVICE6_INT,(int) pConfig->sys.biopsyType,DBase::_DB_FORCE_SGN);
 
 }
 
@@ -135,7 +134,6 @@ void systemPage::exitPage(void){
         pConfig->sys.armMotor = ApplicationDatabase.getDataI(_DB_SERVICE3_INT);
         pConfig->sys.trxMotor = ApplicationDatabase.getDataI(_DB_SERVICE5_INT);
         pConfig->sys.detectorType = ApplicationDatabase.getDataI(_DB_SERVICE4_INT);
-        pConfig->sys.biopsyType = ApplicationDatabase.getDataI(_DB_SERVICE6_INT);
         pConfig->saveSysCfg();
         pConfig->executeReboot();
     }

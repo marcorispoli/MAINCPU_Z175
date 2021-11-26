@@ -55,6 +55,7 @@ ext biopsyStandardDevice* pBiopsyStandard;
 ext biopsyExtendedDevice* pBiopsyExtended;
 ext BiopsyStandardPage*   paginaBiopsyStandard;
 ext BiopsyExtendedPage*   paginaBiopsyExtended;
+ext biopsyModule*         pBiopsy;
 
 ext QString _CONSOLE_IP;
 ext QString _MASTER_IP;

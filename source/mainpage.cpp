@@ -313,7 +313,7 @@ void MainPage::valueChanged(int index,int opt)
         tiltValue->labelText = getTiltString();
         tiltValue->update();
 
-        if((isMaster) && (ApplicationDatabase.getDataU(_DB_ACCESSORIO) == BIOPSY_DEVICE) && (pCollimatore->accessorio == COLLI_ACCESSORIO_FRUSTOLI)) pCollimatore->updateColli();
+        if((isMaster) && (pBiopsy->connected) && (pCollimatore->accessorio == COLLI_ACCESSORIO_FRUSTOLI)) pCollimatore->updateColli();
 
         break;
     case _DB_COMPRESSOR_POSITION:

@@ -27,15 +27,13 @@
  /*_______________________________________________________________________*/
 
 void biopsyStandardDevice::activateConnections(void){
-    if(pConfig->sys.biopsyType != BYM_STANDARD_DEVICE) return;
+
     connect(pConsole, SIGNAL(mccBiopsyStandardNotify(unsigned char,unsigned char,QByteArray)), this, SLOT(mccStatNotify(unsigned char,unsigned char,QByteArray)),Qt::UniqueConnection);
 }
 
 biopsyStandardDevice::biopsyStandardDevice(QObject *parent) :
     QObject(parent)
 {
-    connected = FALSE;
-
 
     Lago=0;
     Zlimit=0;
@@ -49,42 +47,10 @@ biopsyStandardDevice::biopsyStandardDevice(QObject *parent) :
     margZ = 0;
     accessorio = _BIOP_ACCESSORIO_ND;
     accessorioSelezionato = _BIOP_ACCESSORIO_ND;
-    id_console=0;
-    checksum_h=0;
-    checksum_l=0;
-    revisione=0;
-
-    // Nel caso in cui ci fosse un errore nel file o il file non
-    // esiste vengono caricati dei valori di default
-    if(openCfg() == FALSE)
-    {
-        config.Z_homePosition = 189;
-        config.offsetPad = 50;
-        config.margineRisalita = 15;
-        config.marginePosizionamento = 5;
-        storeConfig();
-    }
-
 
 }
 
-bool biopsyStandardDevice::openCfg(void)
-{
-    QString filename;
-    filename = QString("%1/%2").arg(_CFGPATH).arg(_BPCFG);
-    QFile file(filename.toAscii());
 
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) return FALSE;
-
-    if(Config::getNextLine(&file,&config.Z_homePosition)==FALSE) return FALSE;
-    if(Config::getNextLine(&file,&config.offsetPad)==FALSE) return FALSE;
-    if(Config::getNextLine(&file,&config.margineRisalita)==FALSE) return FALSE;
-    if(Config::getNextLine(&file,&config.marginePosizionamento)==FALSE) return FALSE;
-
-    file.close();
-
-    return TRUE;
-}
 
 /*
      Contenuto notifica m4-A5 biopsia
@@ -124,16 +90,19 @@ void biopsyStandardDevice::mccStatNotify(unsigned char id_notify,unsigned char c
 
     errore=0;
     if(cmd!=BIOP_NOTIFY_STAT) return;
+    if(pBiopsy->model == BYM_EXTENDED_DEVICE) return;
 
+    // Se arriva qui il modulo ha comunicato con successo con la torretta standard
+    pBiopsy->model = BYM_STANDARD_DEVICE;
 
     // _____________________  Stato connessione____________________________________________________________________________________
     if(data.at(_BP_STD_CONNESSIONE)==1)
     {
         // Riconoscimento torretta di Biopsia inserita
-        connected = TRUE;
-        checksum_h=data[_BP_STD_CHKH];
-        checksum_l=data[_BP_STD_CHKL];
-        revisione=data[_BP_STD_REVIS];
+        pBiopsy->connected = TRUE;
+        pBiopsy->checksum_h=data[_BP_STD_CHKH];
+        pBiopsy->checksum_l=data[_BP_STD_CHKL];
+        pBiopsy->revisione=data[_BP_STD_REVIS];
 
         // Reset dati biopsia passati da consolle
         Lago=0;
@@ -163,7 +132,7 @@ void biopsyStandardDevice::mccStatNotify(unsigned char id_notify,unsigned char c
     }
     else if(data.at(_BP_STD_CONNESSIONE)==2)
     {
-        connected = FALSE;
+        pBiopsy->connected = FALSE;
 
         // Disabilita i movimenti manuali
         ApplicationDatabase.setData(_DB_BIOP_MANUAL_ENA,(unsigned char) 0 ,0);
@@ -263,7 +232,7 @@ void biopsyStandardDevice::mccStatNotify(unsigned char id_notify,unsigned char c
                 errore = 0x2;
                 curX = 0xFFFF;
                 ApplicationDatabase.setData(_DB_BIOP_X,QString("ND"));
-                if(this->id_console) PageAlarms::activateNewAlarm(_DB_ALLARMI_BIOPSIA,ERROR_BIOP_MOVE_X,TRUE);
+                if(pBiopsy->activationId) PageAlarms::activateNewAlarm(_DB_ALLARMI_BIOPSIA,ERROR_BIOP_MOVE_X,TRUE);
             }else{
                 curX = targetX;
 
@@ -275,7 +244,7 @@ void biopsyStandardDevice::mccStatNotify(unsigned char id_notify,unsigned char c
                 errore = 0x4;
                 curY = 0xFFFF;
                 ApplicationDatabase.setData(_DB_BIOP_Y,QString("ND"));
-                if(this->id_console) PageAlarms::activateNewAlarm(_DB_ALLARMI_BIOPSIA,ERROR_BIOP_MOVE_Y,TRUE);
+                if(pBiopsy->activationId) PageAlarms::activateNewAlarm(_DB_ALLARMI_BIOPSIA,ERROR_BIOP_MOVE_Y,TRUE);
             }else{
                 curY = targetY;
                 ApplicationDatabase.setData(_DB_BIOP_Y,QString("%1").arg((float)curY/10.0,0,'f',1));
@@ -284,7 +253,7 @@ void biopsyStandardDevice::mccStatNotify(unsigned char id_notify,unsigned char c
             if(!(data.at(_BP_STD_MOTION_END)&4))
             {// Errore su Z
                 errore = 0x8;
-                if(this->id_console) PageAlarms::activateNewAlarm(_DB_ALLARMI_BIOPSIA,ERROR_BIOP_MOVE_Z,TRUE);
+                if(pBiopsy->activationId) PageAlarms::activateNewAlarm(_DB_ALLARMI_BIOPSIA,ERROR_BIOP_MOVE_Z,TRUE);
             }else{
 
             }
@@ -293,9 +262,9 @@ void biopsyStandardDevice::mccStatNotify(unsigned char id_notify,unsigned char c
             if(curZ>10) ApplicationDatabase.setData(_DB_BIOP_MANUAL_ENA,(unsigned char) 1 ,0);
 
             // Comunicazione dell'esito del comando in corso alla Console
-            if(this->id_console) pToConsole->endCommandAck(this->id_console, errore);
-            else pToConsole->setBiopsyPosition(curX, curY,curZ);
-            this->id_console = 0;
+            if(pBiopsy->activationId) pToConsole->endCommandAck(pBiopsy->activationId, errore);
+            else pToConsole->setBiopsyStandardPosition(curX, curY,curZ);
+            pBiopsy->activationId = 0;
 
         break;
         case 5: // TIMEOUT TORRETTA
@@ -304,8 +273,8 @@ void biopsyStandardDevice::mccStatNotify(unsigned char id_notify,unsigned char c
             ApplicationDatabase.setData(_DB_BIOP_Y,QString("ND"));
             ApplicationDatabase.setData(_DB_BIOP_Z,QString("ND"));
 
-            if(this->id_console) pToConsole->endCommandAck(this->id_console, 0x1);
-            this->id_console = 0;
+            if(pBiopsy->activationId) pToConsole->endCommandAck(pBiopsy->activationId, 0x1);
+            pBiopsy->activationId = 0;
 
             // Disabilita i movimenti manuali
             ApplicationDatabase.setData(_DB_BIOP_MANUAL_ENA,(unsigned char) 0 ,0);
@@ -361,7 +330,7 @@ bool biopsyStandardDevice::moveXYZ(unsigned short X, unsigned short Y, unsigned 
     data[11]=0;
     data[13]=0;
 
-    if(pConsole->pGuiMcc->sendFrame(MCC_STD_BIOPSY_XYZ,1,data,9)==FALSE)
+    if(pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_STD_XYZ,1,data,9)==FALSE)
     {
         qDebug() << "BIOPSY <moveXYZ>: ERRORE COMANDO MCC";
         return FALSE;
@@ -384,7 +353,7 @@ bool biopsyStandardDevice::moveZ(unsigned short Z)
     data[11]=0;
     data[13]=0;
 
-    if(pConsole->pGuiMcc->sendFrame(MCC_STD_BIOPSY_XYZ,1,data,9)==FALSE)
+    if(pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_STD_XYZ,1,data,9)==FALSE)
     {
         qDebug() << "BIOPSY <moveZ>: ERRORE COMANDO MCC";
         return FALSE;
@@ -416,7 +385,7 @@ bool biopsyStandardDevice::stepZ(int step)
         data[1]=-1*step;
     }
 
-    if(pConsole->pGuiMcc->sendFrame(MCC_STD_BIOPSY_XYZ,1,data,sizeof(data))==FALSE)
+    if(pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_STD_XYZ,1,data,sizeof(data))==FALSE)
     {        
         return FALSE;
     }
@@ -437,7 +406,7 @@ bool biopsyStandardDevice::moveX(unsigned short X)
     data[11]=0;
     data[13]=0;
 
-    if(pConsole->pGuiMcc->sendFrame(MCC_STD_BIOPSY_XYZ,1,data,9)==FALSE)
+    if(pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_STD_XYZ,1,data,9)==FALSE)
     {
         qDebug() << "BIOPSY <moveX>: ERRORE COMANDO MCC";
         return FALSE;
@@ -460,7 +429,7 @@ bool biopsyStandardDevice::moveY(unsigned short Y)
     data[11]=0;
     data[13]=0;
 
-    if(pConsole->pGuiMcc->sendFrame(MCC_STD_BIOPSY_XYZ,1,data,9)==FALSE)
+    if(pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_STD_XYZ,1,data,9)==FALSE)
     {
         qDebug() << "BIOPSY <moveY>: ERRORE COMANDO MCC";
         return FALSE;
@@ -486,10 +455,10 @@ int biopsyStandardDevice::setBiopsyData(unsigned int x, unsigned int y, unsigned
 
 
     // Check presenza
-    if(connected == FALSE)  return 1;
+    if(pBiopsy->connected == FALSE)  return 1;
 
     // Non consente di gestire un comando con un movimento giÃ  in corso
-    if((id_console!=0)&&(cmd_id!=-1))  return 3;
+    if((pBiopsy->activationId!=0)&&(cmd_id!=-1))  return 3;
 
     // Acquisisce i dati
     targetX = x;
@@ -508,19 +477,19 @@ int biopsyStandardDevice::setBiopsyData(unsigned int x, unsigned int y, unsigned
 
 
         // Reset dati biopsia passati da consolle
-        pBiopsy->Lago=0;
-        pBiopsy->Zlimit=0;
-        pBiopsy->Zlesione=0;
-        pBiopsy->codiceAccessorio="ND";
-        pBiopsy->codiceAgo="ND";
-        pBiopsy->accessorioSelezionato = _BIOP_ACCESSORIO_ND;
+        Lago=0;
+        Zlimit=0;
+        Zlesione=0;
+        codiceAccessorio="ND";
+        codiceAgo="ND";
+        accessorioSelezionato = _BIOP_ACCESSORIO_ND;
         margZ=0;
         ApplicationDatabase.setData(_DB_BIOP_MARG,QString(""));
         ApplicationDatabase.setData(_DB_BIOP_MANUAL_ENA,(unsigned char) 0 ,0);
         ApplicationDatabase.setData(_DB_BIOP_AGO,QString(""),0);
         if(updateTorretta(cmd_id)==FALSE) return 7;
 
-        pToConsole->setBiopsyPosition(0,0,0); // Avvisa subito la AWS per evitare magheggi sull'interfaccia
+        pToConsole->setBiopsyStandardPosition(0,0,0); // Avvisa subito la AWS per evitare magheggi sull'interfaccia
         return 0;
     }
 
@@ -528,10 +497,10 @@ int biopsyStandardDevice::setBiopsyData(unsigned int x, unsigned int y, unsigned
     if(targetZ > (maxZ+1) * 10) return 6;               // Controllo limite meccanico per impatto con il compressore
 
     // Imposta il nome dell'accessorio utilizzato
-     ApplicationDatabase.setData(_DB_BIOP_AGO,pBiopsy->codiceAgo,0);
+     ApplicationDatabase.setData(_DB_BIOP_AGO,codiceAgo,0);
     if(cmd_id==-1) return 0; // Solo simulato
 
-    if( pBiopsy->updateTorretta(cmd_id)==FALSE) return 7;
+    if( updateTorretta(cmd_id)==FALSE) return 7;
     return 0;
 
 }
@@ -557,60 +526,13 @@ bool biopsyStandardDevice::updateTorretta(unsigned char id_command)
     data[13]=1;
     data[14]=Lago;
 
-    if(pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_XYZ,1,data,sizeof(data))==FALSE)
+    if(pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_STD_XYZ,1,data,sizeof(data))==FALSE)
     {
         qDebug() << "BIOPSY <updateTorretta>: ERRORE COMANDO MCC";
         return FALSE;
     }
 
-    this->id_console = id_command;
+    pBiopsy->activationId = id_command;
     return TRUE;
 }
 
-/*
- *
- *  Salva il file di configurazione della biopsia
- */
-bool biopsyStandardDevice::storeConfig(void)
-{
-    QString filename;
-
-    filename =  QString(_CFGPATH);
-    filename.append("/");
-    filename.append(_BPCFG);
-
-    QFile file(filename.toAscii());
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-    {
-        qDebug() <<"IMPOSSIBILE APRIRE IL FILE IN SCRITTURA:" << filename;
-        return FALSE;
-    }
-
-    ///////////////////////////////////////////////////////////////
-    // SETUP FILTRO
-    ///////////////////////////////////////////////////////////////
-    file.write("Dati di calibrazione Biopsia\n\n");
-
-    file.write("\nAltezza meccanica base del cursore\n");
-    file.write( QString("<%1>\n").arg((int) config.offsetZ).toAscii());
-
-    file.write("\nDistanza meccanica top staffe linea del cursore\n");
-    file.write( QString("<%1>\n").arg((int) config.offsetPad).toAscii());
-
-    file.write("\nMargine (mm) sulla risalita del compressore\n");
-    file.write( QString("<%1>\n").arg((int) config.margineRisalita).toAscii());
-
-    file.write("\nMargine (mm) sul posizionamento \n");
-    file.write( QString("<%1>\n").arg((int) config.marginePosizionamento).toAscii());
-    file.flush();
-    file.close();
-
-    return true;
-}
-
-bool biopsyStandardDevice::updateConfig(void)
-{
-    // Invia la configurazione al driver per aggiornarlo in diretta
-    return pConfig->sendMccConfigCommand(CONFIG_BIOPSY);
-
-}

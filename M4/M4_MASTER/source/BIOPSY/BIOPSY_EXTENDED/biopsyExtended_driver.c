@@ -1,6 +1,23 @@
-#define _BIOPSY_DRIVER_C
+#define _BIOPSY_EXTENDED_DRIVER_C
 #include "dbt_m4.h" 
 
+bool BiopsyExtendedIsPresent(void)
+{
+    unsigned char rx_buffer[4];
+    unsigned char tx_buffer[4];
+
+    tx_buffer[0] = 0x8D;
+    tx_buffer[1] = 0x0;
+    tx_buffer[2] = 0x0;
+
+#ifdef __BIOPSY_SIMULATOR
+    sim_serialCommand(tx_buffer,rx_buffer);
+#else
+    Ser422SendRaw(tx_buffer[0], tx_buffer[1], tx_buffer[2], rx_buffer, 5);
+#endif
+  if(rx_buffer[0]==tx_buffer[0]) return true;
+  return FALSE;
+}
 
 /*
    GET_STAT()
@@ -611,6 +628,24 @@ bool BiopsyDriverSetStepVal(unsigned char val, unsigned char* stepval)
         return true;
     }
     return FALSE;
+}
+
+void BiopsyDriverSetBuzzer(void)
+{
+    unsigned char rx_buffer[4];
+    unsigned char tx_buffer[4];
+
+    tx_buffer[0] = 0x0D;
+    tx_buffer[1] = 0x1;
+    tx_buffer[2] = 0;
+
+#ifdef __BIOPSY_SIMULATOR
+    sim_serialCommand(tx_buffer,rx_buffer);
+#else
+    Ser422SendRaw(tx_buffer[0], tx_buffer[1], tx_buffer[2], rx_buffer, 5);
+#endif
+
+    return ;
 }
 
 /* EOF */

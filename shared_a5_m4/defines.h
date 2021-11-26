@@ -14,7 +14,7 @@
 //#define _CANDEVICE_SIMULATION // Stub per mancanza CAN BUS su m4_slave
 //#define __APPLICATION_DESKTOP_COMPILE // Compilazione per moduli TS da tavolo: rotazione 180 display, indirizzi CONSOLE a 192.168.30.10, abilitazione PRINT
 //#define __CONSOLE_IP_ADDRESS 10 // MODIFICA l'IP AWS
-#define __BIOPSY_SIMULATOR
+// #define __BIOPSY_SIMULATOR
 #endif
 //_________________________________________________________________________________
 
@@ -142,8 +142,9 @@ typedef enum
 //////////////////////////////////////////////////////////////////////////////
 // Tipologia torretta di biopsia
 //////////////////////////////////////////////////////////////////////////////
-#define BYM_STANDARD_DEVICE 0
-#define BYM_EXTENDED_DEVICE 1
+#define BYM_UNDETERMINED_DEVICE 0
+#define BYM_STANDARD_DEVICE 1
+#define BYM_EXTENDED_DEVICE 2
 
 //////////////////////////////////////////////////////////////////////////////
 // Elenco codici detectors

@@ -21,26 +21,37 @@ public:
 
     int requestBiopsyHome(int id, unsigned char lat);
     int requestBiopsyMoveXYZ(unsigned short X, unsigned short Y,unsigned short Z,int id);
+    void calibrateXbase(unsigned short val);
     void activateConnections(void);
-
-
-    void calcoloMargini(void);
-
-    // Movimenti su tre assi
-    int moveXYZ(unsigned short X, unsigned short Y, unsigned short Z); // Chiede il movimento sui tre assi
-
-    bool testUpsidePosition(unsigned short X);
-    bool isHome(unsigned char lat);
-
-    // Movimenti per step
     int setStepVal(unsigned char step);
+    unsigned char getLatX(void);
+    unsigned char getAdapterId(void);
+    void  setBuzzer(void);
+
+
+    #define _DEF_TIMEOUT_USER_FEEDBACK  100 // 100ms unit
+
+    #define _DEF_EXT_XHOME_LEFT      2580
+    #define _DEF_EXT_XHOME_CENTER    1290
+    #define _DEF_EXT_XHOME_RIGHT     0
+
+    #define _DEF_EXT_YHOME_LEFT      0
+    #define _DEF_EXT_YHOME_CENTER    0
+    #define _DEF_EXT_YHOME_RIGHT     0
+
+    #define _DEF_EXT_ZHOME_LEFT      143
+    #define _DEF_EXT_ZHOME_CENTER    143
+    #define _DEF_EXT_ZHOME_RIGHT     143
+
+
+    /*
     int moveDecZ(int id);
     int moveIncZ(int id);
     int moveDecX(int id);
     int moveIncX(int id);
     int moveDecY(int id);
     int moveIncY(int id);
-
+    */
 
 signals:
     
@@ -63,18 +74,9 @@ public:
     void initPage(void);
     void exitPage(void);
 
-
-    bool connected;
-    biopsyConfExtended_Str config;          // Dati di configurazione
-    bool openCfg(void);             // Funzione per l'apertura del file di configurazione
-    bool storeConfig(void);         // Salva la configurazione
-    void defaultConfigData(void);
-
-    bool updateConfig(void);        // Aggioirna M4 con i valori correnti
-
     // Comandi in corso
     int movingCommand;  // Codice comando in esecuzione
-    int activationId;   // Codice ID per comando AWS
+
     #define _BIOPSY_MOVING_NO_COMMAND       0
     #define _BIOPSY_MOVING_COMPLETED        1
     #define _BIOPSY_MOVING_XYZ              2
@@ -101,32 +103,7 @@ public:
     unsigned short curSh_dmm;   // (0.1mm) Posizione corrente Sh
     unsigned char  curLatX;     // Posizione dislocazione asse X
 
-    // Limiti di movimento
-    unsigned char  paddle_margine;  // (mm) distanza staffe paddle - base torretta (mm) calcolata da Gantry
-    unsigned char  needle_home;     // (mm) distanza punta ago - home torretta
-    unsigned char  needle_margine;  // Distanza punta ago - fibra di carbonio
 
-    unsigned char  max_z_paddle;    // (mm) Massima Z ricalcolata sulla base della posizione del paddle
-    unsigned char  abs_max_z;       // (mm) Massima Z assoluta rspetto sia al paddle che all'ago (se presente)
-
-    // Target di movimento impostato
-    unsigned short targetX_dmm;    // (0.1mm) Valore Target di movimento X
-    unsigned short targetY_dmm;    // (0.1mm) Valore Target di movimento Y
-    unsigned short targetZ_dmm;    // (0.1mm) Valore Target di movimento Z
-
-    // Impostazione corrente step di incremento
-    unsigned char  stepVal;      // STEPVAL corrente
-
-    // Accessorio riconosciuto
-    unsigned char adapterId;       // adapterId riconosciuto
-
-    // Pulsante di sblocco
-    bool unlock_button;
-
-    // Dati perifierica collegata
-    unsigned char checksum_h;
-    unsigned char checksum_l;
-    unsigned char revisione;
 
 
     #define BIOPSY_ACTIVATION_SEQUENCE_DB   _DB_SERVICE1_INT
@@ -176,6 +153,9 @@ public:
 
     #define _REQ_SUBSEQ_XYZ_COMPLETED               21
 
+
+
+private:
     int req_sequence;
     int sub_sequence;
     int event_req_sequence;
@@ -185,9 +165,30 @@ public:
     unsigned short req_Y;
     unsigned short req_Z;
     bool user_confirmation;
+    unsigned char buzzer_delay;
     bool bypass_y_scroll;
+    int user_timeout;
 
-private:
+    unsigned short XHOME_LEFT;
+    unsigned short XHOME_CENTER;
+    unsigned short XHOME_RIGHT;
+    unsigned short YHOME_LEFT;
+    unsigned short YHOME_CENTER;
+    unsigned short YHOME_RIGHT;
+    unsigned short ZHOME_LEFT;
+    unsigned short ZHOME_CENTER;
+    unsigned short ZHOME_RIGHT;
+
+    // Impostazione corrente step di incremento
+    unsigned char  stepVal;      // STEPVAL corrente
+
+    // Accessorio riconosciuto
+    unsigned char adapterId;       // adapterId riconosciuto
+
+    // Pulsante di sblocco
+    bool unlock_button;
+
+
     void manageHomeSequence(void);
     void manageXYZSequence(void);
     void manageRequestErrors(int error);
@@ -196,6 +197,12 @@ private:
     void manageChangeMoveXYZSeq(unsigned char sub_seq);
     void hideFrames(void);
     int calibrateSh(void);
+
+    // Movimenti su tre assi
+    int moveXYZ(unsigned short X, unsigned short Y, unsigned short Z); // Chiede il movimento sui tre assi
+
+    bool testUpsidePosition(unsigned short X);
+    bool isTarget(unsigned short X, unsigned short Y, unsigned short Z);
 
 };
 

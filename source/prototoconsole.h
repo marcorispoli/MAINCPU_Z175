@@ -36,6 +36,7 @@ public:
 
     #define NOTIFY_REQUEST_POWER_OFF            "RequestPowerOff"
     #define NOTIFY_SET_BIOPSY_EXTENDED_DATA     "SetBiopsyExtendedData"
+    #define NOTIFY_SET_BIOPSY_STANDARD_POSITION "SetBiopsyPosition"
 
 typedef enum
 {
@@ -60,6 +61,8 @@ public:
     void notifyAbortProjection(void); // Notifica la AWS dell'avvenuta selezione
     void notifyRequestPowerOff(void);
     void setBiopsyExtendedData();
+    void setBiopsyStandardPosition(int curX, int curY, int curZ);
+
     void setSpecimen(bool stat);
 
     void endCommandAck(unsigned char id, unsigned char code); // Acnowledge per fine comando

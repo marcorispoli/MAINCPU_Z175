@@ -207,6 +207,7 @@ typedef enum
 
 
 
+
 // _____________________________________________________________________
 // Codici per notifiche Biopsia estesa
 #define _BP_EXT_CONNESSIONE     0 // Stato della connessione
@@ -226,16 +227,13 @@ typedef enum
 #define _BP_EXT_SHL             12
 #define _BP_EXT_SHH             13
 
-#define _BP_EXT_PADDLE_MARGINE  14 // Distanza compressore da base torretta
-#define _BP_EXT_MAX_Z_PADDLE    15 // Massima Z sulla base del margine PADDLE
-
 // Dati per la revisione e checksum
-#define _BP_EXT_CHKH            16
-#define _BP_EXT_CHKL            17
-#define _BP_EXT_REVIS           18
-#define _BP_EXT_MODEL           19
+#define _BP_EXT_CHKH            14
+#define _BP_EXT_CHKL            15
+#define _BP_EXT_REVIS           16
+#define _BP_EXT_MODEL           17
 //______________________________
-#define _BP_EXT_DATA_LEN        20
+#define _BP_EXT_DATA_LEN        18
 
 
 //_____________________________
@@ -295,6 +293,7 @@ typedef enum
 #define _MCC_EXT_BIOPSY_CMD_MOVE_DECZ   8
 #define _MCC_EXT_BIOPSY_CMD_SET_STEPVAL 9
 #define _MCC_EXT_BIOPSY_CMD_SET_ZLIMIT  10
+#define _MCC_EXT_BIOPSY_CMD_SET_BUZZER  11
 
 //____________________________________________________________
 // CODICI COMANDI SIMULATORE DI BIOPSIA SE COMPILATO
@@ -315,11 +314,8 @@ typedef enum
 //________________________________________________________________________
 typedef enum
 {
-  BIOP_NOTIFY_STAT=0,           // buffer[0]: 0=NULLA, 1 = ->CONNESSO, 2->NON CONNESSO
-                                // buffer[1]: 0=NULLA, 1 = ->SBLOCCO ON, 2-> SBLOCCO OFF
-                                // buffer[2:3], Posizione corrente Z (se buffer[4]==4)
-                                // buffer[4]: 1= muove X, 2=muoveY, 3=muoveZ 4=fine movimenti
-  BIOP_NOTIFY_MOVE_CMD          // <TBD>
+  BIOP_NOTIFY_STAT=0,
+  BIOP_NOTIFY_MOVE_CMD
 }_MccBiopNotify_Code;
 
 
@@ -444,7 +440,9 @@ typedef enum
 
     // BIOPSY
     MCC_BIOPSY_SIMULATOR,     // Comando di attivazione/Disattivazione demo
-    MCC_BIOPSY_CMD,          // Comando di movimento Biopsia a XYZ
+    MCC_BIOPSY_CMD,           // Comando di movimento Biopsia a XYZ
+    MCC_BIOPSY_STD_XYZ,       // Comando di movimento Biopsia Standard a XYZ
+
 
     MCC_GUI_NOTIFY,          // Notifica per l'applicazione da GUI M4
     MCC_CONFIG_NOTIFY,       // Notifica dal configuratore

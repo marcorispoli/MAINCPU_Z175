@@ -1,6 +1,5 @@
-gcc_arm/ram_release/obj/biopsy_driver.o: \
- /mnt/hgfs/DBT/M4/M4_MASTER/source/BIOPSY/biopsy_driver.c \
- /mnt/hgfs/DBT/M4/M4_MASTER/source/dbt_m4.h \
+gcc_arm/ram_release/obj/main.o: /mnt/hgfs/DBT/M4/M4_SLAVE/source/main.c \
+ /mnt/hgfs/DBT/M4/M4_SLAVE/source/dbt_m4.h \
  /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/mqx.h \
  /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/mqx_cnfg.h \
  /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/user_config.h \
@@ -107,6 +106,8 @@ gcc_arm/ram_release/obj/biopsy_driver.o: \
  /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/mutex.h \
  /opt/arm-2017/arm-none-eabi/include/math.h \
  /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/timer.h \
+ /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/fsl_flexcan_driver.h \
+ /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/fsl_flexcan_hal.h \
  /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc_config.h \
  /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc_common.h \
  /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc_api.h \
@@ -115,27 +116,19 @@ gcc_arm/ram_release/obj/biopsy_driver.o: \
  /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/core_mutex.h \
  /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/core_mutex_sema4.h \
  /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/sema4.h \
- /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/fsl_flexcan_driver.h \
- /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/fsl_flexcan_hal.h \
- /mnt/hgfs/DBT/M4/M4_MASTER/source/eventi.h \
+ /mnt/hgfs/DBT/M4/M4_SLAVE/source/eventi.h \
  /mnt/hgfs/DBT/M4/../shared_a5_m4/shared.h \
  /mnt/hgfs/DBT/M4/../shared_a5_m4/mcc.h \
  /mnt/hgfs/DBT/M4/../shared_a5_m4/errors.h \
  /mnt/hgfs/DBT/M4/../shared_a5_m4/defines.h \
  /mnt/hgfs/DBT/M4/COMMON/common.h /mnt/hgfs/DBT/M4/COMMON/canopen.h \
  /mnt/hgfs/DBT/M4/COMMON/mccClass.h \
- /mnt/hgfs/DBT/M4/M4_MASTER/source/sequences.h \
- /mnt/hgfs/DBT/M4/M4_MASTER/source/ser422.h \
- /mnt/hgfs/DBT/M4/M4_MASTER/source/loader.h \
- /mnt/hgfs/DBT/M4/M4_MASTER/source/pcb215.h \
- /mnt/hgfs/DBT/M4/M4_MASTER/source/pcb190.h \
- /mnt/hgfs/DBT/M4/M4_MASTER/source/pcb244.h \
- /mnt/hgfs/DBT/M4/M4_MASTER/source/BIOPSY/biopsy.h \
- /mnt/hgfs/DBT/M4/M4_MASTER/source/BIOPSY/biopsy_driver.h \
- /mnt/hgfs/DBT/M4/M4_MASTER/source/BIOPSY/biopsy_simulator.h \
- /mnt/hgfs/DBT/M4/M4_MASTER/source/pcb249U1.h \
- /mnt/hgfs/DBT/M4/M4_MASTER/source/pcb249U2.h \
- /mnt/hgfs/DBT/M4/M4_MASTER/source/actuators.h \
- /mnt/hgfs/DBT/M4/M4_MASTER/source/gui.h \
- /mnt/hgfs/DBT/M4/M4_MASTER/source/fault.h \
- /mnt/hgfs/DBT/M4/M4_MASTER/source/master_can.h
+ /mnt/hgfs/DBT/M4/M4_SLAVE/source/ser240.h \
+ /mnt/hgfs/DBT/M4/M4_SLAVE/source/trx.h \
+ /mnt/hgfs/DBT/M4/M4_SLAVE/source/drivers/nanotec/pd4.h \
+ /mnt/hgfs/DBT/M4/M4_SLAVE/source/arm.h \
+ /mnt/hgfs/DBT/M4/M4_SLAVE/source/lenze.h \
+ /mnt/hgfs/DBT/M4/M4_SLAVE/source/drivers/lenze/i510.h \
+ /mnt/hgfs/DBT/M4/M4_SLAVE/source/fault.h \
+ /mnt/hgfs/DBT/M4/M4_SLAVE/source/slave_can.h \
+ /mnt/hgfs/DBT/M4/M4_SLAVE/source/actuators.h

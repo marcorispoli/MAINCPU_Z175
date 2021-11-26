@@ -201,11 +201,9 @@ void console::consoleRxHandler(QByteArray rxbuffer)
         return;
     }else if(comando==GET_POTTER)
     {
-        if(ApplicationDatabase.getDataU(_DB_ACCESSORIO) == BIOPSY_DEVICE){
-            if(pConfig->sys.biopsyType == BYM_STANDARD_DEVICE)
-                emit consoleTxHandler(answ.answToQByteArray(QString("BP %1").arg(pBiopsyStandard->accessorio)));
-            else
-                emit consoleTxHandler(answ.answToQByteArray(QString("BPEXT 0")));
+        if(pBiopsy->connected){
+            if(pBiopsy->model == BYM_STANDARD_DEVICE) emit consoleTxHandler(answ.answToQByteArray(QString("BP %1").arg(pBiopsyStandard->accessorio)));
+            else  emit consoleTxHandler(answ.answToQByteArray(QString("LAT 0")));
         }
         else if(pPotter->getPotId()==POTTER_2D)  emit consoleTxHandler(answ.answToQByteArray("2D 0"));
         else if(pPotter->getPotId()==POTTER_TOMO)  emit consoleTxHandler(answ.answToQByteArray("3D 0"));
@@ -1633,7 +1631,7 @@ void console::handleSetArm(int target,int minimo, int massimo,int id)
 
 
     // Se c'è la biopsia il massimo angolo attivabile è 90°
-    if(ApplicationDatabase.getDataU(_DB_ACCESSORIO) == BIOPSY_DEVICE){
+    if(pBiopsy->connected){
         if(abs(target)>90){
             answ.addParam(QString("%1").arg((int)ARM_RANGE_ERROR));
             emit consoleTxHandler(answ.cmdToQByteArray("NOK 9"));
@@ -1961,7 +1959,7 @@ void console::RxStart(void)
 
     // Controllo Angolo Braccio
     // Attenzione questo controllo non e' piu' valido con la Biopsia
-    if((ApplicationDatabase.getDataU(_DB_ACCESSORIO) != BIOPSY_DEVICE)&&((angolo_corrente>xSequence.arm_max) || (angolo_corrente<xSequence.arm_min)))
+    if((!pBiopsy->connected)&&((angolo_corrente>xSequence.arm_max) || (angolo_corrente<xSequence.arm_min)))
     {
         ret.clear();
         ret.append(ERROR_ANGOLO_ARM);
@@ -1972,7 +1970,7 @@ void console::RxStart(void)
     }
 
     // Controllo Su Potter
-    if((!pPotter->isValid())&&(ApplicationDatabase.getDataU(_DB_ACCESSORIO) != BIOPSY_DEVICE))
+    if((!pPotter->isValid())&&(!pBiopsy->connected))
     {
         ret.clear();
         ret.append(ERROR_INVALID_POTTER);
@@ -2045,7 +2043,7 @@ void console::Rx2DSequence(void)
     QByteArray ret;
 
 
-    if(ApplicationDatabase.getDataU(_DB_ACCESSORIO) == BIOPSY_DEVICE){
+    if(pBiopsy->connected){
         // In biopsia il flag deve sempre essere azzerato a scanso di equivoci
         xSequence.isCombo=false;
     }else{
@@ -2114,7 +2112,7 @@ void console::Rx2DSequence(void)
     }else{
 
         // Ingranditore e Biopsia non necessitano di protezione paziente
-        if((!pPotter->isMagnifier())&&(ApplicationDatabase.getDataU(_DB_ACCESSORIO) != BIOPSY_DEVICE)){
+        if((!pPotter->isMagnifier())&&(!pBiopsy->connected)){
             if(pConfig->userCnf.enableCheckAccessorio){
                 if((pCollimatore->accessorio!=COLLI_ACCESSORIO_PROTEZIONE_PAZIENTE_2D)&&(pCollimatore->accessorio!=COLLI_ACCESSORIO_PROTEZIONE_PAZIENTE_3D)){
                     PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_RAGGI, ERROR_MISSA_PROT_PAZIENTE,TRUE); // Self resetting
@@ -2161,7 +2159,7 @@ void console::Rx2DSequence(void)
     data[12] = pGeneratore->minI;
 
     // Gestione dello sblocco del compressore: NON IN BIOPSIA e non in combo
-    if(ApplicationDatabase.getDataU(_DB_ACCESSORIO) == BIOPSY_DEVICE) data[13] = 0;
+    if(pBiopsy->connected) data[13] = 0;
     else if (xSequence.isCombo) data[13] = 0;
     else if(pConfig->userCnf.enableSblocco) data[13] = 1;
     else data[13]=0;
@@ -2639,7 +2637,7 @@ void console::Rx3DSequence(void)
     QByteArray ret;
 
 
-    if(ApplicationDatabase.getDataU(_DB_ACCESSORIO) == BIOPSY_DEVICE){
+    if(pBiopsy->connected){
         // In biopsia il flag deve sempre essere azzerato a scanso di equivoci
         xSequence.isCombo=false;
     }else{
@@ -2673,7 +2671,7 @@ void console::Rx3DSequence(void)
     }
 
     // Controllo sul compressore utilizzato
-    if(ApplicationDatabase.getDataU(_DB_ACCESSORIO)!=BIOPSY_DEVICE){
+    if(!pBiopsy->connected){
 
         // Obbligatorio il potter 3D presente!
         if(ApplicationDatabase.getDataU(_DB_ACCESSORIO)!=POTTER_TOMO){
@@ -2767,7 +2765,7 @@ void console::Rx3DSequence(void)
     }
 
     // Gestione dello sblocco del compressore: NON IN BIOPSIA e non in combo
-    if(ApplicationDatabase.getDataU(_DB_ACCESSORIO) == BIOPSY_DEVICE) data[17] = 0;
+    if(pBiopsy->connected) data[17] = 0;
     else if (xSequence.isCombo) data[17] = 0;
     else if(pConfig->userCnf.enableSblocco) data[17] = 1;
     else data[17]=0;
@@ -3204,7 +3202,6 @@ void mccMasterCom::mccRxHandler(_MccFrame_Str mccframe)
           bufdata.append(mccframe.buffer[2+ciclo]);
         pConsole->emitLoaderNotify(mccframe.id, mccframe.buffer[0],bufdata);
         break;
-
 
 
         case MCC_BIOP_STANDARD_NOTIFY:
@@ -4720,19 +4717,21 @@ void console::handleGetBiopsyExtendedData(protoConsole* frame, protoConsole* ans
 
 
     // Stato della connessione
-    if(pBiopsyExtended->connected) stringa += "CONNECTED ";
+    if(pBiopsy->connected) stringa += "CONNECTED ";
     else stringa += "DISCONNECTED ";
 
     // Lateralità rilevata
-    if(pBiopsyExtended->curLatX == _BP_EXT_ASSEX_POSITION_LEFT) stringa += "X_L ";
-    else if(pBiopsyExtended->curLatX == _BP_EXT_ASSEX_POSITION_RIGHT) stringa += "X_R ";
-    else if(pBiopsyExtended->curLatX == _BP_EXT_ASSEX_POSITION_CENTER) stringa += "X_C ";
+    unsigned char latX = pBiopsyExtended->getLatX();
+    if( latX == _BP_EXT_ASSEX_POSITION_LEFT) stringa += "X_L ";
+    else if(latX == _BP_EXT_ASSEX_POSITION_RIGHT) stringa += "X_R ";
+    else if(latX == _BP_EXT_ASSEX_POSITION_CENTER) stringa += "X_C ";
     else stringa += "X_N ";
 
     // Adapter
-    if(pBiopsyExtended->adapterId == _BP_EXT_ADAPTER_A) stringa += "AD_A ";
-    else if(pBiopsyExtended->adapterId == _BP_EXT_ADAPTER_B) stringa += "AD_B ";
-    else if(pBiopsyExtended->adapterId == _BP_EXT_ADAPTER_C) stringa += "AD_C ";
+    unsigned char adapterId = pBiopsyExtended->getAdapterId();
+    if(adapterId == _BP_EXT_ADAPTER_A) stringa += "AD_A ";
+    else if(adapterId == _BP_EXT_ADAPTER_B) stringa += "AD_B ";
+    else if(adapterId == _BP_EXT_ADAPTER_C) stringa += "AD_C ";
     else stringa += "AD_ND ";
 
     // Coordinate

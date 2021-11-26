@@ -298,6 +298,7 @@ int main(int argc, char *argv[])
         pCollimatore =  new Collimatore();
         pGeneratore =   new Generatore();
         pPotter =       new Potter();
+        pBiopsy =       new(biopsyModule);
         pBiopsyStandard =  new biopsyStandardDevice();
         pBiopsyExtended =  new biopsyExtendedDevice(rotView);
         pConsole =      new console();
@@ -312,8 +313,7 @@ int main(int argc, char *argv[])
         pWarningBox = new msgBox(rotView,0);
         // Creazione IO di sistema
         io = new sysIO(FALSE);
-        pConfig = new Config(FALSE);
-
+        pConfig = new Config(FALSE);        
         pBiopsyExtended =  new biopsyExtendedDevice(rotView);
     }
 
@@ -323,8 +323,10 @@ int main(int argc, char *argv[])
     pagina_language = new PageLanguages( &mainApplication, PageLanguages::_LNG_ENG, true,_BACKGROUND_Y_PG_SELLNG,_BACKGROUND_C_PG_SELLNG,TRUE, 800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_SELLNG,GWindow::setPointPath(LEFT_ARROW_FRAME),(int)_PG_MAIN_DIGITAL,(int)_PG_SELLNG);
     paginaMainDigital = new MainPage(true,QString(_BACKGROUND_Y_PG_MAIN),QString(_BACKGROUND_C_PG_MAIN),TRUE,800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_MAIN_DIGITAL,GWindow::setPointPath(LEFT_ARROW_FRAME),(int)_PG_SERVICE_MENU,(int)_PG_MAIN_DIGITAL);
 
+
     paginaBiopsyStandard = new BiopsyStandardPage(true,QString("_BACKGROUND_Y_PG_MAIN"),QString(""),TRUE,800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_ACR,GWindow::setPointPath(LEFT_ARROW_FRAME),(int)_PG_BIOPSY_STANDARD_PAGE,(int)_PG_BIOPSY_STANDARD_PAGE);
     paginaBiopsyExtended = new BiopsyExtendedPage(true,QString("_BACKGROUND_Y_PG_MAIN"),QString(""),TRUE,800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_ACR,GWindow::setPointPath(LEFT_ARROW_FRAME),(int)_PG_BIOPSY_EXTENDED_PAGE,(int)_PG_BIOPSY_EXTENDED_PAGE);
+
 
     paginaOpenStudyDigital = new OpenStudyPage(false,QString(""),QString(""),TRUE,800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_OPEN_STUDY_DIGITAL,GWindow::setPointPath(LEFT_ARROW_FRAME),(int)_PG_OPEN_STUDY_DIGITAL,(int)_PG_OPEN_STUDY_DIGITAL);
     paginaProjections = new ProjectionPage(false,QString(""),QString(""),TRUE,800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_PROJECTIONS,GWindow::setPointPath(LEFT_ARROW_FRAME),(int)_PG_OPEN_STUDY_DIGITAL,(int)_PG_PROJECTIONS);

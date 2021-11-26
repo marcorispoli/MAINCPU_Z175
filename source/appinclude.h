@@ -19,6 +19,7 @@
 #include "BiopsyExtended/biopsyExtendedPage.h"
 #include "BiopsyStandard/biopsyStandardDevice.h"
 #include "BiopsyStandard/biopsyStandardPage.h"
+#include "biopsymodule.h"
 #include "loader.h"
 #include "print.h"
 

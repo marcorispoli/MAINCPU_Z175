@@ -278,6 +278,7 @@ public:
     systemCfg_Str   sys;            // System config
     userCnf_Str     userCnf;        // Dati uso interfaccia
 
+
     // Funzioni per gestire i file di configurazione
     static QList<QString> getNextArrayFields(QFile* fp); // Restituisce una lista di Items tra <> e separati da virgole
     static QString removeSpaces(QString frame);          // Restituisce una stringa privata di spazi prima e dopo

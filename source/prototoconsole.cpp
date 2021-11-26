@@ -449,9 +449,9 @@ void protoToConsole::setConfigChanged(_configCode config){
     case protoToConsole::ACCESSORIO:
 
         cmd.addParam(QString("POTTER")); // Parola chiave
-        if(ApplicationDatabase.getDataU(_DB_ACCESSORIO) == BIOPSY_DEVICE){
-            if(pConfig->sys.biopsyType == BYM_STANDARD_DEVICE) cmd.addParam(QString("BP %1").arg(pBiopsyStandard->accessorio));
-            else cmd.addParam(QString("BPLAT 0"));
+        if(pBiopsy->connected){
+            if(pBiopsy->model == BYM_STANDARD_DEVICE) cmd.addParam(QString("BP %1").arg(pBiopsyStandard->accessorio));
+            else cmd.addParam(QString("LAT 0"));
         }else if(pPotter->getPotId()==POTTER_2D)  cmd.addParam(QString("2D 0"));
         else if(pPotter->getPotId()==POTTER_TOMO)  cmd.addParam(QString("3D 0"));
         else if(pPotter->getPotId()==POTTER_MAGNIFIER)  cmd.addParam(QString("MG %1").arg(pCompressore->config.fattoreIngranditore[pPotter->getPotFactor()]));
@@ -476,19 +476,21 @@ void protoToConsole::setBiopsyExtendedData(){
     QString stringa;
 
     // Stato della connessione
-    if(pBiopsyExtended->connected) stringa = "CONNECTED ";
+    if(pBiopsy->connected) stringa = "CONNECTED ";
     else stringa = "DISCONNECTED ";
 
     // Lateralità rilevata
-    if(pBiopsyExtended->curLatX == _BP_EXT_ASSEX_POSITION_LEFT) stringa += "X_L ";
-    else if(pBiopsyExtended->curLatX == _BP_EXT_ASSEX_POSITION_RIGHT) stringa += "X_R ";
-    else if(pBiopsyExtended->curLatX == _BP_EXT_ASSEX_POSITION_CENTER) stringa += "X_C ";
+    unsigned char latX = pBiopsyExtended->getLatX();
+    if( latX == _BP_EXT_ASSEX_POSITION_LEFT) stringa += "X_L ";
+    else if(latX == _BP_EXT_ASSEX_POSITION_RIGHT) stringa += "X_R ";
+    else if(latX == _BP_EXT_ASSEX_POSITION_CENTER) stringa += "X_C ";
     else stringa += "X_N ";
 
     // Adapter
-    if(pBiopsyExtended->adapterId == _BP_EXT_ADAPTER_A) stringa += "AD_A ";
-    else if(pBiopsyExtended->adapterId == _BP_EXT_ADAPTER_B) stringa += "AD_B ";
-    else if(pBiopsyExtended->adapterId == _BP_EXT_ADAPTER_C) stringa += "AD_C ";
+    unsigned char adapterId = pBiopsyExtended->getAdapterId();
+    if(adapterId == _BP_EXT_ADAPTER_A) stringa += "AD_A ";
+    else if(adapterId == _BP_EXT_ADAPTER_B) stringa += "AD_B ";
+    else if(adapterId == _BP_EXT_ADAPTER_C) stringa += "AD_C ";
     else stringa += "AD_ND ";
 
     // Coordinate
@@ -498,6 +500,14 @@ void protoToConsole::setBiopsyExtendedData(){
     cmd.addParam(stringa);
     sendNotificheTcp(cmd.cmdToQByteArray(NOTIFY_SET_BIOPSY_EXTENDED_DATA));
     return;
+}
+
+void protoToConsole::setBiopsyStandardPosition(int curX, int curY, int curZ){
+    protoConsole cmd(1,UNICODE_FORMAT);
+    cmd.addParam(QString("%1 %2 %3").arg(curX).arg(curY).arg(curZ));
+    sendNotificheTcp(cmd.cmdToQByteArray(NOTIFY_SET_BIOPSY_STANDARD_POSITION));
+
+   return;
 }
 
 void protoToConsole::setSpecimen(bool stat){

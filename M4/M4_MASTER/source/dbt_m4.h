@@ -78,9 +78,13 @@ _____________________________________________________________________________*/
 #include "pcb215.h"     // Gestore Carrello compressore
 #include "pcb190.h"     // Gestore generatore
 #include "pcb244.h"     // Gestore potter
-#include "BIOPSY/biopsy.h"     // Gestore biopsia
-#include "BIOPSY/biopsy_driver.h"     // Gestore biopsia
-#include "BIOPSY/biopsy_simulator.h"     // Gestore biopsia
+
+#include "BIOPSY/biopsy_startup.h"
+#include "BIOPSY/BIOPSY_EXTENDED/biopsyExtended.h"
+#include "BIOPSY/BIOPSY_EXTENDED/biopsyExtended_driver.h"
+#include "BIOPSY/BIOPSY_EXTENDED/biopsy_simulator.h"
+#include "BIOPSY/BIOPSY_STANDARD/biopsyStandard.h"
+
 #include "pcb249U1.h"   // Gestore filtri, lame di collimazione
 #include "pcb249U2.h"   // Gestore filtri, back/front, mirror,light
 #include "actuators.h"  // Gestore movimentazioni
@@ -201,7 +205,9 @@ typedef struct
     compressoreCfg_Str  comprCfg;       // Parametri compressore
     potterCfg_Str       potterCfg;      // Configurazione Potter
     colliConf_Str       colliCfg;       // Configurazione collimatore
-    biopsyStat_Str      biopsyCfg;      // Stato + Configurazione biopsia
+    biopsyStat_Str      biopsyCfg;
+
+
     pcb190Conf_Str      pcb190Cfg;      // Configurazione PCB190
 
     bool deviceStarted;  // Definisce lo stato di Startup dei drivers

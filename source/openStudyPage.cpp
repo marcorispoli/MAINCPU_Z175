@@ -711,8 +711,8 @@ void OpenStudyPage::valueChanged(int index,int opt)
     case _DB_ACCESSORIO:
         if(!isMaster) return;
 
-        if(ApplicationDatabase.getDataU(index)==BIOPSY_DEVICE){
-            if(pConfig->sys.biopsyType == BYM_STANDARD_DEVICE) GWindowRoot.setNewPage(_PG_BIOPSY_STANDARD_PAGE,GWindowRoot.curPage,0);
+        if(pBiopsy->connected){
+            if(pBiopsy->model == BYM_STANDARD_DEVICE) GWindowRoot.setNewPage(_PG_BIOPSY_STANDARD_PAGE,GWindowRoot.curPage,0);
             else GWindowRoot.setNewPage(_PG_BIOPSY_EXTENDED_PAGE,GWindowRoot.curPage,0);
         }
 

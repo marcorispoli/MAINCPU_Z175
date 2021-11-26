@@ -33,11 +33,7 @@ public slots:
     void mccStatNotify(unsigned char,unsigned char,QByteArray); // Notifica dal driver di gestione sul blocco STAT
 
 public:
-    bool connected;
-    biopsyConfStandard_Str config;          // Dati di configurazione
-    bool openCfg(void);             // Funzione per l'apertura del file di configurazione
-    bool storeConfig(void);         // Salva la configurazione
-    bool updateConfig(void);        // Aggioirna M4 con i valori correnti
+
 
     unsigned char Lago;            // (mm) Lunghezza effettiva Ago
     unsigned char Zlimit;          // (mm) Posizione limite Z
@@ -63,12 +59,8 @@ public:
     unsigned char accessorio; // Accessorio riconosciuto
     unsigned char accessorioSelezionato; // Accessorio impostato da Console
 
-    unsigned char id_console;   // ID comando da console
 
-    // Dati perifierica collegata
-    unsigned char checksum_h;
-    unsigned char checksum_l;
-    unsigned char revisione;
+
 
 
 };

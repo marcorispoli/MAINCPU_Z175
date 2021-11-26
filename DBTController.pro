@@ -76,7 +76,8 @@ HEADERS += \
     source/BiopsyExtended/biopsyExtendedPage.h \
     source/BiopsyExtended/biopsyExtendedDevice.h \
     source/BiopsyStandard/biopsyStandardPage.h \
-    source/BiopsyStandard/biopsyStandardDevice.h
+    source/BiopsyStandard/biopsyStandardDevice.h \
+    source/biopsymodule.h
 
 SOURCES += \
     source/main.cpp \
@@ -130,7 +131,8 @@ SOURCES += \
     source/BiopsyExtended/biopsyExtendedPage.cpp \
     source/BiopsyExtended/biopsyExtendedDevice.cpp \
     source/BiopsyStandard/biopsyStandardPage.cpp \
-    source/BiopsyStandard/biopsyStandardDevice.cpp
+    source/BiopsyStandard/biopsyStandardDevice.cpp \
+    source/biopsymodule.cpp
 
 
 FORMS += \

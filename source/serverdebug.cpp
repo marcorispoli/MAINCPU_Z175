@@ -517,7 +517,7 @@ void serverDebug::serviceRxHandler(QByteArray data)
     }else if(data.contains("biopsy:"))
     {
         cmdGroup="biopsy: ";
-        if(pConfig->sys.biopsyType== BYM_STANDARD_DEVICE)  handleStandardBiopsy(data);
+        if(pBiopsy->model== BYM_STANDARD_DEVICE)  handleStandardBiopsy(data);
         else handleExtendedBiopsy(data);
     }else if(data.contains("loader:"))
     {
@@ -4124,8 +4124,12 @@ void serverDebug::handleExtendedBiopsy(QByteArray data)
     if(data.contains("?"))
     {
         serviceTcp->txData(QByteArray("--------------- ACTIVATION ----------------------------\r\n"));
-        serviceTcp->txData(QByteArray("moveXYZ x,y,z         ? X,Y,Z in dmm \r\n"));
-        serviceTcp->txData(QByteArray("moveHome              ? move to 0,0,0 \r\n"));
+        serviceTcp->txData(QByteArray("moveXYZ   x,y,z       ? X,Y,Z in dmm \r\n"));
+        serviceTcp->txData(QByteArray("moveHome  [L,C,R]     ? Imposta lateralità \r\n"));
+        serviceTcp->txData(QByteArray("getAdapter            ? legge adapter rilevato \r\n"));
+        serviceTcp->txData(QByteArray("getRevision           ? legge la revisione e il checksum\r\n"));
+        serviceTcp->txData(QByteArray("calibXbase  val       ? calibrazione base X\r\n"));
+        serviceTcp->txData(QByteArray("testBuzzer            ? attiva buzzer BYM X\r\n"));
 
 
 #ifdef __BIOPSY_SIMULATOR
@@ -4145,7 +4149,7 @@ void serverDebug::handleExtendedBiopsy(QByteArray data)
 
 
 #ifndef __BIOPSY_SIMULATOR
-        if(!pBiopsyExtended->connected){
+        if(!pBiopsy->connected){
             serviceTcp->txData(QByteArray("BIOPSY DEVICE DISCONNECTED!!\n\r"));
             return;
         }
@@ -4183,10 +4187,25 @@ void serverDebug::handleExtendedBiopsy(QByteArray data)
             if(retval==0)  serviceTcp->txData(QByteArray("BYM already in Home\r\n"));
             else serviceTcp->txData(QByteArray("DONE \r\n"));
 
+        }else if(data.contains("calibXbase")){
+            parametri = getNextFieldsAfterTag(data, QString("calibXbase"));
+            if(parametri.size()!=1){
+                serviceTcp->txData(QByteArray("PARAM ERROR: calibXbase <val>\r\n"));
+                return;
+            }
+            pBiopsyExtended->calibrateXbase(parametri[0].toUShort());
+            serviceTcp->txData(QByteArray("DONE \r\n"));
+
         }else if(data.contains("getAdapter")){
-            serviceTcp->txData(QString("current adapter: %1\n\r").arg(pBiopsyExtended->adapterId).toAscii().data());
+            serviceTcp->txData(QString("current adapter: %1\n\r").arg(pBiopsyExtended->getAdapterId()).toAscii().data());
         }else if(data.contains("getRevision")){
-            serviceTcp->txData(QString("current adapter: %1\n\r").arg(pBiopsyExtended->revisione).toAscii().data());
+            serviceTcp->txData(QString("current revision: %1\n\r").arg(pBiopsy->revisione).toAscii().data());
+            QString hex; hex.setNum((unsigned short) pBiopsy->checksum_h * 256 + (unsigned short)pBiopsy->checksum_l,16);
+            QString stringa = "current checksum: oX" + hex + "\n\r";
+            serviceTcp->txData(stringa.toAscii().data());
+        }else if(data.contains("testBuzzer")){
+            pBiopsyExtended->setBuzzer();
+            serviceTcp->txData(QByteArray("DONE \r\n"));
         }else handleBiopsySimulator(data);
     }
 }

@@ -323,7 +323,7 @@ bool Collimatore::updateColli(void)
 
 
     // In biopsia, con la piastrina per frustoli si utilizza una collimazione dedicata che dipende dall'angolo del braccio
-    if((ApplicationDatabase.getDataU(_DB_ACCESSORIO) == BIOPSY_DEVICE) && (accessorio==COLLI_ACCESSORIO_FRUSTOLI)){
+    if((pBiopsy->connected) && (accessorio==COLLI_ACCESSORIO_FRUSTOLI)){
 
         ApplicationDatabase.setData(_DB_COLLIMAZIONE,"SPECIMEN",0);
 
@@ -376,7 +376,7 @@ bool Collimatore::updateColli(void)
     if(pConsole->isOperatingMode())
     {
         // Se non c'è potter e non c'e la Biopsia non viene effettuata nessuna collimazione
-        if((!pPotter->isValid())&&(ApplicationDatabase.getDataU(_DB_ACCESSORIO) != BIOPSY_DEVICE)){
+        if((!pPotter->isValid())&&(!pBiopsy->connected)){
 
             ApplicationDatabase.setData(_DB_COLLIMAZIONE,QString(QApplication::translate("COLLIMATORE","NON DEFINITA", 0, QApplication::UnicodeUTF8)),0);
             return FALSE;

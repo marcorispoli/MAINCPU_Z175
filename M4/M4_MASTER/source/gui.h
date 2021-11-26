@@ -69,7 +69,7 @@ void mcc_raggi_alta_energia(void);
 void mcc_calib_zero(void);
 void mcc_parking_mode(void);
 void mcc_unparking_mode(void);
-
+void mccBiopsyStdXYZ(void);
 
 
 #else
