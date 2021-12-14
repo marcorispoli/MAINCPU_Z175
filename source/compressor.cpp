@@ -520,12 +520,15 @@ void Compressor::pcb215Notify(unsigned char id, unsigned char notifyCode, QByteA
             // Allarme compressione a studio chiuso: attivato solo la prima volta
             // L'allarme si riattiva alla prima volta che si richiude lo studio
             // Tuttavia, per evitare strane condizioni, durante lo startup non viene considerata..
+            /*
             if((pConfig->startupCompleted==false)&&(isCompressed())) enable_compressione_closed_study=true;
 
             if((isCompressed())&&(!enable_compressione_closed_study)&&(ApplicationDatabase.getDataU(_DB_STUDY_STAT)==_CLOSED_STUDY_STATUS)){
                 enable_compressione_closed_study=true;
                 PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_PAD,_ALR_COMPR_CLOSED_STUDY,TRUE);
             }else if(ApplicationDatabase.getDataU(_DB_STUDY_STAT)!=_CLOSED_STUDY_STATUS) enable_compressione_closed_study=false;
+            */
+
         break;
 
         case PCB215_NOTIFY_ERRORS:

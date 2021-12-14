@@ -20,7 +20,7 @@ PageLanguages::PageLanguages(QApplication* app, LANGUAGES deflang, bool local, Q
         setBackground(openStudyBackground);
 
     // Definizione del testo per la data
-    font.setFamily("DejaVu Serif");
+    font.setFamily("DejaVuSerif");
     font.setBold(true);
     font.setWeight(75);
     font.setItalic(false);

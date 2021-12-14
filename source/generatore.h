@@ -25,9 +25,7 @@ signals:
 
 public slots:
     void updateFuocoNotify(unsigned char id, unsigned char mcccode, QByteArray buffer);
-    void pcb190Notify(unsigned char id, unsigned char cmd, QByteArray data);
-    void manualXrayReqSlot(bool status); // Usato per l'attivazione manuale dei raggi
-    void manualXrayReqAutoSlot(bool status); // Usato per l'attivazione manuale dei raggi
+    void pcb190Notify(unsigned char id, unsigned char cmd, QByteArray data);    
     void stopStarterSlot(void);
 
 public:
@@ -84,8 +82,6 @@ public:
     bool setkV(float kV);   // Imposta i kV
     bool getIdacForKvCalibration(int kV, QString anodo, int* Idac, int* Inom);
 
-    void manualShot(QString filename);
-    bool manualShot(void);
 
     void fuocoOff(void); // Spegne il filamento
 

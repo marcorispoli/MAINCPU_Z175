@@ -758,6 +758,7 @@ void serverDebug::handleDebug(QByteArray data)
         serviceTcp->txData(QByteArray("run              Attiva ciclo automatico dei drivers\r\n"));
         serviceTcp->txData(QByteArray("setArmAng        Imposta l'angolo corrente\r\n"));
         serviceTcp->txData(QByteArray("generateAlarmList  \r\n"));
+        serviceTcp->txData(QByteArray("setBurning val   Attiva il pulsante raggi per un tot ms  \r\n"));
         serviceTcp->txData(QByteArray("----------------------------------------------------------------------------------\r\n"));
     } else if(data.contains("generateAlarmList"))
     {
@@ -803,6 +804,16 @@ void serverDebug::handleDebug(QByteArray data)
         if(parametri.size()!=1) return;
         ApplicationDatabase.setData(_DB_DANGOLO, (int) parametri[0].toInt());
         serviceTcp->txData(QByteArray("OK\n\r"));
+
+    }else if(data.contains("setBurning")){
+        QList<QByteArray> parametri;
+        parametri = getNextFieldsAfterTag(data, QString("setBurning"));
+        if(parametri.size()!=1) {
+            serviceTcp->txData(QByteArray("ERRORE: inserire il tempo in ms\n\r"));
+            return;
+        }
+        io->setSpareOutputPulse(1, parametri[0].toInt());
+        serviceTcp->txData(QByteArray("DONE \n\r"));
 
     }else if(data.contains("freeze")) handleDriverFreeze(TRUE);
     else if(data.contains("run")) handleDriverFreeze(FALSE);
@@ -1675,8 +1686,6 @@ void serverDebug::handleSetCalibMirror(QByteArray data)
     return;
 }
 
-// Handler connesso ai messaggi di log (qDebug)
-
 // Handler messaggi spediti verso console: deve essere trasformato in UNICODE
 void serverDebug::serviceTxConsoleHandler(QByteArray data)
 {
@@ -1697,16 +1706,8 @@ void serverDebug::serviceRxConsoleHandler(QByteArray data)
     return;
 }
 
-// Messaggi provenienti dalle qDebug di sistema: UNICODE
-void serverDebug::serviceLogHandler(QByteArray data)
-{
-    QTextCodec *codec = QTextCodec::codecForName(UNICODE_TYPE);
-    QString stringa = codec->toUnicode(data);
-    stringa = "LOG:" + stringa + "\r\n";
 
-    serviceTcp->txData(stringa.toAscii());
-    return;
-}
+
 
 // Risposte asincrone verso Console: UNICODE
 void serverDebug::serviceTxAsyncHandler(QByteArray data)
@@ -1825,6 +1826,7 @@ void serverDebug::handleConsole(QByteArray data)
         serviceTcp->txData(QByteArray("getFormat <frame>       Restituisce info sul frame\r\n"));
         serviceTcp->txData(QByteArray("logOn                   Attiva Sniffer TCP AWS\r\n"));
         serviceTcp->txData(QByteArray("logOff                  Disattiva Sniffer TCP AWS\r\n"));
+        serviceTcp->txData(QByteArray("logString <string>      Logga una stringa\r\n"));
         serviceTcp->txData(QByteArray("pcPowerOff              Richiede spegnimento PC\r\n"));
         serviceTcp->txData(QByteArray("---------------------------------------------------------\r\n"));
     } else if(data.contains("simulateRx "))
@@ -1849,9 +1851,13 @@ void serverDebug::handleConsole(QByteArray data)
 
         disconnect(pConsole,SIGNAL(consoleTxHandler(QByteArray)),this,SLOT(serviceTxConsoleHandler(QByteArray)));
         disconnect(pConsole,SIGNAL(consoleRxSgn(QByteArray)),this,SLOT(serviceRxConsoleHandler(QByteArray)));
-        disconnect(pToConsole,SIGNAL(logTxHandler(QByteArray)),this,SLOT(serviceLogHandler(QByteArray)));
         disconnect(pToConsole,SIGNAL(notificheTxHandler(QByteArray)),this,SLOT(serviceTxAsyncHandler(QByteArray)));        
         disconnect(paginaAllarmi,SIGNAL(newAlarmSgn(int,QString)),this,SLOT(serviceErrorTxHandler(int,QString)));
+
+        disconnect(pInfo,SIGNAL(printTxHandler(QString)),this,SLOT(servicePrintHandler(QString)));
+        disconnect(pInfo,SIGNAL(debugTxHandler(QString)),this,SLOT(serviceDebugHandler(QString)));
+        disconnect(pInfo,SIGNAL(logTxHandler(QString)),this,SLOT(serviceLogHandler(QString)));
+        disconnect(pInfo,SIGNAL(qtTxHandler(QString)),this,SLOT(serviceQtHandler(QString)));
 
     }else if(data.contains("logOn"))
     {
@@ -1861,15 +1867,31 @@ void serverDebug::handleConsole(QByteArray data)
         connect(pConsole,SIGNAL(consoleTxHandler(QByteArray)),this,SLOT(serviceTxConsoleHandler(QByteArray)),Qt::UniqueConnection);
         connect(pConsole,SIGNAL(consoleRxSgn(QByteArray)),this,SLOT(serviceRxConsoleHandler(QByteArray)),Qt::UniqueConnection);
 
-        // Connessione con il canale LOG verso AWS
-        connect(pToConsole,SIGNAL(logTxHandler(QByteArray)),this,SLOT(serviceLogHandler(QByteArray)),Qt::UniqueConnection);
-
         // Connessione con il canale ASYNC verso AWS
         connect(pToConsole,SIGNAL(notificheTxHandler(QByteArray)),this,SLOT(serviceTxAsyncHandler(QByteArray)),Qt::UniqueConnection);
 
         // Connessione con il canale di comunicazioni errori verso AWS
         connect(paginaAllarmi,SIGNAL(newAlarmSgn(int,QString)),this,SLOT(serviceErrorTxHandler(int,QString)),Qt::UniqueConnection);
 
+        connect(pInfo,SIGNAL(printTxHandler(QString)),this,SLOT(servicePrintHandler(QString)),Qt::UniqueConnection);
+        connect(pInfo,SIGNAL(debugTxHandler(QString)),this,SLOT(serviceDebugHandler(QString)),Qt::UniqueConnection);
+        connect(pInfo,SIGNAL(logTxHandler(QString)),this,SLOT(serviceLogHandler(QString)),Qt::UniqueConnection);
+        connect(pInfo,SIGNAL(qtTxHandler(QString)),this,SLOT(serviceQtHandler(QString)),Qt::UniqueConnection);
+
+
+    }else if(data.contains("logString"))
+    {
+        QList<QByteArray> parametri = getNextFieldsAfterTag(data, QString("logString"));
+        if(parametri.size() == 0) {
+            serviceTcp->txData(QString("Formato: logString stringa da inviare..\r\n").toAscii());
+            return;
+        }
+
+        QString stringa="";
+
+        for(int i=0;i<parametri.size();i++) stringa+=parametri[i]+" ";
+        LOG(stringa);
+        return;
 
     }else if(data.contains("setMag")){
         ApplicationDatabase.setData(_DB_ACCESSORIO,(unsigned char) POTTER_MAGNIFIER,0);
@@ -2305,8 +2327,7 @@ void serverDebug::handleGeneratore(QByteArray data)
         serviceTcp->txData(QByteArray("getCalibKv                       Rilettura coeff. calibrazione read-kV  \r\n"));
 
         serviceTcp->txData(QByteArray("getKvDac [float KV]              Restituisce il DAC assegnato\r\n"));
-        serviceTcp->txData(QByteArray("manXray [FILE/AUTO/OFF]          Modo XRAY manuale, da file \r\n"));
-        serviceTcp->txData(QByteArray("setManReg Fuoco,Vn,Vdac,In,Idac,dacInc,mAs,Hs,SWA,SWB,TMO   \r\n"));
+
 
         serviceTcp->txData(QByteArray("setFuoco [W/Mo/OFF][Small/Large] Imposta il fuoco corrente  \r\n"));
         serviceTcp->txData(QByteArray("setStarter  [HS/LS/OFF]          Attivazione Starter  \r\n"));
@@ -2343,68 +2364,6 @@ void serverDebug::handleGeneratore(QByteArray data)
             pGeneratore->updateFuoco();
             serviceTcp->txData(QByteArray("Command executed!\r\n"));
         }
-    }else if(data.contains("manXray"))
-    {
-        if(data.contains("FILE"))
-        {
-            // Monta il file system remoto
-            QString command = QString("/monta.sh");
-            system(command.toStdString().c_str());
-
-            serviceTcp->txData(QString("MANUAL XRAY: FILE ACTIVATION\r\n").toAscii());
-            connect(io,SIGNAL(xrayReqSig(bool)),pGeneratore,SLOT(manualXrayReqSlot(bool)),Qt::UniqueConnection);
-            connect(pConsole,SIGNAL(raggiDataSgn(QByteArray)),this,SLOT(serviceNotifyFineRaggi(QByteArray)),Qt::UniqueConnection);
-            pGeneratore->manAutoIdacInc = false;
-            pGeneratore->manDIdac = 0;
-            pGeneratore->manualMode = true;
-        }else if(data.contains("AUTO"))
-        {
-            QObject::disconnect(io,SIGNAL(xrayReqSig(bool)),pGeneratore,SLOT(manualXrayReqSlot(bool)));
-            serviceTcp->txData(QString("MANUAL XRAY: AUTO ACTIVATION\r\n").toAscii());
-            connect(io,SIGNAL(xrayReqSig(bool)),pGeneratore,SLOT(manualXrayReqAutoSlot(bool)),Qt::UniqueConnection);
-            connect(pConsole,SIGNAL(raggiDataSgn(QByteArray)),this,SLOT(serviceNotifyFineRaggi(QByteArray)),Qt::UniqueConnection);
-
-            pGeneratore->manualMode = true;
-
-            // Inizializzazione dati Auto
-            pGeneratore->manVnom = 0;
-            pGeneratore->manVdac = 0;
-            pGeneratore->manInom = 0;
-            pGeneratore->manIdac = 0;
-            pGeneratore->manAutoIdacInc = true;
-            pGeneratore->manDIdac = 0;
-        }else
-        {
-            pGeneratore->manualMode = false;
-            serviceTcp->txData(QString("MANUAL XRAY OFF \r\n").toAscii());
-            QObject::disconnect(io,SIGNAL(xrayReqSig(bool)),pGeneratore,SLOT(manualXrayReqSlot(bool)));
-            QObject::disconnect(io,SIGNAL(xrayReqSig(bool)),pGeneratore,SLOT(manualXrayReqAutoSlot(bool)));
-            connect(pConsole,SIGNAL(raggiDataSgn(QByteArray)),this,SLOT(serviceNotifyFineRaggi(QByteArray)),Qt::UniqueConnection);
-        }
-    }else if(data.contains("setManReg")){
-        //     Fuoco,Vn,Vdac,In,Idac,dacInc,mAs,Hs,SWA,SWB,GRID,TMO
-        QList<QByteArray> parametri = getNextFieldsAfterTag(data, QString("setManReg"));
-        if(parametri.size() != 12) {
-            serviceTcp->txData(QString("Invalid parameters\n\r").toAscii());
-            return;
-        }
-
-        pGeneratore->manFuoco = parametri[0];
-        pGeneratore->manVnom = parametri[1].toInt();
-        pGeneratore->manVdac = parametri[2].toInt();
-        pGeneratore->manInom = parametri[3].toInt();
-        pGeneratore->manIdac = parametri[4].toInt();
-        pGeneratore->manDIdac = parametri[5].toInt();
-        pGeneratore->manMas = parametri[6].toInt();
-        pGeneratore->manHs = parametri[7].toInt();
-        pGeneratore->manSWA = parametri[8].toInt();
-        pGeneratore->manSWB = parametri[9].toInt();
-        pGeneratore->manGrid = parametri[10].toInt();
-        pGeneratore->manTMO = parametri[11].toInt();
-
-        serviceTcp->txData(QString("Fuoco:%1 Vnom:%2 Vdac:%3 Inom:%4 Idac:%5 dIdac:%6 mAs:%7 HS:%8 SWA:%9 SWB:%10 GRID:%11 TMO:%12 \r\n").arg( pGeneratore->manFuoco).arg( pGeneratore->manVnom).arg( pGeneratore->manVdac).arg( pGeneratore->manInom).arg( pGeneratore->manIdac).arg( pGeneratore->manDIdac).arg( pGeneratore->manMas).arg( pGeneratore->manHs).arg( pGeneratore->manSWA).arg( pGeneratore->manSWB).arg( pGeneratore->manGrid).arg( pGeneratore->manTMO).toAscii());
-
-
     }else if(data.contains("setStarter"))
     {
         if(data.contains(" HS")){
@@ -4651,8 +4610,34 @@ void serverDebug::handleGetTrolleyNotify(unsigned char id,unsigned char cmd, QBy
     return;
 }
 
-void serverDebug::debugPrint(QString data){
-    if(serviceTcp->connection_status==false) return;
-    data.prepend("DEBUG:>");
-    serviceTcp->txData(data.append("\n\r").toAscii());
+//______________________________________________________________________________________________________________________________________________________________
+// Messagi provenienti da infoClass
+void serverDebug::serviceLogHandler(QString data)
+{
+    QString stringa = "LOG: "+ data + "\r\n";
+    serviceTcp->txData(stringa.toAscii());
+    return;
 }
+
+void serverDebug::serviceDebugHandler(QString data)
+{
+    QString stringa = "DBG: "+ data + "\r\n";
+    serviceTcp->txData(stringa.toAscii());
+    return;
+}
+
+void serverDebug::servicePrintHandler(QString data)
+{
+    QString stringa = "PRINT: "+ data + "\r\n";
+    serviceTcp->txData(stringa.toAscii());
+    return;
+}
+
+
+void serverDebug::serviceQtHandler(QString data)
+{
+    QString stringa = "QT: "+ data + "\r\n";
+    serviceTcp->txData(stringa.toAscii());
+    return;
+}
+

@@ -8,7 +8,7 @@ void console::activateConnections(void){
     consoleSocketTcp = new TcpIpServer();
     if(consoleSocketTcp->Start(_CONSOLE_IN_PORT)<0)
     {
-        qDebug() << "IMPOSSIBILE APIRE LA PORTA DI COMUNICAZIONE CON LA CONSOLE!!";
+        PRINT("IMPOSSIBILE APIRE LA PORTA DI COMUNICAZIONE CON LA CONSOLE!!");
         return;
     }
 
@@ -429,8 +429,7 @@ void console::consoleRxHandler(QByteArray rxbuffer)
         // Invio comando
         unsigned char data=0;
         if(pConsole->pGuiMcc->sendFrame(MCC_GET_TROLLEY,protocollo.id,&data, 1)==FALSE)
-        {
-            qDebug() << "CONSOLE <GetTrolley>: ERRORE COMANDO MCC";
+        {            
             PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_SOFT,ERROR_MCC,TRUE); // Self resetting
         }
 
@@ -961,7 +960,7 @@ void console::handleSetMas(QString qmAs)
     double mAs;
 
     mAs = qmAs.toDouble();
-    if(pGeneratore->setmAs(mAs)==FALSE) qDebug() << "CONSOLE <SetmAs>: INVALID mAs:" << qmAs;
+    if(pGeneratore->setmAs(mAs)==FALSE) LOG(QString("CONSOLE <SetmAs>: INVALID mAs:%1").arg(qmAs));
 
 }
 
@@ -987,7 +986,7 @@ void console::handleSetAECdata(QString qkV, QString qmAs)
 
     mAs = qmAs.toDouble();
 
-    if(pGeneratore->setmAs(mAs)==FALSE) qDebug() << "CONSOLE <SetAECdata>: INVALID mAs:" << qmAs;
+    if(pGeneratore->setmAs(mAs)==FALSE) LOG(QString("CONSOLE <SetAECdata>: INVALID mAs:%1").arg(qmAs));
 
     // Effettua la validazione dei dati del generatore
     pGeneratore->aecMode = TRUE;
@@ -995,7 +994,7 @@ void console::handleSetAECdata(QString qkV, QString qmAs)
     if(code)
     {
         // Errore di validazione
-        qDebug() << "CONSOLE <SetAECdata>: ERRORE DI VALIDAZIONE:" << code;
+        DEBUG(QString("CONSOLE <SetAECdata>: ERRORE DI VALIDAZIONE:")+code);
         ret.clear();
         ret.append(1);
         ret.append(code);
@@ -1031,7 +1030,7 @@ void console::handleSetAECdata(QString qkV, QString qmAs)
 
     if(pGuiMcc->sendFrame(MCC_CMD_EXP_AEC,1,data,14)==FALSE)
     {
-        qDebug() << "CONSOLE <SetAECdata>: ERRORE COMANDO MCC";
+        DEBUG("CONSOLE <SetAECdata>: ERRORE COMANDO MCC");
         ret.clear();
         ret.append(1);
         ret.append(ERROR_MCC_COMMAND);
@@ -1058,7 +1057,7 @@ void console::handleSetAEdata(QString qkV, QString qmAs)
 
     mAs = qmAs.toDouble();
 
-    if(pGeneratore->setmAs(mAs)==FALSE) qDebug() << "CONSOLE <SetAEdata>: INVALID mAs:" << qmAs;
+    if(pGeneratore->setmAs(mAs)==FALSE) LOG(QString("CONSOLE <SetAEdata>: INVALID mAs:%1").arg(qmAs));
 
     // Effettua la validazione dei dati del generatore
     pGeneratore->aecMode = FALSE;
@@ -1066,7 +1065,7 @@ void console::handleSetAEdata(QString qkV, QString qmAs)
     if(code)
     {
         // Errore di validazione
-        qDebug() << "CONSOLE <SetAEdata>: ERRORE DI VALIDAZIONE:" << code;
+        DEBUG(QString("CONSOLE <SetAEdata>: ERRORE DI VALIDAZIONE:")+code);
         ret.clear();
         ret.append(1);
         ret.append(code);
@@ -1080,7 +1079,7 @@ void console::handleSetAEdata(QString qkV, QString qmAs)
     stringa.append(QString("kV=%1 VDAC=%2 VMIN=%3 VMAX=%4 ").arg(pGeneratore->selectedKv).arg(pGeneratore->selectedVdac).arg(pGeneratore->minV).arg(pGeneratore->maxV));
     stringa.append(QString("In=%1 IDAC=%2 IMIN=%3 IMAX=%4 ").arg(pGeneratore->selectedIn).arg(pGeneratore->selectedIdac).arg(pGeneratore->minI).arg(pGeneratore->maxI));
     stringa.append(QString("TMO=%1 HS=%2").arg(pGeneratore->timeoutExp).arg(pGeneratore->starterHS));
-    qDebug() << stringa;
+    LOG(stringa);
 
     data[0] =  (unsigned char) (pGeneratore->selectedVdac&0x00FF);
     data[1] =  (unsigned char) (pGeneratore->selectedVdac>>8);
@@ -1103,7 +1102,7 @@ void console::handleSetAEdata(QString qkV, QString qmAs)
 
     if(pGuiMcc->sendFrame(MCC_CMD_RAGGI_AE_H,1,data,14)==FALSE)
     {
-        qDebug() << "CONSOLE <SetAEdata>: ERRORE COMANDO MCC";
+        DEBUG("CONSOLE <SetAEdata>: ERRORE COMANDO MCC");
         ret.clear();
         ret.append(1);
         ret.append(ERROR_MCC_COMMAND);
@@ -1129,7 +1128,7 @@ void console::handleSetTomoAecData(QString qkV, QString qnum, QString qmAs)
     if(code)
     {
         // Errore di validazione
-        qDebug() << "CONSOLE <SetTomoAecData>: ERRORE DI VALIDAZIONE:" << code;
+        DEBUG(QString("CONSOLE <SetTomoAecData>: ERRORE DI VALIDAZIONE:") +  code);
         ret.clear();
         ret.append(1);
         ret.append(code);
@@ -1169,7 +1168,7 @@ void console::handleSetTomoAecData(QString qkV, QString qnum, QString qmAs)
 
     if(pGuiMcc->sendFrame(MCC_CMD_EXP_AEC,1,data,14)==FALSE)
     {
-        qDebug() << "CONSOLE <SetTomoAecData>: ERRORE COMANDO MCC";
+        DEBUG("CONSOLE <SetTomoAecData>: ERRORE COMANDO MCC");
         ret.clear();
         ret.append(1);
         ret.append(ERROR_MCC_COMMAND);
@@ -1203,7 +1202,7 @@ void console::handleSetTomoMas(QString qindex, QString qmAs)
     mAs = qmAs.toDouble();
 
     if(index==0) pGeneratore->setMasTomo(index,mAs);
-    else qDebug() << "CONSOLE <SetTomoMas>: INVALID INDEX:" << index;
+    else LOG(QString("CONSOLE <SetTomoMas>: INVALID INDEX:%1").arg(index));
 
 }
 
@@ -1272,7 +1271,7 @@ bool console::handleSetAf(QString param)
     // Impostazione del Filtro
     if(pCollimatore->setFiltro()==FALSE)
     {
-        qDebug() << "CONSOLE: <handleSetAf> FALLITA!";
+        DEBUG("CONSOLE: <handleSetAf> FALLITA!");
         return FALSE;
     }
 
@@ -1284,7 +1283,7 @@ bool console::handleSetFocus(QString materiale, QString dimensione)
 
     if(!pGeneratore->setFuoco(materiale))
     {
-        qDebug() << "CONSOLE: <handleSetFocus> FUOCO NON VALIDO" <<pGeneratore->confF1 << pGeneratore->confF2;
+        DEBUG(QString("CONSOLE: <handleSetFocus> FUOCO NON VALIDO, ") + pGeneratore->confF1 + " " + pGeneratore->confF2);
         return FALSE;
     }
 
@@ -1554,8 +1553,7 @@ bool console::handleSetTube(QString param,unsigned char id)
     else
     {
         int angolo = param.toInt();
-        if((angolo>26)||(angolo<-26)){
-            qDebug() << "CONSOLE <SetTube>: ERRORE ANGOLO(<=26):" << angolo;
+        if((angolo>26)||(angolo<-26)){            
             PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_TRX,TRX_INVALID_ANGOLO,TRUE); // Self resetting
             return FALSE;
         }
@@ -1568,8 +1566,7 @@ bool console::handleSetTube(QString param,unsigned char id)
 
     // Invio comando
     if(pConsole->pGuiMcc->sendFrame(MCC_CMD_TRX,id,data, 4)==FALSE)
-    {
-        qDebug() << "CONSOLE <SetTube>: ERRORE COMANDO MCC";
+    {        
         PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_SOFT,ERROR_MCC,TRUE); // Self resetting
         return FALSE;
     }
@@ -1681,8 +1678,7 @@ void console::handleSetArm(int target,int minimo, int massimo,int id)
 
     // Invio comando
     if(pConsole->pGuiMcc->sendFrame(MCC_CMD_ARM,id,data, 2)==FALSE)
-    {
-        qDebug() << "CONSOLE <SetArm>: ERRORE COMANDO MCC";
+    {        
         PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_SOFT,ERROR_MCC,TRUE); // Self resetting
     }
 
@@ -2136,7 +2132,7 @@ void console::Rx2DSequence(void)
     stringa.append(QString("kV=%1 VDAC=%2 VMIN=%3 VMAX=%4 ").arg(pGeneratore->selectedKv).arg(pGeneratore->selectedVdac).arg(pGeneratore->minV).arg(pGeneratore->maxV));
     stringa.append(QString("In=%1 IDAC=%2 IMIN=%3 IMAX=%4 ").arg(pGeneratore->selectedIn).arg(pGeneratore->selectedIdac).arg(pGeneratore->minI).arg(pGeneratore->maxI));
     stringa.append(QString("TMO=%1 HS=%2").arg(pGeneratore->timeoutExp).arg(pGeneratore->starterHS));
-    qDebug() << stringa;
+    LOG(stringa);
 
     data[0] =  (unsigned char) (pGeneratore->selectedVdac&0x00FF);
     data[1] =  (unsigned char) (pGeneratore->selectedVdac>>8);
@@ -2243,7 +2239,7 @@ void console::RxAESequence(void)
     stringa.append(QString("kV=%1 VDAC=%2 VMIN=%3 VMAX=%4 ").arg(pGeneratore->selectedKv).arg(pGeneratore->selectedVdac).arg(pGeneratore->minV).arg(pGeneratore->maxV));
     stringa.append(QString("In=%1 IDAC=%2 IMIN=%3 IMAX=%4 ").arg(pGeneratore->selectedIn).arg(pGeneratore->selectedIdac).arg(pGeneratore->minI).arg(pGeneratore->maxI));
     stringa.append(QString("TMO=%1 HS=%2").arg(pGeneratore->timeoutExp).arg(pGeneratore->starterHS));
-    qDebug() << stringa;
+    LOG(stringa);
 
     data[0] =  (unsigned char) (pGeneratore->selectedVdac&0x00FF);
     data[1] =  (unsigned char) (pGeneratore->selectedVdac>>8);
@@ -2720,7 +2716,7 @@ void console::Rx3DSequence(void)
     stringa.append(QString("kV=%1 VDAC=%2 VMIN=%3 VMAX=%4 ").arg(pGeneratore->selectedKv).arg(pGeneratore->selectedVdac).arg(pGeneratore->minV).arg(pGeneratore->maxV));
     stringa.append(QString("In=%1 IDAC=%2 IMIN=%3 IMAX=%4 ").arg(pGeneratore->selectedIn).arg(pGeneratore->selectedIdac).arg(pGeneratore->minI).arg(pGeneratore->maxI));
     stringa.append(QString("TMO=%1 HS=%2").arg(pGeneratore->timeoutExp).arg(pGeneratore->starterHS));
-    qDebug() << stringa;
+    LOG(stringa);
 
     data[0] =  (unsigned char) (pGeneratore->selectedVdac&0x00FF);
     data[1] =  (unsigned char) (pGeneratore->selectedVdac>>8);
@@ -2887,7 +2883,7 @@ void console::rxDataLog(QByteArray buffer)
         stringa.append(QString("NO PULSE TIME SAMPLES AVAILABLE  \n\r"));
     }
 
-    qDebug() << stringa;
+    LOG(stringa);
 
 }
 

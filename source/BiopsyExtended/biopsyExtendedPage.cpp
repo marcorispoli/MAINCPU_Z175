@@ -14,7 +14,7 @@ BiopsyExtendedPage::BiopsyExtendedPage(bool local, QString bgl, QString bgs , bo
 
 
     // Definizione del testo per la data
-    font.setFamily("DejaVu Serif");
+    font.setFamily("DejaVuSerif");
     font.setBold(true);
     font.setWeight(75);
     font.setItalic(false);

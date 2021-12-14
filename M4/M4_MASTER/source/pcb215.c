@@ -1135,7 +1135,7 @@ void pcb215VerifyComprData(void)
       if(generalConfiguration.biopsyCfg.biopsyConnected==TRUE)
       {
         // Ricalcolo del limiti sulla base della configurazione ricevuta
-        padLimitPosition = ( generalConfiguration.biopsyCfg.conf.Z_basePosizionatore - generalConfiguration.biopsyCfg.Z/10 ) + (generalConfiguration.biopsyCfg.conf.offsetPad - generalConfiguration.biopsyCfg.conf.margineRisalita);
+        padLimitPosition = ( generalConfiguration.biopsyCfg.Z_basePosizionatore - generalConfiguration.biopsyCfg.Z/10 ) + (generalConfiguration.biopsyCfg.offsetPad - generalConfiguration.biopsyCfg.margineRisalita);
       }
       else if(IS_VALID_PAD)
       {
@@ -1250,7 +1250,9 @@ bool classifyPad(void)
     verifyClassPadInit  = FALSE;
     padDetected=200;
   }
-  
+
+
+
   usval=_DEVREGL(RG215_RAW_PADDLE,CONTEST);
   for(i=0; i<10;i++)
     if(usval<generalConfiguration.comprCfg.calibration.thresholds[i]) break;
@@ -1264,10 +1266,16 @@ bool classifyPad(void)
   // <TBD> Classificazione PAD BIOP_3D
   if(generalConfiguration.biopsyCfg.biopsyConnected==TRUE)
   {
-    if(i==_BIOP_3D_LEVEL)
-      generalConfiguration.comprCfg.padSelezionato = PAD_BIOP_3D;
-    else
-      generalConfiguration.comprCfg.padSelezionato = PAD_ND;
+#ifdef __BYM_PAD_DETECTION
+        i = _BIOP_3D_LEVEL;
+        generalConfiguration.comprCfg.padSelezionato = PAD_BIOP_3D;
+#else
+      if(i==_BIOP_3D_LEVEL)
+        generalConfiguration.comprCfg.padSelezionato = PAD_BIOP_3D;
+      else
+        generalConfiguration.comprCfg.padSelezionato = PAD_ND;
+#endif
+
   }
   
   // La classificazione avviene mappando il livello identificato in funzione

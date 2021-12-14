@@ -40,11 +40,6 @@ void biopsyExtendedLoop(void)
     driverStatus = _BYM_DRIVER_STAT_DISCONNECTED;
     activationCommands = _BYM_NO_COMMAND;
 
-#ifdef __BIOPSY_SIMULATOR
-    // Partenza processo gestione biopsia (opzionale)
-    _task_create(0,_IDTASK(BIOPSYM),(uint32_t) NULL);
-
-#endif
 
     printf("ATTIVAZIONE DRIVER BIOPSI ESTESA: \n");
     

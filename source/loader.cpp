@@ -330,7 +330,7 @@ void Loader::loaderNotify(unsigned char id,unsigned char cmd,QByteArray data)
                     onDownloadErr(QString("Loader: ERR %1, File:%2\n").arg(MCC_COMMAND).arg(curItem.file));
                     return;
                 }
-                qDebug() << "LOADER: Chip Erasing ......";
+                DEBUG("LOADER: Chip Erasing ......");
 
             }else                
             {
@@ -520,7 +520,7 @@ void Loader::readConfigNotify(unsigned char id,unsigned char cmd,QByteArray data
         emit readConfigSgn(conf);
     }else
     {
-        qDebug() << "FALLITA LETTURA CONFIGURAZIONE";
+        DEBUG("FALLITA LETTURA CONFIGURAZIONE");
     }
 }
 

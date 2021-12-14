@@ -83,7 +83,11 @@ public slots:
 
     // Ricezione dati richiesti
 
-    void serviceLogHandler(QByteArray data);
+    void serviceLogHandler(QString data);
+    void serviceDebugHandler(QString data);
+    void servicePrintHandler(QString data);
+    void serviceQtHandler(QString data);
+
     void handleReadConfigNotify(_picConfigStr data);
     void serviceNotifyFineRaggi(QByteArray data);
 
@@ -139,7 +143,7 @@ public slots:
     void handleCanOpen(QByteArray data);
         void handleCanOpen_test(QByteArray data);
 
-        void debugPrint(QString data);
+
 private:
     bool mccService(int id, _MccServiceNotify_Code cmd, QByteArray data);
     bool mccService(_MccServiceNotify_Code cmd);

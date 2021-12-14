@@ -360,7 +360,7 @@ bool Collimatore::updateColli(void)
         // Invio comando
         if(pConsole->pGuiMcc->sendFrame(MCC_SET_COLLI,_COLLI_ID,data, COLLI_LEN)==FALSE)
         {
-            qDebug() << "MCC FALLITO";
+            LOG("MCC COLLI FRUSTOLI FALLITO");
             collimazione_frustoli = COLLI_FRUSTOLI_ND;
             return FALSE;
         }
@@ -429,7 +429,7 @@ bool Collimatore::updateColli(void)
    // Invio comando
    if(pConsole->pGuiMcc->sendFrame(MCC_SET_COLLI,_COLLI_ID,data, COLLI_LEN)==FALSE)
    {
-       qDebug() << "MCC FALLITO";
+       LOG("MCC COLLI COMMAND FALLITO");
        return FALSE;
    }
 
@@ -454,14 +454,14 @@ bool Collimatore::setFiltro(_FilterCmd_Enum cmd, bool update)
     // Collimazione manuale attivata
     if(manualFiltroCollimation)
     {
-        qDebug() << "setFiltro: collimatore in modalitÃ  manuale";
+        DEBUG("setFiltro: collimatore in modo  manuale");
         return TRUE;
     }
 
     // Controlli preliminari sui comandi
     if(pConfig->collimator_configured==FALSE)
     {
-        qDebug() << "setFiltro: collimatore non configurato";
+        LOG("setFiltro: collimatore non configurato");
         return FALSE;
     }
 
@@ -482,7 +482,7 @@ bool Collimatore::setFiltro(_FilterCmd_Enum cmd, bool update)
     // Invio comando
     if(pConsole->pGuiMcc->sendFrame(MCC_SET_FILTRO,_COLLI_ID,data, sizeof(data))==FALSE)
     {
-        qDebug() << "MCC FALLITO";
+        LOG("MCC SET FILTRO FALLITO");
         return FALSE;
     }
 
@@ -499,14 +499,14 @@ bool Collimatore::setFiltro(void)
     // Collimazione manuale attivata
     if(manualFiltroCollimation)
     {
-        qDebug() << "setFiltro: collimatore in modalitÃ  manuale";
+        DEBUG("setFiltro: collimatore in modo manuale");
         return TRUE;
     }
 
     // Controlli preliminari sui comandi
     if(pConfig->collimator_configured==FALSE)
     {
-        qDebug() << "setFiltro: collimatore non configurato";
+        LOG("setFiltro: collimatore non configurato");
         return FALSE;
     }
 
@@ -521,7 +521,7 @@ bool Collimatore::setFiltro(void)
     // Invio comando
     if(pConsole->pGuiMcc->sendFrame(MCC_SET_FILTRO,_COLLI_ID,data, sizeof(data))==FALSE)
     {
-        qDebug() << "MCC FALLITO";
+        LOG("MCC SET FILTRO FALLITO");
         return FALSE;
     }
 
@@ -549,14 +549,14 @@ bool Collimatore::manualSetFiltro(void)
     // Controlli preliminari sui comandi
     if(pConfig->collimator_configured==FALSE)
     {
-        qDebug() << "setFiltro: collimatore non configurato";
+        LOG("setFiltro: collimatore non configurato");
         return FALSE;
     }
 
     // Collimazione manuale attivata
     if(!manualFiltroCollimation)
     {
-        qDebug() << "manualSetFiltro: collimatore in AUTOMATICO";
+        LOG("manualSetFiltro: collimatore in AUTOMATICO");
         return FALSE;
     }
 
@@ -1035,7 +1035,7 @@ bool Collimatore::storeConfigFile(void)
     QFile file(filename.toAscii());
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        qDebug() << "Collimatore::storeConfigFile: IMPOSSIBILE APRIRE IL FILE IN SCRITTURA:" << filename;
+        DEBUG(QString("Collimatore::storeConfigFile: IMPOSSIBILE APRIRE IL FILE IN SCRITTURA: ") + filename);
         return FALSE;
     }
 

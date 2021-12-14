@@ -107,7 +107,7 @@ PageAlarms::PageAlarms(QString bg ,bool showLogo, int w,int h, qreal angolo,QPai
     activePix->hide();
 
     // Definizione del testo per la data
-    font.setFamily("DejaVu Serif");
+    font.setFamily("DejaVuSerif");
     font.setBold(true);
     font.setWeight(75);
     font.setItalic(false);

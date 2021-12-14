@@ -62,6 +62,7 @@ ext QString _MASTER_IP;
 ext QString _SLAVE_IP;
 ext QString _LOCAL_SERVICE_IP;
 
+ext infoClass* pInfo;
 
 
 #endif // GLOBVAR_H

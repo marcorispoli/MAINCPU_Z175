@@ -105,11 +105,9 @@ int main(int argc, char *argv[])
     else isMaster=false;
 
 #endif
-#ifdef __PRINT
-    if (isIp(MASTER_N_IP)) isMaster=true;
-    else isMaster=false;
-    pPrint = new printDebug();
-#endif
+
+    // Classe soipra tutte per gestire messaggi di log
+    pInfo = new infoClass();
 
 
     // Init variabili globali non definite in  classi

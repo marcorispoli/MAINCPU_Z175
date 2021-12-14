@@ -1099,7 +1099,7 @@ bool Config::saveTrxConfig(void)
     QFile   file(filename);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        qDebug() <<"IMPOSSIBILE SALVARE IL FILE:" << filename;
+        PRINT(QString("IMPOSSIBILE SALVARE IL FILE: ")+ filename);
         return FALSE;
     }
 
@@ -1232,7 +1232,7 @@ bool Config::saveTomoConfig(QString filename)
     QFile   file(filename);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        qDebug() <<"IMPOSSIBILE SALVARE IL FILE:" << filename;
+        PRINT(QString("IMPOSSIBILE SALVARE IL FILE:")+ filename);
         return FALSE;
     }
 
@@ -1358,7 +1358,7 @@ bool Config::saveArmConfig(void)
     QFile   file(filename);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        qDebug() <<"IMPOSSIBILE SALVARE IL FILE:" << filename;
+        PRINT(QString("IMPOSSIBILE SALVARE IL FILE:")+filename);
         return FALSE;
     }
 
@@ -1451,7 +1451,7 @@ bool Config::saveLenzeConfig(void)
     QFile   file(filename);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        qDebug() <<"IMPOSSIBILE SALVARE IL FILE:" << filename;
+        PRINT(QString("IMPOSSIBILE SALVARE IL FILE:")+filename);
         return FALSE;
     }
 
@@ -1590,12 +1590,16 @@ bool Config::sendMccConfigCommand(unsigned char cmd){
             buflen += 10;
         break;
         case CONFIG_BIOPSY:
-            pData[0] = pBiopsy->config.Z_homePosition; // Distanza home to fibra
-            pData[1] = pBiopsy->config.Z_basePosizionatore; // Distanza base metallica fibra di carbonio
-            pData[2] = pBiopsy->config.offsetPad;   // Offset linea di calibrazione compressore, Staffe compressore
-            pData[3] = pBiopsy->config.margineRisalita; // Margine di sicurezza sulla risalita del compressore
-            pData[4] = pBiopsy->config.marginePosizionamento; // NA
-            buflen += 5;
+            pData[0] = pBiopsy->configStd.Z_homePosition; // Distanza home to fibra
+            pData[1] = pBiopsy->configStd.Z_basePosizionatore; // Distanza base metallica fibra di carbonio
+            pData[2] = pBiopsy->configStd.offsetPad;   // Offset linea di calibrazione compressore, Staffe compressore
+            pData[3] = pBiopsy->configStd.margineRisalita; // Margine di sicurezza sulla risalita del compressore
+            pData[4] = pBiopsy->configStd.marginePosizionamento; // NA
+
+            pData[5] = pBiopsy->configExt.Z_basePosizionatore; // Distanza base metallica fibra di carbonio
+            pData[6] = pBiopsy->configExt.offsetPad;   // Offset linea di calibrazione compressore, Staffe compressore
+            pData[7] = pBiopsy->configExt.margineRisalita; // Margine di sicurezza sulla risalita del compressore
+            buflen += 8;
         break;
         case CONFIG_PCB244:           
             pData[0] = 0;
@@ -2148,10 +2152,10 @@ bool Config::fileTransfer(QString origine, QString destinazione){
 void Config::ftpPrintMsg(int val){
 
     switch(val){
-    //case 0: qDebug() << "FTP: TRASFERIMENTO COMPLETATO\n"; break;
-    case 1: qDebug() << "FTP ERROR: IMPOSSIBILE CREARE FILE DESTINAZIONE\n"; break;
-    case 2: qDebug() << "FTP ERROR: PROTOCOLLO NON ABILITATO\n"; break;
-    case 3: qDebug() << "FTP ERROR: CRC NON CORRETTO\n"; break;
+    //case 0: DEBUG("FTP: TRASFERIMENTO COMPLETATO"); break;
+    case 1: DEBUG( "FTP ERROR: IMPOSSIBILE CREARE FILE DESTINAZIONE\n"); break;
+    case 2: DEBUG("FTP ERROR: PROTOCOLLO NON ABILITATO\n"); break;
+    case 3: DEBUG("FTP ERROR: CRC NON CORRETTO\n"); break;
     }
 
 }

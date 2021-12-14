@@ -317,27 +317,28 @@ void Generatore::pcb190Notify(unsigned char id, unsigned char cmd, QByteArray da
             faultITest = false;
             warningITest = false;
         }else {
-            faultR16 = false;
-            // Controllo valore anodica: solo warning se la variazione è contenuta altrementi è fault
-            if((anodicaTest < pConfig->userCnf.correnteAnodicaTest-10)||(anodicaTest > pConfig->userCnf.correnteAnodicaTest+10)){
-                faultITest = true;
-                warningITest = true;
-            }else{
-                faultITest  = false;
-                if((anodicaTest < pConfig->userCnf.correnteAnodicaTest-5)||(anodicaTest > pConfig->userCnf.correnteAnodicaTest+5)) warningITest=true;
-                else warningITest = false;
-            }
+            faultR16 = false;            
+
+            if((anodicaTest < pConfig->userCnf.correnteAnodicaTest-5)||(anodicaTest > pConfig->userCnf.correnteAnodicaTest+5)) warningITest=true;
+            else warningITest = false;
+
+            if(pConfig->userCnf.enableIFil){
+                if((anodicaTest < pConfig->userCnf.correnteAnodicaTest-10)||(anodicaTest > pConfig->userCnf.correnteAnodicaTest+10)){
+                    faultITest = true;
+                }else    faultITest = false;
+            }else faultITest = false;
+
         }
 
-        // Controllo mAs (solo se gnd è ok)
-        if(faultGnd==false){
-            if((mAsTest < pConfig->userCnf.correnteAnodicaTest - 3) || (mAsTest > pConfig->userCnf.correnteAnodicaTest + 3)) warningMas=true;
-            else warningMas = false;
-            if(pConfig->userCnf.enableTestMasmetro){
-                if((mAsTest < pConfig->userCnf.correnteAnodicaTest - 5) || (mAsTest > pConfig->userCnf.correnteAnodicaTest + 5)) faultMas=true;
-                else faultMas=false;
-            }else faultMas = false;
-        }
+
+        // Controllo mAs
+        if((mAsTest < pConfig->userCnf.correnteAnodicaTest-3)||(mAsTest > pConfig->userCnf.correnteAnodicaTest+3)) warningMas=true;
+        else warningMas = false;
+
+        if((!faultR16)&&(!faultGnd)&&(!faultITest)&&(!warningITest)&&(pConfig->userCnf.enableTestMasmetro)){
+            if((mAsTest < pConfig->userCnf.correnteAnodicaTest-6)||(mAsTest > pConfig->userCnf.correnteAnodicaTest+6)) faultMas=true;
+            else faultMas=false;
+        }else faultMas = false;
 
 
         // Tensioni di alimentazione scheda
@@ -932,7 +933,7 @@ void Generatore::readStarterFile(void){
     QFile file(filename.toAscii());
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        qDebug() <<"IMPOSSIBILE APRIRE IL FILE USER:" << filename;
+        PRINT("IMPOSSIBILE APRIRE IL FILE USER:"+ filename);
         return ;
     }
 
@@ -1263,7 +1264,7 @@ bool Generatore::saveTube(QString tubename)
     QFile file(filename.toAscii());
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        qDebug() <<"IMPOSSIBILE APRIRE IL FILE IN SCRITTURA:" << "tube.cnf";
+        PRINT("IMPOSSIBILE APRIRE IL FILE IN SCRITTURA: tube.cnf");
         return FALSE;
     }
 
@@ -1305,7 +1306,7 @@ bool Generatore::saveTube(QString tubename)
             file.setFileName(QString("%1/%2/KV%3.cnf").arg(_TUBEPATH).arg(tubename).arg(i+_MIN_KV).toAscii());
             if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
             {
-                qDebug() <<"IMPOSSIBILE APRIRE IL FILE KVXX" ;
+                PRINT("IMPOSSIBILE APRIRE IL FILE KVXX");
                 return FALSE;
             }
 
@@ -1378,7 +1379,7 @@ bool Generatore::saveTube(QString tubename)
     file.setFileName(filename.toAscii());
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        qDebug() <<"IMPOSSIBILE APRIRE IL FILE IN SCRITTURA:" << _TUBE_CALIB_NAME;
+        PRINT(QString("IMPOSSIBILE APRIRE IL FILE IN SCRITTURA:") + _TUBE_CALIB_NAME);
         return FALSE;
     }
 
@@ -1509,7 +1510,7 @@ bool Generatore::readKvFile(unsigned char kV, QString path)
             // Impostazione dati relativi ai KV
             if(getVLine(&risultato, &j, kV)==FALSE)
             {
-                qDebug() << "ERRORE LETTURA V";
+                PRINT("ERRORE LETTURA V");
                 return FALSE;
             }
         }else if(tag=="I")
@@ -1517,7 +1518,7 @@ bool Generatore::readKvFile(unsigned char kV, QString path)
             // Dati relativi alle correnti di riferimento
             if(getILine(&risultato, &j, kV)==FALSE)
             {
-                qDebug() << "ERRORE LETTURA I";
+                PRINT("ERRORE LETTURA I");
                 return FALSE;
             }
         }else if(tag=="M")
@@ -1525,7 +1526,7 @@ bool Generatore::readKvFile(unsigned char kV, QString path)
             // Dati relativi ai carichi
             if(getMLine(&risultato, &j, kV)==FALSE)
             {
-                qDebug() << "ERRORE LETTURA M";
+                PRINT( "ERRORE LETTURA M");
                 return FALSE;
             }
         }else if(tag=="S")
@@ -1533,7 +1534,7 @@ bool Generatore::readKvFile(unsigned char kV, QString path)
             // Dati relativi all'uso dello Starter
             if(getSLine(&risultato, &j, kV)==FALSE)
             {
-                qDebug() << "ERRORE LETTURA S";
+                PRINT("ERRORE LETTURA S");
                 return FALSE;
             }
         }else if(tag=="T")
@@ -1541,12 +1542,12 @@ bool Generatore::readKvFile(unsigned char kV, QString path)
             // Dati relativi alla corrente Tomo
             if(getTLine(&risultato, &j, kV)==FALSE)
             {
-                qDebug() << "ERRORE LETTURA T";
+                PRINT("ERRORE LETTURA T");
                 return FALSE;
             }
         }else
         {
-            qDebug() << "ERRORE INVALID TAG";
+            PRINT("ERRORE INVALID TAG");
             return FALSE;
         }
 
@@ -2146,252 +2147,6 @@ bool Generatore::setkV(float kV)
     return TRUE;
 }
 
-
-/*
- *  LANCIO DI UNA SEQUENZA DI SPARO SENZA DETECTOR CON IMPOSTAZIONI MANUALI
- *  MCC_TEST_RX_SHOT:
- *  FUNZIONE DI LANCIO SHOT RX SENZA DETECTOR
-    data[0] = (unsigned char) fuoco;
-    data[1] = (unsigned char) (Vdac&0xFF);
-    data[2] = (unsigned char) ((Vdac>>8)&0xFF);
-    data[3] = (unsigned char) (Idac&0xFF);
-    data[4] = (unsigned char) ((Idac>>8)&0xFF);
-    data[5] = (unsigned char) ((mAs*50)&0xFF);
-    data[6] = (unsigned char) (((mAs*50)>>8)&0xFF);
-    data[7] = TIMEOUT (100ms)
-    data[8] = [x,hs,swb,swa]
-    data[9] = grid;
-    data[10] = maxv
-    data[11] = minv
-    data[12] = maxI
-    data[13] = minI
-
-
- *///<0,1666,2000,50,1,1,0,0,20>   // 20Kv,105mA, FG
-void Generatore::manualShot(QString filename)
-{
-    unsigned char data[14];
-    QByteArray dato,qval;
-    int i;
-    unsigned short val,hs,swa,swb,tmo,grid,vnom,inom;
-
-
-    QFile file(filename.toAscii());
-    if (!file.open(QIODevice::ReadWrite | QIODevice::Text))
-    {
-        qDebug() << "NON APRE";
-        return;
-    }
-
-    dato = Config::getNextValidLine(&file);
-    if(dato.isEmpty())
-    {
-        qDebug() << "NESSUN DATO";
-        return;
-    }
-    i=0;
-
-    qval=Config::getNextTag(&dato,&i,false);
-    if(qval.isEmpty()) return;
-
-    // Impostazione fuoco:
-    if(qval=="F1G")      data[0] = 0;
-    else if(qval=="F2G") data[0] = 1;
-    else if(qval=="F1p") data[0] = 2;
-    else                 data[0] = 3;
-
-    // Calcolo Vnom
-    qval=Config::getNextParam(&dato,&i,FALSE);
-    if(qval.isEmpty()) return;
-    vnom = qval.toUShort();
-    qDebug() << "VNOM=" <<vnom;
-
-    qval=Config::getNextParam(&dato,&i,FALSE);
-    if(qval.isEmpty()) return;
-    val = qval.toUShort();
-    data[1] = (unsigned char) (val&0xFF);
-    data[2] = (unsigned char) ((val>>8)&0xFF);
-    qDebug() << "VDAC=" <<val;
-
-    // Calcolo Inom
-    qval=Config::getNextParam(&dato,&i,FALSE);
-    if(qval.isEmpty()) return;
-    inom = qval.toUShort();
-    qDebug() << "INOM=" <<inom;
-
-    qval=Config::getNextParam(&dato,&i,FALSE);
-    if(qval.isEmpty()) return;
-    val = qval.toUShort();
-    data[3] = (unsigned char) (val&0xFF);
-    data[4] = (unsigned char) ((val>>8)&0xFF);
-    qDebug() << "IDAC=" <<val;
-
-    qval=Config::getNextParam(&dato,&i,FALSE);
-    if(qval.isEmpty()) return;
-    val = qval.toUShort();
-    data[5] = (unsigned char) ((val*50)&0xFF);
-    data[6] = (unsigned char) (((val*50)>>8)&0xFF);
-    qDebug() << "MAS=" <<val;
-
-    // Starter
-    qval=Config::getNextParam(&dato,&i,FALSE);
-    if(qval.isEmpty()) return;
-    hs = qval.toUShort();
-    qDebug() << "HS=" <<hs;
-
-    // SWA
-    qval=Config::getNextParam(&dato,&i,FALSE);
-    if(qval.isEmpty()) return;
-    swa = qval.toUShort();
-    qDebug() << "SWA=" <<swa;
-
-    // SWB
-    qval=Config::getNextParam(&dato,&i,FALSE);
-    if(qval.isEmpty()) return;
-    swb = qval.toUShort();
-    qDebug() << "SWB=" <<swb;
-
-    // Grid
-    qval=Config::getNextParam(&dato,&i,FALSE);
-    if(qval.isEmpty()) return;
-    grid = qval.toUShort();
-    qDebug() << "GRID=" <<grid;
-
-    // TMO
-    qval=Config::getNextParam(&dato,&i,TRUE);
-    if(qval.isEmpty()) return;
-    tmo = qval.toUShort();
-
-
-    if(tmo&0x80) {
-        qDebug() << "SHORT TMO:" << (int)(tmo & 0x007F) << "(10ms)";
-    }else{
-        qDebug() << "LONG TMO:" << (int) (tmo & 0x007F) << "(100ms)";
-    }
-    data[7] = (unsigned char) tmo;
-
-    data[8]=0;
-    if(swa) data[8]|=1;
-    if(swb) data[8]|=2;
-    if(hs)  data[8]|=4;
-
-    data[9] = grid;
-
-    // Calcolo valori minimo e massimo ammessi
-    if(vnom==0)
-    {
-        data[10]=255;
-        data[11]=0;
-    }else
-    {
-        // Caricamento valori limite
-        data[10] = convertPcb190KvToRaw(vnom+5);
-        data[11] = convertPcb190KvToRaw(vnom-5);
-    }
-    qDebug() << "VMAX:" << data[10] << "VMIN:" << data[11];
-
-    if(inom==0)
-    {
-        data[12]=255;
-        data[13]=0;
-    }else
-    {
-        data[12] = convertPcb190IanodeToRaw(inom+20);
-        data[13] = convertPcb190IanodeToRaw(inom-20);
-    }
-
-    qDebug() << "IMAX:" << data[12] << "IMIN:" << data[13];
-    pConsole->pGuiMcc->sendFrame(MCC_TEST_RX_SHOT,1,data, 14);
-
-}
-
-void Generatore::manualXrayReqSlot(bool status)
-{
-    if(status)
-    {
-        qDebug() << "ATTIVAZIONE RAGGI MANUALI";        
-        manualShot("/mnt/nfs/shot.cnf");
-    }
-}
-
-void Generatore::manualXrayReqAutoSlot(bool status)
-{
-    if(status)
-    {
-        if(manualShot()==false) qDebug() << "Errore attivazione raggi in modo Auto Incremento";
-        else qDebug() << "Attivazione raggi in modo Auto/Incremento";
-    }
-}
-
-bool Generatore::manualShot(void)
-{
-    unsigned char data[14];
-
-    QString dati = QString("Fuoco:%1 Vnom:%2 Vdac:%3 Inom:%4 Idac:%5 dIdac:%6 mAs:%7 HS:%8 SWA:%9 SWB:%10 GRID:%11 TMO:%12 \r\n").arg( pGeneratore->manFuoco).arg( pGeneratore->manVnom).arg( pGeneratore->manVdac).arg( pGeneratore->manInom).arg( pGeneratore->manIdac).arg( pGeneratore->manDIdac).arg( pGeneratore->manMas).arg( pGeneratore->manHs).arg( pGeneratore->manSWA).arg( pGeneratore->manSWB).arg( pGeneratore->manGrid).arg( pGeneratore->manTMO);
-    qDebug() << dati;
-
-    // Impostazione fuoco:
-    if(manFuoco.contains("F1G"))      data[0] = 0;
-    else if(manFuoco.contains("F2G")) data[0] = 1;
-    else if(manFuoco.contains("F1p")) data[0] = 2;
-    else if(manFuoco.contains("F2p")) data[0] = 3;
-    else return false;
-
-    data[1] = (unsigned char) (manVdac&0xFF);
-    data[2] = (unsigned char) ((manVdac>>8)&0xFF);
-    data[3] = (unsigned char) (manIdac&0xFF);
-    data[4] = (unsigned char) ((manIdac>>8)&0xFF);
-
-    // Calcola il prossimo valore
-    if(manAutoIdacInc){
-        manIdac+=manDIdac;
-    }
-
-    data[5] = (unsigned char) ((manMas*50)&0xFF);
-    data[6] = (unsigned char) (((manMas*50)>>8)&0xFF);
-
-
-    if(manTMO&0x80) {
-        qDebug() << "SHORT TMO:" << (int)(manTMO & 0x007F) << "(10ms)";
-    }else{
-        qDebug() << "LONG TMO:" << (int) (manTMO & 0x007F) << "(100ms)";
-    }
-    data[7] = (unsigned char) manTMO;
-
-    data[8]=0;
-    if(manSWA) data[8]|=1;
-    if(manSWB) data[8]|=2;
-    if(manHs)  data[8]|=4;
-
-    data[9] = manGrid;
-
-    // Calcolo valori minimo e massimo ammessi
-    if(manVnom==0)
-    {
-        data[10]=255;
-        data[11]=0;
-    }else
-    {
-        // Caricamento valori limite
-        data[10] = convertPcb190KvToRaw(manVnom+5);
-        data[11] = convertPcb190KvToRaw(manVnom-5);
-    }
-    qDebug() << "VMAX:" << data[10] << "VMIN:" << data[11];
-
-    if(manInom==0)
-    {
-        data[12]=255;
-        data[13]=0;
-    }else
-    {
-        data[12] = convertPcb190IanodeToRaw(manInom+20);
-        data[13] = convertPcb190IanodeToRaw(manInom-20);
-    }
-
-    qDebug() << "IMAX:" << data[12] << "IMIN:" << data[13];
-    pConsole->pGuiMcc->sendFrame(MCC_TEST_RX_SHOT,1,data, 14);
-
-}
 
 
 /*

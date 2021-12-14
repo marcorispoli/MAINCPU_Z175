@@ -225,13 +225,22 @@ typedef struct
 typedef struct
 {
     unsigned short Z_homePosition;          // Posizione del punto Z=0 rispetto alla fibra di carbonio
-    unsigned char  offsetPad;               // Offset meccanico Staffe Pad rispetto alla calibrazione(mm)
-    unsigned char  Z_basePosizionatore;     // Posizione staffa metallica posizionatore rispetto a fibra di carbonio
-
-    unsigned char  margineRisalita;         // Margine di risalita (mm)
     unsigned char  marginePosizionamento;   // Margine di sicurezza sul posizionamento (mm)
 
-}biopsyConf_Str;
+    unsigned char  offsetPad;               // Offset meccanico Staffe Pad rispetto alla calibrazione(mm)
+    unsigned char  Z_basePosizionatore;     // Posizione staffa metallica posizionatore rispetto a fibra di carbonio
+    unsigned char  margineRisalita;         // Margine di risalita (mm)
+
+}biopsyConfStd_Str;
+
+// Configurazione biopsia estesa
+typedef struct
+{
+    unsigned char  offsetPad;               // Offset meccanico Staffe Pad rispetto alla calibrazione(mm)
+    unsigned char  Z_basePosizionatore;     // Posizione staffa metallica posizionatore rispetto a fibra di carbonio
+    unsigned char  margineRisalita;         // Margine di risalita (mm)
+
+}biopsyConfExt_Str;
 
 
 

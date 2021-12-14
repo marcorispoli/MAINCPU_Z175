@@ -276,9 +276,9 @@ void biopsyStandardLoop(void)
          // solo se c'è compressione in corso
          if(_TEST_BIT(PCB215_COMPRESSION))
          {
-           dati[_BP_STD_MAX_Z] = generalConfiguration.biopsyCfg.conf.Z_homePosition
-                            + generalConfiguration.biopsyCfg.conf.offsetPad
-                            - generalConfiguration.biopsyCfg.conf.marginePosizionamento
+           dati[_BP_STD_MAX_Z] = generalConfiguration.biopsyCfg.standardConf.conf.Z_homePosition
+                            + generalConfiguration.biopsyCfg.standardConf.conf.offsetPad
+                            - generalConfiguration.biopsyCfg.standardConf.conf.marginePosizionamento
                             - _DEVREG(RG215_DOSE,PCB215_CONTEST);     
 
            static unsigned char valore=255;
@@ -292,6 +292,7 @@ void biopsyStandardLoop(void)
            dati[_BP_STD_MAX_Z] = 0; // Se non è in compressione non consente spostamenti di Z
           
          }
+
           if(maxZ!=dati[_BP_STD_MAX_Z])
           {
             maxZ=dati[_BP_STD_MAX_Z];

@@ -1,6 +1,5 @@
 #include "numericpad.h"
 #include "ui_numericpad.h"
-#include  <QDebug>
 
 
 numericPad::numericPad(int rotview,  QGraphicsView *parentView, QWidget *parent) :

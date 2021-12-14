@@ -140,6 +140,7 @@ typedef struct
 
 typedef struct
 {
+    biopsyConfExt_Str  conf;
 
     // Registri interni al driver
     unsigned char  statusL;        // Registro di stato L
@@ -150,6 +151,8 @@ typedef struct
 
 typedef struct
 {
+    biopsyConfStd_Str  conf;
+
     // Configurazione dalla GUI
     bool needlePresent;         // Presenza needle
 
@@ -169,11 +172,22 @@ typedef struct
 
 }biopsyStatStandard_Str;
 
+#define _BYM_NOT_DEFINED    0
+#define _BYM_STANDARD_MODEL 1
+#define _BYM_EXTENDED_MODEL 2
+
 typedef struct
 {
+    // Definisce se e quale modello è stato identificato
+    int biopsyModel;
+
     biopsyStatExtended_Str extendedConf;
     biopsyStatStandard_Str standardConf;
-    biopsyConf_Str  conf;
+    int Z_basePosizionatore;
+    int offsetPad;
+    int margineRisalita;
+
+
 
     // Pulsante sblocco e adapter
     unsigned short adapterId;    // Identificazione adattatore

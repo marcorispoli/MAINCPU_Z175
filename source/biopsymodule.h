@@ -7,7 +7,8 @@ class biopsyModule
 
 public:
     biopsyModule();
-    biopsyConf_Str config;      // Dati di configurazione
+    biopsyConfStd_Str configStd;      // Dati di configurazionebiopsia standard
+    biopsyConfExt_Str configExt;      // Dati di configurazionebiopsia estesa
 
     bool connected;             // Stato della connessione
     unsigned char model;        // Modello identificato
@@ -21,10 +22,13 @@ public:
     int activationId;
 
 
-    void defaultConfigData(void);
-    bool openCfg(void);         // Funzione per l'apertura del file di configurazione
-    bool storeConfig(void);     // Salva la configurazione
-    bool updateConfig(void);    // Aggioirna M4 con i valori correnti
+    void defaultConfigDataStandard(void);
+    void defaultConfigDataExtended(void);
+    bool openCfgStandard(void);         // Funzione per l'apertura del file di configurazione
+    bool openCfgExtended(void);         // Funzione per l'apertura del file di configurazione
+    bool storeConfigStandard(void);     // Salva la configurazione
+    bool storeConfigExtended(void);     // Salva la configurazione
+    bool updateConfig(void);            // Aggioirna M4 con i valori correnti
 
 };
 

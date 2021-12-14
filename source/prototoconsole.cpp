@@ -1,17 +1,9 @@
 #include "appinclude.h"
 #include "globvar.h"
 
-// Comandi da inviare a Console
-
-void  logOutput(QtMsgType type, const char *msg);
-
-void  logOutput(QtMsgType type, const char *msg)
-{
-    pToConsole->logMessages(QString(msg));
-    return;
-}
 
 void protoToConsole::activateConnections(void){
+
     QObject::connect(notificheTcp,SIGNAL(clientConnection(bool)),this,SLOT(notificheConnectionHandler(bool)),Qt::UniqueConnection);
     QObject::connect(this,SIGNAL(notificheTxHandler(QByteArray)), notificheTcp,SLOT(txData(QByteArray)),Qt::UniqueConnection);
     notificheTcp->Start(QHostAddress(_CONSOLE_IP),_CONSOLE_OUT_PORT);
@@ -23,7 +15,9 @@ void protoToConsole::activateConnections(void){
     QObject::connect(msgLogTcp,SIGNAL(clientConnection(bool)),this,SLOT(logConnectionHandler(bool)),Qt::UniqueConnection);
     msgLogTcp->Start(QHostAddress(_CONSOLE_IP),_CONSOLE_LOG_PORT);
 
-    qInstallMsgHandler(logOutput);
+
+    // Connette io logs
+    connect(pInfo,SIGNAL(logTxHandler(QString)),this,SLOT(logMessages(QString)),Qt::UniqueConnection);
 
 }
 
@@ -399,7 +393,21 @@ void protoToConsole::logMessages(QString msg)
     }
 
     // Invia al LOGGER una versione della stringa parserata per togliere i caratteri speciali
-    emit logTxHandler(cmd.cmdToQByteArray(parsed));
+    QByteArray buffer = cmd.cmdToQByteArray(parsed);
+    emit logTxHandler(buffer);
+
+    // Trasforma in Unicode il buffer ricevuto
+#ifdef __PRINT
+    #if (UNICODE_FORMAT == 0)
+        PRINT(QString(buffer));
+    #else
+        QTextCodec *codec = QTextCodec::codecForName(UNICODE_TYPE);
+        QString frame = codec->toUnicode(buffer);
+        PRINT(frame);
+    #endif
+#endif
+
+
     return;
 }
 

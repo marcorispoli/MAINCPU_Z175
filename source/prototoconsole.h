@@ -51,6 +51,7 @@ signals:
     void notificheTxHandler(QByteArray); // Segnale per invio su socket
     void errorTxHandler(QByteArray);     // Invio su socket errori
     void logTxHandler(QByteArray);       // Invio su socket log
+    void dbgTxHandler(QByteArray);       // Invio messaggi di debug
 
 public:
 
@@ -75,6 +76,7 @@ public:
 public slots:
     void sendNotificheTcp(QByteArray frame);  // Slot per invio da fuori messaggi di notifica
     void setSamples(QByteArray data);
+    void debugMessages(QString msg){emit dbgTxHandler(msg.toAscii());}
 
     // Socket per connessione con console
     void notificheConnectionHandler(bool status);       // Gestore connessioni
@@ -102,6 +104,7 @@ private:
     TcpIpClient*        msgErrorTcp;    // Socket Client per invio notifiche messaggi di errore
     TcpIpClient*        msgLogTcp;      // Socket Client per invio messaggi di Log
     bool xrayEnable;
+
 
 
 };

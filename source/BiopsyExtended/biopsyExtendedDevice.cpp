@@ -1143,8 +1143,8 @@ int biopsyExtendedDevice::setStepVal(unsigned char step)
 // per poter impostare la massima salita del compressore
 void biopsyExtendedDevice::calibrateXbase(unsigned short val)
 {
-    pBiopsy->config.Z_basePosizionatore = val + curZ_dmm / 10;
-    pBiopsy->storeConfig();
+    pBiopsy->configExt.Z_basePosizionatore = val + curZ_dmm / 10;
+    pBiopsy->storeConfigExtended();
     pBiopsy->updateConfig();
 
 }

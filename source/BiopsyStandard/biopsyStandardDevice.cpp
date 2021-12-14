@@ -216,13 +216,13 @@ void biopsyStandardDevice::mccStatNotify(unsigned char id_notify,unsigned char c
     switch(data.at(_BP_STD_MOTION))
     {
         case 1:
-            //qDebug() << "MUOVE X";
+
         break;
         case 2:
-            //qDebug() << "MUOVE Y";
+
         break;
         case 3:
-            //qDebug() << "MUOVE Z";
+
         break;
         case 4:
 
@@ -332,7 +332,7 @@ bool biopsyStandardDevice::moveXYZ(unsigned short X, unsigned short Y, unsigned 
 
     if(pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_STD_XYZ,1,data,9)==FALSE)
     {
-        qDebug() << "BIOPSY <moveXYZ>: ERRORE COMANDO MCC";
+        LOG("BIOPSY <moveXYZ>: ERRORE COMANDO MCC");
         return FALSE;
     }
 
@@ -355,7 +355,7 @@ bool biopsyStandardDevice::moveZ(unsigned short Z)
 
     if(pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_STD_XYZ,1,data,9)==FALSE)
     {
-        qDebug() << "BIOPSY <moveZ>: ERRORE COMANDO MCC";
+        LOG("BIOPSY <moveZ>: ERRORE COMANDO MCC");
         return FALSE;
     }
 
@@ -408,7 +408,7 @@ bool biopsyStandardDevice::moveX(unsigned short X)
 
     if(pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_STD_XYZ,1,data,9)==FALSE)
     {
-        qDebug() << "BIOPSY <moveX>: ERRORE COMANDO MCC";
+        LOG("BIOPSY <moveX>: ERRORE COMANDO MCC");
         return FALSE;
     }
 
@@ -431,7 +431,7 @@ bool biopsyStandardDevice::moveY(unsigned short Y)
 
     if(pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_STD_XYZ,1,data,9)==FALSE)
     {
-        qDebug() << "BIOPSY <moveY>: ERRORE COMANDO MCC";
+        LOG("BIOPSY <moveY>: ERRORE COMANDO MCC");
         return FALSE;
     }
 
@@ -528,7 +528,7 @@ bool biopsyStandardDevice::updateTorretta(unsigned char id_command)
 
     if(pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_STD_XYZ,1,data,sizeof(data))==FALSE)
     {
-        qDebug() << "BIOPSY <updateTorretta>: ERRORE COMANDO MCC";
+        LOG("BIOPSY <updateTorretta>: ERRORE COMANDO MCC");
         return FALSE;
     }
 
