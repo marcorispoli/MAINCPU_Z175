@@ -78,6 +78,8 @@ void main_task(uint32_t initial_data)
  printf("MASTER PROCESS REVISION WITH CANOPEN:--- %s --- STARTING.....\n",REVISIONE);
  printf("\n\n\n\n\n",REVISIONE);
 
+
+
  generalConfiguration.revisioni.m4_master.maj = REVMAJ;
  generalConfiguration.revisioni.m4_master.min = REVMIN;
  generalConfiguration.gantryConfigurationReceived = false;
@@ -309,6 +311,7 @@ void mainPrintHardwareConfig(void){
 
 
 }
+
 
 
 /* EOF */

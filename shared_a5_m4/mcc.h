@@ -4,14 +4,15 @@
 //////////////////////////////////////////////////////////////////////////////
 //                   INTERFACCIA MCC SHARED AREA
 //////////////////////////////////////////////////////////////////////////////
-#define _DEF_MCC_INPUTS_TO_APP_SLAVE           0,0,1 // Invio Inputs a App Slave
-#define _DEF_MCC_IO_TO_M4_SLAVE                1,0,2 // Invio Outputs a M4 Slave
-#define _DEF_MCC_GUI_TO_M4_MASTER              1,0,3 // Comandi da Master App a Master M4
-#define _DEF_MCC_MASTER_TO_APP_MASTER          0,0,4 // Risposte comandi da MASTER M4  a MASTER applicazione
-#define _DEF_MCC_INPUTS_TO_M4_MASTER           1,0,5 // Invio System Inputs da Master App a MASTER M4
-#define _DEF_MCC_OUTPUTS_TO_APP_MASTER         0,0,6 // Invio setting Outputs da Master M4 a Master Applicazione
-#define _DEF_APP_SLAVE_TO_M4_SLAVE             1,0,7 // Porta M4 SLAVE
-#define _DEF_M4_SLAVE_TO_APP_SLAVE             0,0,8 // Porta GUI SLAVE
+#define _DEF_MCC_GUI_TO_M4_MASTER              1,0,3 // M4-Master Riceve su questo canale dal DBTController Master
+#define _DEF_MCC_MASTER_TO_APP_MASTER          0,0,4 // M4-Master Invia messaggi a DBTController Master
+
+#define _DEF_APP_SLAVE_TO_M4_SLAVE             1,0,7 // M4-Slave Riceve su questo canale dal DBTController Slave
+#define _DEF_M4_SLAVE_TO_APP_SLAVE             0,0,8 // M4-Slave Invia messaggi a DBTController Slave
+
+#define _DEF_M4_MASTER_DEBUG_MESSAGES_MCC      0,0,1 // M4-Master Invia messaggi di debug a DBTController Master
+#define _DEF_M4_SLAVE_DEBUG_MESSAGES_MCC       0,0,2 // M4-Slave Invia messaggi di debug a DBTController Slave
+
 
 // _______________________________________________
 // SOTTOGRUPPO COMANDI MCC_CALIB_ZERO
@@ -413,7 +414,7 @@ typedef enum
     MCC_CMD_RAGGI_AE,       // Richiesta sequenza raggi Bassa/Alta energia
     MCC_CMD_RAGGI_AE_AEC,   // Richiesta sequenza raggi Bassa/Alta energia con pre impulso
     MCC_CMD_RAGGI_AE_H,     // Dati per impulso alta energia
-    MCC_SPARE3,
+    MCC_PRINT,            // GEstione delle debugPrint
     MCC_TEST_RX_SHOT,     // Attiva una sequenza manuale raggi standard senza detector
     MCC_STARTER,          // GEstione attivazione Starter
     MCC_SET_FUOCO,        // Impostazione Fuoco
@@ -473,5 +474,7 @@ typedef enum
 
 }_MccGuiToDevice_Cmd;
 
+#define MCC_DEBUG_PRINT_ENABLE_CMD 1
+#define MCC_DRIVER_PRINT_ENABLE_CMD 2
 
 #endif

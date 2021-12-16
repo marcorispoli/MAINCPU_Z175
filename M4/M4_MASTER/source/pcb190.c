@@ -420,8 +420,7 @@ int pcb190StartRxStd(void)
   frame.cmd=SER422_COMMAND;
   frame.data1=_CMD1(PCB190_START_RX_STD);
   frame.data2=_CMD2(PCB190_START_RX_STD);
-  printf("START RX %d %d\n",frame.data1,frame.data2);
-  
+  debugPrintI2("PCB190 START EXPOSURE 2D COMMAND, D1",frame.data1,"D2",frame.data2);
   Ser422Send(&frame, SER422_BLOCKING,CONTEST.ID);
   
   return (int) frame.retcode;
@@ -442,7 +441,7 @@ int pcb190StartRxAecStd(void)
   frame.cmd=SER422_COMMAND;
   frame.data1=_CMD1(PCB190_START_RX_STD_AEC);
   frame.data2=_CMD2(PCB190_START_RX_STD_AEC);
-  printf("START RX %d %d\n",frame.data1,frame.data2);
+  debugPrintI2("PCB190 START EXPOSURE 2D AEC COMMAND, D1",frame.data1,"D2",frame.data2);
   
   Ser422Send(&frame, SER422_BLOCKING,CONTEST.ID);
   _mutex_unlock(&(CONTEST.pollinglist_mutex));
@@ -465,7 +464,7 @@ int pcb190StartRxTomoAec(void)
   frame.cmd=SER422_COMMAND;
   frame.data1=_CMD1(PCB190_START_RX_TOMO_AEC);
   frame.data2=_CMD2(PCB190_START_RX_TOMO_AEC);
-  printf("START RX %d %d\n",frame.data1,frame.data2);
+  debugPrintI2("PCB190 START EXPOSURE 3D AEC COMMAND, D1",frame.data1,"D2",frame.data2);
   
   Ser422Send(&frame, SER422_BLOCKING,CONTEST.ID);
   _mutex_unlock(&(CONTEST.pollinglist_mutex));
@@ -491,7 +490,7 @@ int pcb190StartRxTomo(void)
   frame.data1=_CMD1(PCB190_START_RX_TOMO);
   frame.data2=_CMD2(PCB190_START_RX_TOMO);
   
-  printf("START RX TOMO %d %d\n",frame.data1,frame.data2);
+  debugPrintI2("PCB190 START EXPOSURE 3D COMMAND, D1",frame.data1,"D2",frame.data2);
 
   Ser422Send(&frame, SER422_BLOCKING,CONTEST.ID);
   _mutex_unlock(&(CONTEST.pollinglist_mutex));
@@ -520,10 +519,6 @@ bool pcb190ResetFault(void)
   _mutex_unlock(&(CONTEST.pollinglist_mutex));
   
   if(frame.retcode==SER422_COMMAND_OK) return TRUE; 
-  else
-  {
-    printf("RETCODE:%d\n",frame.retcode);
-  }
   return FALSE;
   
 }
@@ -554,7 +549,7 @@ bool pcb190SetFuoco(unsigned char fuoco)
   else frame.data1=_CMD1(PCB190_SELECT_FUOCO); 
   frame.data2=fuoco;
   
-  printf("ATTIVA FUOCO CODICE:%d\n",fuoco);
+  debugPrintI("PCB190 ATTIVAZIONE FUOCO, CODICE",fuoco);
   Ser422Send(&frame, SER422_BLOCKING,CONTEST.ID);
   _mutex_unlock(&(CONTEST.pollinglist_mutex));
   
@@ -569,7 +564,7 @@ bool pcb190StarterH(void)
 
   // Sospende il driver bloccando la mutex del polling
   // Il driver si blocca esattamente dopo aver letto i registri di stato
-  printf("PCB190: ESECUZIONE STARTER H\n");
+  debugPrint("PCB190 COMMAND STARTER HS");
 
   // Prepara il comando 
   frame.address = TARGET_ADDRESS;
@@ -590,9 +585,9 @@ bool pcb190StarterL(void)
 
   // Sospende il driver bloccando la mutex del polling
   // Il driver si blocca esattamente dopo aver letto i registri di stato
-  printf("PCB190: ESECUZIONE STARTER L\n");
-  
-  // Prepara il comando 
+  debugPrint("PCB190 COMMAND STARTER LS");
+
+  // Prepara il comando
   frame.address = TARGET_ADDRESS;
   frame.attempt = 10;
   frame.cmd=SER422_COMMAND;
@@ -612,7 +607,7 @@ bool pcb190StopStarter(void)
   // Sospende il driver bloccando la mutex del polling
   // Il driver si blocca esattamente dopo aver letto i registri di stato
   
-  printf("PCB190: ESECUZIONE STOP STARTER \n");
+  debugPrint("PCB190 COMMAND STOP STARTER");
   for(int i=0; i<10; i++) {
 
       _mutex_lock(&(CONTEST.pollinglist_mutex));
@@ -635,7 +630,7 @@ bool pcb190StopStarter(void)
   }
 
   // Fallito Stop Starter
-  printf("PCB190: ESECUZIONE STOP STARTER FALLITA!!\n");
+  debugPrint("PCB190 COMANDO STOP STARTER FALLITO");
   return false;
 }
 
@@ -647,7 +642,7 @@ bool pcb190OffStarter(void)
 
   // Sospende il driver bloccando la mutex del polling
   // Il driver si blocca esattamente dopo aver letto i registri di stato
-  printf("PCB190: ESECUZIONE OFF STARTER \n");
+  debugPrint("PCB190 COMMAND STOP STARTER");
 
   for(int i=0; i<10; i++) {
 
@@ -663,8 +658,7 @@ bool pcb190OffStarter(void)
       Ser422Send(&frame, SER422_BLOCKING,CONTEST.ID);
       _mutex_unlock(&(CONTEST.pollinglist_mutex));
 
-      if(frame.retcode==SER422_COMMAND_OK){
-          printf("PCB190: ESECUZIONE OFF OK!!! \n");
+      if(frame.retcode==SER422_COMMAND_OK){          
           return TRUE;
       }else{
           _time_delay(100);
@@ -672,7 +666,7 @@ bool pcb190OffStarter(void)
 
   }
 
-  printf("PCB190: ESECUZIONE OFF FALLITO!!! \n");
+  debugPrint("PCB190 COMANDO STOP STARTER FALLITO");
   return false;
 }
 
@@ -685,7 +679,8 @@ bool waitPcb190Ready(unsigned char attempt)
     if(!_TEST_BIT(PCB190_RX_BUSY)) return TRUE;
     _time_delay(100);
   }
-  printf("PCB190: TIMEOUT ATTESA READY\n");
+
+  debugPrint("PCB190 TIMOUT ATTESA READY");
   return FALSE;
 }
 
@@ -953,10 +948,7 @@ bool pcb190SetITest(bool stat)
     
     return TRUE; 
   }
-  else
-  {
-    printf("RETCODE:%d\n",frame.retcode);
-  }
+
   return FALSE;
 
 }
@@ -992,7 +984,8 @@ bool pcb190UploadExpose(_RxStdSeq_Str* Param, bool isAEC)
 {
   if (isAEC)
   {
-   printf("AEC-PULSE UPLOAD PCB190\n");
+   debugPrint("PCB190 UPLOAD PRE-EXPOSURE DATA");
+
    // DATI CARICATI DOPO IL PRE IMPULSO
    if(Ser422WriteRegister(_REGID(RG190_RXHVTMO),Param->esposizione.TMO, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
    if(Ser422WriteRegister(_REGID(RG190_RXHVEXP),Param->esposizione.HV, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
@@ -1005,8 +998,9 @@ bool pcb190UploadExpose(_RxStdSeq_Str* Param, bool isAEC)
    if(Ser422WriteRegister(_REGID(RG190_AEC),1, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
    return TRUE;
   }
-  
-   // Scrive uno per uno tutti i registri
+
+
+  // Scrive uno per uno tutti i registri
    if(Ser422WriteRegister(_REGID(RG190_RXHVTMO),Param->esposizione.TMO, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
    if(Ser422WriteRegister(_REGID(RG190_RXHVEXP),Param->esposizione.HV, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
    if(Ser422WriteRegister(_REGID(RG190_RXI),Param->esposizione.I, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
@@ -1018,10 +1012,12 @@ bool pcb190UploadExpose(_RxStdSeq_Str* Param, bool isAEC)
    if(Ser422WriteRegister(_REGID(RG190_RXCHK),Param->esposizione.CHK, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
 
    // Caricamento modalità particolare di sparo senza detector
-   if(Param->config & 0x81) printf("!!!!!!!!!SEQUENZA RAGGI SENZA SYNCH DETECTOR!!!!!\n");
+   if(Param->config & 0x81) debugPrint("PCB190 UPLOAD EXPOSURE DATA NO SYNC TO DETECTOR");
    else if(generalConfiguration.gantryCfg.detectorType == DETECTOR_SOLO){
        Param->config|=0x2;
-       printf("!!!!!!!!!SEQUENZA RAGGI AEC PER DETECTOR SOLO!!!!!\n");
+       debugPrint("PCB190 UPLOAD EXPOSURE DATA WITH DETECTOR SOLO");
+   }else{
+       debugPrint("PCB190 UPLOAD EXPOSURE DATA");
    }
 
    if(Ser422WriteRegister(_REGID(PR_RX_OPT),Param->config, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
@@ -1030,114 +1026,10 @@ bool pcb190UploadExpose(_RxStdSeq_Str* Param, bool isAEC)
    return TRUE;
 }
 
-bool pcb190UploadAnalogOnlyPreExpose(_RxStdSeq_Str* Param)
-{
-
-   // Datai primari di esposizione
-   if(Ser422WriteRegister(_REGID(RG190_RXHVTMO),Param->esposizione.TMO, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_RXHVEXP),Param->esposizione.HV, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_RXI),Param->esposizione.I, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_RXMAS),Param->esposizione.MAS, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_MIN_HV),Param->esposizione.MINHV, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_MAX_HV),Param->esposizione.MAXHV, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_MIN_IANODICA),Param->esposizione.MINI, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_MAX_IANODIA),Param->esposizione.MAXI, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_RXCHK),Param->esposizione.CHK, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-
-
-   // Scrittura opzioni relative
-   Param->config =  0x01; // NO DETECTOR
-   Param->config |= 0x04; // ANALOGIC MODELS
-   Param->config |= 0x08; // ONLY PRE PULSE DURING AEC
-   printf("CARICAMETO DATI PCB190 PER ANALOGICA SOLO PRE IMPULSO");
-   if(Ser422WriteRegister(_REGID(PR_RX_OPT),Param->config, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   printf("Param->esposizione.TMO=%d - 0x%x\n",Param->esposizione.TMO,Param->esposizione.TMO);
-   return TRUE;
-}
-
-bool pcb190UploadAnalogCalibTubeExpose(_RxStdSeq_Str* Param)
-{
-   int tmo;
-
-   if(Param->esposizione.TMO &0x80) tmo = (Param->esposizione.TMO & 0x7F) * 10;
-   else tmo = (Param->esposizione.TMO & 0x7F) * 100;
-   printf("CARICAMETO DATI PCB190 PER CALIBRAZIONE TUBO: TIMEOUT=%d\n", tmo);
-
-   // Datai primari di esposizione
-   if(Ser422WriteRegister(_REGID(RG190_RXHVTMO),Param->esposizione.TMO, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_RXHVEXP),Param->esposizione.HV, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_RXI),Param->esposizione.I, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_RXMAS),Param->esposizione.MAS, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_MIN_HV),Param->esposizione.MINHV, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_MAX_HV),Param->esposizione.MAXHV, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_MIN_IANODICA),Param->esposizione.MINI, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_MAX_IANODIA),Param->esposizione.MAXI, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_RXCHK),Param->esposizione.CHK, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-
-
-   // Scrittura opzioni relative
-   Param->config =  0x01; // NO DETECTOR
-   Param->config |= 0x04; // ANALOGIC MODELS
-   // Param->config |= 0x08; // ONLY PRE PULSE DURING AEC
-
-   if(Ser422WriteRegister(_REGID(PR_RX_OPT),Param->config, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;   
-   return TRUE;
-}
-
-bool pcb190UploadAnalogPreExpose(_RxStdSeq_Str* Param)
-{
-
-   printf("PRE AEC PCB190 UPLOADING..\n");
-
-   // Datai primari di esposizione
-   if(Ser422WriteRegister(_REGID(RG190_RXHVTMO),Param->esposizione.TMO, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_RXHVEXP),Param->esposizione.HV, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_RXI),Param->esposizione.I, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_RXMAS),Param->esposizione.MAS, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_MIN_HV),Param->esposizione.MINHV, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_MAX_HV),Param->esposizione.MAXHV, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_MIN_IANODICA),Param->esposizione.MINI, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_MAX_IANODIA),Param->esposizione.MAXI, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_RXCHK),Param->esposizione.CHK, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-
-
-   // Scrittura opzioni relative
-   Param->config =  0x01; // NO DETECTOR
-   Param->config |= 0x04; // ANALOGIC MODELS
-
-   if(Ser422WriteRegister(_REGID(PR_RX_OPT),Param->config, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   return TRUE;
-}
-
-bool pcb190UploadAnalogManualExpose(_RxStdSeq_Str* Param)
-{
-
-   printf("ANALOG MANUAL EXPOSURE PCB190 UPLOADING..\n");
-
-   // Dati primari di esposizione
-   if(Ser422WriteRegister(_REGID(RG190_RXHVTMO),Param->esposizione.TMO, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_RXHVEXP),Param->esposizione.HV, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_RXI),Param->esposizione.I, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_RXMAS),Param->esposizione.MAS, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_MIN_HV),Param->esposizione.MINHV, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_MAX_HV),Param->esposizione.MAXHV, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_MIN_IANODICA),Param->esposizione.MINI, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_MAX_IANODIA),Param->esposizione.MAXI, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_RXCHK),Param->esposizione.CHK, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-
-
-   // Carica gli impulsi
-   // Scrittura opzioni relative
-   Param->config =  0x01; // NO DETECTOR
-   Param->config |= 0x04; // ANALOGIC MODELS
-
-   if(Ser422WriteRegister(_REGID(PR_RX_OPT),Param->config, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   return TRUE;
-}
-
 bool pcb190UploadExposeAE(_RxStdSeq_Str* Param)
 {
 
+    debugPrint("PCB190 UPLOAD EXPOSURE (AE) DATA");
   // Scrive uno per uno tutti i registri
    if(Ser422WriteRegister(_REGID(RG190_RXHVTMO),Param->esposizioneAE.TMO, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
    if(Ser422WriteRegister(_REGID(RG190_RXHVEXP),Param->esposizioneAE.HV, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
@@ -1157,6 +1049,7 @@ bool pcb190UploadTomoExpose(_RxStdSeq_Str* Param, bool isAEC)
 {
   if (isAEC)
   {
+   debugPrint("PCB190 UPLOAD PRE-EXPOSURE DATA FOR TOMO");
    if(Ser422WriteRegister(_REGID(RG190_RXHVTMO),Param->esposizione.TMO, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
    if(Ser422WriteRegister(_REGID(RG190_RXHVEXP),Param->esposizione.HV, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
    if(Ser422WriteRegister(_REGID(RG190_RXI),Param->esposizione.I, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
@@ -1185,8 +1078,8 @@ bool pcb190UploadTomoExpose(_RxStdSeq_Str* Param, bool isAEC)
    // Caricamento modalità particolare di sparo senza detector
    if(generalConfiguration.gantryCfg.detectorType == DETECTOR_SOLO){
        Param->config|=0x2;
-       printf("!!!!!!!!!SEQUENZA RAGGI AEC PER DETECTOR SOLO!!!!!\n");
-   }
+       debugPrint("PCB190 UPLOAD EXPOSURE DATA FOR TOMO WITH SOLO DETECTOR");
+   }else debugPrint("PCB190 UPLOAD EXPOSURE DATA FOR TOMO");
 
    if(Ser422WriteRegister(_REGID(PR_RX_OPT),Param->config, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
 

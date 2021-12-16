@@ -40,7 +40,7 @@ static bool test_on=false;
 //  O EVENTY ASINCRONI (ERRORI, ...)
 // ___________________________________________________________________________
 void actuators_rx_devices(uint32_t parameter){
-    printf("ACTUATOR DEVICE EVENTS HANDLER STARTED\n");
+    debugPrint("ACTUATORS DEVICE EVENTS HANDLER STARTED");
     actuators_event_timeout = 0xFFFFFFFF;
 
     _EVCLR(_EV0_TRX_EVENT);
@@ -51,7 +51,7 @@ void actuators_rx_devices(uint32_t parameter){
     while(1){
         if(_EVWAIT_TANY(ACTUATOR_EVENTS,actuators_event_timeout)==false){
             // Evento timeout
-            printf("TIMEOUT EVENTI ACTUATOR\n");
+            debugPrint("ACTUATORS TIMEOUT EVENTI ACTUATOR");
 
             actuators_event_timeout = 0xFFFFFFFF;
             continue;
@@ -113,11 +113,11 @@ void managePowerEvents(void){
 
     // Solo per la stampa dello stato
     if(memMccbuffer[PWRMANAGEMENT_STAT]!=mccbuffer[PWRMANAGEMENT_STAT]){
-        if(mccbuffer[PWRMANAGEMENT_STAT]==PWRMANAGEMENT_STAT_POWERDOWN)          printf("POWERDOWN CONDITION!!!\n");
-        else if(mccbuffer[PWRMANAGEMENT_STAT]==PWRMANAGEMENT_STAT_EMERGENCY)     printf("EMERGENCY CONDITION!!!\n");
-        else if(mccbuffer[PWRMANAGEMENT_STAT]==PWRMANAGEMENT_STAT_BLITERS_ON)     printf("BLITERS ON CONDITION!!!\n");
-        else printf("POWER MANAGEMENT OK\n");
-        printf("VLENZE=%d\n",vbus);
+        if(mccbuffer[PWRMANAGEMENT_STAT]==PWRMANAGEMENT_STAT_POWERDOWN)          debugPrint("ACTUATORS POWERDOWN CONDITION");
+        else if(mccbuffer[PWRMANAGEMENT_STAT]==PWRMANAGEMENT_STAT_EMERGENCY)     debugPrint("ACTUATORS EMERGENCY CONDITION");
+        else if(mccbuffer[PWRMANAGEMENT_STAT]==PWRMANAGEMENT_STAT_BLITERS_ON)    debugPrint("ACTUATORS BLITERS ON CONDITION");
+        else debugPrint("ACTUATORS POWER MANAGEMENT OK");
+        debugPrintI("ACTUATORS VLENZE",vbus);
     }
 
 
@@ -217,7 +217,7 @@ void manageTrxEvents(void){
         sendActuatorFrameToMaster(buffer);
         break;
     case TRX_ZERO_SETTING:
-        printf("ZERO SETTING TERMINATO: esito=%d, data=%d\n",event_code,event_data);
+        debugPrintI2("ACTUATORS ZERO SETTING TERMINATO. ESITO",event_code, "DATO",event_data);
         buffer[0]= ACTUATORS_SET_TRX_ZERO;
         buffer[1]= event_code;  // Esito comando
         buffer[2] = event_data; // Dato associato all'esito
@@ -227,9 +227,8 @@ void manageTrxEvents(void){
 
     case TRX_MOVE_WITH_TRIGGER:
     case TRX_MOVE_TO_POSITION:
-        val = getTrxPosition(); // Legge l'angolo del Tubo
-
-        printf("TRX: POSIZIONAMENTO TERMINATO: esito=%d, data=%d\n",event_code,event_data);
+        val = getTrxPosition(); // Legge l'angolo del Tubo        
+        debugPrintI2("ACTUATORS TRX POSIZIONAMENTO TERMINATO. ESITO",event_code, "DATO",event_data);
         buffer[0]= ACTUATORS_MOVE_TRX;
         buffer[1]= event_code;  // Esito comando
         buffer[2]= event_data;
@@ -239,7 +238,7 @@ void manageTrxEvents(void){
 
     case TRX_MANUAL_MOVE_TO_POSITION:
         val = getTrxPosition(); // Legge l'angolo del Tubo
-        printf("POSIZIONAMENTO MANUALE TERMINATO:%d\n", pTrxStat->dAngolo);
+        debugPrintI("ACTUATORS TRX POSIZIONAMENTO MANUALE TERMINATO. ANGOLO",pTrxStat->dAngolo);
         buffer[0]= ACTUATORS_MOVE_MANUAL_TRX;
         buffer[1]= event_code;  // Esito comando
         buffer[2]= event_data;
@@ -249,7 +248,7 @@ void manageTrxEvents(void){
 
     case TRX_QUICK_STOP:
         val = getTrxPosition(); // Legge l'angolo del Tubo
-        printf("QUICK STOP TERMINATO: posizione=%d\n",pTrxStat->dAngolo);
+        debugPrintI("ACTUATORS QUICK STOP TERMINATO. ANGOLO",pTrxStat->dAngolo);
         buffer[0]= ACTUATORS_TRX_QUICK_STOP;
         buffer[1]= event_code;  // Esito comando
         buffer[2]= event_data;  // Angolo finale
@@ -274,7 +273,7 @@ void manageTrxEvents(void){
         buffer[5]= (unsigned char) (event_data>>24);
 
         val = getTrxPosition(); // Legge l'angolo del Tubo
-        printf("TRX FAULT: Posizione:%x\n",val);
+        debugPrintI("ACTUATORS TRX FAULT. ANGOLO",val);
         TO_LE16(&buffer[6],val);    // Aggiunge il valore dell'angolo corrente
         sendActuatorFrameToMaster(buffer);
         break;
@@ -301,8 +300,8 @@ void manageArmEvents(void){
         sendActuatorFrameToMaster(buffer);
         break;
 
-    case ARM_MOVE_TO_POSITION:
-        printf("POSIZIONAMENTO TERMINATO: esito=%d, data=%d\n",event_code,event_data);
+    case ARM_MOVE_TO_POSITION:        
+        debugPrintI2("ACTUATORS ARM POSIZIONAMENTO TERMINATO. ESITO",event_code, "DATO",event_data);
         buffer[0]= ACTUATORS_MOVE_ARM;
         buffer[1]= event_code;  // Esito comando
         buffer[2] = event_data; // Dato associato all'esito
@@ -310,7 +309,7 @@ void manageArmEvents(void){
         break;
 
     case ARM_MOVE_MANUAL:
-        printf("POSIZIONAMENTO MANUALE TERMINATO: esito=%d, data=%d\n",event_code,event_data);
+        debugPrintI2("ACTUATORS ARM POSIZIONAMENTO MANUALE TERMINATO. ESITO",event_code, "DATO",event_data);
         buffer[0]= ACTUATORS_MOVE_MANUAL_ARM;
         buffer[1]= event_code;  // Esito comando
         buffer[2] = event_data; // Dato associato all'esito
@@ -428,16 +427,16 @@ void masterCommandExecution(void){
     // Verify the command to be executed
     switch((actuatorEnumCommands_t) actuatorCommand.data[0]){
     case ACTUATORS_CMD_TEST:
-        printf("comando ricevuto\n");
+        debugPrint("ACTUATORS TEST COMMAND");
         actuatorTestCommands();
         break;
 
     case ACTUATORS_LENZE_UNPARK:
-        printf("COMANDO UNPARK LENZE\n");
+        debugPrint("ACTUATORS UNPARK LENZE COMMAND");
         lenzeSetCommand(LENZE_UNLOCK_PARKING,0);
         break;
     case ACTUATORS_LENZE_PARK:
-        printf("COMANDO UNPARK LENZE\n");
+        debugPrint("ACTUATORS PARK LENZE COMMAND");
         lenzeSetCommand(LENZE_SET_PARKING,0);
         break;
 
@@ -449,7 +448,7 @@ void masterCommandExecution(void){
          *  data[1:2] = init position in 0.1°/unit. type short.
          *  data[2:3] = target position in 0.1°/unit.  type short.
          */
-          printf("COMANDO ARM\n");
+        debugPrint("ACTUATORS ARM COMMAND");
         actuatorMoveArm(); // Attivazione Braccio: eventuali errori sono segnalati all'interno
         break;
 
@@ -462,7 +461,7 @@ void masterCommandExecution(void){
          *  data[3:4] = target position in 0.1°/unit.  type short.
          *  data[5] = modo calib/standard
          */
-        printf("COMANDO MANUAL ARM\n");
+        debugPrint("ACTUATORS MANUAL ARM COMMAND");
         actuatorMoveManualArm(); // Attivazione Braccio: eventuali errori sono segnalati all'interno
         break;
 
@@ -475,6 +474,7 @@ void masterCommandExecution(void){
          *  data[3]     = context index 0,1,2,3
          *  data[4] =   EXP_WIN MODE
          */
+        debugPrint("ACTUATORS TRX COMMAND");
         actuatorMoveTrx(); // Attivazione tubo: eventuali errori sono segnalati all'interno
         break;
 
@@ -487,7 +487,7 @@ void masterCommandExecution(void){
          *  data[3]     = context index 0,1,2,3
          *  data[4] =   EXP_WIN MODE
          */
-        printf("COMANDO MANUAL TRX\n");
+        debugPrint("ACTUATORS MANUAL TRX COMMAND");
         actuatorMoveManualTrx(); // Attivazione tubo: eventuali errori sono segnalati all'interno
         break;
 
@@ -500,12 +500,13 @@ void masterCommandExecution(void){
          *  data[3]     = context index 0,1,2,3
          *  data[4] =   EXP_WIN MODE
          */
-        printf("COMANDO ZERO SETTING TRX\n");
+        debugPrint("ACTUATORS TRX ZERO SETTING COMMAND");
         trxSetCommand(TRX_ZERO_SETTING,null);
         break;
 
 
     case ACTUATORS_TRX_QUICK_STOP:
+        debugPrint("ACTUATORS QUICK STOP COMMAND");
         actuatorTrxQuickStop();
         break;
 

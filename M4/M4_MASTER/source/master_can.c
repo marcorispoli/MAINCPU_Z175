@@ -189,24 +189,6 @@ void Can_RxErrors_Task(uint32_t parameter)
    static unsigned char buffer[2*sizeof(SystemInputs)];
    _SystemInputs_Str changedInputs;
 
-   //static bool prxStat = false;
-
-   // Controllo di debug
-   /*
-   if(pFrame->inputs.CPU_XRAY_REQ){
-       if(!prxStat){
-           printf(">>>>>>>> PRX ON\n");
-           prxStat = true;
-           if(!pFrame->changed) printf("ERRORE TRASFERIMENTO PRX A MASTER\n");
-       }
-
-   }else{
-       if(prxStat){
-           printf("PRX OFF <<<<<<<\n");
-           prxStat = false;
-           if(!pFrame->changed) printf("ERRORE TRASFERIMENTO PRX A MASTER\n");
-       }
-   }*/
 
    // In ogni caso copia il contenuto aggiornato
    // Calcola i bit cambiati con un'operazione di XOR tra i nuovi e i precedenti
@@ -300,14 +282,14 @@ void Can_RxErrors_Task(uint32_t parameter)
       outputs.MASTER_TERMINAL_PRESENT=1;
       if(flexcan_send(MB_TX_TO_IO_SLAVE, &txmb_to_io_slave, CANOPEN_MASTER_NODE + CANOPEN_SRV_IO,8, (uint8_t*)&outputs)){
         if(!is_in_error){
-            printf("CAN IO ERROR\n");
+            debugPrint("FLEXCAN Send Outputs error");
             is_in_error = true;
         }
 
       }else{
           generalConfiguration.canConnected = true;
           if(is_in_error){
-              printf("CAN IO RESUME ERROR\n");
+              debugPrint("FLEXCAN Send Outputs error RESUME");
               is_in_error = false;
           }
       }
@@ -330,13 +312,12 @@ void Can_RxErrors_Task(uint32_t parameter)
      while(1)
      {
          if(flexcan_wait_receive(MB_RX_FROM_IO_SLAVE, &data_result)==false){
-             printf("\nFLEXCAN Receive Outputs Error \n");
+             debugPrint("FLEXCAN Receive Inputs Error");
              _time_delay(1000);
          }
 
          lenght = ((data_result.cs) >> 16) & 0xF;
          if(lenght!=8){
-             printf("\nReceived wronght lenght CANOPEN frame\n");
              continue;
          }
 
@@ -358,13 +339,12 @@ void Can_RxErrors_Task(uint32_t parameter)
      while(1)
      {
          if(flexcan_wait_receive(MB_RX_FROM_ACTUATORS_SLAVE, &data_result)==false){
-             printf("\nFLEXCAN Receive Outputs Error \n");
+             debugPrint("FLEXCAN Actuator Receive Error");
              _time_delay(1000);
          }
 
          lenght = ((data_result.cs) >> 16) & 0xF;
          if(lenght!=8){
-             printf("\nReceived wronght lenght CANOPEN frame\n");
              continue;
          }
 

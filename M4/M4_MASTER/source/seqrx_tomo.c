@@ -42,8 +42,8 @@ void tomo_rx_task(uint32_t taskRegisters)
     tomoError=0;
     
     
-    if(generalConfiguration.demoMode) printf("SEQUENZA TOMO ATTIVATA IN DEMO MODE\n");
-    else  printf("SEQUENZA TOMO ATTIVATA \n");
+    if(generalConfiguration.demoMode) debugPrint("RX-3D START IN DEMO MODE");
+    else  debugPrint("RX-3D START SEQUENCE");
 
     // Prima di andare in freeze bisogna accertarsi che la collimazione 2D sia andata a buon fine
     if(wait2DBackFrontCompletion(100)==false) _SEQERROR(ERROR_INVALID_COLLI);
@@ -60,23 +60,23 @@ void tomo_rx_task(uint32_t taskRegisters)
     // Verifica Chiusura porta
     if((SystemInputs.CPU_CLOSED_DOOR==0) && (!generalConfiguration.demoMode))
     {
-        printf("PORTA STUDIO APERTA!\n");
+        debugPrint("RX-3D ERRORE PORTA STUDIO APERTA");
         _SEQERROR(ERROR_CLOSED_DOOR);
     }
 
     // Reset Eventuale Fault della PCB190
     pcb190ResetFault();
 
-    // Attiva Starter
+    // Attiva Starter precocemente
     if(!generalConfiguration.demoMode){
       if(Param->esposizione.HV & 0x4000)
       {
-        if(pcb190StarterH()==FALSE) printf("WARNING: COMANDO STARTER HIGH FALLITO\n");
-        else printf("STARTER ATTIVATO AD ALTA VELOCITA'\n");
+        if(pcb190StarterH()==FALSE) debugPrint("RX-3D COMANDO STARTER HS FALLITO");
+        else debugPrint("RX-3D STARTER HS ATTIVATO");
       }else
       {
-        if(pcb190StarterL()==FALSE) printf("WARNING: COMANDO STARTER LOW FALLITO\n");
-        else printf("STARTER ATTIVATO A BASSA VELOCITA'\n");
+        if(pcb190StarterL()==FALSE) debugPrint("RX-3D COMANDO STARTER LS FALLITO");
+        else debugPrint("RX-3D STARTER LS ATTIVATO");
       }
     }
 
@@ -99,7 +99,7 @@ void tomo_rx_task(uint32_t taskRegisters)
           tomoCurrentFilterPosition = _DEVREGL(RG249U2_POS_TARGET,PCB249U2_CONTEST);           
       }
       
-      printf("ANGOLO BRACCIO PER COLLIMAZIONE TOMO:%d\n",generalConfiguration.armExecution.dAngolo/10);
+      debugPrintI("RX-3D ANGOLO BRACCIO PER COLLIMAZIONE TOMO",generalConfiguration.armExecution.dAngolo/10);
 
       // Si deve esprimere l'angolo in 0.025 °/unit per compatibilità con collimatore
       short angolo = generalConfiguration.armExecution.dAngolo * 4;
@@ -118,24 +118,19 @@ void tomo_rx_task(uint32_t taskRegisters)
     if(!generalConfiguration.demoMode){
       
         // Preparazione Registri 190 per attivazione raggi 
-        printf("PREPARAZIONE REGISTRI PCB190\n");
         if(pcb190UploadTomoExpose(Param,FALSE)==FALSE) _SEQERROR(_SEQ_UPLOAD190_PARAM);
         
         if(Param->tomo_mode==_TOMO_MODE_WIDE)
-          printf("DATI TOMO: ESPOSIZIONE  WIDE --------------------------\n");
+          debugPrint("RX-3D ESPOSIZIONE  WIDE");
         else if(Param->tomo_mode==_TOMO_MODE_NARROW)
-          printf("DATI TOMO: ESPOSIZIONE  NARROW --------------------------\n");
+          debugPrint("RX-3D ESPOSIZIONE  NARROW");
         else if(Param->tomo_mode==_TOMO_MODE_INTERMEDIATE)
-          printf("DATI TOMO: ESPOSIZIONE  INTERMEDIATE --------------------------\n");
+          debugPrint("RX-3D ESPOSIZIONE  INTERMEDIATE");
         else
-          printf("DATI TOMO: ESPOSIZIONE  A BRACCIO FERMO --------------------------\n");
+          debugPrint("RX-3D ESPOSIZIONE  BRACCIO FERMO");
 
-        printf("IDAC:%d\n",Param->esposizione.I);
-        printf("VDAC:%d\n",Param->esposizione.HV);
-        printf("MASDAC:%d\n",Param->esposizione.MAS);   
-        printf("SAMPLES:%d\n",Param->tomo_samples);
-        printf("PRE SAMPLES:%d\n",Param->tomo_pre_pulses);
-        printf("--------------------------------------\n");
+        debugPrintI4("RX-3D EXP DATA, IDAC", Param->esposizione.I & 0x0FFF, "VDAC",Param->esposizione.HV & 0x0FFF,"MASDAC", Param->esposizione.MAS, "SMP",Param->tomo_samples );
+
 
         // Impostazione Segnale XRAY_ENA su Bus Hardware
         _mutex_lock(&output_mutex);
@@ -151,7 +146,7 @@ void tomo_rx_task(uint32_t taskRegisters)
 
         // Attesa completamento movimento tubo + preparazione per nuovo movimento con EXP-WIN
         // Se si rilascia il pulsante durante il posizionamento verrà segnalato l'errore sul posizionamento
-        printf("ATTESA FINE POSIZIONAMENO..\n");
+        debugPrint("RX-3D ATTESA FINE POSIZIONAMENO");
         if(actuatorsTrxWaitReady(100)==false) _SEQERROR(_SEQ_ERR_WIDE_HOME);
         if(Param->tomo_mode!=_TOMO_MODE_STATIC) actuatorsMoveTomoTrxEnd(Param->tomo_mode,true); // actuatorsActivateTrxTriggerStart();
 
@@ -162,12 +157,12 @@ void tomo_rx_task(uint32_t taskRegisters)
           if(angolo&0x80) angolo = -1 * (angolo&0x7F); 
           tomoFilterTarget = getTomoDeltaFilter(angolo) +  tomoCurrentFilterPosition;        
           int i=100;
-          printf("SET FILTER IN INITIAL RAW POSITION: %d\n",tomoFilterTarget);
+          debugPrintI("RX-3D SET FILTER IN INITIAL RAW POSITION",tomoFilterTarget);
           while(--i){
               if( pcb249U2SetFiltroRaw(tomoFilterTarget)) break;
               _time_delay(50);
           }
-          if(i==0) printf("INITIAL FILTER POSITIONING FAILED!\n");
+          if(i==0) debugPrint("RX-3D INITIAL FILTER POSITIONING FAILED!\n");
         }
 
         // Attende i segnali e verifica l'uscita con pulsante raggi
@@ -181,13 +176,10 @@ void tomo_rx_task(uint32_t taskRegisters)
 
         // Comando Attivazione Raggi
         if(waitPcb190Ready(50)==FALSE) _SEQERROR(_SEQ_PCB190_BUSY);
-        printf("Comando Raggi \n");
 
         int rc = pcb190StartRxTomo();
         if(rc==SER422_BUSY) _SEQERROR(_SEQ_PCB190_BUSY);
         if(rc==SER422_ILLEGAL_FUNCTION) _SEQERROR(ERROR_PUSHRX_NO_PREP);
-
-        printf("Comando a PCB190 OK. Sleep.....\n");
 
         // Spin Lock ogni 100ms per testare anche eventuali blocchi sul braccio in movimento
         long rxloop = (_WAIT_XRAY_COMPLETED / 100);        
@@ -203,7 +195,6 @@ void tomo_rx_task(uint32_t taskRegisters)
               Ser422ReadRegister(_REGID(RG249U1_GONIO_REL),4,&PCB249U1_CONTEST);
               int angolo = (int) _DEVREGL(RG249U1_GONIO_REL,PCB249U1_CONTEST);
               if(angolo&0x80) angolo = -1 * (angolo&0x7F); 
-              //printf("ANGOLO:%d\n", angolo);
 
               int  new_filter;
               new_filter = getTomoDeltaFilter(angolo) + tomoCurrentFilterPosition;        
@@ -211,7 +202,7 @@ void tomo_rx_task(uint32_t taskRegisters)
               if(new_filter > tomoFilterTarget){ 
                   tomoFilterTarget = new_filter;
                   pcb249U2SetFiltroRaw(tomoFilterTarget);
-                  printf("ANGOLO:%d  FILTRO:%d\n",angolo, tomoFilterTarget);
+                  debugPrintI2("RX-3D FILTRO FOLLOWER. ANGOLO",angolo,"FPOS",tomoFilterTarget);
               }
            }
            
@@ -233,18 +224,16 @@ void tomo_rx_task(uint32_t taskRegisters)
        if((generalConfiguration.filterTomoEna!=0)&&(Param->tomo_mode!=_TOMO_MODE_STATIC)){
           if(tomoCurrentFilterPosition!=0){
             if(pcb249U2SetFiltroRaw(tomoCurrentFilterPosition) == false) {
-                  printf("FILTER COMMAND FAILED!\n");
+                  debugPrint("RX-3D FILTER COMMAND FAILED");
             }else{          
-                  printf("CURRENT FILTER POSITION: %d \n", tomoCurrentFilterPosition);
+                  debugPrintI("RX-3D CURRENT FILTER POSITION", tomoCurrentFilterPosition);
             }
           }
        }
-       
-       printf("PCB190: END SEQUENCE\n");
 
        // Lettura esito raggi
        if(pcb190GetPostRxRegisters()==FALSE){
-           printf("ERROR DURING PCB190 READ REGISTER AFTER XRAY EXPOSURE!!!!!!! \n");
+           debugPrint("RX-3D ERROR DURING PCB190 READ REGISTER AFTER XRAY EXPOSURE");
            _SEQERROR(_SEQ_READ_REGISTER);
 
        }
@@ -343,27 +332,23 @@ void tomo_rx_task(uint32_t taskRegisters)
     if(!generalConfiguration.demoMode){
        if(_TEST_BIT(PCB190_FAULT)) _SEQERROR(_DEVREGL(RG190_FAULTS,PCB190_CONTEST));
     }
-    printf("RISULTATO RX OK\n");
+
 
 
     // Ritardo acquisizione campionamenti
     _time_delay(50); // Attesa 50ms
 
     if(!generalConfiguration.demoMode){
-      // Lettura mas residui
-//      mAs_erogati = _DEVREG(RG190_MAS_EXIT,PCB190_CONTEST)/50;
       mAs_erogati = _DEVREG(RG190_MAS_EXIT,PCB190_CONTEST);
-
     }else{
-        // mAs_erogati = (Param->esposizione.MAS / 50) * Param->tomo_samples;
         mAs_erogati = (unsigned short) (((float) Param->esposizione.MAS  * Param->tomo_samples) * 50);
     }
     
     tomoSeqResult=TRUE;
         
-    // Stringa di debug
-    printf("SEQUENZA TOMO TERMINATA CON SUCCESSO: mAs=%d\n", mAs_erogati);
-    data[0]=RXOK;       
+    debugPrintI("RX-3D SEQUENZA COMPLETATA. mAs",(int) mAs_erogati);
+
+    data[0]=RXOK;
     data[1]=(unsigned char) (mAs_erogati&0xFF);  // Aggiungere mas residui        
     data[2]=(unsigned char) ((mAs_erogati>>8)&0xFF);  
     data[3]= _DEVREGL(RG190_HV_RXEND,PCB190_CONTEST);
@@ -416,7 +401,6 @@ void RxTomoSeqError(int code)
     unsigned char data[5];
     unsigned short mAs_erogati=0;
     
-    printf(" SEQUENZA TOMO STANDARD: ERRORE!!!\n");
     
     // Ferma subito il braccio
     actuatorsTrxStop(20);
@@ -452,8 +436,8 @@ void RxTomoSeqError(int code)
         }
     }
     
-    // Stringa di debug
-    printf("TOMO SEQ ERROR:%d\n",code); 
+
+    debugPrintI("RX-3D ERRORE SEQUENZA",code );
     tomoError = code;
     data[0]=tomoError;       
     data[1]=(unsigned char) (mAs_erogati&0xFF);  // Aggiungere mas residui        
@@ -471,9 +455,9 @@ void RxTomoSeqError(int code)
     if((generalConfiguration.filterTomoEna!=0)&&(Param->tomo_mode!=_TOMO_MODE_STATIC)){
       if(tomoCurrentFilterPosition!=0){
         if(pcb249U2SetFiltroRaw(tomoCurrentFilterPosition) == false) {
-            printf("FILTER COMMAND FAILED!\n");
+            debugPrint("RX-3D FILTER COMMAND FAILED");
         }else{          
-            printf("CURRENT FILTER POSITION: %d \n", tomoCurrentFilterPosition);
+            debugPrintI("RX-3D CURRENT FILTER POSITION", tomoCurrentFilterPosition);
         }
       }
     }

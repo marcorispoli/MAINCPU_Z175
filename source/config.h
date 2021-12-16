@@ -3,10 +3,21 @@
 
 #include "application.h"
 
+
+
 class mccMasterCom: public mccCom
 {
 public:
     mccMasterCom(int x, int y, int z, bool mode) : mccCom(x,y,z,mode) {}
+    // gestione dei comandi GUI provenienti da M4 MASTER
+    void mccRxHandler(_MccFrame_Str mccframe);
+
+};
+
+class mccMasterdebugPrint: public mccCom
+{
+public:
+    mccMasterdebugPrint(int x, int y, int z, bool mode) : mccCom(x,y,z,mode) {}
     // gestione dei comandi GUI provenienti da M4 MASTER
     void mccRxHandler(_MccFrame_Str mccframe);
 

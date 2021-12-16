@@ -103,6 +103,7 @@ _____________________________________________________________________________*/
 ext bool isPowerdown;
 ext void show_mqx_error(int code);
 
+
 typedef struct
 {
     // Architettura Hardware

@@ -32,7 +32,7 @@ void std_ae_rx_task(uint32_t taskRegisters)
   bool isAEC = false;
 
  
-  printf("PARTENZA SEQUENZA PER GESTIONE RAGGI ALTA ENERGIA \n");
+  printf("PARTENZA THREAD SEQUENZA PER GESTIONE RAGGI ALTA ENERGIA\n");
   _EVCLR(_SEQEV_RX_AE_START);
   
 
@@ -57,8 +57,8 @@ void std_ae_rx_task(uint32_t taskRegisters)
     mAs_erogati_AE = 0;
 
      // In Demo mode il comando non viene eseguito
-    if(generalConfiguration.demoMode) printf("ATTIVAZIONE RX AE IN DEMO MODE\n");
-    else  printf("ATTIVAZIONE RX AE \n");
+    if(generalConfiguration.demoMode) debugPrint("RX-AE ATTIVAZIONE IN DEMO MODE");
+    else  debugPrint("RX-AE ATTIVAZIONE SEQUENZA");
 
     // Prima di andare in freeze bisogna accertarsi che la collimazione 2D sia andata a buon fine
     if(wait2DBackFrontCompletion(100)==false) _SEQERROR(ERROR_INVALID_COLLI);
@@ -78,7 +78,7 @@ void std_ae_rx_task(uint32_t taskRegisters)
     // Verifica Chiusura porta
     if((SystemInputs.CPU_CLOSED_DOOR==0) && (!generalConfiguration.demoMode))
     {
-      printf("PORTA STUDIO APERTA!\n");
+      debugPrint("RX-AE PORTA STUDIO APERTA");
       _SEQERROR(ERROR_CLOSED_DOOR);  
     }
 
@@ -87,25 +87,22 @@ void std_ae_rx_task(uint32_t taskRegisters)
 
     if(Param->esposizione.HV & 0x4000)
     {
-      if(pcb190StarterH()==FALSE) printf("WARNING: COMANDO STARTER HIGH FALLITO\n");
-      else printf("STARTER ATTIVATO AD ALTA VELOCITA'\n");
+      if(pcb190StarterH()==FALSE) debugPrint("RX-AE  COMANDO STARTER HS FALLITO");
+      else debugPrint("RX-AE STARTER HS ATTIVATO");
     }else
     {
-      if(pcb190StarterL()==FALSE) printf("WARNING: COMANDO STARTER LOW FALLITO\n");
-      else printf("STARTER ATTIVATO A BASSA VELOCITA'\n");
+      if(pcb190StarterL()==FALSE) debugPrint("RX-AE COMANDO STARTER LS");
+      else debugPrint("RX-AE STARTER LS ATTIVATO");
     }
 
 
     // Caricamento parametri di esposizione o pre esposizione per impulso bassa energia
     if(pcb190UploadExpose(Param, FALSE)==FALSE) _SEQERROR(_SEQ_UPLOAD190_PARAM);      
  
-    if(isAEC) printf("DATI PRE-IMPULSO BASSA ENERGIA --------------------------\n");
-    else printf("DATI IMPULSO BASSA ENERGIA --------------------------\n");
-    printf("IDAC:%d\n",Param->esposizione.I & 0x0FFF);
-    printf("VDAC:%d\n",Param->esposizione.HV & 0x0FFF);
-    printf("MASDAC:%d\n",Param->esposizione.MAS);   
-    printf("-----------------------------------------------------\n");
-    
+    if(isAEC) debugPrint("RX-AE DATI PRE-IMPULSO");
+    else debugPrint("RX-AE DATI IMPULSO BASSA ENERGIA");
+    debugPrintI3("RX-AE EXP DATA, IDAC", Param->esposizione.I & 0x0FFF, "VDAC",Param->esposizione.HV & 0x0FFF,"MASDAC", Param->esposizione.MAS);
+
     // Verifica su XRAY_REQ(Pulsante raggi premuto)
     if(SystemInputs.CPU_XRAY_REQ==0)  _SEQERROR(ERROR_PUSHRX_NO_PREP);
       
@@ -121,9 +118,6 @@ void std_ae_rx_task(uint32_t taskRegisters)
       _EVCLR(_EV2_XRAY_REQ_OFF);
        if(_EVWAIT_TANY(_MOR2(_EV2_XRAY_ENA_ON,_EV2_XRAY_REQ_OFF),_WAIT_XRAY_ENA)==FALSE) _SEQERROR(_SEQ_IO_TIMEOUT);
      }
-
-    // Tolto controllo pulsante raggi per evitare abort per brevi rilasci..
-    // if(SystemInputs.XRAY_REQ==0)  _SEQERROR(ERROR_PUSHRX_NO_PREP);
         
     // Comando Attivazione Raggi
     if(waitPcb190Ready(50)==FALSE) _SEQERROR(_SEQ_PCB190_BUSY);
@@ -162,20 +156,13 @@ void std_ae_rx_task(uint32_t taskRegisters)
                 {
                   // Upload manuale registri dati (il sistema è ancora in FREEZE)
                   pcb190GetPostRxRegisters();
-                  printf("ERRORE SEQUENZA RAGGI DURANTE ATTESA AEC\n");
+                  debugPrint("RX-AE ERRORE SEQUENZA RAGGI DURANTE ATTESA AEC");
                   _SEQERROR(_DEVREGL(RG190_FAULTS,PCB190_CONTEST));
                 }
 
-                printf("DATI AEC ARRIVATI!\n");
-
                 // Dati AEC giunti
                 if(aecExpIsValid==FALSE) _SEQERROR(_SEQ_AEC_NOT_AVAILABLE);
-
-                printf("------DATI IMPULSO BASSA ENERGIA -------\n");
-                printf("IDAC:%d\n",Param->esposizione.I & 0x0FFF);
-                printf("VDAC:%d\n",Param->esposizione.HV & 0x0FFF);
-                printf("MASDAC:%d\n",Param->esposizione.MAS);
-                printf("--------------------------------------\n");
+                debugPrintI3("RX-AE AEC EXPOSURE DATA, IDAC", Param->esposizione.I & 0x0FFF, "VDAC",Param->esposizione.HV & 0x0FFF,"MASDAC", Param->esposizione.MAS);
 
                 // Dati AEC giunti: ricarica i dati alla PCB190
                 pcb190UploadExpose(Param, TRUE);
@@ -184,7 +171,7 @@ void std_ae_rx_task(uint32_t taskRegisters)
     ///////////////////////////////////////////////////////////////////////////////////////////////////
     //                          ATTESA FINE IMPULSO BASSA ENERGIA
     ///////////////////////////////////////////////////////////////////////////////////////////////////
-     printf("Attesa Dati per impulso AE ... \n");
+    printf("Attesa Dati per impulso AE ... \n");
     _time_delay(500);
   
     // Attesa XRAY COMPLETED da Bus Hardware
@@ -196,7 +183,7 @@ void std_ae_rx_task(uint32_t taskRegisters)
 
     // Lettura esito raggi
     if(pcb190GetPostRxRegisters()==FALSE){
-        printf("ERRORE DURANTE LETTURA REGISTRI FINE RAGGI!!!!!!! \n");
+        debugPrint("RX-AE ERRORE DURANTE LETTURA REGISTRI FINE RAGGI");
         _SEQERROR(_SEQ_READ_REGISTER);
 
     }
@@ -232,12 +219,7 @@ void std_ae_rx_task(uint32_t taskRegisters)
 
     // Caricamento parametri di esposizione ALTA ENERGIA
     if(pcb190UploadExpose(Param, FALSE)==FALSE) _SEQERROR(_SEQ_UPLOAD190_PARAM);
-
-    printf("DATI IMPULSO ALTA ENERGIA --------------------------\n");
-    printf("IDAC:%d\n",Param->esposizione.I & 0x0FFF);
-    printf("VDAC:%d\n",Param->esposizione.HV & 0x0FFF);
-    printf("MASDAC:%d\n",Param->esposizione.MAS);
-    printf("-----------------------------------------------------\n");
+    debugPrintI3("RX-AE HIGH PULSE EXPOSURE DATA, IDAC", Param->esposizione.I & 0x0FFF, "VDAC",Param->esposizione.HV & 0x0FFF,"MASDAC", Param->esposizione.MAS);
 
     // Ricarica nuova sequenza
     rc = pcb190StartRxStd();
@@ -258,14 +240,14 @@ void std_ae_rx_task(uint32_t taskRegisters)
 
     // Lettura esito raggi
     if(pcb190GetPostRxRegisters()==FALSE){
-        printf("ERRORE DURANTE LETTURA REGISTRI FINE RAGGI!!!!!!! \n");
+        debugPrint("RX-AE ERRORE DURANTE LETTURA REGISTRI FINE RAGGI");
         _SEQERROR(_SEQ_READ_REGISTER);
 
     }
 
     if(_TEST_BIT(PCB190_FAULT)) _SEQERROR(_DEVREGL(RG190_FAULTS,PCB190_CONTEST));
 
-    printf("SEQUENZA ALTA ENERGIA COMPLETATA CON SUCCESSO\n");
+    debugPrint("RX-AE SEQUENZA ALTA ENERGIA COMPLETATA CON SUCCESSO");
     mAs_erogati_AE = _DEVREG(RG190_MAS_EXIT,PCB190_CONTEST);// /50;
         
     // Calcolo dei dati di post esposizione
@@ -356,8 +338,7 @@ void _SEQERRORFUNC(int code)
 
     // Reset errori per consentire di eseguire comandi sui dispositivi della PCB190
     pcb190ResetFault();
-
-    printf("SEQ AE ERROR:%d, mAsLow=%d mAsAE=%d kVBUS=%d\n",code, mAs_erogati, mAs_erogati_AE,data[3] );
+    debugPrintI4("RX-AE ERROR", code,"mAsLow", mAs_erogati,"mAsAE", mAs_erogati_AE,"kVBUS", data[3] );
 
     // Carica i dati relativi all'esposizione se necessario
     if(!generalConfiguration.demoMode) rxNotifyData(1,code);

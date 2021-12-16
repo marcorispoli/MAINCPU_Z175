@@ -43,7 +43,8 @@ void gui_interface_task(uint32_t initial_data)
   // La gestione operativa avviene solo se i dispositivi sono configurati
   while(1){
     if(mccRxFrame(&ep, &mcc_cmd)){
-      if((mcc_cmd.cmd == MCC_LOADER) || (generalConfiguration.loaderOn)) manageMccLoader();
+      if(mcc_cmd.cmd == MCC_PRINT) mccPrint();
+      else if((mcc_cmd.cmd == MCC_LOADER) || (generalConfiguration.loaderOn)) manageMccLoader();
       else if(mcc_cmd.cmd == MCC_CONFIG) manageMccConfig();
       else if(generalConfiguration.deviceConfigured){
           digitalManageMccOperativo();
@@ -404,7 +405,7 @@ void manageMccConfig(){
 
     case  CONFIG_COMPLETED:                    
         // Questo sblocca la fase di startup attivando tutti i polling
-        printf("CONFIGURAZIONE DEVICES COMPLETATA\n");
+        debugPrint("CONFIGURAZIONE DEVICES COMPLETATA");
         generalConfiguration.deviceConfigOk = TRUE; // La configurazione è arrivata
         _EVSET(_EV1_DEV_CONFIG_OK);
 
@@ -592,6 +593,7 @@ void manageMccConfig(){
             case MCC_CALIB_ZERO:
                   mcc_calib_zero();
             break;
+
             case MCC_PARKING_MODE_COMMANDS:
 
                 if(mcc_cmd.buffer[0] == MCC_PARKING_MODE_COMMANDS_START_PARKING)  mcc_parking_mode();
@@ -612,10 +614,9 @@ void manageMccConfig(){
 _____________________________________________________________________________________*/
 void mcc_cmd_trx(void)
 {
-    printf("COMANDO MCC TRX\n");
 
     if(mcc_cmd.buffer[0]==TRX_MOVE_STOP){
-        printf("MCC COMANDO STOP\n");
+        debugPrint("GUI COMANDO STOP TRX");
         actuatorsTrxStop(0);
         return;
 
@@ -624,7 +625,7 @@ void mcc_cmd_trx(void)
     int timeout = 5;
     if(mcc_cmd.buffer[1] == MOVE_WAIT_END){
         while((!timeout) || (generalConfiguration.trxExecution.run == true) || (generalConfiguration.trxExecution.completed == false) || (!generalConfiguration.trxExecution.idle))   {
-            printf("ATTESA FINE COMANDO TRX IN CORSO: -%d(s)\n", timeout);
+            debugPrint("GUI ATTESA COMANDO TRX IN CORSO");
             _time_delay(1000);
             timeout--;
         }
@@ -633,7 +634,7 @@ void mcc_cmd_trx(void)
     // Se il comando è già in esecuzione deve rispondere un errore
     if((generalConfiguration.trxExecution.run == true) || (generalConfiguration.trxExecution.completed == false) || (!generalConfiguration.trxExecution.idle)){
         unsigned char buffer[2];
-        printf("RICHIESTA MCC MOVIMENTO TRX: BUSY!");
+        debugPrint("GUI ERRORE COMANDO TRX: BUSY");
         buffer[0] = TRX_BUSY;
         buffer[1] = 0; // sub codice in caso di errore da fault
         mccGuiNotify(mcc_cmd.id,MCC_CMD_TRX,buffer,2);
@@ -685,7 +686,7 @@ void mcc_cmd_arm(void)
 
     // Se il comando è già in esecuzione deve rispondere un errore
     if((generalConfiguration.armExecution.run == true)||(generalConfiguration.armExecution.completed == false)){
-        printf("RICHIESTA MCC MOVIMENTO ARM: BUSY!");
+        debugPrint("GUI ERRORE COMANDO ARM: BUSY");
         buffer[0] = ARM_BUSY;
         buffer[1] = 0; // sub codice in caso di errore da fault
         mccGuiNotify(mcc_cmd.id,MCC_CMD_ARM,buffer,2);
@@ -698,16 +699,16 @@ void mcc_cmd_arm(void)
     if(!SystemOutputs.CPU_ROT_ENA)
     {
       // Rotation enable Bus Hardware test
-      printf("MOVIMENTO (ARM) FALLITO: SEGNALE ROT_ENA NON ATTIVO!\n");
+      debugPrint("GUI ERRORE COMANDO ARM: ROT ENA NON ATTIVO");
       error = ARM_DISABLED_ERROR;
     }else if((angolo!=200)&&((angolo>180) ||(angolo<-180)))
     {
       // Errore angolo fuori range
-      printf("MOVIMENTO (ARM) FALLITO: ANGOLO OUT OF RANGE: %d!\n",angolo);
+      debugPrintI("GUI ERRORE COMANDO ARM: OUT OF RANGE, ANGOLO",angolo);
       error =  ARM_RANGE_ERROR;
     }else if(generalConfiguration.armCfg.direction_memory==MEM_ARM_DIR_UNDEF){
         // Errore per mancanza di informazioni relative alla posizione del braccio
-        printf("MOVIMENTO (ARM) FALLITO: ANGOLO OUT OF RANGE: %d!\n",angolo);
+        debugPrintI("GUI ERRORE COMANDO ARM: OUT OF RANGE, ANGOLO",angolo);
         error =  ARM_RANGE_ERROR;
     }
 
@@ -763,7 +764,7 @@ void mcc_raggi_std(void)
     // Verifica se la sequenza è partita
     if(rxStdIsRunning)
     {
-      printf("ATTESA FINE SEQUENZA RX IN ESECUZIONE ..\n");
+      debugPrint("GUI ATTESA FINE SEQUENZA RX 2D IN ESECUZIONE");
       timeout = 30;
       while(rxStdIsRunning)
       {
@@ -821,7 +822,7 @@ void mcc_raggi_aec_std(void)
     // Verifica se la sequenza è partita
     if(rxStdAecIsRunning)
     {
-      printf("ATTESA FINE SEQUENZA RX IN ESECUZIONE ..\n");
+      debugPrint("GUI ATTESA FINE SEQUENZA RX AEC IN ESECUZIONE");
       timeout = 30;
       while(rxStdAecIsRunning)
       {
@@ -925,10 +926,9 @@ void mcc_raggi_alta_energia(void)
 {
     unsigned char chk,i;
     unsigned char data[13];
-    MCC_ENDPOINT ep = {_DEF_MCC_MASTER_TO_APP_MASTER};
-    int timeout;
 
-    printf("DATI ALTA ENERGIA ARRIVATI \n");
+
+    debugPrint("GUI DATI ALTA ENERGIA ARRIVATI");
 
     // La sequenza non è ancora attiva ..
     if(!rxAeIsRunning)
@@ -980,28 +980,25 @@ void mcc_exp_aec_std(void)
 
   if(aecIsValid ==FALSE)
   {
-    printf("TROPPO PRESTO!\n");
+    debugPrint("GUI DATI AEC ARRIVATI TROPPO PRESTO");
     return;
   }
 
   // Discrimina se Tomo o STandard
   if(mcc_cmd.buffer[13]==_AEC_2D)
   {
-    // 2D
-    printf("ARRIVATI AEC 2D!!!!\n");
+    debugPrint("GUI ARRIVATI DATI AEC (2D)");
     pParam = &rxStdAecParam;    
   }else if(mcc_cmd.buffer[13]==_AEC_TOMO)
   {
-    printf("ARRIVATI AEC TOMO!!!!\n");
+    debugPrint("GUI ARRIVATI DATI AEC (TOMO)");
     pParam = &tomoAecParam;
   }else if(mcc_cmd.buffer[13]==_AEC_AE)
   {
-    printf("ARRIVATI AEC!!!!\n");
+    debugPrint("GUI ARRIVATI DATI AEC (AE)");
     pParam = &rxAeParam;
   }
   
-  
-    printf("SCRITTURA PARAMETRI IMPULSO");
     pParam->esposizione.HV=(0x0fff & (mcc_cmd.buffer[0]+256*mcc_cmd.buffer[1]));   // Vdac
     pParam->esposizione.HV|=(0x7000&((unsigned short)mcc_cmd.buffer[7]<<12));      // Aggiunge lo stato degli switch generatore + velocità starter
     pParam->esposizione.I=(0x0FFF & (mcc_cmd.buffer[2]+256*mcc_cmd.buffer[3]));    // Idac
@@ -1064,7 +1061,7 @@ void mcc_raggi_tomo(void)
     // Verifica se la sequenza è partita
     if(tomoIsRunning)
     {
-      printf("ATTESA FINE SEQUENZA TOMO RX IN ESECUZIONE ..\n");
+      debugPrint("GUI ATTESA FINE SEQUENZA TOMO RX IN ESECUZIONE");
       timeout = 30;
       while(tomoIsRunning)
       {
@@ -1130,7 +1127,7 @@ void mcc_raggi_aec_tomo(void)
     // Verifica se la sequenza è partita
     if(tomoAecIsRunning)
     {
-      printf("ATTESA FINE SEQUENZA RX IN ESECUZIONE ..\n");
+      debugPrint("GUI ATTESA FINE SEQUENZA AEC TOMO IN ESECUZIONE");
       timeout = 30;
       while(tomoAecIsRunning)
       {
@@ -1196,7 +1193,7 @@ void mccSetRotationToolConfig()
    _DeviceAppRegister_Str        ConfList;
 
     
-    printf("GUI: CONFIGURAZIONE PER TOOL ROTAZIONI\n");
+    debugPrint("GUI CONFIGURAZIONE PER TOOL ROTAZIONI");
 }
 
 /*_____________________________________________________________________________
@@ -1219,7 +1216,6 @@ void mccGetGonio(unsigned char id, unsigned char mcccode)
 {
     unsigned char buffer[6];
 
-    printf("RICEVUTO RICHIESTA GONIO: TRX=(c)%d, ARM=(d)%d, GONIO=(d)%d\n", generalConfiguration.trxExecution.cAngolo,generalConfiguration.armExecution.dAngolo,generalConfiguration.armExecution.dAngolo_inclinometro);
     TO_LE16(&buffer[0],generalConfiguration.armExecution.dAngolo);
     TO_LE16(&buffer[2],generalConfiguration.trxExecution.cAngolo);
     TO_LE16(&buffer[4],generalConfiguration.armExecution.dAngolo_inclinometro);
@@ -1235,13 +1231,14 @@ void mcc_set_mirror(unsigned char id, unsigned char mcccode,unsigned char cmd)
  
   // Attende un eventuale comando in corso se necessario
   if(pcb249WaitBusy(50)==false){
-      printf("TIMEOUT IMPOSTAZIONE SPECCHIO:%d\n",cmd);
+      debugPrintI("GUI TIMEOUT IMPOSTAZIONE SPECCHIO, COMANDO",cmd);
       data[0] = 0;
   }else{
       if(pcb249U2Mirror(cmd)==TRUE) data[0]=1;
       else data[0] = 0;
-      if(data[0]==1) printf("MIRROR OK\n");
-      else printf("MIRROR NOK\n");
+
+      if(data[0]==1) debugPrintI("GUI COMANDO MIRROR ESEGUITO, COMANDO",cmd);
+      else debugPrintI("GUI COMANDO MIRROR FALLITO, COMANDO",cmd);
   }
 
   // Consulta il registro RG249U2_MIRROR_STAT per lo stato corrente dello specchio
@@ -1282,11 +1279,11 @@ void mcc_set_lamp(unsigned char id, unsigned char mcccode)
         attempt --;
     }
     if(data[0]==0){
-        printf("Fallito comando pcb249U2Lamp() !\n");
+        debugPrint("GUI FALLITO COMANDO LAMPADA CENTRATORE");
     }
 
   }else{
-      printf("Fallita scrittura steps!\n");
+      debugPrint("GUI FALLITO SCRITTURA STEPS PER SPECCHIO");
   }
 
   // Consulta il registro RG249U2_MIRROR_STAT per lo stato corrente dello specchio
@@ -1299,7 +1296,9 @@ void mcc_set_lamp(unsigned char id, unsigned char mcccode)
 
   mccGuiNotify(id,mcccode,data,3);
   
-  if(data[0]) printf("MCC LAMP OK: CMD=%d,  TMO=%d, STEPS=%d\n", mcc_cmd.buffer[0], mcc_cmd.buffer[1], steps);
+  if(data[0]){
+      debugPrintI("GUI COMANDO LAMPADA COMPLETATO, COMANDO", mcc_cmd.buffer[0]);
+  }
   return; 
 
 }
@@ -1341,7 +1340,8 @@ void  mccSetFuoco(unsigned char id, unsigned char mcccode)
 */  
 void mccSetFiltro(void)
 {
-    printf("GUI RICHIEDE POSIZIONAMENTO FILTRO: INDEX=%d, POS=%d\n", mcc_cmd.buffer[0],mcc_cmd.buffer[1]);
+
+  debugPrintI2("GUI COMANDO POSIZIONAMENTO FILTRO, INDEX",mcc_cmd.buffer[0], "POS",mcc_cmd.buffer[1]);
   pcb249U2SetFiltro(mcc_cmd.buffer[0],mcc_cmd.buffer[1], mcc_cmd.id);
 
 }
@@ -1376,7 +1376,7 @@ void  mccSetColli(unsigned char id, unsigned char mcccode)
 {  
   unsigned char data[1];
   
-    printf("SCRITTURA LAME PER COLLIMAZIONE 2D\n");
+   debugPrint("GUI SCRITTURA LAME PER COLLIMAZIONE 2D");
 
     // Deve aspettare che le sequenze raggi terminino
    if(pcb249U1_GetFreeze() || pcb249U2_GetFreeze()){
@@ -1398,8 +1398,6 @@ void  mccSetColli(unsigned char id, unsigned char mcccode)
   generalConfiguration.colliCfg.lame2D.left = mcc_cmd.buffer[COLLI_L];
   generalConfiguration.colliCfg.lame2D.right = mcc_cmd.buffer[COLLI_R];
   
-  
-
   printf("FRONT:%d\n",generalConfiguration.colliCfg.lame2D.front);
   printf("BACK:%d\n",generalConfiguration.colliCfg.lame2D.back );
   printf("LEFT:%d\n",generalConfiguration.colliCfg.lame2D.left);
@@ -1444,7 +1442,7 @@ void mcc_manual_rx_shot(void)
     // Verifica se la sequenza è partita
     if(rxStdIsRunning)
     {
-      printf("ATTESA FINE SEQUENZA RX IN ESECUZIONE ..\n");
+      debugPrint("GUI MANUAL RX, ATTESA FINE SEQUENZA RX IN ESECUZIONE");
       timeout = 30;
       while(rxStdIsRunning)
       {
@@ -1461,7 +1459,6 @@ void mcc_manual_rx_shot(void)
     }
 
 
-  // Impostazione Fuoco   printf("ESEGUE FUOCO\n");
     switch(mcc_cmd.buffer[0])
     {
     case 0: ris1 = pcb190SetFuoco(PCB190_F1G);break;
@@ -1498,7 +1495,8 @@ void mcc_manual_rx_shot(void)
 }
 
 void mcc_test(void)
-{
+{   
+    debugPrint("GUI TEST COMMAND");
     return;
 }
 
@@ -1512,8 +1510,6 @@ void mcc_test(void)
 */
 void mcc_set_starter(void)
 {
-  bool ris;
-  printf("ATTIVAZIONE/DISATTIVAZIONE STARTER:%d\n",mcc_cmd.buffer[0]);
   
   // Reset fault sulla pcb190
   pcb190ResetFault();
@@ -1868,35 +1864,35 @@ void mcc_calib_zero(void){
 
     if(mcc_cmd.buffer[0] == CALIB_ZERO_MANUAL_ACTIVATION_TRX_CALIB){
         generalConfiguration.manual_mode_activation = _MANUAL_ACTIVATION_TRX_CALIB;
-        printf("SELEZIONATA MODALITA DI MOVIMENTO MANUALE:%d\n",generalConfiguration.manual_mode_activation);
+        debugPrintI("GUI SELEZIONATA MODALITA DI MOVIMENTO MANUALE, CODE",generalConfiguration.manual_mode_activation);
     }else if(mcc_cmd.buffer[0] == CALIB_ZERO_MANUAL_ACTIVATION_ARM_CALIB){
         generalConfiguration.manual_mode_activation = _MANUAL_ACTIVATION_ARM_CALIB;
-        printf("SELEZIONATA MODALITA DI MOVIMENTO MANUALE:%d\n",generalConfiguration.manual_mode_activation);
+        debugPrintI("GUI SELEZIONATA MODALITA DI MOVIMENTO MANUALE, CODE",generalConfiguration.manual_mode_activation);
     }else if(mcc_cmd.buffer[0] == CALIB_ZERO_MANUAL_ACTIVATION_TRX_STANDARD){
         generalConfiguration.manual_mode_activation = _MANUAL_ACTIVATION_TRX_STANDARD;
-        printf("SELEZIONATA MODALITA DI MOVIMENTO MANUALE:%d\n",generalConfiguration.manual_mode_activation);
+        debugPrintI("GUI SELEZIONATA MODALITA DI MOVIMENTO MANUALE, CODE",generalConfiguration.manual_mode_activation);
     }else if(mcc_cmd.buffer[0] == CALIB_ZERO_MANUAL_ACTIVATION_ARM_STANDARD){
         generalConfiguration.manual_mode_activation = _MANUAL_ACTIVATION_ARM_STANDARD;
-        printf("SELEZIONATA MODALITA DI MOVIMENTO MANUALE:%d\n",generalConfiguration.manual_mode_activation);
+        debugPrintI("GUI SELEZIONATA MODALITA DI MOVIMENTO MANUALE, CODE",generalConfiguration.manual_mode_activation);
     }else if(mcc_cmd.buffer[0] == CALIB_ZERO_ACTIVATE_TRX_ZERO_SETTING){
-        printf("TRX ZERO SETTING ..\n");
+        debugPrint("GUI TRX ZERO SETTING CALIBRATION");
         generalConfiguration.trxExecution.id = mcc_cmd.id;
         actuatorsTrxActivateZeroSetting();
     }else if(mcc_cmd.buffer[0] == CALIB_ZERO_ACTIVATE_ARM_ZERO_SETTING){
-        printf("ARM ZERO SETTING ..\n");
+        debugPrint("GUI ARM ZERO SETTING CALIBRATION");
     }else if(mcc_cmd.buffer[0] == CALIB_ZERO_ACTIVATE_GONIO_ZERO_SETTING){
 
        // Ferma tutti i driver per non sollecitare il gonio
        Ser422DriverFreezeAll(5000);
-       printf("COMANDO RESET INCLINOMETRO....  ");
+       debugPrint("GUI COMANDO RESET INCLINOMETRO");
 
        // Carica i registri per impostare l'angolo
        if(pcb249U1ResetGonio(0)==FALSE) data[1]=0;
        else data[1]=1;
        _time_delay(500);
        Ser422DriverSetReadyAll(5000);
-       if(data[1]) printf("INCLINOMETRO OK\n");
-       else   printf("INCLINOMETRO  FALLITO\n");
+       if(data[1]) debugPrint("GUI RESET INCLINOMETRO COMPLETATO");
+       else   debugPrint("GUI RESET INCLINOMETRO FALLITO");
     }
 
     // Feedback di ricezione
@@ -1912,7 +1908,7 @@ void mccResetGonio(unsigned char id, unsigned char mcccode)
   // Ferma tutti i driver per non sollecitare il gonio
   Ser422DriverFreezeAll(5000);
 
-  printf("COMANDO RESET INCLINOMETRO....  ");
+  debugPrint("GUI COMANDO RESET INCLINOMETRO");
 
   // Carica i registri per impostare l'angolo
   if(pcb249U1ResetGonio(0)==FALSE) risultato=0;
@@ -1920,8 +1916,8 @@ void mccResetGonio(unsigned char id, unsigned char mcccode)
   _time_delay(500);
   Ser422DriverSetReadyAll(5000);
 
-  if(risultato) printf("INCLINOMETRO OK\n");
-  else   printf("INCLINOMETRO  FALLITO\n");
+  if(risultato) debugPrint("GUI RESET INCLINOMETRO COMPLETATO");
+  else   debugPrint("GUI RESET INCLINOMETRO FALLITO");
 
   mccGuiNotify(id,mcccode,&risultato,1);
   return ;
@@ -1935,7 +1931,7 @@ void mcc_parking_mode(void)
     unsigned char buffer[2];
     buffer[0] = MCC_PARKING_MODE_COMMANDS_START_PARKING;
 
-    printf("PARKING MODE REQUEST \n");
+    debugPrint("GUI PARKING MODE REQUEST");
 
     // Posizionament del Tilt a 0
     actuatorsTrxMove(0);
@@ -1946,7 +1942,7 @@ void mcc_parking_mode(void)
     }
     if(!generalConfiguration.trxExecution.success){
         // Errore timeout posizionamento lenze
-        printf("TIMEOUT TRX PARKING\n");
+        debugPrint("GUI TIMEOUT TRX PARKING");
         buffer[1] = ERROR_PARKING_TILT_SETTING;
         mccGuiNotify(1,MCC_PARKING_MODE_COMMANDS, buffer, 2);
         return;
@@ -1956,7 +1952,7 @@ void mcc_parking_mode(void)
     // Posizionamento del Braccio in posizione Alta per assicurare una corretta rotazione del braccio
     if(generalConfiguration.gantryCfg.armMotor){
             if(generalConfiguration.armExecution.lenze_run){
-                printf("LENZE BUSY DURING SAFE POSITIONING\n");
+                debugPrint("GUI LENZE BUSY DURING SAFE POSITIONING");
                 buffer[1] = ERROR_PARKING_LENZE_BUSY;
                 mccGuiNotify(1,MCC_PARKING_MODE_COMMANDS, buffer, 2);
                 return;
@@ -1971,7 +1967,7 @@ void mcc_parking_mode(void)
 
             if(generalConfiguration.armExecution.lenze_run){
                 // Errore timeout posizionamento lenze
-                printf("TIMEOUT LENZE IN SAFE POSITIONING\n");
+                debugPrint("GUI TIMEOUT LENZE IN SAFE POSITIONING");
                 buffer[1] = ERROR_PARKING_LENZE_TMO;
                 mccGuiNotify(1,MCC_PARKING_MODE_COMMANDS, buffer, 2);
                 return;
@@ -1979,13 +1975,13 @@ void mcc_parking_mode(void)
 
             // Verifica se il potenziometro ha raggiunto il target atteso
             if(generalConfiguration.armExecution.lenze_pot < generalConfiguration.lenzeCfg.parkingSafePoint){
-                printf("LENZE NOT CORRECTLY POSITIONED\n");
+                debugPrint("GUI LENZE NOT CORRECTLY POSITIONED");
                 buffer[1] = ERROR_PARKING_LENZE_POSITION;
                 mccGuiNotify(1,MCC_PARKING_MODE_COMMANDS, buffer, 2);
                 return;
             }
 
-            printf("ARM ROTATION FOR PARKING...\n");
+            debugPrint("GUI ARM ROTATION FOR PARKING");
 
             // Attivazione Arm a 180 in modo parking (senza correzione altezza)
             if(generalConfiguration.armExecution.dAngolo>0) actuatorsArmMove(200);
@@ -1999,7 +1995,7 @@ void mcc_parking_mode(void)
             }
             if(!generalConfiguration.armExecution.success){
                 // Errore timeout posizionamento lenze
-                printf("TIMEOUT ARM DURING PARKING..\n");
+                debugPrint("GUI TIMEOUT ARM DURING PARKING");
                 buffer[1] = ERROR_PARKING_ARM_TMO;
                 mccGuiNotify(1,MCC_PARKING_MODE_COMMANDS, buffer, 2);
                 return;
@@ -2023,7 +2019,7 @@ void mcc_parking_mode(void)
 
     if(generalConfiguration.armExecution.lenze_run){
         // Errore timeout posizionamento lenze
-        printf("TIMEOUT COMPRESSION PARKING LENZE\n");
+        debugPrint("GUI TIMEOUT COMPRESSION PARKING LENZE");
         buffer[1] = ERROR_PARKING_LENZE_TMO;
         mccGuiNotify(1,MCC_PARKING_MODE_COMMANDS, buffer, 2);
         return;
@@ -2049,14 +2045,14 @@ void mcc_unparking_mode(void)
     unsigned char buffer[2];
     buffer[0] = MCC_PARKING_MODE_COMMANDS_START_UNPARKING;
 
-    printf("UNPARKING MODE GUI REQUEST \n");
+    debugPrint("GUI UNPARKING MODE GUI REQUEST");
     generalConfiguration.lenze_park_enable_run = true;
     actuatorsManageEnables();
     _time_delay(200);
 
     // Attivazione della modalità di sblocco parcheggio
     if(generalConfiguration.armExecution.lenze_run){
-        printf("LENZE BUSY DURING UNPARKING\n");
+        debugPrint("GUI LENZE BUSY DURING UNPARKING");
         buffer[1] = ERROR_PARKING_LENZE_BUSY;
         mccGuiNotify(1,MCC_PARKING_MODE_COMMANDS, buffer, 2);
         return;
@@ -2074,7 +2070,7 @@ void mcc_unparking_mode(void)
 
     if(generalConfiguration.armExecution.lenze_run){
         // Errore timeout posizionamento lenze
-        printf("TIMEOUT LENZE DURING UNPARKING\n");
+        debugPrint("GUI TIMEOUT LENZE DURING UNPARKING");
         buffer[1] = ERROR_PARKING_LENZE_TMO;
         mccGuiNotify(1,MCC_PARKING_MODE_COMMANDS, buffer, 2);
         return;
@@ -2082,13 +2078,13 @@ void mcc_unparking_mode(void)
 
     // Verifica se il potenziometro ha raggiunto il target atteso
     if(generalConfiguration.armExecution.lenze_pot < generalConfiguration.lenzeCfg.parkingSafePoint){
-        printf("UNPARKING LENZ ERROR IN POSITIONNING\n");
+        debugPrint("GUI UNPARKING LENZ ERROR IN POSITIONNING");
         buffer[1] = ERROR_PARKING_LENZE_POSITION;
         mccGuiNotify(1,MCC_PARKING_MODE_COMMANDS, buffer, 2);
         return;
     }
 
-    printf("UNPARKING LENZE OK: POT=%d\n", generalConfiguration.armExecution.lenze_pot);
+    debugPrintI("GUI UNPARKING LENZE OK, POT", generalConfiguration.armExecution.lenze_pot);
     generalConfiguration.lenzeCfg.startupInParkingMode = 0;
     generalConfiguration.lenze_park_enable_run = true;
     actuatorsManageEnables();
@@ -2170,5 +2166,24 @@ void mccBiopsyStdXYZ(void)
   return;
 }
 
-
+void mccPrint(void)
+{
+    if(mcc_cmd.buffer[0] == MCC_DEBUG_PRINT_ENABLE_CMD){
+        if(mcc_cmd.buffer[1] == 1){
+                debugPrintEna(true);
+                debugPrint("ATTIVAZIONE DEBUG PRINT  DRIVER");
+        }else{
+                debugPrintEna(false);
+                debugPrint("DISATTIVAZIONE DEBUG PRINT DRIVER");
+        }
+    }else if(mcc_cmd.buffer[0] == MCC_DRIVER_PRINT_ENABLE_CMD){
+        if(mcc_cmd.buffer[1] == 1){
+                printEna(true);
+                debugPrint("ATTIVAZIONE PRINT DRIVER");
+        }else{
+                printEna(false);
+                debugPrint("DISATTIVAZIONE PRINT DRIVER");
+        }
+    }
+}
 /* EOF */

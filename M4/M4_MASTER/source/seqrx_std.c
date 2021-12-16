@@ -45,11 +45,9 @@ void std_rx_task(uint32_t taskRegisters)
     ISRUNNING=TRUE;
     ERROR=0;
   
-    // In Demo mode il comando non viene eseguito
-    printf("ATTIVAZIONE PROCEDURA RAGGI 2D MANUALE\n");
 
-    if(generalConfiguration.demoMode) printf("DEMO MODE\n");
-    else  printf("ESPOSIZIONE REALE\n");
+    if(generalConfiguration.demoMode) debugPrint("RX-2D START IN DEMO MODE");
+    else  debugPrint("RX-2D START SEQUENCE");
   
     // Prima di andare in freeze bisogna accertarsi che la collimazione 2D sia andata a buon fine
     if(wait2DBackFrontCompletion(100)==false) _SEQERROR(ERROR_INVALID_COLLI);
@@ -68,7 +66,7 @@ void std_rx_task(uint32_t taskRegisters)
     // Verifica Chiusura porta
     if((SystemInputs.CPU_CLOSED_DOOR==0) && (!generalConfiguration.demoMode))
     {
-      printf("PORTA STUDIO APERTA!\n");
+      debugPrint("RX-2D ERRORE PORTA STUDIO APERTA");
       _SEQERROR(ERROR_CLOSED_DOOR);  
     }    
           
@@ -79,23 +77,19 @@ void std_rx_task(uint32_t taskRegisters)
     if(!generalConfiguration.demoMode){
       if(Param->esposizione.HV & 0x4000)
       {
-        if(pcb190StarterH()==FALSE) printf("WARNING: COMANDO STARTER HIGH FALLITO\n");
-        else printf("STARTER ATTIVATO AD ALTA VELOCITA'\n");
+        if(pcb190StarterH()==FALSE) debugPrint("RX-2D COMANDO STARTER HS FALLITO");
+        else debugPrint("RX-2D STARTER HS ATTIVATO");
       }else
       {
-        if(pcb190StarterL()==FALSE) printf("WARNING: COMANDO STARTER LOW FALLITO\n");
-        else printf("STARTER ATTIVATO A BASSA VELOCITA'\n");   
+        if(pcb190StarterL()==FALSE) debugPrint("RX-2D COMANDO STARTER LS FALLITO");
+        else debugPrint("RX-2D STARTER LS ATTIVATO");
       }
     }    
     
     // Caricamento parametri di esposizione
     if(pcb190UploadExpose(Param, FALSE)==FALSE) _SEQERROR(_SEQ_UPLOAD190_PARAM);      
  
-    printf("DATI IMPULSO --------------------------\n");
-    printf("IDAC:%d\n",Param->esposizione.I & 0x0FFF);
-    printf("VDAC:%d\n",Param->esposizione.HV & 0x0FFF);
-    printf("MASDAC:%d\n",Param->esposizione.MAS);   
-    printf("--------------------------------------\n");    
+    debugPrintI3("RX-2D EXP DATA, IDAC", Param->esposizione.I & 0x0FFF, "VDAC",Param->esposizione.HV & 0x0FFF,"MASDAC", Param->esposizione.MAS);
         
     // Verifica su XRAY_REQ(Pulsante raggi premuto)
     if(SystemInputs.CPU_XRAY_REQ==0)  _SEQERROR(ERROR_PUSHRX_NO_PREP);
@@ -118,8 +112,6 @@ void std_rx_task(uint32_t taskRegisters)
         }
         if(SystemInputs.CPU_XRAY_REQ==0)  _SEQERROR(ERROR_PUSHRX_NO_PREP);
 
-        printf("Comando Raggi \n");
-    
         // Comando Attivazione Raggi
         _time_delay(100); // Non levare il delay
         
@@ -134,7 +126,7 @@ void std_rx_task(uint32_t taskRegisters)
         // Un minimo di attesa per consentire ai vari segnali di sincronizzarsi
         _time_delay(1000);
 
-        printf("Attesa Completamento \n");
+        debugPrint("RX-2D ATTESA COMPLETAMENTO");
         
         // Attesa XRAY COMPLETED da Bus Hardware
         if(SystemInputs.CPU_XRAY_COMPLETED==0)
@@ -145,13 +137,12 @@ void std_rx_task(uint32_t taskRegisters)
      
         // Lettura esito raggi
         if(pcb190GetPostRxRegisters()==FALSE){
-            printf("ERRORE DURANTE LETTURA REGISTRI FINE RAGGI!!!!!!! \n");
+            debugPrint("RX-2D ERRORE DURANTE LETTURA REGISTRI FINE RAGGI");
             _SEQERROR(_SEQ_READ_REGISTER);
 
         }
 
         if(_TEST_BIT(PCB190_FAULT)) _SEQERROR(_DEVREGL(RG190_FAULTS,PCB190_CONTEST));
-        printf("RISULTATO RX OK\n");        
 
         // Se la sequenza finisce correttamente i MAS ovviamente sono quelli previsti
         mAs_erogati = Param->esposizione.MAS;
@@ -230,7 +221,7 @@ void std_rx_task(uint32_t taskRegisters)
     RESULT=TRUE;
 
     // Stringa di debug
-    printf("SEQUENZA RX STANDARD TERMINATA CON SUCCESSO. mAs:%f\n",(float) mAs_erogati/50);    
+    debugPrintF("RX-2D SEQUENZA COMPLETATA. mAs",(float) mAs_erogati/50);
  
     _EVSET(_SEQEV_RX_STD_TERMINATED);
 
@@ -272,7 +263,8 @@ void _SEQERRORFUNC(int code)
     }else mAs_erogati = 0;
     
     // Stringa di debug
-    printf("STD SEQ ERROR:%d, mAs:%f\n",code, (float) mAs_erogati/50); 
+    debugPrintI("RX-2D SEQUENZA FALLITA, ERRORE",code);
+
     ERROR = code;
     data[0]=ERROR;       
     data[1]=(unsigned char) ((mAs_erogati)&0xFF);// (unsigned char) ((mAs_erogati/50)&0xFF);  // Aggiungere mas residui

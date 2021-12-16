@@ -63,7 +63,7 @@ void biopsyStandardLoop(void)
   }
 
 
-   printf("ATTIVAZIONE DRIVER BIOPSIA STANDARD: \n");
+   debugPrint("BYM ATTIVAZIONE DRIVER BIOPSIA STANDARD");
    driverDelay =   _DEF_BIOPSY_DRIVER_DELAY_NC;
 
    timeout = _DEF_BIOPSY_DRIVER_TIMEOUT/driverDelay;
@@ -118,7 +118,7 @@ void biopsyStandardLoop(void)
               dati[_BP_STD_MOTION ] = 5; // Timeout
               mccBiopsyStandardNotify(1,BIOP_NOTIFY_STAT,dati, sizeof(dati));
               timeout = _DEF_BIOPSY_DRIVER_TIMEOUT/driverDelay;
-              printf("BIOPSIA: TIMEOUT TORRETTA\n");
+              debugPrint("BYM TIMEOUT");
             }
 
             // Se non è in  timeout allora attende ancora ...
@@ -139,7 +139,7 @@ void biopsyStandardLoop(void)
             BiopsySetStepUpZ();           
             dati[_BP_STD_MOTION]=3;
             mccBiopsyStandardNotify(1,BIOP_NOTIFY_STAT,dati, sizeof(dati));
-            printf("BIOPSIA: MOVIMENTO STEP UP Z \n");
+            debugPrint("BYM MOVIMENTO STEP UP Z");
             goto termine_biop_driver;
           }
 
@@ -149,7 +149,7 @@ void biopsyStandardLoop(void)
               BiopsySetStepDwnZ();           
               dati[_BP_STD_MOTION]=3;
               mccBiopsyStandardNotify(1,BIOP_NOTIFY_STAT,dati, sizeof(dati));
-              printf("BIOPSIA: MOVIMENTO STEP DOWN Z \n");
+              debugPrint("BYM MOVIMENTO STEP DOWN Z");
               goto termine_biop_driver;
           }
 
@@ -172,8 +172,7 @@ void biopsyStandardLoop(void)
           generalConfiguration.biopsyCfg.standardConf.movimento = FALSE;
           dati[_BP_STD_MOTION] = 4;
           
-          printf("TGX=%d, TGY=%d, TGZ=%d\n",generalConfiguration.biopsyCfg.TGX,generalConfiguration.biopsyCfg.TGY,generalConfiguration.biopsyCfg.TGZ);
-          printf("X=%d, Y=%d, Z=%d\n",generalConfiguration.biopsyCfg.X,generalConfiguration.biopsyCfg.Y,generalConfiguration.biopsyCfg.Z);
+          debugPrintI3("BYM FINE MOVIMENTO. X", generalConfiguration.biopsyCfg.X, "Y",generalConfiguration.biopsyCfg.Y,"Z",generalConfiguration.biopsyCfg.Z);
           
           // Controllo sul risultato se tale controllo viene abilitato
           if(biopTestPosition)
@@ -210,7 +209,7 @@ void biopsyStandardLoop(void)
           
           mccBiopsyStandardNotify(1,BIOP_NOTIFY_STAT,dati, sizeof(dati));
           timeout = _DEF_BIOPSY_DRIVER_TIMEOUT/driverDelay;
-          printf("BIOPSIA: FINE MOVIMENTI! ESITO:%d\n",dati[_BP_STD_MOTION_END]);
+          debugPrintI("BYM FINE MOVIMENTO ESITO",dati[_BP_STD_MOTION_END]);
           goto termine_biop_driver;
        }
        else if(BiopsyGetStat()==TRUE)
@@ -231,7 +230,7 @@ void biopsyStandardLoop(void)
            
            // Diminuisce il tempo di polling durante la connessione
            generalConfiguration.biopsyCfg.biopsyConnected = TRUE;
-           printf("RICONOSCIUTA BIOPSIA\n");
+           debugPrint("BYM RICONOSCIUTA BIOPSIA");
            dati[_BP_STD_CONNESSIONE] = 1; // Notifica cambio stato in connessione
            notifica=TRUE;
          }
@@ -245,12 +244,12 @@ void biopsyStandardLoop(void)
            else dati[_BP_STD_SBLOCCO] = 2;
            if(sbloccoReq) 
            {
-             printf("BIOPSIA: RICHIESTA SBLOCCO BRACCIO\n");
+             debugPrint("BYM RICHIESTA SBLOCCO BRACCIO");
              generalConfiguration.biopsyCfg.biopsyArmEna = TRUE;
              actuatorsManageEnables();
            }else
            {
-             printf("BIOPSIA: RICHIESTA BLOCCO BRACCIO\n");
+             debugPrint("BYM RICHIESTA BLOCCO BRACCIO");
              generalConfiguration.biopsyCfg.biopsyArmEna = FALSE;
              actuatorsManageEnables();
            }
@@ -261,7 +260,7 @@ void biopsyStandardLoop(void)
          {
            notifica=TRUE;
            adapterId=generalConfiguration.biopsyCfg.adapterId;
-           printf("BIOPSIA: CAMBIO ACCESSORIO:%d\n",adapterId);
+           debugPrintI("BYM CAMBIO ACCESSORIO",adapterId);
          }
          dati[_BP_STD_ACCESSORIO] = generalConfiguration.biopsyCfg.adapterId;
          
@@ -309,7 +308,7 @@ void biopsyStandardLoop(void)
               if(generalConfiguration.biopsyCfg.biopsyConnected==TRUE)
               {// Cambio stato
                 generalConfiguration.biopsyCfg.biopsyConnected = FALSE;
-                printf("BIOPSIA SCOLLEGATA\n");
+                debugPrint("BYM SCOLLEGATA");
                 notifica=TRUE;
                 dati[_BP_STD_CONNESSIONE]=2;
               }
@@ -357,7 +356,7 @@ bool moveZ(unsigned char* dati)
     BiopsySetZ();           
     dati[_BP_STD_MOTION]=3;
     mccBiopsyStandardNotify(1,BIOP_NOTIFY_STAT,dati, sizeof(dati));
-    printf("BIOPSIA: MOVIMENTO Z \n");
+    debugPrint("BYM MOVIMENTO Z");
     return TRUE; 
 }
 
@@ -372,7 +371,7 @@ bool moveX(unsigned char* dati)
   dati[_BP_STD_MOTION]=1;
   BiopsySetX();
   mccBiopsyStandardNotify(1,BIOP_NOTIFY_STAT,dati, sizeof(dati));
-  printf("BIOPSIA: MOVIMENTO X \n");
+  debugPrint("BYM MOVIMENTO X");
   return TRUE;
 }
          
@@ -387,7 +386,7 @@ bool moveY(unsigned char* dati)
   BiopsySetY();
   dati[_BP_STD_MOTION]=2;
   mccBiopsyStandardNotify(1,BIOP_NOTIFY_STAT,dati, sizeof(dati));
-  printf("BIOPSIA: MOVIMENTO Y \n");
+  debugPrint("BYM MOVIMENTO Y");
   return TRUE; 
 }
 
@@ -588,8 +587,8 @@ bool BiopsyGetRevision(void)
   }
     
   generalConfiguration.biopsyCfg.revisione = buffer[2];
-  
-  printf("BIOPSIA - REVISIONE:%d, CHK=%x%x\n",generalConfiguration.biopsyCfg.revisione,generalConfiguration.biopsyCfg.checksum_h,generalConfiguration.biopsyCfg.checksum_l);
+  debugPrintI("BYM REVISIONE",generalConfiguration.biopsyCfg.revisione);
+  debugPrintX("BYM CHECKSUM",(unsigned int) generalConfiguration.biopsyCfg.checksum_h * 256 + (unsigned int) generalConfiguration.biopsyCfg.checksum_l);
   return TRUE;
 }
 
@@ -600,7 +599,7 @@ bool biopsyStandardSetXYZ(unsigned short X, bool XGO, unsigned short Y, bool YGO
 {
   if(generalConfiguration.biopsyCfg.standardConf.movimento) return FALSE; // E' già in corso
   
-  printf("TGX:%d, TGY:%d, TGZ:%d\n",X,Y,Z);
+  debugPrintI3("BYM SETXYZ, X",X, "Y",Y, "Z",Z);
 
   _mutex_lock(&biopsy_standard_mutex);
   if(XGO)

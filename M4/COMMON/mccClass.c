@@ -187,6 +187,27 @@ PARAMETRI:
   ATTENZIONE: Se id==0 non verrà inviata nessuna notifica all'applicazione
 */
 
+bool mccDebugPrint(char* buffer, int buflen)
+{
+    MCC_MEM_SIZE mcc_len;
+    if(buflen>_MCC_DIM-2) buflen = _MCC_DIM-2;
+
+#ifdef M4_MASTER
+    MCC_ENDPOINT ep = {_DEF_M4_MASTER_DEBUG_MESSAGES_MCC};
+#else
+    MCC_ENDPOINT ep = {_DEF_M4_SLAVE_DEBUG_MESSAGES_MCC};
+#endif
+
+    // Verifica se busy
+    mcc_msgs_available(&ep,&mcc_len);
+    if(mcc_len>MAX_MCC_QUEUE)  return FALSE; // C'è già un messaggio in coda
+
+    // Invia a M4
+    if(mcc_send(&ep,(void*)buffer,buflen,0)!=MCC_SUCCESS) return FALSE;
+    return TRUE;
+
+}
+
 bool mccLibNotify(unsigned char ncode, unsigned char id,unsigned char mcccode,unsigned char* buffer, int buflen)
 {      
     unsigned char data[_MCC_DIM];

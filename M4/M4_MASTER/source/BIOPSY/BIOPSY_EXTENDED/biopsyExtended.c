@@ -41,7 +41,7 @@ void biopsyExtendedLoop(void)
     activationCommands = _BYM_NO_COMMAND;
 
 
-    printf("ATTIVAZIONE DRIVER BIOPSI ESTESA: \n");
+    debugPrint("BYM ATTIVAZIONE DRIVER BIOPSI ESTESA");
     
     // Inizializzazione dei campi di notifica alla GUI
     dati[_BP_EXT_MOTION]=_BP_EXT_NO_MOTION;
@@ -116,8 +116,9 @@ void BIOPSY_manageDriverDisconnectedStatus(void){
     dati[_BP_EXT_CHKL]=generalConfiguration.biopsyCfg.checksum_l;
     dati[_BP_EXT_REVIS]=generalConfiguration.biopsyCfg.revisione;
 
-    printf("BYM DRIVER: STATUS CHANGE TO CONNECTED STATUS\n");
-    printf("BYM REVISION: %d CHKSUM %x%x\n",generalConfiguration.biopsyCfg.revisione,generalConfiguration.biopsyCfg.checksum_h,generalConfiguration.biopsyCfg.checksum_l );
+    debugPrintI("BYM CONNECTED, REVISIONE",generalConfiguration.biopsyCfg.revisione);
+    debugPrintX("BYM CHECKSUM",(unsigned int) generalConfiguration.biopsyCfg.checksum_h * 256 + (unsigned int) generalConfiguration.biopsyCfg.checksum_l);
+
     return;
 }
 
@@ -202,7 +203,6 @@ void BIOPSY_manageDriverConnectedStatus(void){
         driverStatus = _BYM_DRIVER_STAT_ACTIVATED;
         dati[_BP_EXT_MOTION]=_BP_EXT_MOTION_ON;
         slot = 0;
-        printf("BYM DRIVER: GESTIONE ATTIVAZIONE");
     }
 
     return;
@@ -223,8 +223,8 @@ void BIOPSY_manageDriverActivatedStatus(void){
                 dati[_BP_EXT_MOTION_END] =_BP_EXT_TIMEOUT_COMANDO;
                 activationCommands =_BYM_NO_COMMAND;
                 driverStatus = _BYM_DRIVER_STAT_CONNECTED;
-                printf("BYM DRIVER: ERRORE CARICAMENTO TARGET\n");
-                printf("BYM DRIVER: CAMBIO STATO TO CONNECTED STATUS\n");
+                debugPrint("BYM ERRORE CARICAMENTO TARGET");
+                debugPrint("BYM CAMBIO STATO TO CONNECTED STATUS");
                 return;
             }
             _time_delay(50);
@@ -237,8 +237,8 @@ void BIOPSY_manageDriverActivatedStatus(void){
                 dati[_BP_EXT_MOTION_END] =_BP_EXT_TIMEOUT_COMANDO;
                 activationCommands =_BYM_NO_COMMAND;
                 driverStatus = _BYM_DRIVER_STAT_CONNECTED;
-                printf("BYM DRIVER: ERRORE CARICAMENTO TARGET\n");
-                printf("BYM DRIVER: CAMBIO STATO TO CONNECTED STATUS\n");
+                debugPrint("BYM ERRORE CARICAMENTO TARGET");
+                debugPrint("BYM CAMBIO STATO TO CONNECTED STATUS");
                 return;
             }
             _time_delay(50);
@@ -251,8 +251,8 @@ void BIOPSY_manageDriverActivatedStatus(void){
                 dati[_BP_EXT_MOTION_END] =_BP_EXT_TIMEOUT_COMANDO;
                 activationCommands =_BYM_NO_COMMAND;
                 driverStatus = _BYM_DRIVER_STAT_CONNECTED;
-                printf("BYM DRIVER: ERRORE CARICAMENTO TARGET\n");
-                printf("BYM DRIVER: CAMBIO STATO TO CONNECTED STATUS\n");
+                debugPrint("BYM ERRORE CARICAMENTO TARGET");
+                debugPrint("BYM CAMBIO STATO TO CONNECTED STATUS");
                 return;
             }
             _time_delay(50);
@@ -310,7 +310,7 @@ void BIOPSY_manageDriverActivatedStatus(void){
         activationCommands =_BYM_NO_COMMAND;
         driverStatus = _BYM_DRIVER_STAT_CONNECTED;
         printf("BYM DRIVER: NESSUN COMANDO DI ATTIVAZIONE\n");
-        printf("BYM DRIVER: CAMBIO STATO TO CONNECTED STATUS\n");
+        debugPrint("BYM CAMBIO STATO TO CONNECTED STATUS");
         return;
     }
 
@@ -327,8 +327,7 @@ void BIOPSY_manageActivationLoop(void){
             dati[_BP_EXT_MOTION_END] =_BP_EXT_TIMEOUT_COMANDO;
             activationCommands =_BYM_NO_COMMAND;
             driverStatus = _BYM_DRIVER_STAT_CONNECTED;
-            printf("BYM DRIVER: TIMEOUT ATIVAZIONE\n");
-            printf("BYM DRIVER: CAMBIO STATO TO CONNECTED STATUS\n");
+            debugPrint("BYM TIMEOUT ATTIVAZIONE");
             return;
         }
     }
@@ -355,8 +354,7 @@ void BIOPSY_manageActivationLoop(void){
 
     activationCommands =_BYM_NO_COMMAND;
     driverStatus = _BYM_DRIVER_STAT_CONNECTED;
-    printf("BYM DRIVER: ATIVAZIONE TERMINATA\n");
-    printf("BYM DRIVER: CAMBIO STATO TO CONNECTED STATUS\n");
+    debugPrint("BYM ATTIVAZIONE TERMINATA\n");
     return;
 }
 
@@ -372,7 +370,7 @@ bool biopsyExtendedMoveXYZ(unsigned short X, unsigned short Y, unsigned short Z)
   targetY = Y;
   targetZ = Z;
   activationCommands = _BYM_MOVE_TO_XYZ;
-  printf("BYM COMMAND: MOVE XYX, mTGX:%d, TGY:%d, TGZ:%d\n",X,Y,Z);
+  debugPrintI3("BYM MOVE XYX, X",X,"Y",Y,"Z",Z);
   return TRUE;
 }
 /*

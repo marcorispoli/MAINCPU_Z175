@@ -94,7 +94,7 @@ void pcb244_driver(uint32_t taskRegisters)
             if(generalConfiguration.potterCfg.potMagFactor!= mag)
             {
               generalConfiguration.potterCfg.potMagFactor = mag;
-              printf("INGRANDITORE: FATTORE %d\n", generalConfiguration.potterCfg.potMagFactor);
+              debugPrintI("PCB244 INGRANDITORE, FATTORE",(int) generalConfiguration.potterCfg.potMagFactor);
               repeat = TRUE;
             }
           }
@@ -104,8 +104,8 @@ void pcb244_driver(uint32_t taskRegisters)
         {
           if(pcb244isPresent==FALSE)
           {
-            printf("CONNESSIONE POTTER ID:%d\n",generalConfiguration.potterCfg.potId);
-            GetFwRevision();          
+            GetFwRevision();
+            debugPrintI3("PCB244 POTTER DETECTED, ID",(int) generalConfiguration.potterCfg.potId, "REV-MAJ",(int) generalConfiguration.revisioni.pcb244.maj, "REV-MIN", generalConfiguration.revisioni.pcb244.min);
             pcb244isPresent=TRUE;
           }
           polling = 5;
@@ -188,7 +188,7 @@ bool GetFwRevision(void)
 bool pcb244StartVoiceCoil(void)
 {  
   if(Ser422WriteRegister(_REGID(RG244_EXE),PCB244_START_VC,5,&CONTEST)== _SER422_NO_ERROR) return TRUE;
-  printf("POTTER START VOICE ERRORE\n");
+  debugPrint("PCB244 START 3D GRID ERROR");
   return FALSE;
   
 }
@@ -230,17 +230,17 @@ bool pcb244Start2d(void)
      Ser422Send(&frame, SER422_BLOCKING, CONTEST.ID);
 
      if(frame.retcode==SER422_COMMAND_OK) {
-         printf("PCB244 - STARTED!!!! \n");
+         debugPrint("PCB244 2D GRID STARTED");
          return true;
      }
 
      // Condizione di BUSY
      if(frame.retcode==SER422_BUSY) {
-         printf("PCB244 - BUSY!!!! \n");
+         debugPrint("PCB244 ERROR 2D GRID: BUSY");
          return false;
      }
 
-     printf("PCB244 - ERROR: [%d] [%d] !!!! \n", frame.data1,frame.data2);
+     debugPrintI2("PCB244 ERROR 2D GRID: D1",frame.data1,"D2",frame.data2);
      return FALSE;
 
  }

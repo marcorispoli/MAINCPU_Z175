@@ -35,6 +35,7 @@ void Config::activateMasterConnections(){
     configMasterTcp = new TcpIpClient();
     configMasterTcp->Start(QHostAddress(_SLAVE_IP),_CONFIG_SLAVE_IN_PORT);
 
+
     QObject::connect(this,SIGNAL(configMasterTx(QByteArray)), configMasterTcp,SLOT(txData(QByteArray)),Qt::QueuedConnection);
     QObject::connect(configMasterTcp,SIGNAL(rxData(QByteArray)),this,SLOT(configMasterRxHandler(QByteArray)),Qt::QueuedConnection);
 

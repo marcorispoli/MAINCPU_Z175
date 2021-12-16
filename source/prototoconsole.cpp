@@ -396,6 +396,7 @@ void protoToConsole::logMessages(QString msg)
     QByteArray buffer = cmd.cmdToQByteArray(parsed);
     emit logTxHandler(buffer);
 
+    /*
     // Trasforma in Unicode il buffer ricevuto
 #ifdef __PRINT
     #if (UNICODE_FORMAT == 0)
@@ -406,7 +407,7 @@ void protoToConsole::logMessages(QString msg)
         PRINT(frame);
     #endif
 #endif
-
+*/
 
     return;
 }

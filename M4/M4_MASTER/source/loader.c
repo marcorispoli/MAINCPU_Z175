@@ -187,28 +187,30 @@ bool loaderActivation(unsigned char address, unsigned char uC)
 {
    _Ser422_Command_Str frame;
  
-   printf("ATTIVAZIONE LOADER: BLOCCO ALIMENTAZIONE..\n");
+   debugPrint("LOADER ATTIVAZIONE BLOCCO ALIMENTAZIONE");
+
    // Impostazione Segnale XRAY_ENA su Bus Hardware
     _mutex_lock(&output_mutex);
     SystemOutputs.CPU_LOADER_PWR_ON=1;   // Attivazione blocco alimentazione
     _EVSET(_EV0_OUTPUT_CAMBIATI);         
     _mutex_unlock(&output_mutex);
     
-   printf("ATTIVAZIONE LOADER: BLOCCO DRIVERS..\n");
+   debugPrint("LOADER ATTIVAZIONE BLOCCO DRIVERS");
    
    // Vengono bloccati tutti i driver, se può .. 
    Ser422DriverFreezeAll(4000);
    _time_delay(500); // Scarico messaggi in coda
 
-   printf("EXIT LOADERS..\n");
+   debugPrint("LOADER ESECUZIONE USCITA LOADERS REMOTI");
 
    // Prima di eseguire l'attivazione fa uscire tutti (nel caso
    // di ripetizione si evita un blocco)
    ser422SetBaud(BAUDLOADER);
    _time_delay(100);
    loaderExit(FALSE);
-   printf("ATTIVAZIONE LOADERS..\n");
-   
+
+   debugPrint("LOADER ATTIVAZIONE TARGET");
+
    // Prosegue con l'attivazione del particolare Loader
    Loader.target = address;
    Loader.uC = uC;
@@ -225,9 +227,8 @@ bool loaderActivation(unsigned char address, unsigned char uC)
   // a conferma
   if(loaderCommand(SERCMD_LOADER,uC,5)==FALSE) return FALSE;
   Loader.isActive = TRUE;
-  printf("LOADER ATTIVATO A 19200 BAUD.\n");
-  
-  printf("LOADER: LETTURA CONFIGURAZIONE ..\n");
+
+  debugPrint("LOADER TARGET ATTIVATO, LETTURA CONFIGURAZIONE");
   
   // Si procede con l'acquisizione della configurazione del target
   if(loaderCommand(SERCMD_SET_CONFIG,0,5)==FALSE){
@@ -236,62 +237,58 @@ bool loaderActivation(unsigned char address, unsigned char uC)
   }
   
   // Lettura configurazione da memoria Loader
-  printf("LETTURA CONFIGURAZIONE ID0..");
+  debugPrint("LOADER TARGET ATTIVATO, LETTURA ID");
   if(loaderRead(REG16_PROG_ID0,&Loader.cfg.id0,5)==FALSE) {
     printf("FALLITO!!!\n");
     return FALSE;
   }
-  printf("%x\nLETTURA CONFIGURAZIONE ID1.. ",Loader.cfg.id0);
   
   if(loaderRead(REG16_PROG_ID1,&Loader.cfg.id1,5)==FALSE) {
     printf("FALLITO!!!\n");
     return FALSE;
   }
-  printf("%x\nLETTURA CONFIGURAZIONE ID2.. ",Loader.cfg.id1);
 
   // Lettura configurazione da memoria Loader
   if(loaderRead(REG16_PROG_ID2,&Loader.cfg.id2,5)==FALSE) {
     printf("FALLITO!!!\n");
     return FALSE;
   }
-  printf("%x\nLETTURA CONFIGURAZIONE ID3.. ",Loader.cfg.id2);
 
   // Lettura configurazione da memoria Loader
   if(loaderRead(REG16_PROG_ID3,&Loader.cfg.id3,5)==FALSE) {
     printf("FALLITO!!!\n");
     return FALSE;
   }
-  printf("%x\nLETTURA CONFIGURAZIONE DEV-ID.. ",Loader.cfg.id3);
 
   // Lettura configurazione da memoria Loader
   if(loaderRead(REG16_PROG_DEVICEID,&Loader.cfg.devId,5)==FALSE) {
     printf("FALLITO!!!\n");
     return FALSE;
   }
-  printf("%x\nLETTURA CONFIGURAZIONE DEV-CODE.. ",Loader.cfg.devId);
-  
+
   // Lettura configurazione da memoria Loader
   if(loaderRead(REG16_PROG_DEVCOD,&Loader.cfg.devCod,5)==FALSE) {
     printf("FALLITO!!!\n");
     return FALSE;
   }
-  printf("%x\nLETTURA CONFIGURAZIONE DEV-REV.. ",Loader.cfg.devCod);
 
   // Lettura configurazione da memoria Loader
   if(loaderRead(REG_PROG_DEVREV,&Loader.cfg.devRev,5)==FALSE) {
     printf("FALLITO!!!\n");
     return FALSE;
   }
-  printf("%x\nLETTURA CONFIG-WORD.. ",Loader.cfg.devRev);
-  _time_delay(100); 
+  _time_delay(100);
   
   // Lettura configurazione da memoria Loader
   if(loaderRead(REG16_PROG_CONFWORD,&Loader.cfg.config,5)==FALSE) {
     printf("FALLITO!!!\n");
     return FALSE;
   }
-  printf("%x\n",Loader.cfg.config);
-    
+
+  debugPrintX4("LOADER CONF-ID, ID0",(unsigned int) Loader.cfg.id0, "ID1",(unsigned int) Loader.cfg.id1, "ID2",(unsigned int) Loader.cfg.id2, "ID3",(unsigned int) Loader.cfg.id3);
+  debugPrintX3("LOADER DEV-ID, ID",(unsigned int) Loader.cfg.devId, "CODE",(unsigned int) Loader.cfg.devCod, "REV",(unsigned int) Loader.cfg.devRev);
+  debugPrintX("LOADER CONFWORD", Loader.cfg.config);
+
   // Attivazione completata con successo
   Loader.isActive = TRUE;
   
@@ -310,7 +307,7 @@ bool loaderChipErase(void)
   // Eseguibile solo con Loader attivo
   if(Loader.isActive==FALSE) return FALSE;
  
-  printf("CANCELLAZIONE DELLA FLASH .. \n");
+  debugPrint("LOADER ERASE FLASH");
   // Procede con la cancellazione del chip
   if(loaderCommand(SERCMD_CHIP_ERASE,0,5)==FALSE) return FALSE;
   _time_delay(100); // Attesa di 100ms prima di proseguire
@@ -338,8 +335,8 @@ bool loaderLoadSegment(_addrStr* blk)
   // Init del blocco
   if((blk->startAddr==0x2100)||(blk->startAddr==0)) 
   {
-    if(isProgram) printf("INIZIO SCRITTURA BLOCCHI IN FLASH ..\n");
-    else printf("INIZIO SCRITTURA BLOCCHI EEPROM ..\n");    
+    if(isProgram) debugPrint("LOADER WRITE FLASH");
+    else debugPrint("LOADER WRITE EEPROM");
     baseAddress = curAddress = blk->startAddr;
     isInit=TRUE;
   }

@@ -53,9 +53,8 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
     ISRUNNING=TRUE;
     ERROR=0;
     
-    // Esegue la thread    
-    if(generalConfiguration.demoMode) printf("SEQUENZA TOMO AEC ATTIVATA IN DEMO MODE\n");
-    else  printf("SEQUENZA TOMO AEC ATTIVATA \n");
+    if(generalConfiguration.demoMode) debugPrint("RX-3D-AEC START IN DEMO MODE");
+    else  debugPrint("RX-3D-AEC START SEQUENCE");
 
     // Prima di andare in freeze bisogna accertarsi che la collimazione 2D sia andata a buon fine
     if(wait2DBackFrontCompletion(100)==false) _SEQERROR(ERROR_INVALID_COLLI);
@@ -78,15 +77,17 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
 
     // Attiva Starter
     pcb190ResetFault();
+
+    // Attiva Starter precocemente
     if(!generalConfiguration.demoMode){
       if(Param->esposizione.HV & 0x4000)
       {
-        if(pcb190StarterH()==FALSE) printf("WARNING: COMANDO STARTER HIGH FALLITO\n");
-        else printf("STARTER ATTIVATO AD ALTA VELOCITA'\n");
+        if(pcb190StarterH()==FALSE) debugPrint("RX-3D-AEC COMANDO STARTER HS FALLITO");
+        else debugPrint("RX-3D-AEC STARTER HS ATTIVATO");
       }else
       {
-        if(pcb190StarterL()==FALSE) printf("WARNING: COMANDO STARTER LOW FALLITO\n");
-        else printf("STARTER ATTIVATO A BASSA VELOCITA'\n");
+        if(pcb190StarterL()==FALSE) debugPrint("RX-3D-AEC COMANDO STARTER LS FALLITO");
+        else debugPrint("RX-3D-AEC STARTER LS ATTIVATO");
       }
     }
 
@@ -108,7 +109,8 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
         tomoAecCurrentFilterPosition = _DEVREGL(RG249U2_POS_TARGET,PCB249U2_CONTEST);           
       }
             
-      printf("ANGOLO BRACCIO PER COLLIMAZIONE TOMO:%d\n",generalConfiguration.armExecution.dAngolo/10);
+      debugPrintI("RX-3D-AEC ANGOLO BRACCIO PER COLLIMAZIONE TOMO",generalConfiguration.armExecution.dAngolo/10);
+
       // Si deve esprimere l'angolo in 0.025 °/unit per compatibilità con collimatore
       short angolo = generalConfiguration.armExecution.dAngolo * 4;
       if(Ser422WriteRegister(_REGID(RG249U1_GONIO16_ARM),angolo,10,&PCB249U1_CONTEST) != _SER422_NO_ERROR)
@@ -130,21 +132,16 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
         if(pcb190UploadTomoExpose(Param, FALSE) == FALSE) _SEQERROR(_SEQ_UPLOAD190_PARAM);
         
         if(Param->tomo_mode==_TOMO_MODE_WIDE)
-          printf("DATI PRE-IMPULSO TOMO: ESPOSIZIONE  WIDE AEC --------------------------\n");
+          debugPrint("RX-3D-AEC PRE ESPOSIZIONE  WIDE");
         else if(Param->tomo_mode==_TOMO_MODE_NARROW)
-          printf("DATI PRE-IMPULSO-TOMO: ESPOSIZIONE  NARROW AEC --------------------------\n");
+          debugPrint("RX-3D-AEC PRE ESPOSIZIONE  NARROW");
         else if(Param->tomo_mode==_TOMO_MODE_INTERMEDIATE)
-          printf("DATI PRE-IMPULSO-TOMO: ESPOSIZIONE  INTERMEDIATE AEC --------------------------\n");
+          debugPrint("RX-3D-AEC PRE ESPOSIZIONE  INTERMEDIATE");
         else
-          printf("DATI PRE-IMPULSO-TOMO: ESPOSIZIONE  DI CALIBRAZIONE AEC --------------------------\n");
+          debugPrint("RX-3D-AEC PRE ESPOSIZIONE  BRACCIO FERMO");
 
-        printf("IDAC:%d\n",Param->esposizione.I);
-        printf("VDAC:%d\n",Param->esposizione.HV);
-        printf("MASDAC:%d\n",Param->esposizione.MAS);   
-        printf("SAMPLES:%d\n",Param->tomo_samples);
-        printf("PRE SAMPLES:%d\n",Param->tomo_pre_pulses);
-        printf("--------------------------------------\n");
-        
+        debugPrintI4("RX-3D-AEC PRE-EXP DATA, IDAC", Param->esposizione.I & 0x0FFF, "VDAC",Param->esposizione.HV & 0x0FFF,"MASDAC", Param->esposizione.MAS, "SMP",Param->tomo_samples );
+
         // Impostazione Segnale XRAY_ENA su Bus Hardware
         _mutex_lock(&output_mutex);
         SystemOutputs.CPU_XRAY_ENA=1;   // Attivazione segnale XRAY ENA
@@ -158,7 +155,7 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
 
         // Attesa completamento movimento tubo NO EXP-WIN (c'ï¿½ il pre-impulso prima)
         // Se si rilascia il pulsante durante il posizionamento verrï¿½ segnalato l'errore sul posizionamento
-        printf("ATTESA FINE POSIZIONAMENO..\n");
+        debugPrint("RX-3D-AEC ATTESA FINE POSIZIONAMENO");
         if(actuatorsTrxWaitReady(100)==false) _SEQERROR(_SEQ_ERR_WIDE_HOME);
 
         if((generalConfiguration.filterTomoEna!=0)&&(Param->tomo_mode!=_TOMO_MODE_STATIC)){
@@ -168,12 +165,12 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
             tomoAecFilterTarget = getTomoDeltaFilter(angolo) +  tomoAecCurrentFilterPosition;        
 
             int i=100;
-            printf("SET FILTER IN INITIAL RAW POSITION: %d\n",tomoAecFilterTarget);
+            debugPrintI("RX-3D-AEC SET FILTER IN INITIAL RAW POSITION",tomoAecFilterTarget);
             while(--i){
                 if( pcb249U2SetFiltroRaw(tomoAecFilterTarget)) break;
                 _time_delay(50);
             }
-            if(i==0) printf("INITIAL FILTER POSITIONING FAILED!\n");
+            if(i==0) debugPrint("RX-3D-AEC INITIAL FILTER POSITIONING FAILED");
         }
         
         // Attende i segnali e verifica l'uscita con pulsante raggi
@@ -186,8 +183,7 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
         if(SystemInputs.CPU_XRAY_REQ==0)  _SEQERROR(ERROR_PUSHRX_NO_PREP);
         
         
-        // Comando Attivazione Raggi
-        printf("ATTIVAZIONE PRE-IMPULSO TOMO..\n");
+        // Comando Attivazione Raggi        
         if(waitPcb190Ready(50)==FALSE) _SEQERROR(_SEQ_PCB190_BUSY);
          _EVCLR(_EV2_WAIT_AEC);
 
@@ -213,15 +209,14 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
         {
           // Upload manuale registri dati (il sistema ï¿½ ancora in FREEZE)
           pcb190GetPostRxRegisters();
-          printf("ERRORE SEQUENZA RAGGI DURANTE ATTESA AEC\n");
+          debugPrint("RX-3D-AEC ERRORE SEQUENZA RAGGI DURANTE ATTESA AEC");
           _SEQERROR(_DEVREGL(RG190_FAULTS,PCB190_CONTEST));      
         }
 
         // Dati AEC giunti
         if(aecExpIsValid==FALSE) _SEQERROR(_SEQ_AEC_NOT_AVAILABLE);
         
-        // Ricarica i dati alla PCB190
-        printf("ATTIVAZIONE IMPULSI TOMO..\n");
+        // Ricarica i dati alla PCB190        
         pcb190UploadTomoExpose(Param, TRUE);
             
         // Attivazione Tomo con impulso di  EXP WIN
@@ -229,20 +224,16 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         if(Param->tomo_mode==_TOMO_MODE_WIDE)
-          printf("DATI IMPULSO TOMO: ESPOSIZIONE  WIDE AEC --------------------------\n");
+          debugPrint("RX-3D-AEC ESPOSIZIONE  WIDE");
         else if(Param->tomo_mode==_TOMO_MODE_NARROW)
-          printf("DATI IMPULSO TOMO: ESPOSIZIONE  NARROW AEC --------------------------\n");
+          debugPrint("RX-3D-AEC ESPOSIZIONE  NARROW");
         else if(Param->tomo_mode==_TOMO_MODE_INTERMEDIATE)
-          printf("DATI IMPULSO TOMO: ESPOSIZIONE  INTERMEDIATE AEC --------------------------\n");
+          debugPrint("RX-3D-AEC ESPOSIZIONE  INTERMEDIATE");
         else
-          printf("DATI IMPULSO TOMO: ESPOSIZIONE  DI CALIBRAZIONE AEC --------------------------\n");
+          debugPrint("RX-3D-AEC ESPOSIZIONE  BRACCIO FERMO");
 
-        printf("IDAC:%d\n",Param->esposizione.I);
-        printf("VDAC:%d\n",Param->esposizione.HV);
-        printf("MASDAC:%d\n",Param->esposizione.MAS);   
-        printf("SAMPLES:%d\n",Param->tomo_samples);
-        printf("PRE SAMPLES:%d\n",Param->tomo_pre_pulses);
-        printf("--------------------------------------\n");
+        debugPrintI4("RX-3D-AEC EXP DATA, IDAC", Param->esposizione.I & 0x0FFF, "VDAC",Param->esposizione.HV & 0x0FFF,"MASDAC", Param->esposizione.MAS, "SMP",Param->tomo_samples );
+
         
         long rxloop = (_WAIT_XRAY_COMPLETED / 100);        
         int delay = 4; // Per i primi 2 secondi non verifica il fine raggi
@@ -284,18 +275,16 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
         if((generalConfiguration.filterTomoEna!=0)&&(Param->tomo_mode!=_TOMO_MODE_STATIC)){
           if(tomoAecCurrentFilterPosition!=0){
             if(pcb249U2SetFiltroRaw(tomoAecCurrentFilterPosition) == false) {
-                  printf("COMANDO IMPOSTAZIONE FILTRO STANDARD FALLITA!\n");
+                  debugPrint("RX-3D-AEC COMANDO IMPOSTAZIONE FILTRO STANDARD FALLITA");
             }else{          
-                  printf("FILTRO IN POSIZIONE: %d \n", tomoAecCurrentFilterPosition);
+                  debugPrintI("RX-3D-AEC FILTRO IN POSIZIONE", tomoAecCurrentFilterPosition);
             }
           }
         }
         
-        printf("PCB190 SEGNALA FINE SEQUENZA\n");
-
        // Lettura esito raggi
        if(pcb190GetPostRxRegisters()==FALSE){
-           printf("ERRORE DURANTE LETTURA REGISTRI FINE RAGGI!!!!!!! \n");
+           debugPrint("RX-3D-AEC ERRORE DURANTE LETTURA REGISTRI FINE RAGGI");
            _SEQERROR(_SEQ_READ_REGISTER);
 
        }
@@ -410,7 +399,6 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
     if(!generalConfiguration.demoMode){
        if(_TEST_BIT(PCB190_FAULT)) _SEQERROR(_DEVREGL(RG190_FAULTS,PCB190_CONTEST));
     }
-    printf("RISULTATO RX OK\n");
 
     _time_delay(50);
 
@@ -424,7 +412,8 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
      }
   
      // Stringa di debug
-    printf("SEQUENZA TOMO AEC TERMINATA CON SUCCESSO. mAs:%d\n", mAs_erogati);
+    debugPrintI("RX-3D-AEC SEQUENZA TOMO AEC TERMINATA CON SUCCESSO. mAs", mAs_erogati);
+
     data[0]=RXOK;       
     data[1]=(unsigned char) (mAs_erogati&0xFF);  // Aggiungere mas residui        
     data[2]=(unsigned char) ((mAs_erogati>>8)&0xFF);     
@@ -507,8 +496,8 @@ void _SEQERRORFUNC(int code)
         }
     }
 
-    // Stringa di debug
-    printf("TOMO AEC SEQ ERROR:%d\n",code); 
+    // Stringa di debug    
+    debugPrintI("RX-3D-AEC ERRORE SEQUENZA",code );
     ERROR = code;
     data[0]=ERROR;       
     data[1]=(unsigned char) (mAs_erogati&0xFF);  // Aggiungere mas residui        
@@ -534,9 +523,9 @@ void _SEQERRORFUNC(int code)
     if((generalConfiguration.filterTomoEna!=0)&&(Param->tomo_mode!=_TOMO_MODE_STATIC)){
       if(tomoAecCurrentFilterPosition!=0){
         if(pcb249U2SetFiltroRaw(tomoAecCurrentFilterPosition) == false) {
-            printf("COMANDO IMPOSTAZIONE FILTRO STANDARD FALLITA!\n");
+            debugPrint("RX-3D-AEC COMANDO IMPOSTAZIONE FILTRO STANDARD FALLITA");
         }else{          
-            printf("FILTRO IN POSIZIONE: %d \n", tomoAecCurrentFilterPosition);
+            debugPrintI("RX-3D-AEC FILTRO IN POSIZIONE", tomoAecCurrentFilterPosition);
         }
       }
     }

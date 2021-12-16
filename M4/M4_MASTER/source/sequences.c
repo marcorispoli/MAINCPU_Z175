@@ -81,8 +81,7 @@ void rxNotifyData(unsigned char type, unsigned char code)
     // Calcola medie AEC se ci sono campioni
     aec_imean=aec_vmean=0;
     if(naec!=0){
-        for(i=0;i<naec;i++){
-          printf("(AEC-%d): I[%f(mA), %d(RAW)]  V[%f(kV), %d(RAW)] \n",i,((((float) is[i])*200.)/255.), is[i],pcb190ConvertKvRead(vs[i]),vs[i]);               
+        for(i=0;i<naec;i++){          
           aec_imean+=(float) is[i];
           aec_vmean+=(float) vs[i];          
         }
@@ -94,8 +93,7 @@ void rxNotifyData(unsigned char type, unsigned char code)
     imean=vmean=0;
     float kvmean=0;
     if((samples-naec)>0){
-        for(i=naec;i<samples;i++){
-            printf("(PLS-%d): I[%f(mA), %d(RAW)]  V[%f(kV), %d(RAW)] \n",(int) (i-naec),((((float) is[i])*200.0)/255.0), is[i],pcb190ConvertKvRead(vs[i]),vs[i]);
+        for(i=naec;i<samples;i++){            
             imean+=(float) is[i];
             vmean+=(float) vs[i];
         }
@@ -141,27 +139,10 @@ void rxNotifyData(unsigned char type, unsigned char code)
             Ser422ReadAddrRegister(addr, banco,10,&cc, &PCB190_CONTEST);
             float cf = (float) cc * 1.115;
             ts[i] = nearest(cf);
-            //printf("T_SMP[%d]: %d(ms) \n",i,ts[i]);
         }
 
     }
 
-    // Stampa dei valori
-    printf("HV-BUS(V):%f\n",(float) _DEVREGL(RG190_HV_RXEND,PCB190_CONTEST) * ((float) generalConfiguration.pcb190Cfg.HV_CONVERTION / 1000.0));
-    printf("I_FIL (mA):%f\n",ifil_rxend * 47.98);
-    
-    if(naec){
-      printf("AEC-Imean(mA)=%f\n",(aec_imean*200.)/255.);
-      printf("AEC-kVmean(kV)=%f\n",(float) pcb190ConvertKvRead(nearest(aec_vmean)));
-      printf("Tmed_Pre(ms)=%d\n",tmed_pre);
-    }
-    if(samples-naec){
-      printf("PLS-I(mA)=%f\n",(imean*200.)/255.);
-      printf("PLS-V(kV)=%f, dKv:%f\n",kvmean,scarto_v/10.);
-      printf("Tmed_Pulse(ms)=%d\n",tmed_pls );
-   }
-    
-    
     data[RX_END_CODE]=code;       // Risultato esposizione    
     data[MAS_PRE_L]=(unsigned char) (mAs_pre&0xFF);       
     data[MAS_PRE_H]=(unsigned char) ((mAs_pre>>8)&0xFF);  
@@ -183,8 +164,7 @@ void rxNotifyData(unsigned char type, unsigned char code)
     data[NSAMPLES_AEC] = (unsigned char) naec;
     if((samples - naec) >0) data[NSAMPLES_PLS] = (unsigned char) (samples - naec);
     else data[NSAMPLES_PLS] = 0;
-  
-    printf("AEC:%d, PLS:%d \n",data[NSAMPLES_AEC], data[NSAMPLES_PLS]);
+      
 
     int index = SAMPLES_BUFFER;
     for(i=0; i<samples; i++, index++){

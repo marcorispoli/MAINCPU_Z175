@@ -754,6 +754,7 @@ void serverDebug::handleDebug(QByteArray data)
         serviceTcp->txData(QByteArray("setDatabaseS     code,val \r\n"));
         serviceTcp->txData(QByteArray("getDatabaseU     code \r\n"));
         serviceTcp->txData(QByteArray("testCmd          Esegue il comando di test \r\n"));
+        serviceTcp->txData(QByteArray("enablePrint      Abilita print su seriale \r\n"));
         serviceTcp->txData(QByteArray("freeze           Blocca ciclo automatico dei drivers\r\n"));
         serviceTcp->txData(QByteArray("run              Attiva ciclo automatico dei drivers\r\n"));
         serviceTcp->txData(QByteArray("setArmAng        Imposta l'angolo corrente\r\n"));
@@ -818,8 +819,15 @@ void serverDebug::handleDebug(QByteArray data)
     }else if(data.contains("freeze")) handleDriverFreeze(TRUE);
     else if(data.contains("run")) handleDriverFreeze(FALSE);
     else if(data.contains("testCmd")){
-        if(pConfig->startupCompleted) serviceTcp->txData(QByteArray("STARTUP OK\n\r"));
-        else serviceTcp->txData(QByteArray("STARTUP NOK\n\r"));
+        unsigned char data;
+        data = 0;
+        pConsole->pGuiMcc->sendFrame(MCC_TEST,1,&data,1);
+   }else if(data.contains("enablePrint")){
+        unsigned char data[2];
+        data[0] = MCC_DRIVER_PRINT_ENABLE_CMD;
+        data[1] = 1;
+        pConsole->pGuiMcc->sendFrame(MCC_PRINT,1,data,2);
+        serviceTcp->txData(QByteArray("DONE \n\r"));
    }
 }
 
@@ -1686,49 +1694,6 @@ void serverDebug::handleSetCalibMirror(QByteArray data)
     return;
 }
 
-// Handler messaggi spediti verso console: deve essere trasformato in UNICODE
-void serverDebug::serviceTxConsoleHandler(QByteArray data)
-{
-    QTextCodec *codec = QTextCodec::codecForName(UNICODE_TYPE);
-    QString stringa = codec->toUnicode(data);
-    stringa = "AWS<" + stringa + "\r\n";
-    serviceTcp->txData(stringa.toAscii());
-    return;
-}
-
-// Handler messaggi ricevuti da console: deve essere trasformato in UNICODE
-void serverDebug::serviceRxConsoleHandler(QByteArray data)
-{
-    QTextCodec *codec = QTextCodec::codecForName(UNICODE_TYPE);
-    QString stringa = codec->toUnicode(data);
-    stringa = "AWS>" + stringa + "\r\n";
-    serviceTcp->txData(stringa.toAscii());
-    return;
-}
-
-
-
-
-// Risposte asincrone verso Console: UNICODE
-void serverDebug::serviceTxAsyncHandler(QByteArray data)
-{
-
-    QTextCodec *codec = QTextCodec::codecForName(UNICODE_TYPE);
-    QString stringa = codec->toUnicode(data);
-    stringa = "ASYNC AWS>" + stringa + "\r\n";
-
-    serviceTcp->txData(stringa.toAscii());
-     return;
-}
-
-
-void serverDebug::serviceErrorTxHandler(int codice, QString msg)
-{
-    QString stringa = "ERROR AWS>" + QString("%1:").arg(codice) + msg + "\r\n";
-    serviceTcp->txData(stringa.toAscii());
-    return;
-}
-
 
 bool serverDebug::mccService(int id, _MccServiceNotify_Code cmd, QByteArray data)
 {
@@ -1823,9 +1788,7 @@ void serverDebug::handleConsole(QByteArray data)
     {
         serviceTcp->txData(QByteArray("--------------------------------------------------------\r\n"));
         serviceTcp->txData(QByteArray("simulateRx <frame>      Simula ricezione comando da AWS \r\n"));
-        serviceTcp->txData(QByteArray("getFormat <frame>       Restituisce info sul frame\r\n"));
-        serviceTcp->txData(QByteArray("logOn                   Attiva Sniffer TCP AWS\r\n"));
-        serviceTcp->txData(QByteArray("logOff                  Disattiva Sniffer TCP AWS\r\n"));
+        serviceTcp->txData(QByteArray("getFormat <frame>       Restituisce info sul frame\r\n"));       
         serviceTcp->txData(QByteArray("logString <string>      Logga una stringa\r\n"));
         serviceTcp->txData(QByteArray("pcPowerOff              Richiede spegnimento PC\r\n"));
         serviceTcp->txData(QByteArray("---------------------------------------------------------\r\n"));
@@ -1845,40 +1808,6 @@ void serverDebug::handleConsole(QByteArray data)
             }
         }
         else serviceTcp->txData(QByteArray("MESSAGGIO NON VALIDO\r\n"));
-    }else if(data.contains("logOff"))
-    {
-        serviceTcp->txData(QByteArray("<AWS TCP CHANNELS DISCONNECTED>\r\n"));
-
-        disconnect(pConsole,SIGNAL(consoleTxHandler(QByteArray)),this,SLOT(serviceTxConsoleHandler(QByteArray)));
-        disconnect(pConsole,SIGNAL(consoleRxSgn(QByteArray)),this,SLOT(serviceRxConsoleHandler(QByteArray)));
-        disconnect(pToConsole,SIGNAL(notificheTxHandler(QByteArray)),this,SLOT(serviceTxAsyncHandler(QByteArray)));        
-        disconnect(paginaAllarmi,SIGNAL(newAlarmSgn(int,QString)),this,SLOT(serviceErrorTxHandler(int,QString)));
-
-        disconnect(pInfo,SIGNAL(printTxHandler(QString)),this,SLOT(servicePrintHandler(QString)));
-        disconnect(pInfo,SIGNAL(debugTxHandler(QString)),this,SLOT(serviceDebugHandler(QString)));
-        disconnect(pInfo,SIGNAL(logTxHandler(QString)),this,SLOT(serviceLogHandler(QString)));
-        disconnect(pInfo,SIGNAL(qtTxHandler(QString)),this,SLOT(serviceQtHandler(QString)));
-
-    }else if(data.contains("logOn"))
-    {
-        serviceTcp->txData(QByteArray("<AWS TCP CHANNELS CONNECTED>\r\n"));
-
-        // Connessione con i canali di ricezione comandi da AWS
-        connect(pConsole,SIGNAL(consoleTxHandler(QByteArray)),this,SLOT(serviceTxConsoleHandler(QByteArray)),Qt::UniqueConnection);
-        connect(pConsole,SIGNAL(consoleRxSgn(QByteArray)),this,SLOT(serviceRxConsoleHandler(QByteArray)),Qt::UniqueConnection);
-
-        // Connessione con il canale ASYNC verso AWS
-        connect(pToConsole,SIGNAL(notificheTxHandler(QByteArray)),this,SLOT(serviceTxAsyncHandler(QByteArray)),Qt::UniqueConnection);
-
-        // Connessione con il canale di comunicazioni errori verso AWS
-        connect(paginaAllarmi,SIGNAL(newAlarmSgn(int,QString)),this,SLOT(serviceErrorTxHandler(int,QString)),Qt::UniqueConnection);
-
-        connect(pInfo,SIGNAL(printTxHandler(QString)),this,SLOT(servicePrintHandler(QString)),Qt::UniqueConnection);
-        connect(pInfo,SIGNAL(debugTxHandler(QString)),this,SLOT(serviceDebugHandler(QString)),Qt::UniqueConnection);
-        connect(pInfo,SIGNAL(logTxHandler(QString)),this,SLOT(serviceLogHandler(QString)),Qt::UniqueConnection);
-        connect(pInfo,SIGNAL(qtTxHandler(QString)),this,SLOT(serviceQtHandler(QString)),Qt::UniqueConnection);
-
-
     }else if(data.contains("logString"))
     {
         QList<QByteArray> parametri = getNextFieldsAfterTag(data, QString("logString"));
@@ -4607,37 +4536,6 @@ void serverDebug::handleGetTrolleyNotify(unsigned char id,unsigned char cmd, QBy
     if(cmd!=MCC_GET_TROLLEY) return;
     serviceTcp->txData(QString("Trolley position:  %1\n\r").arg((int) data.at(0)).toAscii());
     disconnect(pConsole,SIGNAL(mccGuiNotify(unsigned char,unsigned char,QByteArray)),this,SLOT(handleGetTrolleyNotify(unsigned char,unsigned char,QByteArray)));
-    return;
-}
-
-//______________________________________________________________________________________________________________________________________________________________
-// Messagi provenienti da infoClass
-void serverDebug::serviceLogHandler(QString data)
-{
-    QString stringa = "LOG: "+ data + "\r\n";
-    serviceTcp->txData(stringa.toAscii());
-    return;
-}
-
-void serverDebug::serviceDebugHandler(QString data)
-{
-    QString stringa = "DBG: "+ data + "\r\n";
-    serviceTcp->txData(stringa.toAscii());
-    return;
-}
-
-void serverDebug::servicePrintHandler(QString data)
-{
-    QString stringa = "PRINT: "+ data + "\r\n";
-    serviceTcp->txData(stringa.toAscii());
-    return;
-}
-
-
-void serverDebug::serviceQtHandler(QString data)
-{
-    QString stringa = "QT: "+ data + "\r\n";
-    serviceTcp->txData(stringa.toAscii());
     return;
 }
 

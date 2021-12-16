@@ -384,6 +384,7 @@ int main(int argc, char *argv[])
         pConsole->activateConnections();
         pToConsole->activateConnections();
         pDebug->activateConnections();
+        pInfo->activateConnections();
 
 
     }else{
@@ -393,7 +394,7 @@ int main(int argc, char *argv[])
         QObject::connect(&echoDisplay,SIGNAL(txData(QByteArray)),slaveTcp,SLOT(txData(QByteArray)),Qt::UniqueConnection);
         QObject::connect(slaveTcp,SIGNAL(clientConnection(bool)),&echoDisplay,SLOT(connection(bool)),Qt::UniqueConnection);
         slaveTcp->Start(QHostAddress(_MASTER_IP),_ECHO_PORT);
-
+        pInfo->activateConnections();
     }
 
 

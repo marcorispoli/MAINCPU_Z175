@@ -74,19 +74,12 @@ public slots:
         void handleDriverFreezeNotify(unsigned char,unsigned char,QByteArray);
         void handleDriverSendNotify(unsigned char id,unsigned char cmd, QByteArray data);
 
-    void serviceRxConsoleHandler(QByteArray data);    // Handler ricezione dati da AWS
-    void serviceTxConsoleHandler(QByteArray data);    // Handler invio dati ad AWS
-    void serviceTxAsyncHandler(QByteArray data);      // Handler invio dati verso canale async di AWS
-    void serviceErrorTxHandler(int codice, QString msg);// Handler dei messaggi inviati sul canale errori di AWS
 
     void notificheConnectionHandler(bool stat);    // Handler cambio stato connessione
 
     // Ricezione dati richiesti
 
-    void serviceLogHandler(QString data);
-    void serviceDebugHandler(QString data);
-    void servicePrintHandler(QString data);
-    void serviceQtHandler(QString data);
+
 
     void handleReadConfigNotify(_picConfigStr data);
     void serviceNotifyFineRaggi(QByteArray data);

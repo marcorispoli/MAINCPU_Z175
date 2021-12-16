@@ -262,7 +262,7 @@ void CiA402_Arm_Stat(void){
 
 #ifdef _CANDEVICE_SIMULATION
     while(1){
-        printf("%s: SIMULATORE MODULE RESTART...........\n\n",DEVICE);
+        debugPrint("ARM SIMULATORE MODULE RESTART");
         _EVCLR(_EV0_ARM_CONNECTED);
         driver_stat.connected = false;
 
@@ -295,7 +295,7 @@ void CiA402_Arm_Stat(void){
 #endif
     while(1){
     // Reset moule starts here
-        printf("%s: MODULE RESTART...........\n\n",DEVICE);
+        debugPrint("ARM MODULE RESTART");
         _EVCLR(_EV0_ARM_CONNECTED);
         driver_stat.connected = false;
 
@@ -339,7 +339,7 @@ void CiA402_Arm_Stat(void){
                rotena_timout = _ROT_ENA_TIMEOUT;
            }else if(rotena_timout) {
                rotena_timout--;
-               if(rotena_timout==0) printf("RESET ROT ENA\n");
+               if(rotena_timout==0) debugPrint("ARM RESET ROT ENA");
            }
 
            // Lettura Inputs
@@ -349,7 +349,7 @@ void CiA402_Arm_Stat(void){
                    if(tentativi){
                        tentativi--;
                        if(tentativi==0){
-                           printf("%s: ERRORE FATALE: COMUNICATION ERROR\n",DEVICE);
+                           debugPrint("ARM ERRORE FATALE: COMUNICATION ERROR");
                            driver_stat.errors = ARM_ERROR_COMMUNICATION_CODE;
                            driver_stat.event_type = ARM_FAULT;
                            driver_stat.event_code = ARM_CAN_ERROR;
@@ -363,7 +363,7 @@ void CiA402_Arm_Stat(void){
 
                // Reset communication error
                if(driver_stat.errors==ARM_ERROR_COMMUNICATION_CODE){
-                   printf("%s: RESET COMUNICATION ERROR\n",DEVICE);
+                   debugPrint("ARM RESET COMUNICATION ERROR");
                    driver_stat.errors = 0;
                    driver_stat.event_type = ARM_FAULT;
                    driver_stat.event_code = 0;
@@ -383,7 +383,7 @@ void CiA402_Arm_Stat(void){
 
             // Get the current internal status
             if(CiA402_GetCurrentStatus(CANOPEN_ARM_CONTEXT, &driver_stat)==false){
-                printf("ERRORE IN GET CURENT STATUS\n");
+                debugPrint("ARM ERRORE IN GET CURENT STATUS");
                 _mutex_unlock(&driver_stat.req_mutex);
                 _time_delay(200);
                 continue;
@@ -410,14 +410,12 @@ void CiA402_Arm_Stat(void){
 void funcCiA402_SwitchOnDisabled(_PD4_Status_t* pStat)
 {
     if(pStat->statChanged){
-        printf("%s: CiA402 SWITCH ON DISABLED\n",DEVICE);
+        debugPrint("ARM CiA402 SWITCH ON DISABLED");
         // The rotation requires the zero setting
         driver_stat.zeroSettingOK = false;
     }
 
-    // Upload successfully completed: change status
-    // Command Shutdown to enter the ReadyToSwitchedOn status
-    printf("%s: SWITCH STATUS ATTEMPT TO -READY T SWITCH- STATUS...\n",DEVICE);
+    // Upload successfully completed: change status    
     if(CiA402_SwitchOnDisabled_To_ReadyToSwitchOn(CANOPEN_ARM_CONTEXT,pStat)==false) printf("ERRORE CAMBIO STATO\n");
     _time_delay(10);
     return;
@@ -427,14 +425,14 @@ void funcCiA402_SwitchOnDisabled(_PD4_Status_t* pStat)
 void funcCiA402_QuickStopActive(_PD4_Status_t* pStat)
 {
     if(pStat->statChanged){
-        printf("%s: CiA402 QUICK STOP ACTIVE\n",DEVICE);
+        debugPrint("ARM CiA402 QUICK STOP ACTIVE");
     }
 }
 
 void funcCiA402_FaultReactionActive(_PD4_Status_t* pStat)
 {
     if(pStat->statChanged){
-        printf("%s: CiA402 FAULT REACTION ACTIVE\n",DEVICE);
+        debugPrint("ARM CiA402 FAULT REACTION ACTIVE");
     }
 }
 
@@ -444,39 +442,6 @@ void funcCiA402_Fault(_PD4_Status_t* pStat)
     _canopen_ObjectDictionary_t fault_od={OD_1001_00};
     _canopen_ObjectDictionary_t errcode_od={OD_1003_01};
 
-    /*
-    if(!(generalConfiguration.trxDriver)){
-        // E' stato rilevato un blocco degli inputs di rilevamento ostacolo
-        // Attende che si kliberi per almeno un certo tempo
-        if(driver_stat.errors == ARM_ERROR_BLOCKED_OBSTACLE_CODE){
-            pStat->statChanged = false;
-            if(driver_stat.inputs & ARM_OBSTACLE_DETECTION_INPUT){
-                if(blocco_input_ostacolo){
-                     blocco_input_ostacolo--;
-                     if(!blocco_input_ostacolo){
-                         pStat->errors = 0;
-
-                         // Prova a ritornare operativo
-                         printf("%s: CiA402 RESET FAULT\n",DEVICE);
-                         Pd4CiA402FaultReset(CANOPEN_ARM_CONTEXT,pStat);
-
-                         pStat->event_type = ARM_FAULT;
-                         pStat->event_code = 0;
-                         pStat->event_data = 0;
-                         _EVSET(_EV0_ARM_EVENT);
-                         return;
-                     }else return;
-                }
-
-            }else{
-                blocco_input_ostacolo = 400;
-                return;
-            }
-        }
-
-    }
-
-   */
 
     // Legge se c'è un errore in corso
     canopenReadSDO(&fault_od, CANOPEN_ARM_CONTEXT);
@@ -486,7 +451,7 @@ void funcCiA402_Fault(_PD4_Status_t* pStat)
             pStat->errors=0;
 
             // Prova a ritornare operativo
-            printf("%s: CiA402 RESET FAULT\n",DEVICE);
+            debugPrint("ARM CiA402 RESET FAULT");
             Pd4CiA402FaultReset(CANOPEN_ARM_CONTEXT,pStat);
 
             pStat->event_type = ARM_FAULT;
@@ -536,7 +501,7 @@ void funcCiA402_Fault(_PD4_Status_t* pStat)
             }
         }
         pStat->operatingMode = ARM_FAULT;        
-        printf("%s: CiA402 FAULT %x\n",DEVICE,pStat->errors);
+        debugPrintX("ARM CiA402 FAULT",pStat->errors);
     }
 
     return;
@@ -545,14 +510,14 @@ void funcCiA402_Fault(_PD4_Status_t* pStat)
 void funcCiA402_UndefinedStat(_PD4_Status_t* pStat)
 {
     if(pStat->statChanged){
-        printf("%s: CiA402 UNDEFINED STAT\n",DEVICE);
+       debugPrint("ARM CiA402 UNDEFINED STAT");
     }
 }
 
 void funcCiA402_NotReadyToSwitch(_PD4_Status_t* pStat)
 {
     if(pStat->statChanged){
-        printf("%s: CiA402 NOT READY TO SWITCH ON\n",DEVICE);
+        debugPrint("ARM CiA402 NOT READY TO SWITCH ON");
     }
 }
 
@@ -561,12 +526,12 @@ void funcCiA402_NotReadyToSwitch(_PD4_Status_t* pStat)
 void funcCiA402_ReadyToSwitchOn(_PD4_Status_t* pStat)
 {
     if(pStat->statChanged){
-        printf("%s: CiA402 READY TO SWITCH ON\n",DEVICE);
+        debugPrint("ARM CiA402 READY TO SWITCH ON");
 
         // Set the operating register to no operation
         // Set the switch_on flag based on the MAINS_ON system flag
         if(SystemInputs.CPU_POWER_DOWN) {
-            printf("%s: POWER DOWN STATUS DETECTED\n",DEVICE);
+            debugPrint("ARM POWER DOWN STATUS DETECTED");
         }
 
     }
@@ -597,7 +562,7 @@ void funcCiA402_SwitchedOn(_PD4_Status_t* pStat)
     static int pollingCount=POLLING_COUNT;
 
     if(pStat->statChanged){
-        printf("%s: CiA402 SWITCHED ON\n",DEVICE);
+        debugPrint("ARM CiA402 SWITCHED ON");
         pollingCount = POLLING_COUNT;
         // Reset the operating mode register
         CiA402_SetOperatingOD(PD4_NO_PROFILE,CANOPEN_ARM_CONTEXT,pStat);
@@ -614,7 +579,7 @@ void funcCiA402_SwitchedOn(_PD4_Status_t* pStat)
 
     // Set the IDLE arm operating mode
     if(pStat->operatingMode != ARM_IDLE){
-        printf("ARM IDLE\n");
+        debugPrint("ARM IDLE");
         pStat->operatingMode = ARM_IDLE;
         blocco_input_ostacolo = 400;
     }
@@ -626,10 +591,10 @@ void funcCiA402_SwitchedOn(_PD4_Status_t* pStat)
         break;
 
     case ARM_MOVE_TO_POSITION:
-        printf("%s: Execution of positioning \n",DEVICE);
+        debugPrint("ARM Execution of positioning");
         pStat->reqCommand=ARM_NO_COMMAND;
         if(InitPositionSetting(pStat)==false){
-            printf("FALLITO INIZIO ROTAZIONE\n");
+            debugPrint("ARM POSITIONING INIT ERROR");
             pStat->event_type = ARM_MOVE_TO_POSITION;
             pStat->event_code = ARM_ERROR_POSITION_SETTING_INIT;
             pStat->event_data = 0;
@@ -640,7 +605,7 @@ void funcCiA402_SwitchedOn(_PD4_Status_t* pStat)
         break;
 
      case ARM_MOVE_MANUAL:
-        printf("%s: Execution of positioning \n",DEVICE);
+        debugPrint("ARM Manual Execution of positioning");
         pStat->reqCommand=ARM_NO_COMMAND;
         if(InitManualPositionSetting(pStat)==false){
             pStat->event_type = ARM_MOVE_MANUAL;
@@ -694,7 +659,7 @@ void funcCiA402_OperationEnabled(_PD4_Status_t* pStat)
 
     // Verifies if the Application shutdown the operations
     if(!pStat->switch_on){
-        printf("OPERATION MODE FAILED PER SWITCHED ON\n");
+        debugPrint("ARM OPERATION MODE FAILED PER SWITCHED ON");
         CiA402_OperationEnabled_To_ReadyToSwitchOn(CANOPEN_ARM_CONTEXT,pStat);
         _time_delay(100);
         return;
@@ -762,7 +727,7 @@ bool InitPositionSetting(_PD4_Status_t* pStat){
     // Set the Position target
     long deltaP = dGRAD_TO_POS((long) (positioningData.targetPosition - positioningData.initPosition)); // Trasformato in device units
     driver_stat.position_target = positioningData.initEncoder  + deltaP;
-    printf("ENCODER:%d, TARGET:%d\n", positioningData.initEncoder,driver_stat.position_target);
+    debugPrintI2("ARM INIT POSITION, ENCODER", positioningData.initEncoder,"TARGET", driver_stat.position_target);
 
     _canopen_ObjectDictionary_t od1={OD_607A_00,driver_stat.position_target};
     if(canopenWriteSDO(&od1, CANOPEN_ARM_CONTEXT)==false) return false;
@@ -792,7 +757,7 @@ void PositionSettingLoop(_PD4_Status_t* pStat){
 
 
     if(pStat->statChanged){
-        printf("%s: POSITION SETTING MODE STARTED \n",DEVICE);
+        debugPrint("ARM POSITION SETTING MODE STARTED");
         // Set the BIT4 of Control Word to start the sequence
         Pd4CiA402SetControlOD(POSITION_SETTING_START,CANOPEN_ARM_CONTEXT,pStat);
     }
@@ -812,7 +777,7 @@ void PositionSettingLoop(_PD4_Status_t* pStat){
 
         if((pStat->statusword&0x1400)==0x1400){
 
-            printf("%s: TARGET OK\n",DEVICE);
+            debugPrint("ARM POSITION TARGET OK");
             pStat->positionOk = true;
 
             pStat->event_type = ARM_MOVE_TO_POSITION;
@@ -871,8 +836,8 @@ bool InitManualPositionSetting(_PD4_Status_t* pStat){
 
     // Set the Position target
     long deltaP = dGRAD_TO_POS((long) (positioningData.targetPosition )); // Trasformato in device units
-    driver_stat.position_target = positioningData.initEncoder  + deltaP;
-    printf("ENCODER:%d, TARGET:%d\n", positioningData.initEncoder,driver_stat.position_target);
+    driver_stat.position_target = positioningData.initEncoder  + deltaP;   
+    debugPrintI2("ARM INIT MANUAL POSITION, ENCODER", positioningData.initEncoder,"TARGET", driver_stat.position_target);
 
     _canopen_ObjectDictionary_t od1={OD_607A_00, driver_stat.position_target};
     if(canopenWriteSDO(&od1, CANOPEN_ARM_CONTEXT)==false) return false;
@@ -900,7 +865,7 @@ void ManualPositionSettingLoop(_PD4_Status_t* pStat){
     _canopen_ObjectDictionary_t odencoder={OD_6064_00};
 
     if(pStat->statChanged){
-        printf("%s: MANUAL POSITION SETTING MODE STARTED \n",DEVICE);
+        debugPrint("ARM MANUAL POSITION SETTING MODE STARTED");
         // Set the BIT4 of Control Word to start the sequence
         Pd4CiA402SetControlOD(POSITION_SETTING_START,CANOPEN_ARM_CONTEXT,pStat);
     }
@@ -916,7 +881,7 @@ void ManualPositionSettingLoop(_PD4_Status_t* pStat){
        // Pd4CiA402QuickStop(CANOPEN_ARM_CONTEXT, pStat);
 
         // Target OK
-        printf("%s: PULSANTI MOVIMENTO MANUALE RILASCIATI\n",DEVICE);
+        debugPrint("ARM PULSANTI MOVIMENTO MANUALE RILASCIATI");
         pStat->positionOk = true;
 
         pStat->event_type = ARM_MOVE_MANUAL;
@@ -946,7 +911,7 @@ void ManualPositionSettingLoop(_PD4_Status_t* pStat){
             memCtrl = od.val;
             if((od.val&0x1400)==0x1400){
                 // Target OK
-                printf("%s: RAGGIUNTO LIMITE DI MOVIMENTO MANUALE\n",DEVICE);
+                debugPrint("ARM RAGGIUNTO LIMITE DI MOVIMENTO MANUALE");
                 pStat->positionOk = true;
 
                 pStat->event_type = ARM_MOVE_MANUAL;
@@ -1023,14 +988,14 @@ bool armSetCommand(_arm_command_t command, void* data){
             driver_stat.event_type = ARM_MOVE_MANUAL;
             driver_stat.event_code = ARM_ERROR_INVALID_STATUS;
             driver_stat.event_data = 0;
-            printf("COMMAND SET ARM ERROR\n");
+            debugPrint("ARM COMMAND ERROR");
             _EVSET(_EV0_ARM_EVENT);
             return false;
         }
 
         _mutex_lock(&driver_stat.req_mutex);
         memcpy(&positioningData,data,sizeof(_arm_positioning_data_t));
-        printf("RICHIESTO MOVIMENTO MANUALE ARM: encoder:%d target:%d\n",positioningData.initPosition, positioningData.targetPosition);
+        debugPrintI2("ARM RICHIESTO MOVIMENTO MANUALE. ENCODER", positioningData.initPosition,"TARGET", positioningData.targetPosition);
         driver_stat.reqCommand=command;
         driver_stat.cmdData = 0; // Not used
         _mutex_unlock(&driver_stat.req_mutex);
@@ -1041,7 +1006,7 @@ bool armSetCommand(_arm_command_t command, void* data){
             driver_stat.event_type = ARM_MOVE_TO_POSITION;
             driver_stat.event_code = ARM_ERROR_INVALID_STATUS;
             driver_stat.event_data = 0;
-            printf("COMMAND MOVE TO POSITION ARM ERROR\n");
+            debugPrint("ARM COMMAND MOVE TO POSITION ARM ERROR");
             _EVSET(_EV0_ARM_EVENT);
             return false;
         }
@@ -1049,7 +1014,7 @@ bool armSetCommand(_arm_command_t command, void* data){
 
         _mutex_lock(&driver_stat.req_mutex);
         memcpy(&positioningData,data,sizeof(_arm_positioning_data_t));
-        printf("RICHIESTO MOVIMENTO ARM: encoder:%d target:%d\n",positioningData.initPosition, positioningData.targetPosition);
+        debugPrintI2("ARM RICHIESTO MOVIMENTO. ENCODER", positioningData.initPosition,"TARGET", positioningData.targetPosition);
         driver_stat.reqCommand=command;
         driver_stat.cmdData = 0; // Not used
         _mutex_unlock(&driver_stat.req_mutex);
@@ -1163,7 +1128,7 @@ bool armSafetyDuringMotion(int activation_mode){
     if(driver_stat.quickstop){
         Pd4CiA402QuickStop(CANOPEN_ARM_CONTEXT, &driver_stat);
 
-        printf("%s: RICHIESTA DI QUICK STOP\n",DEVICE);
+        debugPrint("ARM RICHIESTA DI QUICK STOP");
         driver_stat.positionOk = true;
         driver_stat.event_type = activation_mode;
         driver_stat.event_code = ARM_NO_ERRORS;
@@ -1186,7 +1151,7 @@ bool armSafetyDuringMotion(int activation_mode){
         // Quick Stop
         Pd4CiA402QuickStop(CANOPEN_ARM_CONTEXT, &driver_stat);
 
-        printf("%s: TARGET NOK PER RICHIESTA STATUS:%d\n",DEVICE,driver_stat.dAngolo);
+        debugPrintI("ARM TARGET NOK PER RICHIESTA STATUS. ENCODER",driver_stat.dAngolo);
         driver_stat.positionOk = false;
         driver_stat.event_type = activation_mode;
         driver_stat.event_code = ARM_CAN_ERROR;
@@ -1210,13 +1175,13 @@ bool armSafetyDuringMotion(int activation_mode){
             Pd4CiA402QuickStop(CANOPEN_ARM_CONTEXT, &driver_stat);
 
             if(driver_stat.statusword & 0x2000){
-                printf("%s: TARGET NOK PER ERRORE DI INSEGUIMENTO:%d\n",DEVICE,driver_stat.dAngolo);
+                debugPrintI("ARM TARGET NOK PER ERRORE DI INSEGUIMENTO. ENCODER",driver_stat.dAngolo);
                 driver_stat.event_code = ARM_OBSTACLE_OBSTRUCTION_ERROR;
             }else if(!driver_stat.activation_timeout){
-                printf("%s: TARGET NOK PER TIMEOUT:%d\n",DEVICE,driver_stat.dAngolo);
+                debugPrintI("ARM TARGET NOK PER TIMEOUT. ENCODER",driver_stat.dAngolo);
                 driver_stat.event_code = ARM_ERROR_POSITION_TMO;
             }else{
-                printf("%s: TARGET NOK PER DISPOSITIVO RILEVAMENTO OSTACOLO:%d\n",DEVICE,driver_stat.dAngolo);
+                debugPrintI("ARM TARGET NOK PER DISPOSITIVO RILEVAMENTO OSTACOLO. ENCODER",driver_stat.dAngolo);
                 driver_stat.event_code = ARM_OBSTACLE_ERROR;
             }
 

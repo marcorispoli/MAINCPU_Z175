@@ -162,7 +162,7 @@ bool actuatorsTrxMove(int angolo)
     buffer[3] = CONTEXT_TRX_2D;
     buffer[4]=0;
     CanSendToActuatorsSlave(buffer);
-    printf("ACTUATORS TRX MOVE:%d",angolo);    
+    debugPrintI("ACTUATORS TRX, ANGOLO",angolo);
     return true;
 }
 
@@ -218,7 +218,7 @@ bool actuatorsTrxActivateZeroSetting(void){
 
     buffer[0]= ACTUATORS_SET_TRX_ZERO;
     CanSendToActuatorsSlave(buffer);
-    printf("ACTUATORS ZERO SETTING MOVE\n");
+    debugPrint("ACTUATORS ZERO SETTING MOVE");
     return true;
 }
 /*
@@ -246,7 +246,7 @@ void actuatorsTrxStop(int tmo ){
     generalConfiguration.trxExecution.completed=false;
     buffer[0]= ACTUATORS_TRX_QUICK_STOP;
     CanSendToActuatorsSlave(buffer);
-    printf("ACTUATORS QUICK STOP REQUEST\n");
+    debugPrint("ACTUATORS QUICK STOP REQUEST");
 
     if(tmo==0) return;
     while(tmo--){
@@ -294,9 +294,9 @@ int actuatorsArmMove(int angolo){
     }else target_angolo = angolo;
 
     if(target_angolo != angolo)
-        printf("RICHIESTA MOVIMENTO ARM A ANGOLO CORRETTO PER BIOPSIA: %d\n", target_angolo);
+        debugPrintI("ACTUATORS RICHIESTA MOVIMENTO ARM A ANGOLO CORRETTO PER BIOPSIA, ANGOLO", target_angolo);
     else
-        printf("RICHIESTA MOVIMENTO ARM A ANGOLO %d\n", target_angolo);
+        debugPrintI("ACTUATORS RICHIESTA MOVIMENTO ARM A ANGOLO", target_angolo);
 
     generalConfiguration.armExecution.completed=false;
 
@@ -340,7 +340,7 @@ void actuatorsManualArmMove(unsigned char mode){
     // Rotation enable Bus Hardware test
     if(!SystemOutputs.CPU_ROT_ENA)
     {
-      printf("MOVIMENTO MANUALE (ARM) FALLITO: SEGNALE ROT_ENA NON ATTIVO!\n");
+      debugPrint("ACTUATORS MOVIMENTO MANUALE (ARM) FALLITO: SEGNALE ROT_ENA NON ATTIVO");
       return; // ARM_DISABLED_ERROR;
     }
 
@@ -377,7 +377,7 @@ void actuatorsManualArmMove(unsigned char mode){
 
     buffer[5] = mode;
 
-    printf("COMANDO MANUAL ARM, MODO:%d\n",mode);
+    debugPrintI("ACTUATORS COMANDO MANUAL ARM, MODO",mode);
     CanSendToActuatorsSlave(buffer);
     return ;
 }
@@ -401,7 +401,7 @@ void actuatorsManualTrxMove(unsigned char mode){
     // Rotation enable Bus Hardware test
     if(!SystemOutputs.CPU_PEND_ENA)
     {
-      printf("MOVIMENTO MANUALE (TRX) FALLITO: SEGNALE PEND_ENA NON ATTIVO!\n");
+      debugPrint("ACTUATORS MOVIMENTO MANUALE (TRX) FALLITO: SEGNALE PEND_ENA NON ATTIVO");
       return; // TRX_DISABLED_ERROR;
     }
 
@@ -417,15 +417,13 @@ void actuatorsManualTrxMove(unsigned char mode){
     TO_LE16(&buffer[1],angolo);
     if(mode==_MANUAL_ACTIVATION_TRX_STANDARD){
         buffer[3] = CONTEXT_TRX_2D;
-        printf("ACTUATORS MANUAL STANDARD TRX MOVE TO:(c)%d",angolo);
+        debugPrintI("ACTUATORS MANUAL STANDARD TRX MOVE TO",angolo);
     }else{
         buffer[3] = CONTEXT_TRX_SLOW_MOTION;
-        printf("ACTUATORS MANUAL SLOW TRX MOVE TO:(c)%d",angolo);
+        debugPrintI("ACTUATORS MANUAL SLOW TRX MOVE TO",angolo);
     }
     buffer[4]=0;
-
-    CanSendToActuatorsSlave(buffer);
-    printf("ACTUATORS MANUAL TRX MOVE TO:(c)%d",angolo);
+    CanSendToActuatorsSlave(buffer);    
     return ;
 }
 
@@ -435,7 +433,6 @@ void actuatorsManualTrxMove(unsigned char mode){
  */
 void actuatorsLenzeUnpark(void){
     uint8_t buffer[8];
-    printf("ACUATORS: ACTUATORS_LENZE_UNPARK COMMAND\n");
     generalConfiguration.armExecution.id=0; // Non comunica il fine movimento lenze
     generalConfiguration.armExecution.lenze_run=true; // Anticipa il flag di attivazione
     buffer[0]= ACTUATORS_LENZE_UNPARK;
@@ -448,7 +445,6 @@ void actuatorsLenzeUnpark(void){
  */
 void actuatorsLenzPark(void){
     uint8_t buffer[8];
-    printf("ACUATORS: ACTUATORS_LENZE_PARK COMMAND\n");
     generalConfiguration.armExecution.id=0; // Non comunica il fine movimento lenze
     generalConfiguration.armExecution.lenze_run=true; // Anticipa il flag di attivazione
     buffer[0]= ACTUATORS_LENZE_PARK;
@@ -491,7 +487,7 @@ bool config_trx(bool setmem, unsigned char blocco, unsigned char* buffer, unsign
       data[3+i] = pData[i];
   }
 
-  printf("CONFIGURAZIONE TRX\n");
+  debugPrint("ACTUATORS CONFIGURAZIONE TRX");
   _EVCLR(_EV1_TRX_CONFIGURED);
   CanSendToActuatorsSlave(data);
   _EVWAIT_ALL(_EV1_TRX_CONFIGURED);
@@ -532,7 +528,7 @@ bool config_arm(bool setmem, unsigned char blocco, unsigned char* buffer, unsign
         data[3+i] = pData[i];
     }
 
-    printf("CONFIGURAZIONE ARM\n");
+    debugPrint("ACTUATORS CONFIGURAZIONE ARM");
 
     _EVCLR(_EV1_ARM_CONFIGURED);
     CanSendToActuatorsSlave(data);
@@ -543,30 +539,6 @@ bool config_arm(bool setmem, unsigned char blocco, unsigned char* buffer, unsign
 }
 
 bool config_lenze(bool setmem, unsigned char blocco, unsigned char* buffer, unsigned char len){
-/*
-    printf("AGGIORNAMENTO LENZE \n");
-  if(setmem){
-    if(len!=sizeof(generalConfiguration.lenzeCfg)) return false;
-    memcpy(&generalConfiguration.lenzeCfg,buffer,len);
-  }
-
-  // Invia i dati di configurazione al Lenze
-  uint8_t data[8];
-
-  data[0]= ACTUATORS_SET_LENZE_CONFIG;
-  data[BYTE_SET_LENZE_CONFIG_MINLIM]=generalConfiguration.lenzeCfg.min_lenze_position;
-  data[BYTE_SET_LENZE_CONFIG_MAXLIM]=generalConfiguration.lenzeCfg.max_lenze_position;
-  data[BYTE_SET_LENZE_CONFIG_MANSPEED]=generalConfiguration.lenzeCfg.manual_speed;
-  data[BYTE_SET_LENZE_CONFIG_AUTOSPEED]=generalConfiguration.lenzeCfg.automatic_speed;
-  data[BYTE_SET_LENZE_PARKING_MODE]=generalConfiguration.lenzeCfg.startupInParkingMode;
-
-  data[BYTE_SET_LENZE_CALIBRATED]=generalConfiguration.lenzeCfg.calibrated;
-
-
-  CanSendToActuatorsSlave(data);
-  return true;
-  */
-
 
   if(setmem){
     if(len!=sizeof(generalConfiguration.lenzeCfg)) return false;
@@ -594,11 +566,11 @@ bool config_lenze(bool setmem, unsigned char blocco, unsigned char* buffer, unsi
       data[3+i] = pData[i];
   }
 
-  printf("CONFIGURAZIONE LENZE\n");
+  debugPrint("ACTUATORS CONFIGURAZIONE LENZE");
   _EVCLR(_EV1_LENZE_CONFIGURED);
   CanSendToActuatorsSlave(data);
   _EVWAIT_ALL(_EV1_LENZE_CONFIGURED);
-   printf("CONFIGURAZIONE LENZE OK\n");
+
   return true;
 }
 
@@ -839,8 +811,8 @@ void actuatorsRxFromArm(uint8_t* data){
 
     // _______________ FEEDBACK DI EFFETTIVA ATTIVAZIONE COMANDI BRACCIO E TUBO ________________
     case ACTUATORS_MOVE_ARM_ON: // Feedback di comando di movimento accettato
-        if(data[1]==1) printf("MOVIMENTO AUTOMATICO ATTIVO\n");
-        else printf("MOVIMENTO MANUALE ATTIVO\n");
+        if(data[1]==1) debugPrint("ACTUATORS MOVIMENTO AUTOMATICO ATTIVO");
+        else debugPrint("ACTUATORS MOVIMENTO MANUALE ATTIVO");
         generalConfiguration.armExecution.run=true;
         break;
 
@@ -855,7 +827,7 @@ void actuatorsRxFromArm(uint8_t* data){
         // Esito movimento
         if(data[1]){
             generalConfiguration.armExecution.success = false;
-            printf("AZIONAMENTO C-ARM FALLITO. ERRORE=%d, SUBERR:%d\n",data[1],data[2]);
+            debugPrintI2("ACTUATORS AZIONAMENTO C-ARM FALLITO. ERRORE",data[1], "SUBERR",data[2]);
 
             // Se ID==0 GuiNotify non invia, dunque occorre inviare l'errore tramite altro comando ..
             if(generalConfiguration.armExecution.id==0){
@@ -876,7 +848,7 @@ void actuatorsRxFromArm(uint8_t* data){
 
 
         generalConfiguration.armExecution.success = true;
-        printf("AZIONAMENTO C-ARM COMPLETATO\n");
+        debugPrint("ACTUATORS AZIONAMENTO C-ARM COMPLETATO");
 
         // Se il Lenze è ancora in movimento, allora delega il risultato al LENZE
         if(generalConfiguration.armExecution.lenze_run) return;
@@ -896,10 +868,10 @@ void actuatorsRxFromArm(uint8_t* data){
         // Esito movimento
         if(data[1]){
             generalConfiguration.armExecution.success = false;
-            printf("AZIONAMENTO MANUALE FALLITO. ERRORE=%d, SUBERR:%d\n",data[1],data[2]);
+            debugPrintI2("ACTUATORS AZIONAMENTO MANUALE FALLITO. ERRORE",data[1], "SUBERR",data[2]);
         }else{
             generalConfiguration.armExecution.success = true;
-            printf("AZIONAMENTO MANUALE COMPLETATO\n");
+            debugPrint("ACTUATORS AZIONAMENTO MANUALE COMPLETATO");
         }
         break;
 
@@ -918,8 +890,9 @@ void actuatorsRxFromArm(uint8_t* data){
         generalConfiguration.armExecution.faultcode = buffer[0];
         generalConfiguration.armExecution.faultsubcode = buffer[1];
 
-        if(data[1]) printf("ARM FAULT. ERRORE=%d, ERCLASS:%x, ERRNUM:%x, ERRCODE:%x\n",data[1],data[4],data[5],data[2]+256*data[3]);
-        else printf("RESET FAULT ARM\n");
+        if(data[1]){
+            debugPrintX4("ACTUATORS ARM FAULT, ERR",data[1],"CLASS",data[4],"NUM",data[5], "CODE" ,data[2]+256*data[3]);
+        }else debugPrint("ACTUATORS RESET FAULT ARM");
 
         break;
 
@@ -949,7 +922,6 @@ void actuatorsRxFromArm(uint8_t* data){
             buffer[1]=255;
             buffer[2]=0;
             CanSendToActuatorsSlave(buffer);
-            printf("FINE BLOCCO CONFIG ARM\n");
             _EVSET(_EV1_ARM_CONFIGURED);
         }
 
@@ -960,7 +932,6 @@ void actuatorsRxFromArm(uint8_t* data){
         // Messaggio in polling per resettare eventuali situazioni rimaste appese
         if(data[1]==ACUATORS_ARM_POLLING_IDLE){
             if(generalConfiguration.armExecution.run){
-                printf("ARM: POLLING RESET RUN STATUS\n");
                 generalConfiguration.armExecution.run=false;
                 generalConfiguration.armExecution.completed = true;
                 generalConfiguration.armExecution.success=false;
@@ -994,7 +965,7 @@ void actuatorsRxFromTrx(uint8_t* data){
 
     switch(data[0]){
     case ACTUATORS_TRX_IDLE:
-        printf("TRX IN IDLE MODE!");
+        debugPrint("ACTUATORS TRX IN IDLE MODE");
         generalConfiguration.trxExecution.run=false;
         generalConfiguration.trxExecution.completed=true;
         generalConfiguration.trxExecution.idle=true;
@@ -1002,8 +973,8 @@ void actuatorsRxFromTrx(uint8_t* data){
         break;
 
     case ACTUATORS_MOVE_TRX_ON: // Feedback di comando di movimento accettato
-        if(data[1]==1) printf("MOVIMENTO TRX ATTIVO\n");
-        else printf("MOVIMENTO ZERO SETTING MODE ATTIVO\n");
+        if(data[1]==1) debugPrint("ACTUATORS MOVIMENTO TRX ATTIVO");
+        else debugPrint("ACTUATORS MOVIMENTO ZERO SETTING MODE ATTIVO");
         generalConfiguration.trxExecution.run=true;
         generalConfiguration.trxExecution.idle=false;
         break;
@@ -1019,7 +990,7 @@ void actuatorsRxFromTrx(uint8_t* data){
         // Esito movimento
         if(data[1]){
             generalConfiguration.trxExecution.success = false;
-            printf("AZIONAMENTO TRX FALLITO. ERRORE=%d, SUBERR:%d, posizione=(c)%d\n",data[1],data[2],generalConfiguration.trxExecution.cAngolo);
+            debugPrintI3("ACTUATORS AZIONAMENTO TRX FALLITO. ERRORE",data[1], "SUBERR", data[2],"POS",generalConfiguration.trxExecution.cAngolo);
 
             // Se ID==0 GuiNotify non invia, dunque occorre inviare l'errore tramite altro comando ..
             if(generalConfiguration.trxExecution.id==0){
@@ -1033,7 +1004,7 @@ void actuatorsRxFromTrx(uint8_t* data){
             }
         }else{
             generalConfiguration.trxExecution.success = true;
-            printf("AZIONAMENTO TRX COMPLETATO: posizione=(c)%d\n",generalConfiguration.trxExecution.cAngolo);
+            debugPrintI("ACTUATORS AZIONAMENTO TRX COMPLETATO: POS",generalConfiguration.trxExecution.cAngolo);
         }
 
         buffer[0] = data[1]; // Codice esito proveniente dai drivers..
@@ -1050,11 +1021,11 @@ void actuatorsRxFromTrx(uint8_t* data){
         FROM_LE16(sval,&data[3]);
         generalConfiguration.trxExecution.cAngolo = sval;
         generalConfiguration.trxExecution.success = true;
-        printf("AZIONAMENTO MANUAL TRX COMPLETATO: posizione=(c)%d\n",generalConfiguration.trxExecution.cAngolo);
+        debugPrintI("ACTUATORS  MANUAL TRX COMPLETATO: POS",generalConfiguration.trxExecution.cAngolo);
         break;
 
     case ACTUATORS_TRX_QUICK_STOP:
-        printf("TRX QUICK STOP ESEGUITO CORRETTAMENTE\n");
+        debugPrint("ACTUATORS TRX QUICK STOP ESEGUITO CORRETTAMENTE");
 
         generalConfiguration.trxExecution.run=false;
         generalConfiguration.trxExecution.completed=true;
@@ -1077,10 +1048,10 @@ void actuatorsRxFromTrx(uint8_t* data){
         // Esito movimento
         if(data[1]){
             generalConfiguration.trxExecution.success = false;
-            printf("AZIONAMENTO ZERO SETTING TRX FALLITO. ERRORE=%d, SUBERR:%d, posizione=(c)%d\n",data[1],data[2],generalConfiguration.trxExecution.cAngolo);
+            debugPrintI3("ACTUATORS ZERO SETTING TRX FALLITO. ERRORE", data[1],"SUBERR", data[2],"POS",generalConfiguration.trxExecution.cAngolo);
         }else{
             generalConfiguration.trxExecution.success = true;
-            printf("AZIONAMENTO ZERO SETTING TRX COMPLETATO: posizione=(c)%d\n",generalConfiguration.trxExecution.cAngolo);
+            debugPrintI("ACTUATORS ZERO SETTING TRX COMPLETATO: POS",generalConfiguration.trxExecution.cAngolo);
         }
 
         buffer[0] = data[1]; // Codice esito proveniente dai drivers..
@@ -1107,8 +1078,9 @@ void actuatorsRxFromTrx(uint8_t* data){
         FROM_LE16(sval,&data[6]);
         generalConfiguration.trxExecution.cAngolo = sval;
 
-        if(data[1]) printf("TRX FAULT. ERRORE=%d, ERCLASS:%x, ERRNUM:%x, ERRCODE:%x , posizione=%d\n",data[1],data[4],data[5],data[2]+256*data[3], generalConfiguration.trxExecution.cAngolo);
-        else printf("RESET FAULT TRX: posizione=%d\n",generalConfiguration.trxExecution.cAngolo);
+        if(data[1]){
+            debugPrintX4("ACTUATORS TRX FAULT, ERR",data[1],"CLASS",data[4],"NUM",data[5], "CODE" ,data[2]+256*data[3]);
+        }else debugPrint("ACTUATORS RESET FAULT TRX");
 
         break;
 
@@ -1138,7 +1110,6 @@ void actuatorsRxFromTrx(uint8_t* data){
             buffer[1]=255;
             buffer[2]=0;
             CanSendToActuatorsSlave(buffer);
-            printf("FINE BLOCCO CONFIG TRX\n");
             _EVSET(_EV1_TRX_CONFIGURED);
         }
 
@@ -1149,7 +1120,6 @@ void actuatorsRxFromTrx(uint8_t* data){
         // Messaggio in polling per resettare eventuali situazioni rimaste appese
         if(data[1]==ACUATORS_TRX_POLLING_IDLE){
             if(generalConfiguration.trxExecution.run){
-                printf("TRX: POLLING RESET RUN STATUS\n");
                 generalConfiguration.trxExecution.run=false;
                 generalConfiguration.trxExecution.completed = true;
                 generalConfiguration.trxExecution.success=false;
@@ -1186,31 +1156,27 @@ void actuatorsRxFromLenze(uint8_t* data){
     switch(data[0]){
 
     case ACTUATORS_FAULT_LENZE:
-        //buffer[0] = data[1]; // Codice esito proveniente dai drivers..
-        //buffer[1] = data[2]; // sub codice in caso di errore da fault
-        //mccGuiNotify(1,MCC_LENZE_ERRORS,buffer,2);
+
         break;
 
     case ACTUATORS_LENZE_RUN_STAT:
-        //data[1]==1 -> MANUALE, data[1]==0 -> Automatico
-        // data[2,3] = POtenziometro *10
+
         if(data[1]==0){
             generalConfiguration.armExecution.lenze_run = true;
-            printf("LENZE ATTIVATO IN MODO AUTOMATICO \n");
+            debugPrint("ACTUATORS LENZE ATTIVATO IN MODO AUTOMATICO");
             return;
         }
 
         // Segnalazione di fine movimento lenze
 
-        printf("COMUNICAZIONE LENZE FINE MOVIMENTO AUTOMATICO\n");
+        debugPrint("ACTUATORS COMUNICAZIONE LENZE FINE MOVIMENTO AUTOMATICO");
         generalConfiguration.armExecution.lenze_run = false;
         generalConfiguration.armExecution.lenze_pot = data[2] + 256 * data[3];
 
         if(generalConfiguration.armExecution.id==0) return; // Non c'è nessuna comunicazione da inviare
         if(generalConfiguration.armExecution.run) return; // Arm ancora in movimento
 
-        // Segnalazione a GUI di completo azionamento avvenuto
-        printf("LENZE AGGIORNA GUI\n");
+        // Segnalazione a GUI di completo azionamento avvenuto        
         buffer[0] = 0;
         buffer[1] = 0;
         mccGuiNotify(generalConfiguration.armExecution.id,MCC_CMD_ARM,buffer,2);
@@ -1244,7 +1210,6 @@ void actuatorsRxFromLenze(uint8_t* data){
             buffer[1]=255;
             buffer[2]=0;
             CanSendToActuatorsSlave(buffer);
-            printf("FINE BLOCCO CONFIG LENZE\n");
             _EVSET(_EV1_LENZE_CONFIGURED);
         }
 

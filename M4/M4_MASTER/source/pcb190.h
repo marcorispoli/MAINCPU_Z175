@@ -389,9 +389,5 @@ Data di Creazione: 24/10/2014
   ext bool pcb190ConfigLSStarter(void);
   ext bool pcb190DisableLSStarterDiagnostic(void);
 
-  ext bool pcb190UploadAnalogOnlyPreExpose(_RxStdSeq_Str* Param);
-  ext bool pcb190UploadAnalogPreExpose(_RxStdSeq_Str* Param);
-  ext bool pcb190UploadAnalogCalibTubeExpose(_RxStdSeq_Str* Param);
-  ext bool pcb190UploadAnalogManualExpose(_RxStdSeq_Str* Param);
 
 #endif

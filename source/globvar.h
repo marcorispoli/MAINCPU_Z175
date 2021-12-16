@@ -28,6 +28,8 @@ ext ImagePage*       paginaImmagine;
 ext mccMasterCom*    pMasterRxMcc;  // Comunicazione da Master M4 Core
 ext mccSlaveCom*     pSlaveRxMcc;  // Comunicazione da Master M4 Core
 
+ext mccPrintCom*     pPrintMcc;
+
 ext DBase            ApplicationDatabase;
 ext bool isMaster;
 ext console*            pConsole;
