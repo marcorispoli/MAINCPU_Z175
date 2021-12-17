@@ -51,6 +51,9 @@ public:
     bool readTomoConfig(QString filename);
     QString getTomoFilename(void);
 
+    void enableSlavePrint(void);
+
+
     bool readArmConfig(void);
     bool readLenzeConfig(void);
 
@@ -99,6 +102,7 @@ public:
     #define SLAVE_EXECUTE_SHELL      "SetShellCommand"
     #define SLAVE_TOOLS_DATA         "SlaveToolsData"
     #define SYNC_TO_SLAVE            "SyncToSlave"
+    #define SLAVE_ENABLE_PRINT       "SlaveEnablePrint"
 
 
     // Comandi aggiornamento firmware

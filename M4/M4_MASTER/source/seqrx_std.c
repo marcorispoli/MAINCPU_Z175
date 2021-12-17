@@ -26,10 +26,7 @@ unsigned char ERROR;
 void std_rx_task(uint32_t taskRegisters)
 {
   unsigned char data[10];
-  unsigned char addr,banco;
-  unsigned char i;
-  unsigned short sval;
-  unsigned char chk;
+
   
   printf("PARTENZA SEQUENZA PER GESTIONE RAGGI STANDARD\n");
   _EVCLR(_SEQEV_RX_STD_START);
@@ -45,9 +42,13 @@ void std_rx_task(uint32_t taskRegisters)
     ISRUNNING=TRUE;
     ERROR=0;
   
-
     if(generalConfiguration.demoMode) debugPrint("RX-2D START IN DEMO MODE");
     else  debugPrint("RX-2D START SEQUENCE");
+
+    // Specchio fuori campo se non è già stato  levato (comando compatibile FREEZE)
+    if(pcb249U2MirrorHome()==FALSE)_SEQERROR(ERROR_MIRROR_LAMP);
+    //if(pcb249U2Lamp(2,100,true) == FALSE) _SEQERROR(ERROR_MIRROR_LAMP);
+
   
     // Prima di andare in freeze bisogna accertarsi che la collimazione 2D sia andata a buon fine
     if(wait2DBackFrontCompletion(100)==false) _SEQERROR(ERROR_INVALID_COLLI);
@@ -60,8 +61,6 @@ void std_rx_task(uint32_t taskRegisters)
     // Prima di procedere bisogna verificare se il filtro ha terminato correttamente il posizionamento
     if(waitRxFilterCompletion()==FALSE)  _SEQERROR(ERROR_INVALID_FILTRO);
 
-    // Specchio fuori campo se non è già stato  levato (comando compatibile FREEZE)
-    if(pcb249U2Lamp(2,100,true) == FALSE) _SEQERROR(ERROR_MIRROR_LAMP);
 
     // Verifica Chiusura porta
     if((SystemInputs.CPU_CLOSED_DOOR==0) && (!generalConfiguration.demoMode))

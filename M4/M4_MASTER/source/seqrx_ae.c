@@ -56,9 +56,14 @@ void std_ae_rx_task(uint32_t taskRegisters)
     mAs_erogati = 0;
     mAs_erogati_AE = 0;
 
-     // In Demo mode il comando non viene eseguito
+    // In Demo mode il comando non viene eseguito
     if(generalConfiguration.demoMode) debugPrint("RX-AE ATTIVAZIONE IN DEMO MODE");
     else  debugPrint("RX-AE ATTIVAZIONE SEQUENZA");
+
+    // Specchio fuori campo
+    if(pcb249U2MirrorHome()==FALSE)_SEQERROR(ERROR_MIRROR_LAMP);
+    //if(pcb249U2Lamp(2,100,true) == FALSE) _SEQERROR(ERROR_MIRROR_LAMP);
+
 
     // Prima di andare in freeze bisogna accertarsi che la collimazione 2D sia andata a buon fine
     if(wait2DBackFrontCompletion(100)==false) _SEQERROR(ERROR_INVALID_COLLI);
@@ -72,8 +77,6 @@ void std_ae_rx_task(uint32_t taskRegisters)
     if(waitRxFilterCompletion()==FALSE)  _SEQERROR(ERROR_INVALID_FILTRO);
 
 
-    // Specchio fuori campo se non è già stato  levato (comando compatibile FREEZE)
-    if(pcb249U2Lamp(2,100,true) == FALSE) _SEQERROR(ERROR_MIRROR_LAMP);
 
     // Verifica Chiusura porta
     if((SystemInputs.CPU_CLOSED_DOOR==0) && (!generalConfiguration.demoMode))

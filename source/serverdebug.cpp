@@ -828,6 +828,8 @@ void serverDebug::handleDebug(QByteArray data)
         data[1] = 1;
         pConsole->pGuiMcc->sendFrame(MCC_PRINT,1,data,2);
         serviceTcp->txData(QByteArray("DONE \n\r"));
+
+        pConfig->enableSlavePrint();
    }
 }
 
@@ -2172,7 +2174,7 @@ void serverDebug::handleSetRemoteCRC(QByteArray data){
     command = QString("/monta.sh");
     system(command.toStdString().c_str());
 
-    command = QString("cp /mnt/nfs/%1 /home/user/").arg(filename);
+    command = QString("cp /mnt/target/%1 /home/user/").arg(filename);
     system(command.toStdString().c_str());
 
 

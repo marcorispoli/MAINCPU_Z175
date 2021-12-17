@@ -56,6 +56,10 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
     if(generalConfiguration.demoMode) debugPrint("RX-3D-AEC START IN DEMO MODE");
     else  debugPrint("RX-3D-AEC START SEQUENCE");
 
+    // Specchio fuori campo se non è già stato  levato (comando compatibile FREEZE)
+    if(pcb249U2MirrorHome()==FALSE)_SEQERROR(ERROR_MIRROR_LAMP);
+    //if(pcb249U2Lamp(2,100,true) == FALSE) _SEQERROR(ERROR_MIRROR_LAMP);
+
     // Prima di andare in freeze bisogna accertarsi che la collimazione 2D sia andata a buon fine
     if(wait2DBackFrontCompletion(100)==false) _SEQERROR(ERROR_INVALID_COLLI);
     if(wait2DLeftRightTrapCompletion(100)==false) _SEQERROR(ERROR_INVALID_COLLI);
@@ -95,9 +99,6 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
     // Manda subito il Braccio in Home Tomo
     if(actuatorsMoveTomoTrxHome(Param->tomo_mode)==false) _SEQERROR(_SEQ_ERR_INTERMEDIATE_HOME);
 
-
-    // Specchio fuori campo  (comando compatibile FREEZE)
-    if(pcb249U2Lamp(2,100,true) == FALSE) _SEQERROR(ERROR_MIRROR_LAMP);
 
     // Impostazione collimazione Dinamica solo se non in calibrazione e se abilitata dal comando setColli
     // Questi comandi sono compatibili con il modo FREEZE

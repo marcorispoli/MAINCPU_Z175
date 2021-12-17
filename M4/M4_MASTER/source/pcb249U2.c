@@ -608,41 +608,80 @@ bool pcb249U2ResetFaults(void)
     
 //_________________________________________________________________________________________________
 //                               FUNZIONI DI INTERFACCIA
-
-
-bool pcb249U2Mirror(unsigned char cmd)
+bool pcb249U2MirrorHome(void)
 {
-  bool ris;
-  if(generalConfiguration.collimator_model_error) return false;
+    if(generalConfiguration.collimator_model_error) return false;
+
+    // Se busy esce
+    if(pcb249WaitBusy(50)==false){
+        Ser422ReadRegister(_REGID(RG249U2_MIRROR_STAT),10,&CONTEST);
+        Ser422ReadRegister(_REGID(RG249U2_ERRORS),10,&CONTEST);
+
+        return false;
+    }
+
+    // Reset fault precedente
+    pcb249U2ResetFaults();
+    if(!pcb249U2MirrorHomeCmd()){
+       Ser422ReadRegister(_REGID(RG249U2_MIRROR_STAT),10,&CONTEST);
+       Ser422ReadRegister(_REGID(RG249U2_ERRORS),10,&CONTEST);
+       Ser422ReadRegister(_REGID(RG249U2_SYS_FLAGS0),10,&CONTEST);
+
+       return false;
+    }
+
+    // Attende completamento comando
+    if(pcb249WaitBusy(50)==false){
+        Ser422ReadRegister(_REGID(RG249U2_MIRROR_STAT),10,&CONTEST);
+        Ser422ReadRegister(_REGID(RG249U2_ERRORS),10,&CONTEST);
+
+        return false;
+    }
+
+    Ser422ReadRegister(_REGID(RG249U2_MIRROR_STAT),10,&CONTEST);
+    Ser422ReadRegister(_REGID(RG249U2_ERRORS),10,&CONTEST);
+    // Verifica che sia effettivamente in Home
+    if(!(_DEVREGL(RG249U2_MIRROR_STAT,CONTEST) & 0x4)) return false;
+    else return true;
+
+}
 
 
-   if(pcb249WaitBusy(50)==false) return false;
+bool pcb249U2MirrorOut(void)
+{
 
-   pcb249U2ResetFaults();
-   
-   if(cmd==0)
-   {
-     ris = pcb249U2MirrorHomeCmd();
-     goto fine_mirror;
-   }
-   
-   // Tentativo di Mirror OUT
-   ris = pcb249U2MirrorOutCmd();
-   if(ris) goto fine_mirror;
-   
-   // Se Mirror Out fallisce allora prima prova a portarlo in HOME
-   if(pcb249U2MirrorHomeCmd()==FALSE) return FALSE;
-   _time_delay(500);   
-   if(pcb249WaitBusy(50)==false) return false;
+    if(generalConfiguration.collimator_model_error) return false;
 
-   // Tentativo di Mirror OUT
-   if(!pcb249U2MirrorOutCmd()) return false;
+    // Se busy esce
+    if(pcb249WaitBusy(50)==false){
+        Ser422ReadRegister(_REGID(RG249U2_MIRROR_STAT),10,&CONTEST);
+        Ser422ReadRegister(_REGID(RG249U2_ERRORS),10,&CONTEST);
+        return false;
+    }
 
-   // Attesa fine operazioni e rilettura registro di Target
-fine_mirror:
-   if(pcb249WaitBusy(50)==false) return false;
+    pcb249U2ResetFaults();
+
+    // Tentativo di Mirror OUT
+    if(!pcb249U2MirrorOutCmd()){
+        // Se c'è un errore, prova prima a portarlo in Home
+        if(!pcb249U2MirrorHome()) return false;
+        _time_delay(500);
+        if(!pcb249U2MirrorOutCmd()) return false;
+    }
+
+    // Attende che il comando termini
+    if(pcb249WaitBusy(50)==false){
+        Ser422ReadRegister(_REGID(RG249U2_MIRROR_STAT),10,&CONTEST);
+        Ser422ReadRegister(_REGID(RG249U2_ERRORS),10,&CONTEST);
+        return false;
+    }
+
    Ser422ReadRegister(_REGID(RG249U2_MIRROR_STAT),10,&CONTEST);
-   return true;
+   Ser422ReadRegister(_REGID(RG249U2_ERRORS),10,&CONTEST);
+
+   // Controlla il risultato
+   if(!(_DEVREGL(RG249U2_MIRROR_STAT,CONTEST) & 0x80)) return false;
+   else return true;
 
 }
 

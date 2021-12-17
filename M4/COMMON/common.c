@@ -77,6 +77,7 @@ int absI(int i){
 #define MAX_PRINT_DEBUG 100
 void debugPrintEna(bool stat){
     debugPrintEnable = stat;
+    if(stat ==true ) printEnable = true;
 }
 void printEna(bool stat){
     printEnable = stat;

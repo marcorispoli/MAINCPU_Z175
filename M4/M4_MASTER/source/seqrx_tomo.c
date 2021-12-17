@@ -45,6 +45,10 @@ void tomo_rx_task(uint32_t taskRegisters)
     if(generalConfiguration.demoMode) debugPrint("RX-3D START IN DEMO MODE");
     else  debugPrint("RX-3D START SEQUENCE");
 
+    // Specchio fuori campo se non è già stato  levato (comando compatibile FREEZE)
+    if(pcb249U2MirrorHome()==FALSE)_SEQERROR(ERROR_MIRROR_LAMP);
+    //if(pcb249U2Lamp(2,100,true) == FALSE) _SEQERROR(ERROR_MIRROR_LAMP);
+
     // Prima di andare in freeze bisogna accertarsi che la collimazione 2D sia andata a buon fine
     if(wait2DBackFrontCompletion(100)==false) _SEQERROR(ERROR_INVALID_COLLI);
     if(wait2DLeftRightTrapCompletion(100)==false) _SEQERROR(ERROR_INVALID_COLLI);
@@ -82,9 +86,6 @@ void tomo_rx_task(uint32_t taskRegisters)
 
     // Manda subito il Braccio in Home Tomo.
     if(actuatorsMoveTomoTrxHome(Param->tomo_mode)==false) _SEQERROR(_SEQ_ERR_INTERMEDIATE_HOME);
-
-    // Specchio fuori campo se non è già stato  levato (comando compatibile FREEZE)
-    if(pcb249U2Lamp(2,100,true) == FALSE) _SEQERROR(ERROR_MIRROR_LAMP);
 
     // Verifica pulsante raggi
     if(SystemInputs.CPU_XRAY_REQ==0)  _SEQERROR(ERROR_PUSHRX_NO_PREP);

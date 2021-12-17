@@ -1229,23 +1229,34 @@ void mcc_set_mirror(unsigned char id, unsigned char mcccode,unsigned char cmd)
 {
   unsigned char data[2];
  
-  // Attende un eventuale comando in corso se necessario
-  if(pcb249WaitBusy(50)==false){
-      debugPrintI("GUI TIMEOUT IMPOSTAZIONE SPECCHIO, COMANDO",cmd);
-      data[0] = 0;
+  if(cmd==0){
+      // Home
+      debugPrint("GUI ESECUZIONE MIRROR HOME");
+      if(pcb249U2MirrorHome()==TRUE){
+          debugPrint("GUI ESECUZIONE MIRROR HOME COMPLETATA");
+          data[0]=1;
+      }else{
+          debugPrint("GUI ESECUZIONE MIRROR HOME FALLITA");
+          data[0] = 0;
+      }
   }else{
-      if(pcb249U2Mirror(cmd)==TRUE) data[0]=1;
-      else data[0] = 0;
-
-      if(data[0]==1) debugPrintI("GUI COMANDO MIRROR ESEGUITO, COMANDO",cmd);
-      else debugPrintI("GUI COMANDO MIRROR FALLITO, COMANDO",cmd);
+      // Out
+      debugPrint("GUI ESECUZIONE MIRROR OUT");
+      if(pcb249U2MirrorOut()==TRUE){
+          debugPrint("GUI ESECUZIONE MIRROR OUT COMPLETATA");
+          data[0]=1;
+      }else{
+          debugPrint("GUI ESECUZIONE MIRROR OUT FALLITA");
+          data[0] = 0;
+      }
   }
+
 
   // Consulta il registro RG249U2_MIRROR_STAT per lo stato corrente dello specchio
   if(_TEST_BIT(PCB249U2_MIR_HOME_FLG)) data[1]=0;
   else if(_TEST_BIT(PCB249U2_MIR_OUT_FLG)) data[1]=1;
   else data[1]=2;
-  
+
   mccGuiNotify(id,mcccode,data,2);
   return; 
 }

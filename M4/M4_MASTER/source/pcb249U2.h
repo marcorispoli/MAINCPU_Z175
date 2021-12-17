@@ -211,8 +211,12 @@ volatile _DeviceRegItem_Str  PCB249U2_Registers[]=
  
   // API ////////////////////////////////////////////////////////////////// 
   ext void pcb249U2_driver(uint32_t initial_data);  // Driver PCB249U2
-  ext bool pcb249U2Mirror(unsigned char cmd); // Attivazione Specchio
+  ext bool pcb249U2MirrorHome(void);
+  ext bool pcb249U2MirrorOut(void);
+
+
   ext bool pcb249U2Lamp(unsigned char cmd, unsigned char tmo, bool wait); // Attivazione lampada
+
   ext bool pcb249U2SetColli(unsigned char back, unsigned char front);   // Imposta il formato
   ext void pcb249U2SetFiltro(unsigned char cmd, unsigned char target_position, unsigned char id);   // Imposta il filtro
   ext bool config_pcb249U2(bool setmem, unsigned char blocco, unsigned char* buffer, unsigned char len);

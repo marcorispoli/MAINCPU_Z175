@@ -2050,6 +2050,7 @@ void Config::masterUpdateDatabase(void){
 void Config::configMasterRxHandler(QByteArray frame)
 {
     static int nBlocchi=0;
+    unsigned char data[2];
 
     protoConsole protocollo(&frame);
     if(protocollo.isValid==FALSE) return;
@@ -2125,6 +2126,10 @@ void Config::configMasterRxHandler(QByteArray frame)
 
         // Impostazione database dipendente da Master
         masterUpdateDatabase();
+    }else if(comando==SLAVE_ENABLE_PRINT){
+        data[0] = MCC_DRIVER_PRINT_ENABLE_CMD;
+        data[1] = 1;
+        pConfig->pSlaveMcc->sendFrame(MCC_PRINT,1,data,2);
     }
     return;
 }
@@ -3547,3 +3552,13 @@ void Config::rebootSlot(void){
     system(command.toStdString().c_str());
     return;
 }
+
+// Abilita le print a basso livello sullo slave
+void Config::enableSlavePrint(void){
+    // Invia comando di reboot allo slave
+    protoConsole frame(1,false);
+    emit configMasterTx( frame.cmdToQByteArray(SLAVE_ENABLE_PRINT));
+
+}
+
+
