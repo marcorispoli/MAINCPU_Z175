@@ -1315,6 +1315,7 @@ void console::handleSetOperatingMode(void)
      ApplicationDatabase.setData(_DB_CALIB_SYM,"",0);
 
      // Update collimazione
+     PRINT("handleSetOperatingMode: COMPRESSOR UPDATE COLLI");
      pCollimatore->updateColli();
 
 }
@@ -1339,6 +1340,7 @@ void console::handleSetCalibTomo(QString samples)
     pGeneratore->tomoMode=TRUE;
 
     // Costringe a collimare OPEN
+    PRINT("handleSetCalibTomo: COMPRESSOR UPDATE COLLI");
     pCollimatore->updateColli();
 
     // Annulla eventuali allarmi PAD
@@ -1358,6 +1360,7 @@ void console::handleSetShotMode(bool useDetector)
     ApplicationDatabase.setData(_DB_EXPOSURE_MODE,(unsigned char) xSequence.workingMode);
 
     // Costringe a collimare OPEN
+    PRINT("handleSetShotMode: COMPRESSOR UPDATE COLLI");
     pCollimatore->updateColli();
 
     // Annulla eventuali allarmi PAD
@@ -3408,6 +3411,7 @@ bool console::handleSetColliMode(protoConsole* frame){
         pCollimatore->manualCollimation=FALSE;
         pCollimatore->manualFiltroCollimation=FALSE;
         pCollimatore->setFiltro();
+        PRINT("handleSetColliMode: COMPRESSOR UPDATE COLLI");
         pCollimatore->updateColli();
 
         return true;

@@ -60,14 +60,15 @@ void std_ae_rx_task(uint32_t taskRegisters)
     if(generalConfiguration.demoMode) debugPrint("RX-AE ATTIVAZIONE IN DEMO MODE");
     else  debugPrint("RX-AE ATTIVAZIONE SEQUENZA");
 
-    // Specchio fuori campo
-    if(pcb249U2MirrorHome()==FALSE)_SEQERROR(ERROR_MIRROR_LAMP);
-    //if(pcb249U2Lamp(2,100,true) == FALSE) _SEQERROR(ERROR_MIRROR_LAMP);
 
 
     // Prima di andare in freeze bisogna accertarsi che la collimazione 2D sia andata a buon fine
     if(wait2DBackFrontCompletion(100)==false) _SEQERROR(ERROR_INVALID_COLLI);
     if(wait2DLeftRightTrapCompletion(100)==false) _SEQERROR(ERROR_INVALID_COLLI);
+
+    // Specchio fuori campo
+    if(pcb249U2MirrorHome()==FALSE)_SEQERROR(ERROR_MIRROR_LAMP);
+    //if(pcb249U2Lamp(2,100,true) == FALSE) _SEQERROR(ERROR_MIRROR_LAMP);
 
     // Disabilita tutti i drivers
     Ser422DriverFreezeAll(0);    

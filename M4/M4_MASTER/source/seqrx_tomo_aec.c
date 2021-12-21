@@ -56,13 +56,14 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
     if(generalConfiguration.demoMode) debugPrint("RX-3D-AEC START IN DEMO MODE");
     else  debugPrint("RX-3D-AEC START SEQUENCE");
 
-    // Specchio fuori campo se non è già stato  levato (comando compatibile FREEZE)
-    if(pcb249U2MirrorHome()==FALSE)_SEQERROR(ERROR_MIRROR_LAMP);
-    //if(pcb249U2Lamp(2,100,true) == FALSE) _SEQERROR(ERROR_MIRROR_LAMP);
+
 
     // Prima di andare in freeze bisogna accertarsi che la collimazione 2D sia andata a buon fine
     if(wait2DBackFrontCompletion(100)==false) _SEQERROR(ERROR_INVALID_COLLI);
     if(wait2DLeftRightTrapCompletion(100)==false) _SEQERROR(ERROR_INVALID_COLLI);
+    // Specchio fuori campo se non è già stato  levato (comando compatibile FREEZE)
+    if(pcb249U2MirrorHome()==FALSE)_SEQERROR(ERROR_MIRROR_LAMP);
+    //if(pcb249U2Lamp(2,100,true) == FALSE) _SEQERROR(ERROR_MIRROR_LAMP);
 
     // Manda subito in FREEZE i drivers per non intralciare le operazioni
     // Non viene perï¿½ atteso che effettivamente i drivers si fermino
@@ -449,8 +450,8 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
    else printf("SBLOCCO DRIVER OK\n");
   
    // Re-imposta la collimazione 2D
-   pcb249U2SetColli( generalConfiguration.colliCfg.lame2D.back , generalConfiguration.colliCfg.lame2D.front);
-   pcb249U1SetColli(generalConfiguration.colliCfg.lame2D.left,generalConfiguration.colliCfg.lame2D.right,generalConfiguration.colliCfg.lame2D.trap,0);
+   pcb249U2SetColli( generalConfiguration.colliCfg.lame2D.back , generalConfiguration.colliCfg.lame2D.front,1);
+   pcb249U1SetColli(generalConfiguration.colliCfg.lame2D.left,generalConfiguration.colliCfg.lame2D.right,generalConfiguration.colliCfg.lame2D.trap,1);
 
    // Se richiesto viene spento lo starter
     if(generalConfiguration.pcb190Cfg.starter_off_after_exposure){
@@ -518,7 +519,7 @@ void _SEQERRORFUNC(int code)
     printf("SBLOCCO DRIVER OK\n");
 
     // Re-imposta la collimazione 2D
-    pcb249U2SetColli( generalConfiguration.colliCfg.lame2D.back , generalConfiguration.colliCfg.lame2D.front);
+    pcb249U2SetColli( generalConfiguration.colliCfg.lame2D.back , generalConfiguration.colliCfg.lame2D.front,0);
     pcb249U1SetColli(generalConfiguration.colliCfg.lame2D.left,generalConfiguration.colliCfg.lame2D.right,generalConfiguration.colliCfg.lame2D.trap,0);
 
     if((generalConfiguration.filterTomoEna!=0)&&(Param->tomo_mode!=_TOMO_MODE_STATIC)){

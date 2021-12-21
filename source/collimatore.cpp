@@ -55,6 +55,7 @@ void Collimatore::timerEvent(QTimerEvent* ev)
             colliTestTimer=0;
             manualCollimation = false;
             manualFiltroCollimation = false;
+            PRINT("timerEvent: UPDATE COLLI");
             updateColli();
             setFiltro();
             return;
@@ -172,6 +173,7 @@ void Collimatore::pcb249U1Notify(unsigned char id, unsigned char notifyCode, QBy
             if(buffer.at(2) != accessorio){
                 accessorio = buffer.at(2);
                 ApplicationDatabase.setData(_DB_ACCESSORIO_COLLIMATORE, (int) accessorio);
+                PRINT("pcb249U1Notify: UPDATE COLLI");
                 updateColli();
                 if(accessorio == COLLI_ACCESSORIO_FRUSTOLI) pToConsole->setSpecimen(true);
                 else pToConsole->setSpecimen(false);
@@ -426,12 +428,30 @@ bool Collimatore::updateColli(void)
 
    }
 
-   // Invio comando
+   PRINT(QString("CL:%1(%2), CR:%3(%4), CT:%5(%6) F:%7(%8) B:%9(%10)").arg(data[COLLI_L]).arg(cursen_left).arg(data[COLLI_R]).arg(cursen_right).arg(data[COLLI_T]).arg(cursen_trap).arg(data[COLLI_F]).arg(cursen_front).arg(data[COLLI_B]).arg(cursen_back));
+   // Verifica se c'è stato un cambio di lame
+   if(
+       (data[COLLI_F] == cursen_front)&&
+       (data[COLLI_B] == cursen_back)&&
+       (data[COLLI_T] == cursen_trap)&&
+       (data[COLLI_L] == cursen_left)&&
+       (data[COLLI_R] == cursen_right)
+      ){
+
+       PRINT("UPDATE-COLLI: GIA COLLIMATO!");
+       return true;
+   }
+
    if(pConsole->pGuiMcc->sendFrame(MCC_SET_COLLI,_COLLI_ID,data, COLLI_LEN)==FALSE)
    {
        LOG("MCC COLLI COMMAND FALLITO");
        return FALSE;
    }
+   cursen_front = data[COLLI_F];
+   cursen_back = data[COLLI_B];
+   cursen_trap = data[COLLI_T];
+   cursen_left = data[COLLI_L];
+   cursen_right = data[COLLI_R];
 
    return TRUE;
 }
@@ -439,6 +459,7 @@ bool Collimatore::updateColli(void)
 // Notifica di avvenuto cambio PAD: effettua un update della collimazione corrente
 void Collimatore::changedPadNotify(void)
 {
+    PRINT("changedPadNotify: UPDATE COLLI");
     updateColli();
 
 }
@@ -680,12 +701,29 @@ void Collimatore::guiNotifySlot(unsigned char id, unsigned char mcccode, QByteAr
         if(buffer.at(1)==1){
             // Collimazione lame laterali
             if(buffer.at(0)==0){
-               PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_COLLI, COLLI_UPDATE_FALLITO, TRUE);
+               //PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_COLLI, COLLI_UPDATE_FALLITO, TRUE);
+               LOG("COLLIMATORE ERRORE COLLIMAZIONE LAME LATERALI");
+               cursen_left = 255;
+               cursen_right = 255;
+               cursen_trap =255;
+
+            }else{
+                PRINT("COLLIMATORE LAME LATERALI OK");
+                cursen_left = buffer.at(2);
+                cursen_right = buffer.at(3);
+                cursen_trap = buffer.at(4);
             }
         }else{
             // Collimazine lama frontale + back
             if(buffer.at(0)==0){
-               PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_COLLI, COLLI_UPDATE_FALLITO, TRUE);
+               //PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_COLLI, COLLI_UPDATE_FALLITO, TRUE);
+               LOG("COLLIMATORE ERRORE COLLIMAZIONE FRONTE/RETRO");
+               cursen_front = 255;
+               cursen_back = 255;
+            }else{
+                PRINT("COLLIMATORE LAME F/B OK");
+                cursen_front = buffer.at(2);
+                cursen_back = buffer.at(3);
             }
         }
 

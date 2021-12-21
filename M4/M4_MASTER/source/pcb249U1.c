@@ -287,16 +287,12 @@ void pcb249U1_driver(uint32_t taskRegisters)
            (Ser422WriteRegister(_REGID(RG249U1_PR_2D_B_USER),trap,10,&PCB249U1_CONTEST) != _SER422_NO_ERROR)){
              debugPrint("PCB249U1 ERRORE SCRITTURA REGISTRI TARGET COLLI LEFT RIGHT TRAP");
              // Se è stata richiesta da GUI una risposta la invia
-             if(u1colli_id){
-                 Ser422ReadRegister(_REGID(RG249U1_RIGHT_SENS),10,&CONTEST);
-                 Ser422ReadRegister(_REGID(RG249U1_LEFT_SENS),10,&CONTEST);
-                 Ser422ReadRegister(_REGID(RG249U1_TRAP_SENS),10,&CONTEST);
-
+             if(u1colli_id){                 
                  data[0]=0;
                  data[1]=1; // Collimazione lame laterali
-                 data[2]=_DEVREGL(RG249U1_LEFT_SENS,CONTEST);
-                 data[3]=_DEVREGL(RG249U1_RIGHT_SENS,CONTEST);
-                 data[4]=_DEVREGL(RG249U1_TRAP_SENS,CONTEST);
+                 data[2]=0;
+                 data[3]=0;
+                 data[4]=0;
                  mccGuiNotify(u1colli_id,MCC_SET_COLLI,data,5);
              }
              _EVCLR(_EV0_PCB249U1_COLLI);
@@ -307,16 +303,12 @@ void pcb249U1_driver(uint32_t taskRegisters)
          if(pcb249U1WaitBusy(80)==false){
              debugPrint("PCB249U1 TIMEOUT COLLI U1 IN ATTESA DEL READY");
              // Se è stata richiesta da GUI una risposta la invia
-             if(u1colli_id){
-                 Ser422ReadRegister(_REGID(RG249U1_RIGHT_SENS),10,&CONTEST);
-                 Ser422ReadRegister(_REGID(RG249U1_LEFT_SENS),10,&CONTEST);
-                 Ser422ReadRegister(_REGID(RG249U1_TRAP_SENS),10,&CONTEST);
-
+             if(u1colli_id){                
                  data[0]=0;
                  data[1]=1; // Collimazione lame laterali
-                 data[2]=_DEVREGL(RG249U1_LEFT_SENS,CONTEST);
-                 data[3]=_DEVREGL(RG249U1_RIGHT_SENS,CONTEST);
-                 data[4]=_DEVREGL(RG249U1_TRAP_SENS,CONTEST);
+                 data[2]=0;
+                 data[3]=0;
+                 data[4]=0;
                  mccGuiNotify(u1colli_id,MCC_SET_COLLI,data,5);
              }
              _EVCLR(_EV0_PCB249U1_COLLI);
@@ -329,16 +321,12 @@ void pcb249U1_driver(uint32_t taskRegisters)
          if(pcb249U1SetColliCmd(2)==false){
              debugPrint("PCB249U1 ERRORE COMANDO COLLIMAZIONE U1");
              // Se è stata richiesta da GUI una risposta la invia
-             if(u1colli_id){
-                 Ser422ReadRegister(_REGID(RG249U1_RIGHT_SENS),10,&CONTEST);
-                 Ser422ReadRegister(_REGID(RG249U1_LEFT_SENS),10,&CONTEST);
-                 Ser422ReadRegister(_REGID(RG249U1_TRAP_SENS),10,&CONTEST);
-
+             if(u1colli_id){               
                  data[0]=0;
                  data[1]=1; // Collimazione lame laterali
-                 data[2]=_DEVREGL(RG249U1_LEFT_SENS,CONTEST);
-                 data[3]=_DEVREGL(RG249U1_RIGHT_SENS,CONTEST);
-                 data[4]=_DEVREGL(RG249U1_TRAP_SENS,CONTEST);
+                 data[2]=0;
+                 data[3]=0;
+                 data[4]=0;
                  mccGuiNotify(u1colli_id,MCC_SET_COLLI,data,5);
              }
              _EVCLR(_EV0_PCB249U1_COLLI);
@@ -351,16 +339,12 @@ void pcb249U1_driver(uint32_t taskRegisters)
          if(pcb249U1WaitBusy(80)==false){
              debugPrint("PCB249U1 TIMEOUT POSIZIONAMENTO LAME U1");
              // Se è stata richiesta da GUI una risposta la invia
-             if(u1colli_id){
-                 Ser422ReadRegister(_REGID(RG249U1_RIGHT_SENS),10,&CONTEST);
-                 Ser422ReadRegister(_REGID(RG249U1_LEFT_SENS),10,&CONTEST);
-                 Ser422ReadRegister(_REGID(RG249U1_TRAP_SENS),10,&CONTEST);
-
+             if(u1colli_id){                 
                  data[0]=0;
                  data[1]=1; // Collimazione lame laterali
-                 data[2]=_DEVREGL(RG249U1_LEFT_SENS,CONTEST);
-                 data[3]=_DEVREGL(RG249U1_RIGHT_SENS,CONTEST);
-                 data[4]=_DEVREGL(RG249U1_TRAP_SENS,CONTEST);
+                 data[2]=0;
+                 data[3]=0;
+                 data[4]=0;
                  mccGuiNotify(u1colli_id,MCC_SET_COLLI,data,5);
               }
              _EVCLR(_EV0_PCB249U1_COLLI);
@@ -371,16 +355,12 @@ void pcb249U1_driver(uint32_t taskRegisters)
          if(_TEST_BIT(PCB249U1_FAULT)) {
              debugPrint("PCB249U1 ERRORE POSIZIONAMENTO LAME U1");
              // Se è stata richiesta da GUI una risposta la invia
-             if(u1colli_id){
-                 Ser422ReadRegister(_REGID(RG249U1_RIGHT_SENS),10,&CONTEST);
-                 Ser422ReadRegister(_REGID(RG249U1_LEFT_SENS),10,&CONTEST);
-                 Ser422ReadRegister(_REGID(RG249U1_TRAP_SENS),10,&CONTEST);
-
+             if(u1colli_id){                 
                  data[0]=0;
                  data[1]=1; // Collimazione lame laterali
-                 data[2]=_DEVREGL(RG249U1_LEFT_SENS,CONTEST);
-                 data[3]=_DEVREGL(RG249U1_RIGHT_SENS,CONTEST);
-                 data[4]=_DEVREGL(RG249U1_TRAP_SENS,CONTEST);
+                 data[2]=0;
+                 data[3]=0;
+                 data[4]=0;
                  mccGuiNotify(u1colli_id,MCC_SET_COLLI,data,5);
                }
              _EVCLR(_EV0_PCB249U1_COLLI);
@@ -395,16 +375,13 @@ void pcb249U1_driver(uint32_t taskRegisters)
              _EVCLR(_EV0_PCB249U1_COLLI);
              u1colli_result = true;
              debugPrintI3("PCB249U1 COLLIMAZIONE U1 CONCLUSA - L",left, "R", right,"T",trap);
-             if(u1colli_id){
-                 Ser422ReadRegister(_REGID(RG249U1_RIGHT_SENS),10,&CONTEST);
-                 Ser422ReadRegister(_REGID(RG249U1_LEFT_SENS),10,&CONTEST);
-                 Ser422ReadRegister(_REGID(RG249U1_TRAP_SENS),10,&CONTEST);
+             if(u1colli_id){                 
 
                  data[0]=1; // Conclusa con successo
                  data[1]=1; // Collimazione lame laterali
-                 data[2]=_DEVREGL(RG249U1_LEFT_SENS,CONTEST);
-                 data[3]=_DEVREGL(RG249U1_RIGHT_SENS,CONTEST);
-                 data[4]=_DEVREGL(RG249U1_TRAP_SENS,CONTEST);
+                 data[2]=left;
+                 data[3]=right;
+                 data[4]=trap;
                  mccGuiNotify(u1colli_id,MCC_SET_COLLI,data,5);
                }
          }
@@ -1215,7 +1192,7 @@ bool wait2DLeftRightTrapCompletion(int timeout){
 
     // Se il comando è fallito, riprova a collimare
     if(!u1colli_result){
-        pcb249U1SetColli(leftcolli_req ,rightcolli_req,trapcolli_req,0); // ripete il comando
+        pcb249U1SetColli(leftcolli_req ,rightcolli_req,trapcolli_req,1); // ripete il comando
         _time_delay(50);
         tmo = timeout;
         while(_IS_EVENT(_EV0_PCB249U1_COLLI)){

@@ -294,6 +294,14 @@ void pcb249U2_driver(uint32_t taskRegisters)
             debugPrintI2("PCB249U2 ESECUZIONE COLLIMAZIONE FRONT-BACK, BACK", back, "FRONT",front);
             if(pcb249WaitBusy(50)==false){
                     debugPrint("PCB249U2 ERRORE COLLIMAZIONE FRONT-BACK: TIMEOUT ATTESA BUSY");
+                    if(u2colli_id){
+                        data[0]=0;
+                        data[1]=0; // Collimazione lame f+b
+                        data[2]=0;
+                        data[3]=0;
+                        data[4]=0;
+                        mccGuiNotify(u2colli_id,MCC_SET_COLLI,data,5);
+                    }
                     _EVCLR(_EV0_PCB249U2_COLLI);
                     continue;
             }
@@ -303,6 +311,14 @@ void pcb249U2_driver(uint32_t taskRegisters)
 
             if(!pcb249U2ColliCmd(back, front)){
                 debugPrint("PCB249U2 ERRORE COLLIMAZIONE FRONT-BACK: COMANDO FALLITO");
+                if(u2colli_id){
+                    data[0]=0;
+                    data[1]=0; // Collimazione lame f+b
+                    data[2]=0;
+                    data[3]=0;
+                    data[4]=0;
+                    mccGuiNotify(u1colli_id,MCC_SET_COLLI,data,5);
+                }
                 _EVCLR(_EV0_PCB249U2_COLLI);
                 continue;
             }
@@ -312,6 +328,14 @@ void pcb249U2_driver(uint32_t taskRegisters)
             debugPrint("PCB249U2 COLLIMAZIONE FRONT-BACK: ATTESA COMPLETAMENTO");
             if(pcb249WaitBusy(50)==false){
                     debugPrint("PCB249U2 ERRORE COLLIMAZIONE FRONT-BACK: TIMEOUT ESECUZIONE");
+                    if(u2colli_id){
+                        data[0]=0;
+                        data[1]=0; // Collimazione lame f+b
+                        data[2]=0;
+                        data[3]=0;
+                        data[4]=0;
+                        mccGuiNotify(u1colli_id,MCC_SET_COLLI,data,5);
+                    }
                     _EVCLR(_EV0_PCB249U2_COLLI);
                     continue;
             }
@@ -319,6 +343,14 @@ void pcb249U2_driver(uint32_t taskRegisters)
             // Fine comando
             if(_TEST_BIT(PCB249U2_FAULT)){
                 debugPrint("PCB249U2 ERRORE COLLIMAZIONE FRONT-BACK: ERRORE PERIFERICA");
+                if(u2colli_id){
+                    data[0]=0;
+                    data[1]=0; // Collimazione lame f+b
+                    data[2]=0;
+                    data[3]=0;
+                    data[4]=0;
+                    mccGuiNotify(u1colli_id,MCC_SET_COLLI,data,5);
+                }
                 _EVCLR(_EV0_PCB249U2_COLLI);
                 continue;
             }
@@ -328,6 +360,15 @@ void pcb249U2_driver(uint32_t taskRegisters)
             // il nuovo comando è uguale allo stato attuale
             if((back==backcolli_req)&&(front==frontcolli_req)){                
                 debugPrint("PCB249U2 COLLIMAZIONE FRONT-BACK TERMINATA");
+                if(u2colli_id){
+                    data[0]=1;
+                    data[1]=0; // Collimazione lame f+b
+                    data[2]=front;
+                    data[3]=back;
+                    data[4]=0;
+                    mccGuiNotify(u1colli_id,MCC_SET_COLLI,data,5);
+                }
+
                 _EVCLR(_EV0_PCB249U2_COLLI);
                 backfront_eseguito = true;
             }
@@ -613,7 +654,8 @@ bool pcb249U2MirrorHome(void)
     if(generalConfiguration.collimator_model_error) return false;
 
     // Se busy esce
-    if(pcb249WaitBusy(50)==false){
+    if(pcb249WaitBusy(100)==false){
+        debugPrint("PCB249U1 Attesa busy per nuovo comando MirrorHome() Fallita");
         Ser422ReadRegister(_REGID(RG249U2_MIRROR_STAT),10,&CONTEST);
         Ser422ReadRegister(_REGID(RG249U2_ERRORS),10,&CONTEST);
 
@@ -626,7 +668,6 @@ bool pcb249U2MirrorHome(void)
        Ser422ReadRegister(_REGID(RG249U2_MIRROR_STAT),10,&CONTEST);
        Ser422ReadRegister(_REGID(RG249U2_ERRORS),10,&CONTEST);
        Ser422ReadRegister(_REGID(RG249U2_SYS_FLAGS0),10,&CONTEST);
-
        return false;
     }
 
@@ -634,15 +675,27 @@ bool pcb249U2MirrorHome(void)
     if(pcb249WaitBusy(50)==false){
         Ser422ReadRegister(_REGID(RG249U2_MIRROR_STAT),10,&CONTEST);
         Ser422ReadRegister(_REGID(RG249U2_ERRORS),10,&CONTEST);
-
         return false;
     }
 
     Ser422ReadRegister(_REGID(RG249U2_MIRROR_STAT),10,&CONTEST);
     Ser422ReadRegister(_REGID(RG249U2_ERRORS),10,&CONTEST);
+
     // Verifica che sia effettivamente in Home
-    if(!(_DEVREGL(RG249U2_MIRROR_STAT,CONTEST) & 0x4)) return false;
-    else return true;
+    if(!(_DEVREGL(RG249U2_MIRROR_STAT,CONTEST) & 0x4)){
+        debugPrint("PCB249U2 RIPROVA ANCORA MIRROR!");
+
+        // Se ha fallito, ci riprova una volta sola
+        pcb249U2ResetFaults();
+        if(!pcb249U2MirrorHomeCmd()) return false;
+        if(!pcb249WaitBusy(50)) return false;
+
+        Ser422ReadRegister(_REGID(RG249U2_MIRROR_STAT),10,&CONTEST);
+        Ser422ReadRegister(_REGID(RG249U2_ERRORS),10,&CONTEST);
+        if(!(_DEVREGL(RG249U2_MIRROR_STAT,CONTEST) & 0x4)) return false;
+        return true;
+
+    } else return true;
 
 }
 
@@ -718,13 +771,14 @@ bool pcb249U2Lamp(unsigned char cmd, unsigned char tmo, bool wait)
 /*
     IMPOSTAZIONE FORMATO DI COLLIMAZIONE
 */
-bool pcb249U2SetColli(unsigned char backin, unsigned char frontin)
+bool pcb249U2SetColli(unsigned char backin, unsigned char frontin, int id)
 {
     if(generalConfiguration.collimator_model_error) return false;
 
     // Mette nella coda di comando il prossimo movimento
     backcolli_req = backin;
     frontcolli_req = frontin;
+    u2colli_id = id;
     backfront_eseguito = false;
     _EVSET(_EV0_PCB249U2_COLLI);
     return true;
@@ -910,7 +964,7 @@ bool wait2DBackFrontCompletion(int timeout){
     // Se il comando è fallito, riprova a collimare
     if(!backfront_eseguito){
         debugPrint("PCB249U1 RIPROVA AD ESEGUIRE IL COMANDO F+B CHE ERA FALLITO!");
-        pcb249U2SetColli(backcolli_req ,frontcolli_req); // ripete il comando
+        pcb249U2SetColli(backcolli_req ,frontcolli_req, 1); // ripete il comando
         _time_delay(50);
         tmo = timeout;
         while(_IS_EVENT(_EV0_PCB249U2_COLLI)){

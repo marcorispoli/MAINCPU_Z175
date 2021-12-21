@@ -1409,17 +1409,12 @@ void  mccSetColli(unsigned char id, unsigned char mcccode)
   generalConfiguration.colliCfg.lame2D.left = mcc_cmd.buffer[COLLI_L];
   generalConfiguration.colliCfg.lame2D.right = mcc_cmd.buffer[COLLI_R];
   
-  printf("FRONT:%d\n",generalConfiguration.colliCfg.lame2D.front);
-  printf("BACK:%d\n",generalConfiguration.colliCfg.lame2D.back );
-  printf("LEFT:%d\n",generalConfiguration.colliCfg.lame2D.left);
-  printf("RIGHT:%d\n",generalConfiguration.colliCfg.lame2D.right);
-  printf("TRAP:%d\n",generalConfiguration.colliCfg.lame2D.trap);
-  
+
   // Richiede l'esecuzione del posizionamento delle lame frontali e posteriori
   // Il comando non può fallire poichè semplicemente sovrascrive uno stato in corso d'opera..
   // Questo dovrebbe impedire una catena di continue collimazioni dovute al cambio di compressore
   // SOltanto l'ultimo stato vince
-  pcb249U2SetColli( generalConfiguration.colliCfg.lame2D.back , generalConfiguration.colliCfg.lame2D.front);
+  pcb249U2SetColli( generalConfiguration.colliCfg.lame2D.back , generalConfiguration.colliCfg.lame2D.front,id);
   pcb249U1SetColli(generalConfiguration.colliCfg.lame2D.left,generalConfiguration.colliCfg.lame2D.right,generalConfiguration.colliCfg.lame2D.trap,id);
 
 }

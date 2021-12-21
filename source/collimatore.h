@@ -159,6 +159,12 @@ private:
     bool colliTestStatus;
     bool filter_test_status;
 
+    // Ultimo valore ricevuto da M4 siu comando eseguito
+    unsigned char cursen_left;
+    unsigned char cursen_right;
+    unsigned char cursen_trap;
+    unsigned char cursen_front;
+    unsigned char cursen_back;
 
 
 };

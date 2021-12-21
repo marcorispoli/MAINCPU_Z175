@@ -506,6 +506,7 @@ void Compressor::pcb215Notify(unsigned char id, unsigned char notifyCode, QByteA
                 ApplicationDatabase.setData(_DB_COMPRESSOR_PAD_CODE,(unsigned char) comprPad,0);
 
                 padChanged();
+                PRINT("COMPRESSOR UPDATE COLLI");
                 pCollimatore->updateColli(); // Aggiorna la collimazione
             }
 

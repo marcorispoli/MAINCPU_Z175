@@ -410,6 +410,7 @@ void OpenStudyPage::openStudyEvent(void){
     ApplicationDatabase.setData(_DB_COMPRESSOR_UNLOCK, (unsigned char) pConfig->userCnf.enableSblocco,DBase::_DB_FORCE_SGN);
 
     // Aggiorna lo stato del collimatore
+    PRINT("openStudyEvent: UPDATE COLLI");
     pCollimatore->updateColli();
 }
 
@@ -875,6 +876,7 @@ void OpenStudyPage::updateManualCollimationStatus(void){
     }else{
         ApplicationDatabase.setData(_DB_COLLIMAZIONE,ApplicationDatabase.getDataS(_DB_COLLIMAZIONE),DBase::_DB_FORCE_SGN); // Refresh del pad corrente
         pCollimatore->manualCollimation = false;
+        PRINT("updateManualCollimationStatus: UPDATE COLLI");
         pCollimatore->updateColli();
     }
 
