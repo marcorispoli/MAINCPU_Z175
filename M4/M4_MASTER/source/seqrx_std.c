@@ -44,24 +44,16 @@ void std_rx_task(uint32_t taskRegisters)
   
     if(generalConfiguration.demoMode) debugPrint("RX-2D START IN DEMO MODE");
     else  debugPrint("RX-2D START SEQUENCE");
-
-
-
   
     // Prima di andare in freeze bisogna accertarsi che la collimazione 2D sia andata a buon fine
     if(wait2DBackFrontCompletion(100)==false) _SEQERROR(ERROR_INVALID_COLLI);
-    if(wait2DLeftRightTrapCompletion(100)==false) _SEQERROR(ERROR_INVALID_COLLI);
-    // Specchio fuori campo se non è già stato  levato (comando compatibile FREEZE)
+    if(waitRxFilterCompletion()==FALSE)  _SEQERROR(ERROR_INVALID_FILTRO);
     if(pcb249U2MirrorHome()==FALSE)_SEQERROR(ERROR_MIRROR_LAMP);
-    //if(pcb249U2Lamp(2,100,true) == FALSE) _SEQERROR(ERROR_MIRROR_LAMP);
+    if(wait2DLeftRightTrapCompletion(100)==false) _SEQERROR(ERROR_INVALID_COLLI);
+
 
     // Disabilita tutti i drivers ed attende che tutti i driver siano fermi
     Ser422DriverFreezeAll(0);    
-
-    //________________________________________________________________________________________________
-    // Prima di procedere bisogna verificare se il filtro ha terminato correttamente il posizionamento
-    if(waitRxFilterCompletion()==FALSE)  _SEQERROR(ERROR_INVALID_FILTRO);
-
 
     // Verifica Chiusura porta
     if((SystemInputs.CPU_CLOSED_DOOR==0) && (!generalConfiguration.demoMode))

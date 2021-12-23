@@ -1353,7 +1353,7 @@ void mccSetFiltro(void)
 {
 
   debugPrintI2("GUI COMANDO POSIZIONAMENTO FILTRO, INDEX",mcc_cmd.buffer[0], "POS",mcc_cmd.buffer[1]);
-  pcb249U2SetFiltro(mcc_cmd.buffer[0],mcc_cmd.buffer[1], mcc_cmd.id);
+  pcb249U2SetFiltro(mcc_cmd.buffer[0],mcc_cmd.buffer[1]);
 
 }
 
@@ -1414,8 +1414,8 @@ void  mccSetColli(unsigned char id, unsigned char mcccode)
   // Il comando non può fallire poichè semplicemente sovrascrive uno stato in corso d'opera..
   // Questo dovrebbe impedire una catena di continue collimazioni dovute al cambio di compressore
   // SOltanto l'ultimo stato vince
-  pcb249U2SetColli( generalConfiguration.colliCfg.lame2D.back , generalConfiguration.colliCfg.lame2D.front,id);
-  pcb249U1SetColli(generalConfiguration.colliCfg.lame2D.left,generalConfiguration.colliCfg.lame2D.right,generalConfiguration.colliCfg.lame2D.trap,id);
+  pcb249U2SetColli( generalConfiguration.colliCfg.lame2D.back , generalConfiguration.colliCfg.lame2D.front);
+  pcb249U1SetColli(generalConfiguration.colliCfg.lame2D.left,generalConfiguration.colliCfg.lame2D.right,generalConfiguration.colliCfg.lame2D.trap);
 
 }
 

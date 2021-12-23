@@ -155,7 +155,7 @@ void pcb249U2_driver(uint32_t taskRegisters)
     STATUS.ready=1;
     while(1)
     {
-        unsigned char data[4];
+        unsigned char data[5];
 
         // Attende di essere svegliato da un comand
         _EVWAIT_ANY(_MOR2(_EV0_PCB249U2_COLLI,_EV0_PCB249U2_FILTRO)); // Attende lo sbloccoo
@@ -182,7 +182,7 @@ void pcb249U2_driver(uint32_t taskRegisters)
                 data[1] = comando_filtro;  // Indice filtro
                 data[2] = posizioneFiltro; // Posizione filtro corrente
                 data[3] = pos_req;         // Posizione filtro richiesto
-                mccGuiNotify(id_filtro,MCC_SET_FILTRO,data,4);
+                mccGuiNotify(_COLLI_ID,MCC_SET_FILTRO,data,4);
                 _EVCLR(_EV0_PCB249U2_FILTRO);
                 continue;
             }
@@ -195,7 +195,7 @@ void pcb249U2_driver(uint32_t taskRegisters)
                 data[1] = comando_filtro;  // Indice filtro
                 data[2] = posizioneFiltro; // Posizione filtro
                 data[3] = pos_req;         // posizione filtro richiesto
-                mccGuiNotify(id_filtro,MCC_SET_FILTRO,data,4);
+                mccGuiNotify(_COLLI_ID,MCC_SET_FILTRO,data,4);
                 _EVCLR(_EV0_PCB249U2_FILTRO);
                 continue;
             }
@@ -221,7 +221,7 @@ void pcb249U2_driver(uint32_t taskRegisters)
                 data[1] = comando_filtro;  // Indice filtro
                 data[2] = posizioneFiltro; // Posizione filtro
                 data[3] = target_filtro;         // posizione filtro richiesto
-                mccGuiNotify(id_filtro,MCC_SET_FILTRO,data,4);
+                mccGuiNotify(_COLLI_ID,MCC_SET_FILTRO,data,4);
                 _EVCLR(_EV0_PCB249U2_FILTRO);
                 continue;
             }
@@ -236,7 +236,7 @@ void pcb249U2_driver(uint32_t taskRegisters)
                data[1] = comando_filtro;  // Indice filtro
                data[2] = posizioneFiltro; // Posizione filtro
                data[3] = target_filtro;   // posizione filtro richiesto
-               mccGuiNotify(id_filtro,MCC_SET_FILTRO,data,4);
+               mccGuiNotify(_COLLI_ID,MCC_SET_FILTRO,data,4);
                _EVCLR(_EV0_PCB249U2_FILTRO);
                continue;
 
@@ -252,7 +252,7 @@ void pcb249U2_driver(uint32_t taskRegisters)
                data[1] = comando_filtro;  // Indice filtro
                data[2] = posizioneFiltro; // Posizione filtro
                data[3] = target_filtro;   // posizione filtro richiesto
-               mccGuiNotify(id_filtro,MCC_SET_FILTRO,data,4);
+               mccGuiNotify(_COLLI_ID,MCC_SET_FILTRO,data,4);
                _EVCLR(_EV0_PCB249U2_FILTRO);
                continue;
             }
@@ -274,7 +274,7 @@ void pcb249U2_driver(uint32_t taskRegisters)
                data[1] = comando_filtro;  // Indice filtro
                data[2] = posizioneFiltro; // Posizione filtro
                data[3] = target_filtro;   // posizione filtro richiesto
-               mccGuiNotify(id_filtro,MCC_SET_FILTRO,data,4);
+               mccGuiNotify(_COLLI_ID,MCC_SET_FILTRO,data,4);
                _EVCLR(_EV0_PCB249U2_FILTRO);
                continue;
 
@@ -293,17 +293,15 @@ void pcb249U2_driver(uint32_t taskRegisters)
             front = frontcolli_req;
             debugPrintI2("PCB249U2 ESECUZIONE COLLIMAZIONE FRONT-BACK, BACK", back, "FRONT",front);
             if(pcb249WaitBusy(50)==false){
-                    debugPrint("PCB249U2 ERRORE COLLIMAZIONE FRONT-BACK: TIMEOUT ATTESA BUSY");
-                    if(u2colli_id){
-                        data[0]=0;
-                        data[1]=0; // Collimazione lame f+b
-                        data[2]=0;
-                        data[3]=0;
-                        data[4]=0;
-                        mccGuiNotify(u2colli_id,MCC_SET_COLLI,data,5);
-                    }
-                    _EVCLR(_EV0_PCB249U2_COLLI);
-                    continue;
+                debugPrint("PCB249U2 ERRORE COLLIMAZIONE FRONT-BACK: TIMEOUT ATTESA BUSY");
+                data[0]=0;
+                data[1]=0; // Collimazione lame f+b
+                data[2]=0;
+                data[3]=0;
+                data[4]=0;
+                mccGuiNotify(_COLLI_ID,MCC_SET_COLLI,data,5);
+                _EVCLR(_EV0_PCB249U2_COLLI);
+                continue;
             }
 
             // Reset Faults
@@ -311,14 +309,12 @@ void pcb249U2_driver(uint32_t taskRegisters)
 
             if(!pcb249U2ColliCmd(back, front)){
                 debugPrint("PCB249U2 ERRORE COLLIMAZIONE FRONT-BACK: COMANDO FALLITO");
-                if(u2colli_id){
-                    data[0]=0;
-                    data[1]=0; // Collimazione lame f+b
-                    data[2]=0;
-                    data[3]=0;
-                    data[4]=0;
-                    mccGuiNotify(u1colli_id,MCC_SET_COLLI,data,5);
-                }
+                data[0]=0;
+                data[1]=0; // Collimazione lame f+b
+                data[2]=0;
+                data[3]=0;
+                data[4]=0;
+                mccGuiNotify(_COLLI_ID,MCC_SET_COLLI,data,5);
                 _EVCLR(_EV0_PCB249U2_COLLI);
                 continue;
             }
@@ -327,30 +323,26 @@ void pcb249U2_driver(uint32_t taskRegisters)
             // Attesa fine operazioni e rilettura registro di Target
             debugPrint("PCB249U2 COLLIMAZIONE FRONT-BACK: ATTESA COMPLETAMENTO");
             if(pcb249WaitBusy(50)==false){
-                    debugPrint("PCB249U2 ERRORE COLLIMAZIONE FRONT-BACK: TIMEOUT ESECUZIONE");
-                    if(u2colli_id){
-                        data[0]=0;
-                        data[1]=0; // Collimazione lame f+b
-                        data[2]=0;
-                        data[3]=0;
-                        data[4]=0;
-                        mccGuiNotify(u1colli_id,MCC_SET_COLLI,data,5);
-                    }
-                    _EVCLR(_EV0_PCB249U2_COLLI);
-                    continue;
+                debugPrint("PCB249U2 ERRORE COLLIMAZIONE FRONT-BACK: TIMEOUT ESECUZIONE");
+                data[0]=0;
+                data[1]=0; // Collimazione lame f+b
+                data[2]=0;
+                data[3]=0;
+                data[4]=0;
+                mccGuiNotify(_COLLI_ID,MCC_SET_COLLI,data,5);
+                _EVCLR(_EV0_PCB249U2_COLLI);
+                continue;
             }
 
             // Fine comando
             if(_TEST_BIT(PCB249U2_FAULT)){
                 debugPrint("PCB249U2 ERRORE COLLIMAZIONE FRONT-BACK: ERRORE PERIFERICA");
-                if(u2colli_id){
-                    data[0]=0;
-                    data[1]=0; // Collimazione lame f+b
-                    data[2]=0;
-                    data[3]=0;
-                    data[4]=0;
-                    mccGuiNotify(u1colli_id,MCC_SET_COLLI,data,5);
-                }
+                data[0]=0;
+                data[1]=0; // Collimazione lame f+b
+                data[2]=0;
+                data[3]=0;
+                data[4]=0;
+                mccGuiNotify(_COLLI_ID,MCC_SET_COLLI,data,5);
                 _EVCLR(_EV0_PCB249U2_COLLI);
                 continue;
             }
@@ -360,15 +352,12 @@ void pcb249U2_driver(uint32_t taskRegisters)
             // il nuovo comando è uguale allo stato attuale
             if((back==backcolli_req)&&(front==frontcolli_req)){                
                 debugPrint("PCB249U2 COLLIMAZIONE FRONT-BACK TERMINATA");
-                if(u2colli_id){
-                    data[0]=1;
-                    data[1]=0; // Collimazione lame f+b
-                    data[2]=front;
-                    data[3]=back;
-                    data[4]=0;
-                    mccGuiNotify(u1colli_id,MCC_SET_COLLI,data,5);
-                }
-
+                data[0]=1;
+                data[1]=0; // Collimazione lame f+b
+                data[2]=front;
+                data[3]=back;
+                data[4]=0;
+                mccGuiNotify(_COLLI_ID,MCC_SET_COLLI,data,5);
                 _EVCLR(_EV0_PCB249U2_COLLI);
                 backfront_eseguito = true;
             }
@@ -499,7 +488,8 @@ bool pcb249U2SetFiltroCmd(unsigned char cmd)
 // Comando di impostazione filtro durante sequenze raggi: driver in FREEZE
 bool pcb249U2RxSetFiltroCmd(unsigned char cmd)
 {
-   if(generalConfiguration.collimator_model_error) return false;
+    unsigned char data[5];
+    if(generalConfiguration.collimator_model_error) return false;
 
 
    _Ser422_Command_Str frame;
@@ -512,6 +502,15 @@ bool pcb249U2RxSetFiltroCmd(unsigned char cmd)
   frame.data2=cmd;
 
   Ser422Send(&frame, SER422_BLOCKING,CONTEST.ID);
+
+  // Notifica GUI con lo stato corrente:
+  // Per sicurezza annulla lo status per forzare una impostazione successiva
+  data[0]=1; // OK
+  data[1] = 255;  // Indice filtro
+  data[2] = 255; // Posizione filtro corrente
+  data[3] = 255;         // Posizione filtro richiesto
+  mccGuiNotify(_COLLI_ID,MCC_SET_FILTRO,data,4);
+
   if(frame.retcode==SER422_COMMAND_OK) return TRUE;
   else return FALSE;
 }
@@ -771,14 +770,13 @@ bool pcb249U2Lamp(unsigned char cmd, unsigned char tmo, bool wait)
 /*
     IMPOSTAZIONE FORMATO DI COLLIMAZIONE
 */
-bool pcb249U2SetColli(unsigned char backin, unsigned char frontin, int id)
+bool pcb249U2SetColli(unsigned char backin, unsigned char frontin)
 {
     if(generalConfiguration.collimator_model_error) return false;
 
     // Mette nella coda di comando il prossimo movimento
     backcolli_req = backin;
     frontcolli_req = frontin;
-    u2colli_id = id;
     backfront_eseguito = false;
     _EVSET(_EV0_PCB249U2_COLLI);
     return true;
@@ -795,14 +793,13 @@ bool pcb249U2SetColli(unsigned char backin, unsigned char frontin, int id)
  Più comandi in successione verranno gestiti dando priorità all'ultimo
  comando ricevuto
 */
-void pcb249U2SetFiltro(unsigned char cmd, unsigned char posizione_target, unsigned char id)
+void pcb249U2SetFiltro(unsigned char cmd, unsigned char posizione_target)
 {
     if(generalConfiguration.collimator_model_error) return ;
 
 
     filtro_req = cmd;
     pos_req = posizione_target;
-    id_filtro = id;
     filtro_eseguito = false;
     _EVSET(_EV0_PCB249U2_FILTRO);
     return ;
@@ -922,7 +919,7 @@ bool waitRxFilterCompletion(void){
     if(!filtro_eseguito){
 
         // Riprova a selezionare il filtro per non perdere l'esposizione
-        pcb249U2SetFiltro(filtro_req,pos_req,0);
+        pcb249U2SetFiltro(filtro_req,pos_req);
 
         // Verifica dello stato di posizionamento del filtro
         tmo=timeout;
@@ -964,7 +961,7 @@ bool wait2DBackFrontCompletion(int timeout){
     // Se il comando è fallito, riprova a collimare
     if(!backfront_eseguito){
         debugPrint("PCB249U1 RIPROVA AD ESEGUIRE IL COMANDO F+B CHE ERA FALLITO!");
-        pcb249U2SetColli(backcolli_req ,frontcolli_req, 1); // ripete il comando
+        pcb249U2SetColli(backcolli_req ,frontcolli_req); // ripete il comando
         _time_delay(50);
         tmo = timeout;
         while(_IS_EVENT(_EV0_PCB249U2_COLLI)){

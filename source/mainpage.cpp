@@ -184,6 +184,7 @@ void MainPage::childStatusPage(bool stat,int opt)
     // Assegna la password da utilizzare per il pannello di service
     if(isMaster){
         ApplicationDatabase.setData(_DB_PASSWORD,pConfig->userCnf.ServicePassword);
+        pCollimatore->resetColliFlags();
     }
     connect(&ApplicationDatabase,SIGNAL(dbDataChanged(int,int)), this,SLOT(valueChanged(int,int)),Qt::UniqueConnection);
 

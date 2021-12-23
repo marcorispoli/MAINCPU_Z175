@@ -62,20 +62,14 @@ void std_ae_rx_task(uint32_t taskRegisters)
 
 
 
-    // Prima di andare in freeze bisogna accertarsi che la collimazione 2D sia andata a buon fine
+    // Prima di andare in freeze bisogna accertarsi che collimazione e filtro siano OK
     if(wait2DBackFrontCompletion(100)==false) _SEQERROR(ERROR_INVALID_COLLI);
-    if(wait2DLeftRightTrapCompletion(100)==false) _SEQERROR(ERROR_INVALID_COLLI);
-
-    // Specchio fuori campo
+    if(waitRxFilterCompletion()==FALSE)  _SEQERROR(ERROR_INVALID_FILTRO);
     if(pcb249U2MirrorHome()==FALSE)_SEQERROR(ERROR_MIRROR_LAMP);
-    //if(pcb249U2Lamp(2,100,true) == FALSE) _SEQERROR(ERROR_MIRROR_LAMP);
+    if(wait2DLeftRightTrapCompletion(100)==false) _SEQERROR(ERROR_INVALID_COLLI);
 
     // Disabilita tutti i drivers
     Ser422DriverFreezeAll(0);    
-
-    //________________________________________________________________________________________________
-    // Prima di procedere bisogna verificare se il filtro ha terminato correttamente il posizionamento
-    if(waitRxFilterCompletion()==FALSE)  _SEQERROR(ERROR_INVALID_FILTRO);
 
 
 
@@ -201,9 +195,6 @@ void std_ae_rx_task(uint32_t taskRegisters)
     // Impostazione filtro Rame per impulso AE
     pcb249U2RxSetFiltroCmd(3); // Filtro al rame: da modificare con la corretta configurazione
 
-    //________________________________________________________________________________________________
-    // Prima di procedere bisogna verificare se il filtro ha terminato correttamente il posizionamento
-    if(waitRxFilterCompletion()==FALSE)  _SEQERROR(ERROR_INVALID_FILTRO);
 
     // Ciclo attesa dati AE
     i = 150; // Massima attesa AE

@@ -217,8 +217,8 @@ volatile _DeviceRegItem_Str  PCB249U2_Registers[]=
 
   ext bool pcb249U2Lamp(unsigned char cmd, unsigned char tmo, bool wait); // Attivazione lampada
 
-  ext bool pcb249U2SetColli(unsigned char back, unsigned char front,int id);   // Imposta il formato
-  ext void pcb249U2SetFiltro(unsigned char cmd, unsigned char target_position, unsigned char id);   // Imposta il filtro
+  ext bool pcb249U2SetColli(unsigned char back, unsigned char front);   // Imposta il formato
+  ext void pcb249U2SetFiltro(unsigned char cmd, unsigned char target_position);   // Imposta il filtro
   ext bool config_pcb249U2(bool setmem, unsigned char blocco, unsigned char* buffer, unsigned char len);
   ext void pcb249U2ResetCalibFilterFlag(void);
   ext bool pcb249U2ColliCmd(unsigned char back, unsigned char front); //Usata dalla funzione ragg
@@ -232,14 +232,12 @@ volatile _DeviceRegItem_Str  PCB249U2_Registers[]=
   // Sezione dedicata al filtro e alla lampada
   ext unsigned char filtro_req;     // ultima richiesta di filtro
   ext unsigned char pos_req;        // ultima richiesta di posizione filtro
-  ext unsigned char id_filtro;      // codice ID per feedback alla gui
   ext bool          filtro_eseguito;// esito ultimo comando
 
 
   //ext int comando_backfront;
   ext unsigned char backcolli_req,frontcolli_req; // Richiesta di spostamento lame frontali e posteriori
   ext bool backfront_eseguito;
-  ext int u2colli_id;
   ext bool pcb249WaitBusy(int timeout);
   ext bool pcb249U2_GetFreeze(void);
 #endif

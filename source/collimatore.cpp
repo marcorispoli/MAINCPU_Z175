@@ -41,6 +41,9 @@ Collimatore::Collimatore(QObject *parent) :
 
 
     collimazione_frustoli = COLLI_FRUSTOLI_ND;
+
+    resetColliFlags();
+
 }
 
 void Collimatore::timerEvent(QTimerEvent* ev)
@@ -517,27 +520,39 @@ bool Collimatore::setFiltro(void)
     unsigned char data[2];
     int i;
 
+    DEBUG("COLLIMATORE: COMANDO SetFiltro()");
+
     // Collimazione manuale attivata
     if(manualFiltroCollimation)
     {
-        DEBUG("setFiltro: collimatore in modo manuale");
+        DEBUG("COLLIMATORE: collimatore in modo manuale");
         return TRUE;
     }
 
     // Controlli preliminari sui comandi
     if(pConfig->collimator_configured==FALSE)
     {
-        LOG("setFiltro: collimatore non configurato");
+        LOG("COLLIMATORE: collimatore non configurato");
         return FALSE;
     }
 
     // Se il filtro non è definito, non procede con l'impostazione
-    if(filtroCmd == FILTRO_ND) return TRUE;
+    if(filtroCmd == FILTRO_ND){
+        LOG("COLLIMATORE: Filtro Non definito");
+        return TRUE;
+    }
 
     // Selezione la posizione del filtro
     for(i=0;i<4;i++) if(pCollimatore->colliConf.filterType[i] == filtroCmd) break;
     data[0] = i;
     data[1] = pCollimatore->colliConf.filterPos[i];
+
+    PRINT(QString("COLLIMATORE: FILTRO INDEX=%1, POS=%2").arg(data[0]).arg(data[1]));
+
+    if((data[0] == filterIndexExecuted) && (data[1] == filterPosExecuted) ){
+        DEBUG("COLLIMATORE: FILTO GIA IMPOSTATO");
+        return true;
+    }
 
     // Invio comando
     if(pConsole->pGuiMcc->sendFrame(MCC_SET_FILTRO,_COLLI_ID,data, sizeof(data))==FALSE)
@@ -679,15 +694,22 @@ void Collimatore::guiNotifySlot(unsigned char id, unsigned char mcccode, QByteAr
     case MCC_SET_FILTRO:
         if(buffer.at(0)==0)
         {
-            // CONDIZIONE DI ERRORE
-            PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_COLLI, COLLI_FILTRO_FALLITO, TRUE);
+            LOG("COLLIMATORE: POSIZIONAMENTO FILTRO FALLITO");
+            //PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_COLLI, COLLI_FILTRO_FALLITO, TRUE);
+            filterIndexExecuted = 255;
+            filterPosExecuted = 255;
             return;
         }else
         {
-            if(manualFiltroCollimation)
+            filterIndexExecuted = buffer.at(1);
+            filterPosExecuted = buffer.at(3);
+            if(manualFiltroCollimation){
                 filtroStat = (_FilterCmd_Enum) manualFilter;
-            else
+                PRINT(QString("COLLIMATORE FILTRO MANUALE OK, IDX=%1, POS=%2").arg(filterIndexExecuted).arg(filterPosExecuted));
+            }else{
                 filtroStat = filtroCmd; // Aggiorna lo stato del filtro
+                PRINT(QString("COLLIMATORE FILTRO AUTO OK, IDX=%1, POS=%2").arg(filterIndexExecuted).arg(filterPosExecuted));
+            }
         }
     break;
 
@@ -708,10 +730,10 @@ void Collimatore::guiNotifySlot(unsigned char id, unsigned char mcccode, QByteAr
                cursen_trap =255;
 
             }else{
-                PRINT("COLLIMATORE LAME LATERALI OK");
                 cursen_left = buffer.at(2);
                 cursen_right = buffer.at(3);
                 cursen_trap = buffer.at(4);
+                PRINT(QString("COLLIMATORE: LAME LATERALI OK. L=%1, R=%2, T=%3").arg(cursen_left).arg(cursen_right).arg(cursen_trap));
             }
         }else{
             // Collimazine lama frontale + back
@@ -721,9 +743,9 @@ void Collimatore::guiNotifySlot(unsigned char id, unsigned char mcccode, QByteAr
                cursen_front = 255;
                cursen_back = 255;
             }else{
-                PRINT("COLLIMATORE LAME F/B OK");
                 cursen_front = buffer.at(2);
                 cursen_back = buffer.at(3);
+                PRINT(QString("COLLIMATORE: LAME F+B OK. F=%1, B=%2").arg(cursen_front).arg(cursen_back));
             }
         }
 
@@ -735,6 +757,8 @@ void Collimatore::guiNotifySlot(unsigned char id, unsigned char mcccode, QByteAr
             // Notifica l'errore a monitor
             PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_COLLI, COLLI_SPECCHIO_FALLITO, TRUE);
             return;
+        }else{
+            PRINT("COLLIMATORE: IMPOSTAZIONE FILTRO COMPLETATA");
         }
     break;
 
@@ -1247,6 +1271,20 @@ void Collimatore::selectManualColliFormat(unsigned char pad){
         }
 
     }
+}
+
+// Effettua il reset dei flags di collimazione Filtro acquisiti
+// per avere una strategia di correzione da eventuali disallineamenti
+// tra driver e Gui
+void Collimatore::resetColliFlags(void){
+
+    PRINT("COLLIMATORE: RESET COLLI FLAGS");
+
+    filterIndexExecuted = 255;
+    filterPosExecuted = 255;
+    cursen_left = 255;
+    cursen_right = 255;
+    cursen_trap =255;
 }
 
 

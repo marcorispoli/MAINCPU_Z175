@@ -225,7 +225,7 @@ volatile _DeviceRegItem_Str  PCB249U1_Registers[]=
   // API ////////////////////////////////////////////////////////////////// 
   ext void pcb249U1_driver(uint32_t initial_data);  // Driver PCB249U1
   ext bool pcb249U1ResetGonio(unsigned short angolo)  ; // Imposta l'angolo corrente del tubo al valore dato
-  ext void pcb249U1SetColli(unsigned char left, unsigned char right, unsigned char trap, unsigned char id);
+  ext void pcb249U1SetColli(unsigned char left, unsigned char right, unsigned char trap);
   ext bool pcb249U1initCollimator(void); // Attiva la ricerca automatica degli zeri
   ext bool config_pcb249U1(bool setmem, unsigned char blocco, unsigned char* buffer, unsigned char len);
   ext bool pcb249U1ResetFaults(void);
@@ -240,7 +240,7 @@ volatile _DeviceRegItem_Str  PCB249U1_Registers[]=
   ext unsigned char leftcolli_req;
   ext unsigned char rightcolli_req;
   ext unsigned char trapcolli_req;
-  ext unsigned char u1colli_id;
+
   ext bool u1colli_result;
   ext bool pcb249U1_GetFreeze(void);
   ext void pcb249U1SetTubeTemperatureThresholds(unsigned char alarm_on, unsigned char alarm_off, unsigned char fan_on, unsigned char fan_off);

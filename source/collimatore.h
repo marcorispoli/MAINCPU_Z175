@@ -153,6 +153,7 @@ public:
     // Collimazione manuale in operativo
     void selectManualColliFormat(unsigned char pad); // Selezione di una particolare collimazione
 
+    void resetColliFlags(void);
 private:
     int colliTestNumber;
     int colliTestTimer;
@@ -166,6 +167,8 @@ private:
     unsigned char cursen_front;
     unsigned char cursen_back;
 
+    unsigned char filterIndexExecuted;
+    unsigned char filterPosExecuted;
 
 };
 

@@ -3022,6 +3022,10 @@ void console::guiNotify(unsigned char id, unsigned char mcccode, QByteArray data
         // Se la fine raggi contiene un errore, viene inviato
         PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_RAGGI, data.at(0),TRUE); // Self resetting
 
+        // Reset della collimazione in caso di errore per sicurezza
+        if(data.at(0)!=RXOK){
+            pCollimatore->resetColliFlags();
+        }
 
         if(data.at(0)==RXOK) cmd.addParam(QString("%1").arg((int)protoToConsole::_RAGGI_OK));
         else if(data.at(0)<LAST_ERROR_NO_PREP) cmd.addParam(QString("%1").arg((int)protoToConsole::_NO_RAGGI));
