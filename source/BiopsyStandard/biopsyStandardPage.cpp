@@ -660,7 +660,7 @@ void BiopsyStandardPage::buttonActivationNotify(int id, bool status,int opt)
     // Gestione pulsanti di step Z per biopsia
     if(isMaster)
     {
-        bool ret;
+        bool ret = false;
         if(pbutton == pulsanteBiopStepUp) ret = pBiopsyStandard->stepZ(-10);
         else if(pbutton == pulsanteBiopStepDown) ret = pBiopsyStandard->stepZ(10);
         else if(pbutton == pulsanteBiopHome) ret = pBiopsyStandard->setBiopsyData(0,0,0,193,0,0,0,"",0);

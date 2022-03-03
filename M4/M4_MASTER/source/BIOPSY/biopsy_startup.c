@@ -54,7 +54,6 @@ void BIOPSY_driver(uint32_t taskRegisters)
             break;
         }
 
-        // Prova a chiedere per la Extended
         if(BiopsyExtendedIsPresent()){
             isStandard = false;
             break;

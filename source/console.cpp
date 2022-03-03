@@ -4677,7 +4677,7 @@ void console::handleBiopsyExtendedMoveXYZ(protoConsole* frame, protoConsole* ans
 
 /*
     Comando di impostazione (con attivazione) della Home:
-    Parametro: [L/C/R] Left / Center / Right
+    Parametro: [L/C/R] Left / Center / Right [0/90]
 
     Risposta:
         -> OK 0 Già in posizione;
@@ -4688,7 +4688,7 @@ void console::handleBiopsyExtendedMoveXYZ(protoConsole* frame, protoConsole* ans
  */
 void console::handleBiopsyExtendedMoveHome(protoConsole* frame, protoConsole* answer)
 {
-    if(frame->parametri.size() != 1 ) {
+    if(frame->parametri.size() != 2 ) {
         emit consoleTxHandler(answer->answToQByteArray("NOK 1 ERRORE NUMERO DI PARAMETRI: ->  LAT"));
         return;
     }
@@ -4704,7 +4704,7 @@ void console::handleBiopsyExtendedMoveHome(protoConsole* frame, protoConsole* an
     }
 
 
-    if(pBiopsyExtended->requestBiopsyHome(frame->id,lat)==0) emit consoleTxHandler(answer->answToQByteArray("OK 0"));
+    if(pBiopsyExtended->requestBiopsyHome(frame->id,lat,frame->parametri[0].toInt() )==0) emit consoleTxHandler(answer->answToQByteArray("OK 0"));
     else  emit consoleTxHandler(answer->answToQByteArray("OK 255"));
 
     return;

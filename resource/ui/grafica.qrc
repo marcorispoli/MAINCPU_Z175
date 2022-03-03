@@ -364,14 +364,6 @@
     </qresource>
     <qresource prefix="/BiopsyExtended">
         <file>BiopsyExtended/biopsy_demo.png</file>
-        <file>BiopsyExtended/BiopsyExecXCenterToHome.png</file>
-        <file>BiopsyExtended/BiopsyExecXLeftToHome.png</file>
-        <file>BiopsyExtended/BiopsyExecXRightToHome.png</file>
-        <file>BiopsyExtended/BiopsyExecXToTarget.png</file>
-        <file>BiopsyExtended/BiopsyExecYToHome.png</file>
-        <file>BiopsyExtended/BiopsyExecYToTarget.png</file>
-        <file>BiopsyExtended/BiopsyExecZToHome.png</file>
-        <file>BiopsyExtended/BiopsyExecZToTarget.png</file>
         <file>BiopsyExtended/BiopsyPointerArrow.png</file>
         <file>BiopsyExtended/BiopsyScrollCenter.png</file>
         <file>BiopsyExtended/BiopsyScrollLeft.png</file>
@@ -394,5 +386,10 @@
         <file>BiopsyExtended/unlockWindow.png</file>
         <file>BiopsyExtended/unlockWindowNotPermitted.png</file>
         <file>BiopsyExtended/Xray.png</file>
+        <file>BiopsyExtended/BiopsyScrollYLeftDown.png</file>
+        <file>BiopsyExtended/BiopsyScrollYRightDown.png</file>
+        <file>BiopsyExtended/BiopsyExecX.png</file>
+        <file>BiopsyExtended/BiopsyExecY.png</file>
+        <file>BiopsyExtended/BiopsyExecZ.png</file>
     </qresource>
 </RCC>

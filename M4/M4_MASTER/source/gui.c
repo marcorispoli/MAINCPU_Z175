@@ -579,7 +579,8 @@ void manageMccConfig(){
             break;
             
             case MCC_SET_OUTPUTS:
-              setOutputs((_SystemOutputs_Str*) mcc_cmd.buffer, (_SystemOutputs_Str*) &(mcc_cmd.buffer[sizeof(SystemOutputs)]));
+                debugPrint("COMANDO SET OUTPUT IN ESECUZIONE");
+                setOutputs((_SystemOutputs_Str*) mcc_cmd.buffer, (_SystemOutputs_Str*) &(mcc_cmd.buffer[sizeof(SystemOutputs)]));
             break;
 
         

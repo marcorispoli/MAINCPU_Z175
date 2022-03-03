@@ -37,6 +37,11 @@ void biopsyModule::defaultConfigDataExtended(void){
     configExt.offsetPad = 59;              // Offset linea di calibrazione posizione - superficie staffe metalliche
     configExt.Z_basePosizionatore = 230;   // Margine di sicurezza per impatto con il compressore in risalita
     configExt.margineRisalita = 15;        // Margine di sicurezza impatto con il compressore in puntamento
+
+    configExt.sh_zero_level = 390;
+    configExt.sh_150_level = 680;
+    configExt.sh_m150_level = 0;
+
 }
 
 
@@ -125,6 +130,15 @@ bool biopsyModule::openCfgExtended(void)
         }else  if(dati.at(0)=="MARGINE_RISALITA"){
             configExt.margineRisalita = dati.at(1).toInt();
 
+        }else  if(dati.at(0)=="SH_ZERO"){
+            configExt.sh_zero_level = dati.at(1).toInt();
+
+        }else  if(dati.at(0)=="SH_150"){
+            configExt.sh_150_level = dati.at(1).toInt();
+
+        }else  if(dati.at(0)=="SH_M150"){
+            configExt.sh_m150_level = dati.at(1).toInt();
+
         }
     }
 
@@ -149,6 +163,7 @@ bool biopsyModule::storeConfigStandard(void)
     file.write( QString("<MARGINE_POSIZIONAMENTO,%1>\n").arg((int) configStd.marginePosizionamento).toAscii());
 
 
+
     file.flush();
     file.close();
 
@@ -167,6 +182,10 @@ bool biopsyModule::storeConfigExtended(void)
     file.write( QString("<Z_BASE, %1>\n").arg((int) configExt.Z_basePosizionatore).toAscii());
     file.write( QString("<OFFSET_PAD,%1>\n").arg((int) configExt.offsetPad).toAscii());
     file.write( QString("<MARGINE_RISALITA,%1>\n").arg((int) configExt.margineRisalita).toAscii());
+
+    file.write( QString("<SH_ZERO, %1>\n").arg((int) configExt.sh_zero_level).toAscii());
+    file.write( QString("<SH_150,%1>\n").arg((int) configExt.sh_150_level).toAscii());
+    file.write( QString("<SH_M150,%1>\n").arg((int) configExt.sh_m150_level).toAscii());
 
 
     file.flush();

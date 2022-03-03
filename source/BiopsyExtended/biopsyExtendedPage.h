@@ -88,7 +88,8 @@ private:
     void updateBiopsyView(void);
     void updateCursorPointer(void);
     QGraphicsPixmapItem* cursorPix;
-    GLabel* cursorValue;
+    //GLabel* cursorValue;
+    QGraphicsTextItem* cursorValue;
     GLabel* tubeTempValue;
 
     QGraphicsPixmapItem* xrayPix;

@@ -61,7 +61,7 @@ color: rgb(248, 248, 54);</string>
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QFrame" name="frameMoveZToHome">
+   <widget class="QFrame" name="frameMoveZ">
     <property name="geometry">
      <rect>
       <x>1000</x>
@@ -72,7 +72,7 @@ color: rgb(248, 248, 54);</string>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgb(0, 0, 0,0);
-background-image: url(:/BiopsyExtended/BiopsyExtended/BiopsyExecZToHome.png);
+background-image: url(:/BiopsyExtended/BiopsyExtended/BiopsyExecZ.png);
 </string>
     </property>
     <property name="frameShape">
@@ -82,7 +82,7 @@ background-image: url(:/BiopsyExtended/BiopsyExtended/BiopsyExecZToHome.png);
      <enum>QFrame::Raised</enum>
     </property>
    </widget>
-   <widget class="QFrame" name="frameMoveXCenterToHome">
+   <widget class="QFrame" name="frameMoveX">
     <property name="enabled">
      <bool>true</bool>
     </property>
@@ -96,7 +96,7 @@ background-image: url(:/BiopsyExtended/BiopsyExtended/BiopsyExecZToHome.png);
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgb(0, 0, 0,0);
-background-image: url(:/BiopsyExtended/BiopsyExtended/BiopsyExecXCenterToHome.png);
+background-image: url(:/BiopsyExtended/BiopsyExtended/BiopsyExecX.png);
 </string>
     </property>
     <property name="frameShape">
@@ -106,7 +106,7 @@ background-image: url(:/BiopsyExtended/BiopsyExtended/BiopsyExecXCenterToHome.pn
      <enum>QFrame::Raised</enum>
     </property>
    </widget>
-   <widget class="QFrame" name="frameMoveXLeftToHome">
+   <widget class="QFrame" name="frameMoveY">
     <property name="enabled">
      <bool>true</bool>
     </property>
@@ -120,55 +120,7 @@ background-image: url(:/BiopsyExtended/BiopsyExtended/BiopsyExecXCenterToHome.pn
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgb(0, 0, 0,0);
-background-image: url(:/BiopsyExtended/BiopsyExtended/BiopsyExecXLeftToHome.png);
-</string>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
-   </widget>
-   <widget class="QFrame" name="frameMoveXRightToHome">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>1000</x>
-      <y>0</y>
-      <width>800</width>
-      <height>480</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgb(0, 0, 0,0);
-background-image: url(:/BiopsyExtended/BiopsyExtended/BiopsyExecXRightToHome.png);
-</string>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
-   </widget>
-   <widget class="QFrame" name="frameMoveYToHome">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>1000</x>
-      <y>0</y>
-      <width>800</width>
-      <height>480</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgb(0, 0, 0,0);
-background-image: url(:/BiopsyExtended/BiopsyExtended/BiopsyExecYToHome.png);
+background-image: url(:/BiopsyExtended/BiopsyExtended/BiopsyExecY.png);
 </string>
     </property>
     <property name="frameShape">
@@ -384,8 +336,8 @@ color: rgb(255, 255, 0);</string>
     </property>
     <property name="geometry">
      <rect>
-      <x>515</x>
-      <y>335</y>
+      <x>1000</x>
+      <y>0</y>
       <width>800</width>
       <height>480</height>
      </rect>
@@ -404,11 +356,14 @@ background-image: url(:/BiopsyExtended/BiopsyExtended/BiopsyScrollYRight.png);
     <widget class="QFrame" name="frameConfirmRight">
      <property name="geometry">
       <rect>
-       <x>570</x>
-       <y>350</y>
-       <width>221</width>
-       <height>111</height>
+       <x>30</x>
+       <y>190</y>
+       <width>256</width>
+       <height>166</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-image: url(:/transparent.png);</string>
      </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
@@ -421,8 +376,8 @@ background-image: url(:/BiopsyExtended/BiopsyExtended/BiopsyScrollYRight.png);
        <rect>
         <x>20</x>
         <y>45</y>
-        <width>186</width>
-        <height>61</height>
+        <width>201</width>
+        <height>96</height>
        </rect>
       </property>
       <property name="font">
@@ -457,19 +412,19 @@ color: rgb(255, 255, 0);</string>
        <string>CONFIRM</string>
       </property>
      </widget>
-     <widget class="QLabel" name="label_5">
+     <widget class="QLabel" name="label_11">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>15</y>
-        <width>221</width>
+        <width>236</width>
         <height>21</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Bitstream Charter</family>
-        <pointsize>12</pointsize>
+        <pointsize>14</pointsize>
         <weight>75</weight>
         <italic>true</italic>
         <bold>true</bold>
@@ -529,10 +484,10 @@ background-image: url(:/BiopsyExtended/BiopsyExtended/BiopsyScrollYLeft.png);
     <widget class="QFrame" name="frameConfirmLeft">
      <property name="geometry">
       <rect>
-       <x>570</x>
-       <y>350</y>
-       <width>221</width>
-       <height>111</height>
+       <x>525</x>
+       <y>190</y>
+       <width>256</width>
+       <height>166</height>
       </rect>
      </property>
      <property name="styleSheet">
@@ -549,8 +504,8 @@ background-image: url(:/BiopsyExtended/BiopsyExtended/BiopsyScrollYLeft.png);
        <rect>
         <x>20</x>
         <y>45</y>
-        <width>186</width>
-        <height>61</height>
+        <width>201</width>
+        <height>96</height>
        </rect>
       </property>
       <property name="font">
@@ -585,19 +540,19 @@ color: rgb(255, 255, 0);</string>
        <string>CONFIRM</string>
       </property>
      </widget>
-     <widget class="QLabel" name="label_6">
+     <widget class="QLabel" name="label_10">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>15</y>
-        <width>221</width>
+        <width>236</width>
         <height>21</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Bitstream Charter</family>
-        <pointsize>12</pointsize>
+        <pointsize>14</pointsize>
         <weight>75</weight>
         <italic>true</italic>
         <bold>true</bold>
@@ -631,7 +586,10 @@ color: rgb(255, 255, 0);</string>
      </widget>
     </widget>
    </widget>
-   <widget class="QFrame" name="frameMoveXToTarget">
+   <widget class="QFrame" name="frameMoveScrollYLeftDown">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>1000</x>
@@ -642,7 +600,7 @@ color: rgb(255, 255, 0);</string>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgb(0, 0, 0,0);
-background-image: url(:/BiopsyExtended/BiopsyExtended/BiopsyExecXToTarget.png);
+background-image: url(:/BiopsyExtended/BiopsyExtended/BiopsyScrollYLeftDown.png);
 </string>
     </property>
     <property name="frameShape">
@@ -651,8 +609,115 @@ background-image: url(:/BiopsyExtended/BiopsyExtended/BiopsyExecXToTarget.png);
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
+    <widget class="QFrame" name="frameConfirmLeftDown">
+     <property name="geometry">
+      <rect>
+       <x>515</x>
+       <y>190</y>
+       <width>256</width>
+       <height>166</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-image: url(:/transparent.png);</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QPushButton" name="buttonConfirmScrollLeftDown">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>45</y>
+        <width>201</width>
+        <height>96</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bitstream Charter</family>
+        <pointsize>26</pointsize>
+        <weight>75</weight>
+        <italic>true</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string notr="true"/>
+      </property>
+      <property name="statusTip">
+       <string notr="true"/>
+      </property>
+      <property name="whatsThis">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleName">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleDescription">
+       <string notr="true"/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 170, 0);
+color: rgb(255, 255, 0);</string>
+      </property>
+      <property name="text">
+       <string>CONFIRM</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_9">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>15</y>
+        <width>236</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bitstream Charter</family>
+        <pointsize>14</pointsize>
+        <weight>75</weight>
+        <italic>true</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string notr="true"/>
+      </property>
+      <property name="statusTip">
+       <string notr="true"/>
+      </property>
+      <property name="whatsThis">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleName">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleDescription">
+       <string notr="true"/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(255, 255, 0);
+</string>
+      </property>
+      <property name="text">
+       <string>Press here to confirm</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </widget>
    </widget>
-   <widget class="QFrame" name="frameMoveYToTarget">
+   <widget class="QFrame" name="frameMoveScrollYRightDown">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>1000</x>
@@ -663,7 +728,7 @@ background-image: url(:/BiopsyExtended/BiopsyExtended/BiopsyExecXToTarget.png);
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgb(0, 0, 0,0);
-background-image: url(:/BiopsyExtended/BiopsyExtended/BiopsyExecYToTarget.png);
+background-image: url(:/BiopsyExtended/BiopsyExtended/BiopsyScrollYRightDown.png);
 </string>
     </property>
     <property name="frameShape">
@@ -672,27 +737,110 @@ background-image: url(:/BiopsyExtended/BiopsyExtended/BiopsyExecYToTarget.png);
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-   </widget>
-   <widget class="QFrame" name="frameMoveZToTarget">
-    <property name="geometry">
-     <rect>
-      <x>1000</x>
-      <y>0</y>
-      <width>800</width>
-      <height>480</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgb(0, 0, 0,0);
-background-image: url(:/BiopsyExtended/BiopsyExtended/BiopsyExecZToTarget.png);
+    <widget class="QFrame" name="frameConfirmRightDown">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>190</y>
+       <width>256</width>
+       <height>166</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-image: url(:/transparent.png);</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QPushButton" name="buttonConfirmScrollRightDown">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>45</y>
+        <width>201</width>
+        <height>96</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bitstream Charter</family>
+        <pointsize>26</pointsize>
+        <weight>75</weight>
+        <italic>true</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string notr="true"/>
+      </property>
+      <property name="statusTip">
+       <string notr="true"/>
+      </property>
+      <property name="whatsThis">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleName">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleDescription">
+       <string notr="true"/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 170, 0);
+color: rgb(255, 255, 0);</string>
+      </property>
+      <property name="text">
+       <string>CONFIRM</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_8">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>15</y>
+        <width>236</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bitstream Charter</family>
+        <pointsize>14</pointsize>
+        <weight>75</weight>
+        <italic>true</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string notr="true"/>
+      </property>
+      <property name="statusTip">
+       <string notr="true"/>
+      </property>
+      <property name="whatsThis">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleName">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleDescription">
+       <string notr="true"/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(255, 255, 0);
 </string>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
+      </property>
+      <property name="text">
+       <string>Press here to confirm</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </widget>
    </widget>
   </widget>
  </widget>

@@ -23,7 +23,7 @@ BiopsyExtendedPage::BiopsyExtendedPage(bool local, QString bgl, QString bgs , bo
 
     dateText=this->addText("----------",font);
     dateText->setDefaultTextColor(Qt::white);
-    dateText->setPos(670,436);
+    dateText->setPos(600,440);
 
     // Definizione del testo per la data
     font.setFamily("DejaVuSerif");
@@ -52,7 +52,7 @@ BiopsyExtendedPage::BiopsyExtendedPage(bool local, QString bgl, QString bgs , bo
     font.setPointSize(30);
     font.setStretch(35);
     biopXYZValue = new GLabel(this,QRectF(70,87,154,34),font,QColor(_W_TEXT),"",Qt::AlignCenter);
-    cursorValue = new GLabel(this,QRectF(162,282,58,29),font,QColor(_W_TEXT),"",Qt::AlignCenter);
+
 
     font.setPointSize(30);
     font.setStretch(40);
@@ -98,6 +98,14 @@ BiopsyExtendedPage::BiopsyExtendedPage(bool local, QString bgl, QString bgs , bo
     cursorPix = addPixmap(QPixmap("://BiopsyExtended/BiopsyExtended/BiopsyPointerArrow.png"));
     cursorPix->setPos(118,286);
     cursorPix->hide();
+
+    font.setPointSize(30);
+    font.setStretch(35);
+
+    cursorValue=this->addText("----",font);
+    cursorValue->setDefaultTextColor(Qt::white);
+    cursorValue->setPos(162,289);
+    //cursorValue = new GLabel(this,QRectF(162,282,58,29),font,QColor(_W_TEXT),"",Qt::AlignCenter);
 
     specimenMode = false;
 
@@ -197,6 +205,7 @@ void BiopsyExtendedPage::InitBiopsyPage(void)
         setSpessore();
         setCompressione();
         setTubeTemp();
+        updateCursorPointer();
 
     }
 
@@ -332,8 +341,6 @@ void BiopsyExtendedPage::setTrxAngolo(void)
 
         return;
     }
-
-    trxValue->show();
 
     if((angolo>=14) && (angolo<=16)) trxValue->labelText="L";
     else if((angolo>=-16) && (angolo<=-14)) trxValue->labelText="R";
@@ -551,10 +558,10 @@ void BiopsyExtendedPage::updateCursorPointer(void){
     if(sh < -170) sh = -170;
     else if(sh > 150) sh = 150;
 
+    if((sh < 5) && (sh>-5)) sh = 0;
+    cursorValue->setPlainText(QString("%1").arg(sh));
+    cursorValue->setPos(162,289 + (sh*8)/10);
     cursorPix->setPos(118,287 + (sh*8)/10);
-    cursorValue->setPosition(162,289 + (sh*8)/10);
-    cursorValue->labelText=QString("%1").arg(sh);
-    cursorValue->update();
 }
 
 void BiopsyExtendedPage::updateBiopsyView(void){

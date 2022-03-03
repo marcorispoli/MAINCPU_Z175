@@ -4016,10 +4016,16 @@ void serverDebug::handleExtendedBiopsy(QByteArray data)
         serviceTcp->txData(QByteArray("--------------- ACTIVATION ----------------------------\r\n"));
         serviceTcp->txData(QByteArray("moveXYZ   x,y,z       ? X,Y,Z in dmm \r\n"));
         serviceTcp->txData(QByteArray("moveHome  [L,C,R]     ? Imposta lateralità \r\n"));
+        serviceTcp->txData(QByteArray("testBuzzer            ? attiva buzzer BYM X\r\n"));
+
+        serviceTcp->txData(QByteArray("--------------- INQUIRY ----------------------------\r\n"));
         serviceTcp->txData(QByteArray("getAdapter            ? legge adapter rilevato \r\n"));
         serviceTcp->txData(QByteArray("getRevision           ? legge la revisione e il checksum\r\n"));
+        serviceTcp->txData(QByteArray("getSignals            ? legge tutti i segnali analogici\r\n"));
+
+        serviceTcp->txData(QByteArray("--------------- CALIBRATION ----------------------------\r\n"));
         serviceTcp->txData(QByteArray("calibXbase  val       ? calibrazione base X\r\n"));
-        serviceTcp->txData(QByteArray("testBuzzer            ? attiva buzzer BYM X\r\n"));
+        serviceTcp->txData(QByteArray("calibSh  zero,up,down ? calibrazione asse SH: zero, +150,-150 \r\n"));
 
 
 #ifdef __BIOPSY_SIMULATOR
@@ -4073,7 +4079,7 @@ void serverDebug::handleExtendedBiopsy(QByteArray data)
                 return;
             }
 
-            int retval = pBiopsyExtended->requestBiopsyHome(0,lat);
+            int retval = pBiopsyExtended->requestBiopsyHome(0,lat,0);
             if(retval==0)  serviceTcp->txData(QByteArray("BYM already in Home\r\n"));
             else serviceTcp->txData(QByteArray("DONE \r\n"));
 
@@ -4086,8 +4092,23 @@ void serverDebug::handleExtendedBiopsy(QByteArray data)
             pBiopsyExtended->calibrateXbase(parametri[0].toUShort());
             serviceTcp->txData(QByteArray("DONE \r\n"));
 
+        }else if(data.contains("calibSh")){
+            parametri = getNextFieldsAfterTag(data, QString("calibSh"));
+            if(parametri.size()!=3){
+                serviceTcp->txData(QByteArray("PARAM ERROR: calibSh zero up150 down150 \r\n"));
+                return;
+            }
+
+            pBiopsy->configExt.sh_zero_level = parametri[0].toUShort();
+            pBiopsy->configExt.sh_150_level = parametri[1].toUShort();
+            pBiopsy->configExt.sh_m150_level = parametri[2].toUShort();
+            pBiopsy->storeConfigExtended();
+            serviceTcp->txData(QByteArray("DONE \r\n"));
         }else if(data.contains("getAdapter")){
             serviceTcp->txData(QString("current adapter: %1\n\r").arg(pBiopsyExtended->getAdapterId()).toAscii().data());
+        }else if(data.contains("getSignals")){
+            QString stringa = QString("SIGNALS: X:%1, Y:%2, Z:%3, SH:%4\r\n").arg(pBiopsyExtended->curX_dmm).arg(pBiopsyExtended->curY_dmm).arg(pBiopsyExtended->curZ_dmm).arg(pBiopsyExtended->curSh_dmm);
+            serviceTcp->txData(stringa.toAscii().data());
         }else if(data.contains("getRevision")){
             serviceTcp->txData(QString("current revision: %1\n\r").arg(pBiopsy->revisione).toAscii().data());
             QString hex; hex.setNum((unsigned short) pBiopsy->checksum_h * 256 + (unsigned short)pBiopsy->checksum_l,16);
@@ -4099,6 +4120,7 @@ void serverDebug::handleExtendedBiopsy(QByteArray data)
         }else handleBiopsySimulator(data);
     }
 }
+
 void serverDebug::handleBiopsySimulator(QByteArray data)
 {
 #ifdef __BIOPSY_SIMULATOR

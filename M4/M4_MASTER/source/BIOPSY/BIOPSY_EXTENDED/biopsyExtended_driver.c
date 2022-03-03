@@ -6,8 +6,8 @@ bool BiopsyExtendedIsPresent(void)
     unsigned char rx_buffer[4];
     unsigned char tx_buffer[4];
 
-    tx_buffer[0] = 0x8D;
-    tx_buffer[1] = 0x0;
+    tx_buffer[0] = 0x90;
+    tx_buffer[1] = 0x80;
     tx_buffer[2] = 0x0;
 
 #ifdef __BIOPSY_SIMULATOR
@@ -15,6 +15,8 @@ bool BiopsyExtendedIsPresent(void)
 #else
     Ser422SendRaw(tx_buffer[0], tx_buffer[1], tx_buffer[2], rx_buffer, 5);
 #endif
+
+  //printf("TEST EXTENDED BIOPSY:%x %x %x %x\n",rx_buffer[0], rx_buffer[1], rx_buffer[2], rx_buffer[3]);
   if(rx_buffer[0]==tx_buffer[0]) return true;
   return FALSE;
 }

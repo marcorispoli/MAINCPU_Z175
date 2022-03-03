@@ -18,20 +18,25 @@ Data di Creazione: 19/06/2014
   #define extrd extern const
 #endif
 
-#define  _ADAPTER_A_LEVEL_H         1100
-#define  _ADAPTER_A_LEVEL_L         950
+/*
+ *  CODIFICA --------
+ *  ADAPTER_A   * O
+ *  ADAPTER_B   O *
+ *  ADAPTER_C   * *
+ * ADAPTER_OPEN O O
+ *
+ */
+#define  _ADAPTER_A_LEVEL_H         2300
+#define  _ADAPTER_A_LEVEL_L         2000
 
-#define  _ADAPTER_B_LEVEL_H         750
-#define  _ADAPTER_B_LEVEL_L         550
+#define  _ADAPTER_B_LEVEL_H         3000
+#define  _ADAPTER_B_LEVEL_L         2301
 
-#define  _ADAPTER_C_LEVEL_H         400
-#define  _ADAPTER_C_LEVEL_L         200
+#define  _ADAPTER_C_LEVEL_H         5000
+#define  _ADAPTER_C_LEVEL_L         3001
 
-#define  _ADAPTER_SHORT_LEVEL_H     100
-#define  _ADAPTER_SHORT_LEVEL_L     0
-
-#define  _ADAPTER_OPEN_LEVEL_H      2100
-#define  _ADAPTER_OPEN_LEVEL_L      1950
+#define  _ADAPTER_OPEN_LEVEL_H      2000
+#define  _ADAPTER_OPEN_LEVEL_L      1500
 
   // API //////////////////////////////////////////////////////////////////
   ext bool  biopsyExtendedMoveXYZ(unsigned short X, unsigned short Y, unsigned short Z);

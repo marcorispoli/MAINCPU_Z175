@@ -155,21 +155,27 @@ void BIOPSY_manageDriverConnectedStatus(void){
     dati[_BP_EXT_ASSEX_POSITION] = generalConfiguration.biopsyCfg.extendedConf.statusH &0x3;
 
 
+    static unsigned short old_needle = 0;
     if(slot==0){
         // Gestione needle
         if(!BiopsyDriverGetNeedle(&generalConfiguration.biopsyCfg.adapterId)) return;
 
         // Conversione valori NEEDLE -> IDENTIFICATORE
+
         if((generalConfiguration.biopsyCfg.adapterId >= _ADAPTER_A_LEVEL_L) && (generalConfiguration.biopsyCfg.adapterId <= _ADAPTER_A_LEVEL_H))
             dati[_BP_EXT_ADAPTER_ID] = _BP_EXT_ADAPTER_A;
         else if((generalConfiguration.biopsyCfg.adapterId >= _ADAPTER_B_LEVEL_L) && (generalConfiguration.biopsyCfg.adapterId <= _ADAPTER_B_LEVEL_H))
             dati[_BP_EXT_ADAPTER_ID] = _BP_EXT_ADAPTER_B;
         else if((generalConfiguration.biopsyCfg.adapterId >= _ADAPTER_C_LEVEL_L) && (generalConfiguration.biopsyCfg.adapterId <= _ADAPTER_C_LEVEL_H))
             dati[_BP_EXT_ADAPTER_ID] = _BP_EXT_ADAPTER_C;
-        else if((generalConfiguration.biopsyCfg.adapterId >= _ADAPTER_SHORT_LEVEL_L) && (generalConfiguration.biopsyCfg.adapterId <= _ADAPTER_SHORT_LEVEL_H))
-            dati[_BP_EXT_ADAPTER_ID] = _BP_EXT_ADAPTER_SHORT;
-        else  dati[_BP_EXT_ADAPTER_ID] = _BP_EXT_ADAPTER_OPEN;
+        else if((generalConfiguration.biopsyCfg.adapterId >= _ADAPTER_OPEN_LEVEL_L) && (generalConfiguration.biopsyCfg.adapterId <= _ADAPTER_OPEN_LEVEL_H))
+            dati[_BP_EXT_ADAPTER_ID] = _BP_EXT_ADAPTER_OPEN;
+        else  dati[_BP_EXT_ADAPTER_ID] = _BP_EXT_ADAPTER_SHORT;
 
+        if((old_needle > generalConfiguration.biopsyCfg.adapterId + 10 ) || (old_needle< generalConfiguration.biopsyCfg.adapterId - 10 )){
+            debugPrintI("NEEDLE-ID CHANGE:",generalConfiguration.biopsyCfg.adapterId);
+            old_needle = generalConfiguration.biopsyCfg.adapterId;
+        }
 
     }else if(slot==2){
         // Acquisisce posizione attuale

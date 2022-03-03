@@ -407,7 +407,7 @@ bool BiopsyGetStat(void)
   unsigned char buffer[4];
   
   Ser422SendRaw(0x8E, 0x5B, 0, buffer, 5);    
-  if(buffer[0]==0xE) 
+  if(buffer[0]==0x8E)
   {
     // Gestione pressione del pulsante di sblocco
     if(buffer[2]&0x80) generalConfiguration.biopsyCfg.sbloccoReq = TRUE;
@@ -423,9 +423,10 @@ bool BiopsyGetStat(void)
 
 bool biopsyStandardIsPresent(void){
      unsigned char buffer[4];
-     Ser422SendRaw(0x8E, 0x5B, 0, buffer, 5);
+     Ser422SendRaw(0x90, 0x73, 0, buffer, 10);
      //printf("TEST STANDARD BIOPSY:%x %x %x %x\n",buffer[0], buffer[1], buffer[2], buffer[3]);
-     if(buffer[0]==0xE) return true;
+     if(buffer[0] == 0x90) return true;
+
      return false;
 }
 
@@ -546,7 +547,7 @@ void BiopsySetZ(void)
 */
 bool BiopsyGetRevision(void)
 {
-  unsigned char H,L,i;
+  unsigned char i;
   unsigned char buffer[4];
   
   // Ripete il comando per un certo tempo per essere certi che 
@@ -556,10 +557,10 @@ bool BiopsyGetRevision(void)
   while(--i)
   {
     Ser422SendRaw(0x90, 0x72, 0, buffer, 10);  
-    if(buffer[0]!=0x10) continue;
+    if(buffer[0]!=0x90) continue;
     break;
   }
-  if(buffer[0]!=0x10) 
+  if(buffer[0]!=0x90)
   {
     generalConfiguration.biopsyCfg.checksum_h = 0;
     generalConfiguration.biopsyCfg.checksum_l = 0;
@@ -575,10 +576,11 @@ bool BiopsyGetRevision(void)
   while(--i)
   {
     Ser422SendRaw(0x90, 0x73, 0, buffer, 10);  
-    if(buffer[0]!=0x10) continue;
+    if(buffer[0]!=0x90) continue;
     break;
   }
-  if(buffer[0]!=0x10) 
+
+  if(buffer[0]!=0x90)
   {
     generalConfiguration.biopsyCfg.checksum_h = 0;
     generalConfiguration.biopsyCfg.checksum_l = 0;

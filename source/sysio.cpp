@@ -75,15 +75,22 @@ void sysIO::setSpareOutputPulse(int nout, long time){
 
     switch(nout){
         case 1:   // Output BURNING.
+            PRINT("SYSIO SetSpareOutputPulse");
+
             if(timerOut1) killTimer(timerOut1);
             timerOut1 = startTimer(time);
             out.mask.CPU_BURNING=1;
             out.outputs.CPU_BURNING=1;
             break;
-
+        default:
+            PRINT("SYSIO SetSpareOutputPulse OUTPUT NON DEFINITO");
+            return;
+            break;
     }
 
-    setOutputs(out);
+    if(!setOutputs(out)){
+        PRINT("SYSIO setOutputs Fallito");
+    }
 
 }
 

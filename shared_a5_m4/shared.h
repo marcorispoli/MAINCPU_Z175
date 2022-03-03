@@ -240,6 +240,10 @@ typedef struct
     unsigned char  Z_basePosizionatore;     // Posizione staffa metallica posizionatore rispetto a fibra di carbonio
     unsigned char  margineRisalita;         // Margine di risalita (mm)
 
+    unsigned short sh_zero_level;   // Signal level of the shaft at the zero level
+    unsigned short sh_150_level;    // Signal level of the shaft, above 15mm the zero level
+    unsigned short sh_m150_level;   // Signal level of the shaft, below 15mm the zero level
+
 }biopsyConfExt_Str;
 
 

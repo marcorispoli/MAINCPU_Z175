@@ -15,7 +15,7 @@
 //#define __APPLICATION_DESKTOP_COMPILE // Compilazione per moduli TS da tavolo: rotazione 180 display, indirizzi CONSOLE a 192.168.30.10, abilitazione PRINT
 //#define __CONSOLE_IP_ADDRESS 10 // MODIFICA l'IP AWS
 //#define __BIOPSY_SIMULATOR
-#define __BYM_PAD_DETECTION // Simula l'inserimento del pad di biopsia se la biopsia è connesssa
+//#define __BYM_PAD_DETECTION // Simula l'inserimento del pad di biopsia se la biopsia è connesssa
 #endif
 //_________________________________________________________________________________
 

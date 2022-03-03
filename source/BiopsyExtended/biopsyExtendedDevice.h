@@ -19,7 +19,7 @@ public:
     // Timer per gestire il pulsante
     void timerEvent(QTimerEvent* ev); // Override della classe QObject
 
-    int requestBiopsyHome(int id, unsigned char lat);
+    int requestBiopsyHome(int id, unsigned char lat, int rot_holder);
     int requestBiopsyMoveXYZ(unsigned short X, unsigned short Y,unsigned short Z,int id);
     void calibrateXbase(unsigned short val);
     void activateConnections(void);
@@ -29,7 +29,7 @@ public:
     void  setBuzzer(void);
 
 
-    #define _DEF_TIMEOUT_USER_FEEDBACK  100 // 100ms unit
+    #define _DEF_TIMEOUT_USER_FEEDBACK  300 // 100ms unit
 
     #define _DEF_EXT_XHOME_LEFT      2580
     #define _DEF_EXT_XHOME_CENTER    1290
@@ -106,9 +106,10 @@ public:
 
 
 
-    #define BIOPSY_ACTIVATION_SEQUENCE_DB   _DB_SERVICE1_INT
+
     #define BIOPSY_USER_CONFIRMATION_DB     _DB_SERVICE2_INT
     #define BIOPSY_ACTIVATION_TITLE_DB      _DB_SERVICE1_STR
+    #define BIOPSY_ACTIVATION_SEQUENCE_DB   _DB_SERVICE2_STR
 
 
     // Sequenza guidata ________________________________________
@@ -116,27 +117,26 @@ public:
     #define _REQ_SEQ_HOME           1
     #define _REQ_SEQ_XYZ            2
 
-    #define _REQ_SUBSEQ_HOME_INIT           0    
-    #define _REQ_SUBSEQ_HOME_EXE_Z          4
-    #define _REQ_SUBSEQ_HOME_WAIT_Z         5
-    #define _REQ_SUBSEQ_HOME_EXE_Y          6
-    #define _REQ_SUBSEQ_HOME_WAIT_Y         7
+    enum{
+        _REQ_SUBSEQ_HOME_INIT  = 0,
+        _REQ_SUBSEQ_HOME_X_SCROLL, // Common X-SCROLL status
+        _REQ_SUBSEQ_HOME_Y_SCROLL, // Common Y-UP/DOWN-SCROLL status
+        _REQ_SUBSEQ_HOME_X_MOVE,   // Common X move
+        _REQ_SUBSEQ_HOME_Y_MOVE,   // Common Y move
+        _REQ_SUBSEQ_HOME_Z_MOVE,   // Common Z move
 
-    #define _REQ_SUBSEQ_HOME_TEST_SCROLL_X          8
-    #define _REQ_SUBSEQ_HOME_EXE_SCROLL_X_LEFT      9
-    #define _REQ_SUBSEQ_HOME_EXE_SCROLL_X_CENTER    10
-    #define _REQ_SUBSEQ_HOME_EXE_SCROLL_X_RIGHT     11
+        _REQ_SUBSEQ_HOME_EXE_Z,    // Moves to Home Z
+        _REQ_SUBSEQ_HOME_EXE_Y,    // Moves to Home Y
+        _REQ_SUBSEQ_HOME_TEST_Y_UP, // Test if the Y shall be reversed up
+        _REQ_SUBSEQ_HOME_TEST_SCROLL_X, // Test if the X shall be scrolled
+        _REQ_SUBSEQ_HOME_EXE_X,         // Activate the X position in home
+        _REQ_SUBSEQ_HOME_TEST_Y_DOWN, // Test if the Y shall be reversed down
+        _REQ_SUBSEQ_HOME_COMPLETED
 
-    #define _REQ_SUBSEQ_HOME_EXE_TEST_SCROLL_Y      12
-    #define _REQ_SUBSEQ_HOME_EXE_SCROLL_Y_LEFT      13
-    #define _REQ_SUBSEQ_HOME_EXE_SCROLL_Y_CENTER    14
-    #define _REQ_SUBSEQ_HOME_EXE_SCROLL_Y_RIGHT     15
+    };
 
-    #define _REQ_SUBSEQ_HOME_EXE_X                  16
-    #define _REQ_SUBSEQ_HOME_WAIT_X_TO_LEFT         17
-    #define _REQ_SUBSEQ_HOME_WAIT_X_TO_CENTER       18
-    #define _REQ_SUBSEQ_HOME_WAIT_X_TO_RIGHT        19
-    #define _REQ_SUBSEQ_HOME_COMPLETED              20
+
+
 
 
     #define _REQ_SUBSEQ_XYZ_INIT                    0
@@ -154,20 +154,45 @@ public:
     #define _REQ_SUBSEQ_XYZ_COMPLETED               21
 
 
+    // Params value
+    #define _PARAM_CENTER           0
+    #define _PARAM_LEFT             1
+    #define _PARAM_RIGHT            2
+
+    #define _PARAM_UP       5
+    #define _PARAM_DOWN     6
+    #define _PARAM_OUT      7
+    #define _PARAM_IN       8
+
+
 
 private:
-    int req_sequence;
-    int sub_sequence;
-    int event_req_sequence;
+    // Last X-Scroll sensor detected
+    unsigned char last_xscroll_detected;
 
-    unsigned char req_home_lat;
+    // Command execution variables
+    int req_sequence;
+    int event_req_sequence;
+    int sub_sequence;
+
+    int next_seq;
+    int seq_param1;
+    int seq_param2;
+    unsigned short move_X;
+    unsigned short move_Y;
+    unsigned short move_Z;
+
+
+    // Requested positionning target
+    int           req_rot_holder;
+    unsigned char req_home_lat;    
     unsigned short req_X;
     unsigned short req_Y;
     unsigned short req_Z;
-    bool user_confirmation;
-    unsigned char buzzer_delay;
-    bool bypass_y_scroll;
-    int user_timeout;
+
+    bool            user_confirmation; // Confirmation button status
+    unsigned char   buzzer_delay;      // Delay for buzzer pulse
+    int             user_timeout;      // Timeout waiting for confirmation
 
     unsigned short XHOME_LEFT;
     unsigned short XHOME_CENTER;
@@ -188,13 +213,14 @@ private:
     // Pulsante di sblocco
     bool unlock_button;
 
+    bool isHome;
 
     void manageHomeSequence(void);
     void manageXYZSequence(void);
     void manageRequestErrors(int error);
     void nextStepSequence(int tmo);
-    void manageChangeHomeSeq(unsigned char sub_seq);
-    void manageChangeMoveXYZSeq(unsigned char sub_seq);
+    void manageChangeHomeSeq(int sub_seq,int param1, int param2);
+    void manageChangeMoveXYZSeq(int sub_seq,int param1, int param2);
     void hideFrames(void);
     int calibrateSh(void);
 
@@ -203,6 +229,19 @@ private:
 
     bool testUpsidePosition(unsigned short X);
     bool isTarget(unsigned short X, unsigned short Y, unsigned short Z);
+
+    // Test if the Y block is turned Up based on the current X posiiton scenaro
+    bool testYisUp(void){
+        if( (curLatX == _BP_EXT_ASSEX_POSITION_CENTER) && (curX_dmm < 2263)  && (curX_dmm > 317)) return true;
+        else if((curLatX == _BP_EXT_ASSEX_POSITION_LEFT) && (curX_dmm < 980)) return true;
+        else if((curLatX == _BP_EXT_ASSEX_POSITION_RIGHT) && (curX_dmm > 1600)) return true;
+
+        return false;
+    }
+
+    void handleXScroll(void);
+    void handleYScroll(void);
+    void handleMove(void);
 
 };
 
