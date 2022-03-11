@@ -12,9 +12,9 @@
 ///////////////////////////////////////////////////////////////////
 
 // Nuova Interfaccia per Biopsia Standard e ad Approccio laterale
-// #define SET_BIOPSY_DATA     "SetBiopsyData"
+#define SET_BIOPSY_DATA     "SetBiopsyData"
 // #define SET_BIOPSY_HOME     "SetBiopsyHome"
-// #define GET_BIOPSY_Z        "GetBiopsyZ"
+#define GET_BIOPSY_Z        "GetBiopsyZ"
 
 #define SET_BIOPSY_EXTENDED_MOVE        "SetBiopsyExtendedMove"      // Muove ad un punto qualsiasi XYZ
 #define SET_BIOPSY_EXTENDED_HOME        "SetBiopsyExtendedHome"      // Muove a home
@@ -359,6 +359,8 @@ public:
 
     // GESTIONE BIOPSIA STANDARD
     void  handleSetBiopsyConfig(protoConsole* frame,protoConsole* answer);      // Aggiorna la configurazione della calibrazione
+    int  handleSetBiopsyData(protoConsole* frame);      // Posizionamento del cursore
+    void handleGetBiopsyZ(protoConsole* answer);        // Richiede i dati di posizione della Biopsia
 
     int  handleSetLingua(protoConsole* frame);          // Impostazione della lingua
     void handleSetFirmwareUpdate(protoConsole* frame, protoConsole* answer);    // Attivazione aggiornamento del sistema

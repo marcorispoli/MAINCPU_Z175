@@ -111,6 +111,7 @@ void biopsyStandardDevice::mccStatNotify(unsigned char id_notify,unsigned char c
         codiceAccessorio="ND";
         codiceAgo="ND";
         accessorioSelezionato = 0;
+        pBiopsy->activationId = 0;
 
         // Disabilita i movimenti manuali
         ApplicationDatabase.setData(_DB_BIOP_MANUAL_ENA,(unsigned char) 0 ,0);
@@ -133,6 +134,7 @@ void biopsyStandardDevice::mccStatNotify(unsigned char id_notify,unsigned char c
     else if(data.at(_BP_STD_CONNESSIONE)==2)
     {
         pBiopsy->connected = FALSE;
+        pBiopsy->activationId = 0;
 
         // Disabilita i movimenti manuali
         ApplicationDatabase.setData(_DB_BIOP_MANUAL_ENA,(unsigned char) 0 ,0);

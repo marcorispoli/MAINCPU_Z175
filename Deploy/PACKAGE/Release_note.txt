@@ -10,3 +10,5 @@ FATTO
 - Integrato tubo ad Aria
 - Aggiunta ridirezione di tutte le printf sui socket @10010
 
+- Collimazione filtro: corretto uscita da pagina collimazione in filtro auto
+

@@ -234,6 +234,7 @@ void calibfilter::exitPage(void){
         pCollimatore->colliConf.filterPos[2] = posizioneIniziale[2];
         pCollimatore->colliConf.filterPos[3] = posizioneIniziale[3];
 
+        pCollimatore->manualFiltroCollimation=false;
     }
 
 }
