@@ -191,7 +191,9 @@ int main(int argc, char *argv[])
     ApplicationDatabase.append((int) 0);            // _DB_BIOP_X
     ApplicationDatabase.append((int) 0);            // _DB_BIOP_Y
     ApplicationDatabase.append((int) 0);            // _DB_BIOP_Z
-    ApplicationDatabase.append((int) 0);            // _DB_BIOP_SH
+    ApplicationDatabase.append((int) 0);            // _DB_BIOP_SH    
+    ApplicationDatabase.append((unsigned char) 0);  // _DB_BIOP_SHOW_SH
+
 
     ApplicationDatabase.append((int) 0);            // _DB_BIOP_LES_X
     ApplicationDatabase.append((int) 0);            // _DB_BIOP_LES_Y

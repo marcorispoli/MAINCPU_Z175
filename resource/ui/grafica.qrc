@@ -186,6 +186,7 @@
         <file>Service_Calib/manualColliBackground.png</file>
         <file>Service_Calib/parking.png</file>
         <file>Service_Calib/parkingBackground.png</file>
+        <file>Service_Calib/biop_extended_calib_icon.png</file>
     </qresource>
     <qresource prefix="/Service_Tools">
         <file>Service_Tools/tools_icon.png</file>

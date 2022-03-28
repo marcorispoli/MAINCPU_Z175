@@ -154,6 +154,9 @@ void BiopsyExtendedPage::setCloseStudy(void){
 void BiopsyExtendedPage::InitBiopsyPage(void)
 {    
 
+    // Inizializza visualizzazione del puntatore
+    ApplicationDatabase.setData(_DB_BIOP_SHOW_SH, (unsigned char) 0);
+
     // Discrimina fra modalità frustoli e standard
     if(ApplicationDatabase.getDataI(_DB_ACCESSORIO_COLLIMATORE) == COLLI_ACCESSORIO_FRUSTOLI){
         specimenMode = true;
@@ -557,15 +560,18 @@ void BiopsyExtendedPage::updateCursorPointer(void){
     int sh = ApplicationDatabase.getDataI(_DB_BIOP_SH);
     if(sh < -170) sh = -170;
     else if(sh > 150) sh = 150;
-
     if((sh < 5) && (sh>-5)) sh = 0;
-    cursorValue->setPlainText(QString("%1").arg(sh));
+
+    if(sh == -170) cursorValue->setPlainText(QString("^^^"));
+    else if(sh == 150) cursorValue->setPlainText(QString("___"));
+    else cursorValue->setPlainText(QString("%1").arg(sh));
     cursorValue->setPos(162,289 + (sh*8)/10);
     cursorPix->setPos(118,287 + (sh*8)/10);
 }
 
 void BiopsyExtendedPage::updateBiopsyView(void){
-    int adapter = ApplicationDatabase.getDataI(_DB_BIOP_ADAPTER_ID);
+    // int adapter = ApplicationDatabase.getDataI(_DB_BIOP_ADAPTER_ID);
+    unsigned char cursor_enabled = ApplicationDatabase.getDataU(_DB_BIOP_SHOW_SH);
 
     // Se il bottone di sblocco è premuto ha la precedenza
     if(ApplicationDatabase.getDataI(_DB_BIOP_UNLOCK_BUTTON)){
@@ -581,6 +587,16 @@ void BiopsyExtendedPage::updateBiopsyView(void){
         setInfoPanelView(true);
         break;
     case _BP_EXT_ASSEX_POSITION_LEFT:
+        if(cursor_enabled){
+            setBackground("://BiopsyExtended/BiopsyExtended/homeLaccessorio.png");
+            setInfoPanelView(false);
+            // Aggiorna la posizione attuale del cursore SH
+            updateCursorPointer();
+        }else{
+            setBackground("://BiopsyExtended/BiopsyExtended/homeL.png");
+            setInfoPanelView(true);
+        }
+        /*
         if((adapter == _BP_EXT_ADAPTER_OPEN) || (adapter == _BP_EXT_ADAPTER_SHORT)){
             setBackground("://BiopsyExtended/BiopsyExtended/homeL.png");
             setInfoPanelView(true);
@@ -589,9 +605,19 @@ void BiopsyExtendedPage::updateBiopsyView(void){
             setInfoPanelView(false);
             // Aggiorna la posizione attuale del cursore SH
             updateCursorPointer();
-        }
+        }*/
         break;
     case _BP_EXT_ASSEX_POSITION_CENTER:
+        if(cursor_enabled){
+            setBackground("://BiopsyExtended/BiopsyExtended/homeCaccessorio.png");
+            setInfoPanelView(false);
+            // Aggiorna la posizione attuale del cursore SH
+            updateCursorPointer();
+        }else{
+            setBackground("://BiopsyExtended/BiopsyExtended/homeC.png");
+            setInfoPanelView(true);
+        }
+        /*
         if((adapter == _BP_EXT_ADAPTER_OPEN) || (adapter == _BP_EXT_ADAPTER_SHORT)){
             setBackground("://BiopsyExtended/BiopsyExtended/homeC.png");
             setInfoPanelView(true);
@@ -600,9 +626,19 @@ void BiopsyExtendedPage::updateBiopsyView(void){
             setInfoPanelView(false);
             // Aggiorna la posizione attuale del cursore SH
             updateCursorPointer();
-        }
+        }*/
         break;
     case _BP_EXT_ASSEX_POSITION_RIGHT:
+        if(cursor_enabled){
+            setBackground("://BiopsyExtended/BiopsyExtended/homeRaccessorio.png");
+            setInfoPanelView(false);
+            // Aggiorna la posizione attuale del cursore SH
+            updateCursorPointer();
+        }else{
+            setBackground("://BiopsyExtended/BiopsyExtended/homeR.png");
+            setInfoPanelView(true);
+        }
+        /*
         if((adapter == _BP_EXT_ADAPTER_OPEN) || (adapter == _BP_EXT_ADAPTER_SHORT)){
             setBackground("://BiopsyExtended/BiopsyExtended/homeR.png");
             setInfoPanelView(true);
@@ -612,7 +648,7 @@ void BiopsyExtendedPage::updateBiopsyView(void){
             // Aggiorna la posizione attuale del cursore SH
             updateCursorPointer();
 
-        }
+        }*/
         break;
     }
 

@@ -33,6 +33,8 @@ public slots:
      void onLenzePotCalibButton(void); // Calibrazione potenziometro lenze
      void onParkingCalibButton(void); // Calibrazione posizione di parcheggio
      void onColliCalibButton(void) ; // Calibrazione collimazione manuale
+     void onExtendedBiopsyCalibButton(void); // Calibrazione Biopsia Estesa
+
 private:
     Ui::CalibMenuObject *ui;
     QGraphicsScene *scene;

@@ -75,6 +75,7 @@ enum
     _PG_SYSTEM_SETUP,
     _PG_SERVICE_CALIB_COLLI,
     _PG_SERVICE_CALIB_PARKING,
+    _PG_SERVICE_CALIB_EXTENDED_BIOPSY,
     _PG_BIOPSY_EXTENDED_DEVICE,
     _PG_BIOPSY_EXTENDED_PAGE,
     _PG_BIOPSY_STANDARD_PAGE
@@ -223,6 +224,7 @@ _DB_BIOP_X,             // X in dmm
 _DB_BIOP_Y,             // Y in dmm
 _DB_BIOP_Z,             // Z in dmm
 _DB_BIOP_SH,            // SH in dmm
+_DB_BIOP_SHOW_SH,       // Visualizza la posizione del cuneo (solo Extended)
 
 _DB_BIOP_LES_X,         // Posizione lesione X
 _DB_BIOP_LES_Y,         // Posizione lesione Y

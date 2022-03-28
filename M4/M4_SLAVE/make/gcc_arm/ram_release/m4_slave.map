@@ -4063,14 +4063,14 @@ END GROUP
                 0x3f01c4f4                __fini_array_end = .
                 0x3f01c4f4                . = ALIGN (0x4)
                 0x3f01c4f4                __zero_table_start__ = .
-                0x3f01c4f4        0x4 LONG 0x3f8004d8 _bss_start
+                0x3f01c4f4        0x4 LONG 0x3f8004e0 _bss_start
                 0x3f01c4f8        0x4 LONG 0x858 (_bss_end - _bss_start)
                 0x3f01c4fc                __zero_table_end__ = .
                 0x3f01c4fc                . = ALIGN (0x4)
                 0x3f01c4fc                __copy_table_start__ = .
                 0x3f01c4fc        0x4 LONG 0x3f01c510 LOADADDR (.data)
                 0x3f01c500        0x4 LONG 0x3f800000 _data_start
-                0x3f01c504        0x4 LONG 0x4d8 (_data_end - _data_start)
+                0x3f01c504        0x4 LONG 0x4e0 (_data_end - _data_start)
                 0x3f01c508                __copy_table_end__ = .
 
 .vfp11_veneer   0x3f01c508        0x0
@@ -4096,464 +4096,466 @@ END GROUP
 .rel.dyn        0x3f01c510        0x0
  .rel.iplt      0x00000000        0x0 ./gcc_arm/ram_release/obj/actuators.o
 
-.data           0x3f800000      0x4d8 load address 0x3f01c510
+.data           0x3f800000      0x4e0 load address 0x3f01c510
                 0x3f800000                _data_start = .
  *(.vectors_ram)
  *(.data*)
- .data.memCtrl.13585
+ .data.memCtrl.13588
                 0x3f800000        0x2 ./gcc_arm/ram_release/obj/arm.o
  *fill*         0x3f800002        0x2 
- .data.pollingCount.13545
+ .data.pollingCount.13548
                 0x3f800004        0x4 ./gcc_arm/ram_release/obj/arm.o
- .data.memCtrl.13566
+ .data.memCtrl.13569
                 0x3f800008        0x2 ./gcc_arm/ram_release/obj/arm.o
  *fill*         0x3f80000a        0x2 
  .data.lenzeVBUS
                 0x3f80000c        0x4 ./gcc_arm/ram_release/obj/lenze.o
- .data.memCtrl.13622
+ .data.memCtrl.13625
                 0x3f800010        0x2 ./gcc_arm/ram_release/obj/trx.o
- .data.memCtrl.13611
+ .data.memCtrl.13630
                 0x3f800012        0x2 ./gcc_arm/ram_release/obj/trx.o
- .data.pollingCount.13574
-                0x3f800014        0x4 ./gcc_arm/ram_release/obj/trx.o
- .data.memCtrl.13616
-                0x3f800018        0x2 ./gcc_arm/ram_release/obj/trx.o
- .data.memCtrl.13627
-                0x3f80001a        0x2 ./gcc_arm/ram_release/obj/trx.o
+ .data.memCtrl.13614
+                0x3f800014        0x2 ./gcc_arm/ram_release/obj/trx.o
+ *fill*         0x3f800016        0x2 
+ .data.pollingCount.13577
+                0x3f800018        0x4 ./gcc_arm/ram_release/obj/trx.o
+ .data.memCtrl.13619
+                0x3f80001c        0x2 ./gcc_arm/ram_release/obj/trx.o
+ *fill*         0x3f80001e        0x2 
  .data.trxCiA402funcPtr
-                0x3f80001c       0x24 ./gcc_arm/ram_release/obj/trx.o
-                0x3f80001c                trxCiA402funcPtr
+                0x3f800020       0x24 ./gcc_arm/ram_release/obj/trx.o
+                0x3f800020                trxCiA402funcPtr
  .data.pcr_reg_arr
-                0x3f800040       0x14 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(lwgpio_vgpio.o)
-                0x3f800040                pcr_reg_arr
+                0x3f800044       0x14 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(lwgpio_vgpio.o)
+                0x3f800044                pcr_reg_arr
  .data._mqx_kernel_data
-                0x3f800054        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mqx.o)
-                0x3f800054                _mqx_kernel_data
+                0x3f800058        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mqx.o)
+                0x3f800058                _mqx_kernel_data
+ *fill*         0x3f80005c        0x4 
  .data.impure_data
-                0x3f800058      0x428 /opt/arm-2017/arm-none-eabi/lib/armv7e-m/fpu/libc.a(lib_a-impure.o)
+                0x3f800060      0x428 /opt/arm-2017/arm-none-eabi/lib/armv7e-m/fpu/libc.a(lib_a-impure.o)
  .data._impure_ptr
-                0x3f800480        0x4 /opt/arm-2017/arm-none-eabi/lib/armv7e-m/fpu/libc.a(lib_a-impure.o)
-                0x3f800480                _impure_ptr
+                0x3f800488        0x4 /opt/arm-2017/arm-none-eabi/lib/armv7e-m/fpu/libc.a(lib_a-impure.o)
+                0x3f800488                _impure_ptr
  .data._bsp_ksai_init
-                0x3f800484       0x18 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_sai.o)
-                0x3f800484                _bsp_ksai_init
+                0x3f80048c       0x18 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_sai.o)
+                0x3f80048c                _bsp_ksai_init
  .data._bsp_audio_data_init
-                0x3f80049c        0x5 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_sai.o)
-                0x3f80049c                _bsp_audio_data_init
- *fill*         0x3f8004a1        0x3 
+                0x3f8004a4        0x5 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_sai.o)
+                0x3f8004a4                _bsp_audio_data_init
+ *fill*         0x3f8004a9        0x3 
  .data.edma_devif
-                0x3f8004a4       0x2c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(edma.o)
-                0x3f8004a4                edma_devif
+                0x3f8004ac       0x2c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(edma.o)
+                0x3f8004ac                edma_devif
  .data.__ctype_ptr__
-                0x3f8004d0        0x4 /opt/arm-2017/arm-none-eabi/lib/armv7e-m/fpu/libc.a(lib_a-ctype_.o)
-                0x3f8004d0                __ctype_ptr__
-                0x3f8004d8                . = ALIGN (0x8)
- *fill*         0x3f8004d4        0x4 
-                0x3f8004d8                _data_end = .
+                0x3f8004d8        0x4 /opt/arm-2017/arm-none-eabi/lib/armv7e-m/fpu/libc.a(lib_a-ctype_.o)
+                0x3f8004d8                __ctype_ptr__
+                0x3f8004e0                . = ALIGN (0x8)
+ *fill*         0x3f8004dc        0x4 
+                0x3f8004e0                _data_end = .
 
-.igot.plt       0x3f8004d8        0x0 load address 0x3f01c9e8
+.igot.plt       0x3f8004e0        0x0 load address 0x3f01c9f0
  .igot.plt      0x00000000        0x0 ./gcc_arm/ram_release/obj/actuators.o
 
-.bss            0x3f8004d8      0x858
-                0x3f8004d8                _bss_start = .
+.bss            0x3f8004e0      0x858
+                0x3f8004e0                _bss_start = .
  *(.bss*)
  .bss.actuators_event_timeout
-                0x3f8004d8        0x4 ./gcc_arm/ram_release/obj/actuators.o
- .bss.pTrxStat  0x3f8004dc        0x4 ./gcc_arm/ram_release/obj/actuators.o
- .bss.pLenzeStat
                 0x3f8004e0        0x4 ./gcc_arm/ram_release/obj/actuators.o
- .bss.pArmStat  0x3f8004e4        0x4 ./gcc_arm/ram_release/obj/actuators.o
- .bss.test_on   0x3f8004e8        0x1 ./gcc_arm/ram_release/obj/actuators.o
- .bss.memMccbuffer.13495
-                0x3f8004e9       0x10 ./gcc_arm/ram_release/obj/actuators.o
- *fill*         0x3f8004f9        0x1 
+ .bss.pTrxStat  0x3f8004e4        0x4 ./gcc_arm/ram_release/obj/actuators.o
+ .bss.pLenzeStat
+                0x3f8004e8        0x4 ./gcc_arm/ram_release/obj/actuators.o
+ .bss.pArmStat  0x3f8004ec        0x4 ./gcc_arm/ram_release/obj/actuators.o
+ .bss.test_on   0x3f8004f0        0x1 ./gcc_arm/ram_release/obj/actuators.o
+ *fill*         0x3f8004f1        0x1 
  .bss.test_trxpos
-                0x3f8004fa        0x4 ./gcc_arm/ram_release/obj/actuators.o
- *fill*         0x3f8004fe        0x2 
+                0x3f8004f2        0x4 ./gcc_arm/ram_release/obj/actuators.o
+ .bss.memMccbuffer.13498
+                0x3f8004f6       0x10 ./gcc_arm/ram_release/obj/actuators.o
+ *fill*         0x3f800506        0x2 
  .bss.rotena_timout
-                0x3f800500        0x4 ./gcc_arm/ram_release/obj/arm.o
+                0x3f800508        0x4 ./gcc_arm/ram_release/obj/arm.o
  .bss.positioningData
-                0x3f800504        0xc ./gcc_arm/ram_release/obj/arm.o
+                0x3f80050c        0xc ./gcc_arm/ram_release/obj/arm.o
  .bss.blocco_input_ostacolo
-                0x3f800510        0x4 ./gcc_arm/ram_release/obj/arm.o
+                0x3f800518        0x4 ./gcc_arm/ram_release/obj/arm.o
  .bss.driver_stat
-                0x3f800514       0x78 ./gcc_arm/ram_release/obj/arm.o
+                0x3f80051c       0x78 ./gcc_arm/ram_release/obj/arm.o
  .bss.printEnable
-                0x3f80058c        0x1 ./gcc_arm/ram_release/obj/common.o
-                0x3f80058c                printEnable
+                0x3f800594        0x1 ./gcc_arm/ram_release/obj/common.o
+                0x3f800594                printEnable
  .bss.debugPrintEnable
-                0x3f80058d        0x1 ./gcc_arm/ram_release/obj/common.o
-                0x3f80058d                debugPrintEnable
- *fill*         0x3f80058e        0x2 
+                0x3f800595        0x1 ./gcc_arm/ram_release/obj/common.o
+                0x3f800595                debugPrintEnable
+ *fill*         0x3f800596        0x2 
  .bss.faultSig_mutex
-                0x3f800590       0x30 ./gcc_arm/ram_release/obj/fault.o
- .bss.position1.13492
-                0x3f8005c0        0x4 ./gcc_arm/ram_release/obj/lenze.o
- .bss.switch_on.13472
-                0x3f8005c4        0x1 ./gcc_arm/ram_release/obj/lenze.o
- .bss.time_counter.13491
-                0x3f8005c5        0x1 ./gcc_arm/ram_release/obj/lenze.o
- *fill*         0x3f8005c6        0x2 
- .bss.position2.13493
+                0x3f800598       0x30 ./gcc_arm/ram_release/obj/fault.o
+ .bss.position1.13495
                 0x3f8005c8        0x4 ./gcc_arm/ram_release/obj/lenze.o
- .bss.error.13490
-                0x3f8005cc        0x2 ./gcc_arm/ram_release/obj/lenze.o
- *fill*         0x3f8005ce        0x2 
+ .bss.switch_on.13475
+                0x3f8005cc        0x1 ./gcc_arm/ram_release/obj/lenze.o
+ *fill*         0x3f8005cd        0x3 
+ .bss.position2.13496
+                0x3f8005d0        0x4 ./gcc_arm/ram_release/obj/lenze.o
  .bss.driver_stat
-                0x3f8005d0       0x64 ./gcc_arm/ram_release/obj/lenze.o
- .bss.manual_mode.13494
-                0x3f800634        0x1 ./gcc_arm/ram_release/obj/lenze.o
- *fill*         0x3f800635        0x3 
+                0x3f8005d4       0x64 ./gcc_arm/ram_release/obj/lenze.o
+ .bss.time_counter.13494
+                0x3f800638        0x1 ./gcc_arm/ram_release/obj/lenze.o
+ .bss.manual_mode.13497
+                0x3f800639        0x1 ./gcc_arm/ram_release/obj/lenze.o
+ .bss.error.13493
+                0x3f80063a        0x2 ./gcc_arm/ram_release/obj/lenze.o
  .bss.pcb240_cmd_queue
-                0x3f800638        0x4 ./gcc_arm/ram_release/obj/ser240.o
-                0x3f800638                pcb240_cmd_queue
+                0x3f80063c        0x4 ./gcc_arm/ram_release/obj/ser240.o
+                0x3f80063c                pcb240_cmd_queue
  .bss.isTimeout
-                0x3f80063c        0x1 ./gcc_arm/ram_release/obj/ser240.o
- *fill*         0x3f80063d        0x3 
+                0x3f800640        0x1 ./gcc_arm/ram_release/obj/ser240.o
+ *fill*         0x3f800641        0x3 
  .bss.pcb240TimeoutCount
-                0x3f800640        0x4 ./gcc_arm/ram_release/obj/ser240.o
+                0x3f800644        0x4 ./gcc_arm/ram_release/obj/ser240.o
  .bss.PCB240_ID
-                0x3f800644        0x1 ./gcc_arm/ram_release/obj/ser240.o
-                0x3f800644                PCB240_ID
- *fill*         0x3f800645        0x1 
+                0x3f800648        0x1 ./gcc_arm/ram_release/obj/ser240.o
+                0x3f800648                PCB240_ID
+ *fill*         0x3f800649        0x1 
  .bss.positioningData
-                0x3f800646        0x4 ./gcc_arm/ram_release/obj/trx.o
- *fill*         0x3f80064a        0x2 
+                0x3f80064a        0x4 ./gcc_arm/ram_release/obj/trx.o
+ *fill*         0x3f80064e        0x2 
  .bss.blocco_input_ostacolo
-                0x3f80064c        0x4 ./gcc_arm/ram_release/obj/trx.o
+                0x3f800650        0x4 ./gcc_arm/ram_release/obj/trx.o
  .bss.driver_stat
-                0x3f800650       0x78 ./gcc_arm/ram_release/obj/trx.o
- .bss.error.13555
-                0x3f8006c8        0x4 ./gcc_arm/ram_release/obj/trx.o
+                0x3f800654       0x78 ./gcc_arm/ram_release/obj/trx.o
+ .bss.error.13558
+                0x3f8006cc        0x4 ./gcc_arm/ram_release/obj/trx.o
  .bss.err_int_flag
-                0x3f8006cc        0x1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_driver.o)
- *fill*         0x3f8006cd        0x3 
+                0x3f8006d0        0x1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_driver.o)
+ *fill*         0x3f8006d1        0x3 
  .bss.ms_per_tick.9429
-                0x3f8006d0        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mstiq.o)
- .bss.heuristic.9430
                 0x3f8006d4        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mstiq.o)
+ .bss.heuristic.9430
+                0x3f8006d8        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mstiq.o)
  .bss.cpu_to_cpu_isr_vector
-                0x3f8006d8        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_mqx.o)
- .bss.pll4sem   0x3f8006dc       0x1c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(bsp_cm.o)
+                0x3f8006dc        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_mqx.o)
+ .bss.pll4sem   0x3f8006e0       0x1c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(bsp_cm.o)
  .bss.Pll4ClockInHz
-                0x3f8006f8        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(bsp_cm.o)
+                0x3f8006fc        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(bsp_cm.o)
  .bss.ClockConfigurationID
-                0x3f8006fc        0x1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(bsp_cm.o)
- *fill*         0x3f8006fd        0x3 
+                0x3f800700        0x1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(bsp_cm.o)
+ *fill*         0x3f800701        0x3 
  .bss.devif_list
-                0x3f800700        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(dma.o)
- .bss.devif_list_count
                 0x3f800704        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(dma.o)
+ .bss.devif_list_count
+                0x3f800708        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(dma.o)
  .bss._core_mutex_component_ptr
-                0x3f800708        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(core_mutex.o)
+                0x3f80070c        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(core_mutex.o)
  .bss.edma_channel_context
-                0x3f80070c      0x100 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(edma.o)
+                0x3f800710      0x100 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(edma.o)
  *(COMMON)
- COMMON         0x3f80080c       0x68 ./gcc_arm/ram_release/obj/actuators.o
-                0x3f80080c                actuatorCommand
-                0x3f800844                can_mutex
- COMMON         0x3f800874       0x16 ./gcc_arm/ram_release/obj/arm.o
-                0x3f800874                armConfig
- *fill*         0x3f80088a        0x2 
- COMMON         0x3f80088c       0x14 ./gcc_arm/ram_release/obj/fault.o
-                0x3f80088c                faultStat
- COMMON         0x3f8008a0       0x18 ./gcc_arm/ram_release/obj/lenze.o
-                0x3f8008a0                lenzeConfig
- COMMON         0x3f8008b8      0x138 ./gcc_arm/ram_release/obj/main.o
-                0x3f8008b8                mcc_len
-                0x3f8008bc                SystemInputs
-                0x3f8008c3                isPowerdown
-                0x3f8008c4                Ev0
-                0x3f8008e8                output_mutex
-                0x3f800918                input_mutex
-                0x3f800948                SystemOutputs
-                0x3f80094b                mcc_cmd
-                0x3f8009e5                generalConfiguration
- COMMON         0x3f8009f0       0x3d ./gcc_arm/ram_release/obj/ser240.o
-                0x3f8009f0                pPCB240PendingCommand
-                0x3f8009f4                pcb240_stat_mutex
-                0x3f800a24                revPCB240
-                0x3f800a28                pPCB240NextCommand
-                0x3f800a2c                PCB240_Stat
- *fill*         0x3f800a2d        0x3 
- COMMON         0x3f800a30       0xf0 ./gcc_arm/ram_release/obj/slave_can.o
-                0x3f800a30                txmb_to_trx
-                0x3f800a48                txmb_to_arm
-                0x3f800a60                txmb_inputs_to_master
-                0x3f800a78                rxmb_from_lenze
-                0x3f800a90                txmb_actuator_to_master
-                0x3f800aa8                rxmb_from_trx
-                0x3f800ac0                rxmb_outputs_from_master
-                0x3f800ad8                rxmb_from_arm
-                0x3f800af0                txmb_to_lenze
-                0x3f800b08                rxmb_actuator_from_master
- COMMON         0x3f800b20       0x44 ./gcc_arm/ram_release/obj/trx.o
-                0x3f800b20                trxConfig
- COMMON         0x3f800b64       0x39 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_driver.o)
-                0x3f800b64                rx_mb_idx
-                0x3f800b68                int_mb
-                0x3f800b69                locInstance
-                0x3f800b6c                error_register
-                0x3f800b74                locData
-                0x3f800b78                event
-                0x3f800b9c                int_fifo
- *fill*         0x3f800b9d        0x3 
- COMMON         0x3f800ba0        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mqx.o)
-                0x3f800ba0                _mqx_system_stack
- COMMON         0x3f800ba4        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_common.o)
-                0x3f800ba4                bookeeping_data
- COMMON         0x3f800ba8      0x148 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_mqx.o)
-                0x3f800ba8                cm_ptr
-                0x3f800bac                lwevent_buffer_queued
-                0x3f800ccc                lwevent_buffer_freed
- COMMON         0x3f800cf0       0x40 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_bsp.o)
-                0x3f800cf0                systimer
-                0x3f800d30                . = ALIGN (0x8)
-                0x3f800d30                _bss_end = .
+ COMMON         0x3f800810       0x68 ./gcc_arm/ram_release/obj/actuators.o
+                0x3f800810                actuatorCommand
+                0x3f800848                can_mutex
+ COMMON         0x3f800878       0x16 ./gcc_arm/ram_release/obj/arm.o
+                0x3f800878                armConfig
+ *fill*         0x3f80088e        0x2 
+ COMMON         0x3f800890       0x14 ./gcc_arm/ram_release/obj/fault.o
+                0x3f800890                faultStat
+ COMMON         0x3f8008a4       0x18 ./gcc_arm/ram_release/obj/lenze.o
+                0x3f8008a4                lenzeConfig
+ COMMON         0x3f8008bc      0x138 ./gcc_arm/ram_release/obj/main.o
+                0x3f8008bc                mcc_len
+                0x3f8008c0                SystemInputs
+                0x3f8008c7                isPowerdown
+                0x3f8008c8                Ev0
+                0x3f8008ec                output_mutex
+                0x3f80091c                input_mutex
+                0x3f80094c                SystemOutputs
+                0x3f80094f                mcc_cmd
+                0x3f8009e9                generalConfiguration
+ COMMON         0x3f8009f4       0x3d ./gcc_arm/ram_release/obj/ser240.o
+                0x3f8009f4                pPCB240PendingCommand
+                0x3f8009f8                pcb240_stat_mutex
+                0x3f800a28                revPCB240
+                0x3f800a2c                pPCB240NextCommand
+                0x3f800a30                PCB240_Stat
+ *fill*         0x3f800a31        0x3 
+ COMMON         0x3f800a34       0xf0 ./gcc_arm/ram_release/obj/slave_can.o
+                0x3f800a34                txmb_to_trx
+                0x3f800a4c                txmb_to_arm
+                0x3f800a64                txmb_inputs_to_master
+                0x3f800a7c                rxmb_from_lenze
+                0x3f800a94                txmb_actuator_to_master
+                0x3f800aac                rxmb_from_trx
+                0x3f800ac4                rxmb_outputs_from_master
+                0x3f800adc                rxmb_from_arm
+                0x3f800af4                txmb_to_lenze
+                0x3f800b0c                rxmb_actuator_from_master
+ COMMON         0x3f800b24       0x44 ./gcc_arm/ram_release/obj/trx.o
+                0x3f800b24                trxConfig
+ COMMON         0x3f800b68       0x39 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_driver.o)
+                0x3f800b68                rx_mb_idx
+                0x3f800b6c                int_mb
+                0x3f800b6d                locInstance
+                0x3f800b70                error_register
+                0x3f800b78                locData
+                0x3f800b7c                event
+                0x3f800ba0                int_fifo
+ *fill*         0x3f800ba1        0x3 
+ COMMON         0x3f800ba4        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mqx.o)
+                0x3f800ba4                _mqx_system_stack
+ COMMON         0x3f800ba8        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_common.o)
+                0x3f800ba8                bookeeping_data
+ COMMON         0x3f800bac      0x148 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_mqx.o)
+                0x3f800bac                cm_ptr
+                0x3f800bb0                lwevent_buffer_queued
+                0x3f800cd0                lwevent_buffer_freed
+ *fill*         0x3f800cf4        0x4 
+ COMMON         0x3f800cf8       0x40 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_bsp.o)
+                0x3f800cf8                systimer
+                0x3f800d38                . = ALIGN (0x8)
+                0x3f800d38                _bss_end = .
 
-.kernel_data    0x3f800d30        0x0
-                0x3f800d30                __KERNEL_DATA_START = ALIGN (0x10)
+.kernel_data    0x3f800d40        0x0
+                0x3f800d40                __KERNEL_DATA_START = ALIGN (0x10)
 OUTPUT(gcc_arm/ram_release/m4_slave.elf elf32-littlearm)
 
-.debug_info     0x00000000    0x550f2
- .debug_info    0x00000000     0x1951 ./gcc_arm/ram_release/obj/actuators.o
- .debug_info    0x00001951     0x1627 ./gcc_arm/ram_release/obj/arm.o
- .debug_info    0x00002f78      0xc4e ./gcc_arm/ram_release/obj/canopen.o
- .debug_info    0x00003bc6      0xe0f ./gcc_arm/ram_release/obj/common.o
- .debug_info    0x000049d5      0x42d ./gcc_arm/ram_release/obj/fault.o
- .debug_info    0x00004e02      0x8ca ./gcc_arm/ram_release/obj/i510.o
- .debug_info    0x000056cc     0x13e0 ./gcc_arm/ram_release/obj/lenze.o
- .debug_info    0x00006aac      0xf16 ./gcc_arm/ram_release/obj/main.o
- .debug_info    0x000079c2      0xbe5 ./gcc_arm/ram_release/obj/mccClass.o
- .debug_info    0x000085a7      0xeaf ./gcc_arm/ram_release/obj/pd4.o
- .debug_info    0x00009456     0x1021 ./gcc_arm/ram_release/obj/ser240.o
- .debug_info    0x0000a477      0xe48 ./gcc_arm/ram_release/obj/slave_can.o
- .debug_info    0x0000b2bf     0x1a9f ./gcc_arm/ram_release/obj/trx.o
- .debug_info    0x0000cd5e      0x293 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(mqx_main.o)
- .debug_info    0x0000cff1      0x2a6 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(mqx_init.o)
- .debug_info    0x0000d297     0x1005 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(lwgpio_vgpio.o)
- .debug_info    0x0000e29c      0x10b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(vectors.o)
- .debug_info    0x0000e3a7     0x12fa /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_driver.o)
- .debug_info    0x0000f6a1      0xb07 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_int.o)
- .debug_info    0x000101a8     0x1a04 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_hal.o)
- .debug_info    0x00011bac     0x1841 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_gpio.o)
- .debug_info    0x000133ed      0x382 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_pntf.o)
- .debug_info    0x0001376f     0x2886 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(task.o)
- .debug_info    0x00015ff5      0x519 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(stack_de.o)
- .debug_info    0x0001650e     0x1637 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(lwevent.o)
- .debug_info    0x00017b45      0xfc4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_ghand.o)
- .debug_info    0x00018b09     0x135f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(sched.o)
- .debug_info    0x00019e68      0x357 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fflsh.o)
- .debug_info    0x0001a1bf      0x830 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_dopr.o)
- .debug_info    0x0001a9ef       0xbb /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(dispatch.o)
- .debug_info    0x0001aaaa      0xa20 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(cortex.o)
- .debug_info    0x0001b4ca     0x132c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(taskq.o)
- .debug_info    0x0001c7f6     0x1747 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mqx.o)
- .debug_info    0x0001df3d     0x15d3 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(lwsem.o)
- .debug_info    0x0001f510      0x43f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(queue.o)
- .debug_info    0x0001f94f     0x11ac /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(sc_irdyq.o)
- .debug_info    0x00020afb      0x395 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_ioctl.o)
- .debug_info    0x00020e90     0x2587 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mem.o)
- .debug_info    0x00023417     0x2498 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(time.o)
- .debug_info    0x000258af     0x104a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tinm.o)
- .debug_info    0x000268f9       0xb7 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(boot.o)
- .debug_info    0x000269b0      0x384 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_read.o)
- .debug_info    0x00026d34      0x139 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mat3.o)
- .debug_info    0x00026e6d     0x1250 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fopen.o)
- .debug_info    0x000280bd     0x14ec /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(int.o)
- .debug_info    0x000295a9     0x10c7 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tisu.o)
- .debug_info    0x0002a670      0x1d0 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mat1.o)
- .debug_info    0x0002a840      0x425 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(nvic.o)
- .debug_info    0x0002ac65      0x363 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fputc.o)
- .debug_info    0x0002afc8      0x190 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tiol.o)
- .debug_info    0x0002b158      0x81e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(stack_bu.o)
- .debug_info    0x0002b976      0x366 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_write.o)
- .debug_info    0x0002bcdc      0x381 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(comp.o)
- .debug_info    0x0002c05d     0x1044 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_usti.o)
- .debug_info    0x0002d0a1     0x17af /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mutex.o)
- .debug_info    0x0002e850      0x380 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fseek.o)
- .debug_info    0x0002ebd0      0x43e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_spr.o)
- .debug_info    0x0002f00e     0x1002 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(inittask.o)
- .debug_info    0x00030010     0x115b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tims.o)
- .debug_info    0x0003116b      0xfc3 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(idletask.o)
- .debug_info    0x0003212e       0xe8 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(irouter_vybrid.o)
- .debug_info    0x00032216     0x1034 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_seti.o)
- .debug_info    0x0003324a      0x617 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fp.o)
- .debug_info    0x00033861     0x106d /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mstiq.o)
- .debug_info    0x000348ce      0x24c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mat2.o)
- .debug_info    0x00034b1a     0x1044 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_msti.o)
- .debug_info    0x00035b5e     0x1050 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tiad.o)
- .debug_info    0x00036bae      0xa0e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_api.o)
- .debug_info    0x000375bc      0x4fd /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_common.o)
- .debug_info    0x00037ab9      0x508 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_mqx.o)
- .debug_info    0x00037fc1     0x120d /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_vf600.o)
- .debug_info    0x000391ce     0x1c8a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_hw.o)
- .debug_info    0x0003ae58     0x1cfe /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_bsp.o)
- .debug_info    0x0003cb56       0xcf /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_core_mutex.o)
- .debug_info    0x0003cc25      0x798 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(hwtimer_systick.o)
- .debug_info    0x0003d3bd      0x459 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_dma.o)
- .debug_info    0x0003d816      0x363 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_sai.o)
- .debug_info    0x0003db79     0x10f2 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(bsp_cm.o)
- .debug_info    0x0003ec6b      0x4f9 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_sci.o)
- .debug_info    0x0003f164       0xfd /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_esdhc.o)
- .debug_info    0x0003f261      0xb7a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi.o)
- .debug_info    0x0003fddb      0x807 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(core_mutex_sema4.o)
- .debug_info    0x000405e2      0x99a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(dma.o)
- .debug_info    0x00040f7c      0x464 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_spi.o)
- .debug_info    0x000413e0      0x9ca /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(hwtimer_vybrid_m4.o)
- .debug_info    0x00041daa     0x1c77 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sai_dma_ksai.o)
- .debug_info    0x00043a21      0xfb2 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(io_sinit.o)
- .debug_info    0x000449d3     0x1187 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_int_kuart.o)
- .debug_info    0x00045b5a      0x34f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(core_mutex.o)
- .debug_info    0x00045ea9      0xecb /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_pol_kuart.o)
- .debug_info    0x00046d74      0x164 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_i2c.o)
- .debug_info    0x00046ed8     0x11fd /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(esdhc.o)
- .debug_info    0x000480d5      0x755 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(hwtimer.o)
- .debug_info    0x0004882a      0x8eb /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_pol_qi2c.o)
- .debug_info    0x00049115      0x86e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_int_qi2c.o)
- .debug_info    0x00049983      0x887 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sai_int.o)
- .debug_info    0x0004a20a     0x164f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(edma.o)
- .debug_info    0x0004b859      0x759 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_int.o)
- .debug_info    0x0004bfb2      0x764 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_pol.o)
- .debug_info    0x0004c716      0xea5 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi_dspi_dma.o)
- .debug_info    0x0004d5bb      0x74a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(edma_vybrid_m4.o)
- .debug_info    0x0004dd05      0x625 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(esdhc_vf65gs10_m4.o)
- .debug_info    0x0004e32a      0x8fc /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_pol.o)
- .debug_info    0x0004ec26      0x297 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sema4_vybrid.o)
- .debug_info    0x0004eebd      0x66b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi_vybrid_m4.o)
- .debug_info    0x0004f528      0x3d3 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sai_vf65gs10.o)
- .debug_info    0x0004f8fb      0x3d2 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi_dspi_common.o)
- .debug_info    0x0004fccd      0x475 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_vybrid.o)
- .debug_info    0x00050142      0xb29 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_int.o)
- .debug_info    0x00050c6b      0x569 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_qi2c_vybrid_m4.o)
- .debug_info    0x000511d4     0x129b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_instx.o)
- .debug_info    0x0005246f       0xe4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_iinit.o)
- .debug_info    0x00052553      0x168 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mem_copy.o)
- .debug_info    0x000526bb      0x373 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(int_vtab.o)
- .debug_info    0x00052a2e      0x384 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_inst.o)
- .debug_info    0x00052db2      0x3bd /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(cache.o)
- .debug_info    0x0005316f      0xfd2 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_init.o)
- .debug_info    0x00054141      0xfb1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(int_inst.o)
+.debug_info     0x00000000    0x55100
+ .debug_info    0x00000000     0x1953 ./gcc_arm/ram_release/obj/actuators.o
+ .debug_info    0x00001953     0x1629 ./gcc_arm/ram_release/obj/arm.o
+ .debug_info    0x00002f7c      0xc4e ./gcc_arm/ram_release/obj/canopen.o
+ .debug_info    0x00003bca      0xe0f ./gcc_arm/ram_release/obj/common.o
+ .debug_info    0x000049d9      0x42d ./gcc_arm/ram_release/obj/fault.o
+ .debug_info    0x00004e06      0x8ca ./gcc_arm/ram_release/obj/i510.o
+ .debug_info    0x000056d0     0x13e2 ./gcc_arm/ram_release/obj/lenze.o
+ .debug_info    0x00006ab2      0xf18 ./gcc_arm/ram_release/obj/main.o
+ .debug_info    0x000079ca      0xbe5 ./gcc_arm/ram_release/obj/mccClass.o
+ .debug_info    0x000085af      0xeaf ./gcc_arm/ram_release/obj/pd4.o
+ .debug_info    0x0000945e     0x1023 ./gcc_arm/ram_release/obj/ser240.o
+ .debug_info    0x0000a481      0xe4a ./gcc_arm/ram_release/obj/slave_can.o
+ .debug_info    0x0000b2cb     0x1aa1 ./gcc_arm/ram_release/obj/trx.o
+ .debug_info    0x0000cd6c      0x293 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(mqx_main.o)
+ .debug_info    0x0000cfff      0x2a6 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(mqx_init.o)
+ .debug_info    0x0000d2a5     0x1005 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(lwgpio_vgpio.o)
+ .debug_info    0x0000e2aa      0x10b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(vectors.o)
+ .debug_info    0x0000e3b5     0x12fa /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_driver.o)
+ .debug_info    0x0000f6af      0xb07 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_int.o)
+ .debug_info    0x000101b6     0x1a04 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_hal.o)
+ .debug_info    0x00011bba     0x1841 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_gpio.o)
+ .debug_info    0x000133fb      0x382 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_pntf.o)
+ .debug_info    0x0001377d     0x2886 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(task.o)
+ .debug_info    0x00016003      0x519 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(stack_de.o)
+ .debug_info    0x0001651c     0x1637 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(lwevent.o)
+ .debug_info    0x00017b53      0xfc4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_ghand.o)
+ .debug_info    0x00018b17     0x135f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(sched.o)
+ .debug_info    0x00019e76      0x357 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fflsh.o)
+ .debug_info    0x0001a1cd      0x830 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_dopr.o)
+ .debug_info    0x0001a9fd       0xbb /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(dispatch.o)
+ .debug_info    0x0001aab8      0xa20 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(cortex.o)
+ .debug_info    0x0001b4d8     0x132c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(taskq.o)
+ .debug_info    0x0001c804     0x1747 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mqx.o)
+ .debug_info    0x0001df4b     0x15d3 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(lwsem.o)
+ .debug_info    0x0001f51e      0x43f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(queue.o)
+ .debug_info    0x0001f95d     0x11ac /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(sc_irdyq.o)
+ .debug_info    0x00020b09      0x395 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_ioctl.o)
+ .debug_info    0x00020e9e     0x2587 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mem.o)
+ .debug_info    0x00023425     0x2498 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(time.o)
+ .debug_info    0x000258bd     0x104a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tinm.o)
+ .debug_info    0x00026907       0xb7 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(boot.o)
+ .debug_info    0x000269be      0x384 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_read.o)
+ .debug_info    0x00026d42      0x139 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mat3.o)
+ .debug_info    0x00026e7b     0x1250 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fopen.o)
+ .debug_info    0x000280cb     0x14ec /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(int.o)
+ .debug_info    0x000295b7     0x10c7 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tisu.o)
+ .debug_info    0x0002a67e      0x1d0 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mat1.o)
+ .debug_info    0x0002a84e      0x425 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(nvic.o)
+ .debug_info    0x0002ac73      0x363 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fputc.o)
+ .debug_info    0x0002afd6      0x190 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tiol.o)
+ .debug_info    0x0002b166      0x81e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(stack_bu.o)
+ .debug_info    0x0002b984      0x366 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_write.o)
+ .debug_info    0x0002bcea      0x381 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(comp.o)
+ .debug_info    0x0002c06b     0x1044 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_usti.o)
+ .debug_info    0x0002d0af     0x17af /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mutex.o)
+ .debug_info    0x0002e85e      0x380 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fseek.o)
+ .debug_info    0x0002ebde      0x43e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_spr.o)
+ .debug_info    0x0002f01c     0x1002 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(inittask.o)
+ .debug_info    0x0003001e     0x115b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tims.o)
+ .debug_info    0x00031179      0xfc3 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(idletask.o)
+ .debug_info    0x0003213c       0xe8 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(irouter_vybrid.o)
+ .debug_info    0x00032224     0x1034 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_seti.o)
+ .debug_info    0x00033258      0x617 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fp.o)
+ .debug_info    0x0003386f     0x106d /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mstiq.o)
+ .debug_info    0x000348dc      0x24c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mat2.o)
+ .debug_info    0x00034b28     0x1044 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_msti.o)
+ .debug_info    0x00035b6c     0x1050 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tiad.o)
+ .debug_info    0x00036bbc      0xa0e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_api.o)
+ .debug_info    0x000375ca      0x4fd /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_common.o)
+ .debug_info    0x00037ac7      0x508 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_mqx.o)
+ .debug_info    0x00037fcf     0x120d /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_vf600.o)
+ .debug_info    0x000391dc     0x1c8a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_hw.o)
+ .debug_info    0x0003ae66     0x1cfe /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_bsp.o)
+ .debug_info    0x0003cb64       0xcf /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_core_mutex.o)
+ .debug_info    0x0003cc33      0x798 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(hwtimer_systick.o)
+ .debug_info    0x0003d3cb      0x459 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_dma.o)
+ .debug_info    0x0003d824      0x363 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_sai.o)
+ .debug_info    0x0003db87     0x10f2 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(bsp_cm.o)
+ .debug_info    0x0003ec79      0x4f9 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_sci.o)
+ .debug_info    0x0003f172       0xfd /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_esdhc.o)
+ .debug_info    0x0003f26f      0xb7a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi.o)
+ .debug_info    0x0003fde9      0x807 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(core_mutex_sema4.o)
+ .debug_info    0x000405f0      0x99a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(dma.o)
+ .debug_info    0x00040f8a      0x464 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_spi.o)
+ .debug_info    0x000413ee      0x9ca /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(hwtimer_vybrid_m4.o)
+ .debug_info    0x00041db8     0x1c77 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sai_dma_ksai.o)
+ .debug_info    0x00043a2f      0xfb2 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(io_sinit.o)
+ .debug_info    0x000449e1     0x1187 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_int_kuart.o)
+ .debug_info    0x00045b68      0x34f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(core_mutex.o)
+ .debug_info    0x00045eb7      0xecb /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_pol_kuart.o)
+ .debug_info    0x00046d82      0x164 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_i2c.o)
+ .debug_info    0x00046ee6     0x11fd /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(esdhc.o)
+ .debug_info    0x000480e3      0x755 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(hwtimer.o)
+ .debug_info    0x00048838      0x8eb /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_pol_qi2c.o)
+ .debug_info    0x00049123      0x86e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_int_qi2c.o)
+ .debug_info    0x00049991      0x887 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sai_int.o)
+ .debug_info    0x0004a218     0x164f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(edma.o)
+ .debug_info    0x0004b867      0x759 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_int.o)
+ .debug_info    0x0004bfc0      0x764 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_pol.o)
+ .debug_info    0x0004c724      0xea5 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi_dspi_dma.o)
+ .debug_info    0x0004d5c9      0x74a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(edma_vybrid_m4.o)
+ .debug_info    0x0004dd13      0x625 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(esdhc_vf65gs10_m4.o)
+ .debug_info    0x0004e338      0x8fc /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_pol.o)
+ .debug_info    0x0004ec34      0x297 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sema4_vybrid.o)
+ .debug_info    0x0004eecb      0x66b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi_vybrid_m4.o)
+ .debug_info    0x0004f536      0x3d3 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sai_vf65gs10.o)
+ .debug_info    0x0004f909      0x3d2 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi_dspi_common.o)
+ .debug_info    0x0004fcdb      0x475 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_vybrid.o)
+ .debug_info    0x00050150      0xb29 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_int.o)
+ .debug_info    0x00050c79      0x569 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_qi2c_vybrid_m4.o)
+ .debug_info    0x000511e2     0x129b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_instx.o)
+ .debug_info    0x0005247d       0xe4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_iinit.o)
+ .debug_info    0x00052561      0x168 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mem_copy.o)
+ .debug_info    0x000526c9      0x373 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(int_vtab.o)
+ .debug_info    0x00052a3c      0x384 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_inst.o)
+ .debug_info    0x00052dc0      0x3bd /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(cache.o)
+ .debug_info    0x0005317d      0xfd2 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_init.o)
+ .debug_info    0x0005414f      0xfb1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(int_inst.o)
 
-.debug_abbrev   0x00000000     0xadc7
- .debug_abbrev  0x00000000      0x2ad ./gcc_arm/ram_release/obj/actuators.o
- .debug_abbrev  0x000002ad      0x348 ./gcc_arm/ram_release/obj/arm.o
- .debug_abbrev  0x000005f5      0x1c3 ./gcc_arm/ram_release/obj/canopen.o
- .debug_abbrev  0x000007b8      0x2df ./gcc_arm/ram_release/obj/common.o
- .debug_abbrev  0x00000a97      0x108 ./gcc_arm/ram_release/obj/fault.o
- .debug_abbrev  0x00000b9f      0x15e ./gcc_arm/ram_release/obj/i510.o
- .debug_abbrev  0x00000cfd      0x320 ./gcc_arm/ram_release/obj/lenze.o
- .debug_abbrev  0x0000101d      0x281 ./gcc_arm/ram_release/obj/main.o
- .debug_abbrev  0x0000129e      0x191 ./gcc_arm/ram_release/obj/mccClass.o
- .debug_abbrev  0x0000142f      0x1d5 ./gcc_arm/ram_release/obj/pd4.o
- .debug_abbrev  0x00001604      0x24e ./gcc_arm/ram_release/obj/ser240.o
- .debug_abbrev  0x00001852      0x264 ./gcc_arm/ram_release/obj/slave_can.o
- .debug_abbrev  0x00001ab6      0x362 ./gcc_arm/ram_release/obj/trx.o
- .debug_abbrev  0x00001e18       0xc1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(mqx_main.o)
- .debug_abbrev  0x00001ed9       0xcf /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(mqx_init.o)
- .debug_abbrev  0x00001fa8      0x1e8 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(lwgpio_vgpio.o)
- .debug_abbrev  0x00002190       0x83 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(vectors.o)
- .debug_abbrev  0x00002213      0x228 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_driver.o)
- .debug_abbrev  0x0000243b      0x237 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_int.o)
- .debug_abbrev  0x00002672      0x1db /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_hal.o)
- .debug_abbrev  0x0000284d      0x219 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_gpio.o)
- .debug_abbrev  0x00002a66       0xdf /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_pntf.o)
- .debug_abbrev  0x00002b45      0x2dd /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(task.o)
- .debug_abbrev  0x00002e22       0xd9 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(stack_de.o)
- .debug_abbrev  0x00002efb      0x1f0 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(lwevent.o)
- .debug_abbrev  0x000030eb      0x141 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_ghand.o)
- .debug_abbrev  0x0000322c      0x241 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(sched.o)
- .debug_abbrev  0x0000346d       0xd3 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fflsh.o)
- .debug_abbrev  0x00003540      0x18c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_dopr.o)
- .debug_abbrev  0x000036cc       0x14 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(dispatch.o)
- .debug_abbrev  0x000036e0       0xa0 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(cortex.o)
- .debug_abbrev  0x00003780      0x19b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(taskq.o)
- .debug_abbrev  0x0000391b      0x283 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mqx.o)
- .debug_abbrev  0x00003b9e      0x1be /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(lwsem.o)
- .debug_abbrev  0x00003d5c      0x172 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(queue.o)
- .debug_abbrev  0x00003ece      0x177 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(sc_irdyq.o)
- .debug_abbrev  0x00004045       0xd3 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_ioctl.o)
- .debug_abbrev  0x00004118      0x236 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mem.o)
- .debug_abbrev  0x0000434e      0x2d6 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(time.o)
- .debug_abbrev  0x00004624      0x157 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tinm.o)
- .debug_abbrev  0x0000477b       0x14 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(boot.o)
- .debug_abbrev  0x0000478f       0xe2 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_read.o)
- .debug_abbrev  0x00004871       0x8f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mat3.o)
- .debug_abbrev  0x00004900      0x148 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fopen.o)
- .debug_abbrev  0x00004a48      0x252 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(int.o)
- .debug_abbrev  0x00004c9a      0x185 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tisu.o)
- .debug_abbrev  0x00004e1f       0xca /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mat1.o)
- .debug_abbrev  0x00004ee9      0x113 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(nvic.o)
- .debug_abbrev  0x00004ffc       0xe2 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fputc.o)
- .debug_abbrev  0x000050de       0xca /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tiol.o)
- .debug_abbrev  0x000051a8      0x12d /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(stack_bu.o)
- .debug_abbrev  0x000052d5       0xd3 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_write.o)
- .debug_abbrev  0x000053a8      0x1b4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(comp.o)
- .debug_abbrev  0x0000555c      0x14e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_usti.o)
- .debug_abbrev  0x000056aa      0x1f5 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mutex.o)
- .debug_abbrev  0x0000589f       0xc4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fseek.o)
- .debug_abbrev  0x00005963      0x12f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_spr.o)
- .debug_abbrev  0x00005a92      0x156 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(inittask.o)
- .debug_abbrev  0x00005be8      0x183 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tims.o)
- .debug_abbrev  0x00005d6b      0x13f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(idletask.o)
- .debug_abbrev  0x00005eaa       0x75 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(irouter_vybrid.o)
- .debug_abbrev  0x00005f1f      0x13f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_seti.o)
- .debug_abbrev  0x0000605e      0x10f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fp.o)
- .debug_abbrev  0x0000616d      0x15b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mstiq.o)
- .debug_abbrev  0x000062c8       0xca /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mat2.o)
- .debug_abbrev  0x00006392      0x14e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_msti.o)
- .debug_abbrev  0x000064e0      0x15d /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tiad.o)
- .debug_abbrev  0x0000663d      0x1e4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_api.o)
- .debug_abbrev  0x00006821      0x16c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_common.o)
- .debug_abbrev  0x0000698d      0x1c1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_mqx.o)
- .debug_abbrev  0x00006b4e      0x118 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_vf600.o)
- .debug_abbrev  0x00006c66      0x173 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_hw.o)
- .debug_abbrev  0x00006dd9      0x206 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_bsp.o)
- .debug_abbrev  0x00006fdf       0x69 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_core_mutex.o)
- .debug_abbrev  0x00007048      0x230 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(hwtimer_systick.o)
- .debug_abbrev  0x00007278       0xb7 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_dma.o)
- .debug_abbrev  0x0000732f       0xb0 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_sai.o)
- .debug_abbrev  0x000073df      0x2a8 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(bsp_cm.o)
- .debug_abbrev  0x00007687       0x90 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_sci.o)
- .debug_abbrev  0x00007717       0x69 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_esdhc.o)
- .debug_abbrev  0x00007780      0x1b2 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi.o)
- .debug_abbrev  0x00007932      0x203 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(core_mutex_sema4.o)
- .debug_abbrev  0x00007b35      0x195 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(dma.o)
- .debug_abbrev  0x00007cca       0xd5 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_spi.o)
- .debug_abbrev  0x00007d9f      0x149 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(hwtimer_vybrid_m4.o)
- .debug_abbrev  0x00007ee8      0x353 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sai_dma_ksai.o)
- .debug_abbrev  0x0000823b      0x130 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(io_sinit.o)
- .debug_abbrev  0x0000836b      0x24c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_int_kuart.o)
- .debug_abbrev  0x000085b7       0xf1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(core_mutex.o)
- .debug_abbrev  0x000086a8      0x261 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_pol_kuart.o)
- .debug_abbrev  0x00008909       0x69 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_i2c.o)
- .debug_abbrev  0x00008972      0x2fd /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(esdhc.o)
- .debug_abbrev  0x00008c6f      0x16e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(hwtimer.o)
- .debug_abbrev  0x00008ddd      0x217 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_pol_qi2c.o)
- .debug_abbrev  0x00008ff4      0x237 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_int_qi2c.o)
- .debug_abbrev  0x0000922b      0x162 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sai_int.o)
- .debug_abbrev  0x0000938d      0x31e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(edma.o)
- .debug_abbrev  0x000096ab      0x141 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_int.o)
- .debug_abbrev  0x000097ec      0x141 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_pol.o)
- .debug_abbrev  0x0000992d      0x249 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi_dspi_dma.o)
- .debug_abbrev  0x00009b76       0xf2 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(edma_vybrid_m4.o)
- .debug_abbrev  0x00009c68       0xfa /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(esdhc_vf65gs10_m4.o)
- .debug_abbrev  0x00009d62      0x181 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_pol.o)
- .debug_abbrev  0x00009ee3       0xc1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sema4_vybrid.o)
- .debug_abbrev  0x00009fa4      0x121 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi_vybrid_m4.o)
- .debug_abbrev  0x0000a0c5       0xf3 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sai_vf65gs10.o)
- .debug_abbrev  0x0000a1b8      0x139 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi_dspi_common.o)
- .debug_abbrev  0x0000a2f1      0x107 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_vybrid.o)
- .debug_abbrev  0x0000a3f8      0x18e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_int.o)
- .debug_abbrev  0x0000a586       0xf7 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_qi2c_vybrid_m4.o)
- .debug_abbrev  0x0000a67d      0x150 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_instx.o)
- .debug_abbrev  0x0000a7cd       0x68 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_iinit.o)
- .debug_abbrev  0x0000a835       0x78 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mem_copy.o)
- .debug_abbrev  0x0000a8ad       0xf5 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(int_vtab.o)
- .debug_abbrev  0x0000a9a2       0xb7 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_inst.o)
- .debug_abbrev  0x0000aa59      0x10c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(cache.o)
- .debug_abbrev  0x0000ab65      0x132 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_init.o)
- .debug_abbrev  0x0000ac97      0x130 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(int_inst.o)
+.debug_abbrev   0x00000000     0xad49
+ .debug_abbrev  0x00000000      0x298 ./gcc_arm/ram_release/obj/actuators.o
+ .debug_abbrev  0x00000298      0x333 ./gcc_arm/ram_release/obj/arm.o
+ .debug_abbrev  0x000005cb      0x1c3 ./gcc_arm/ram_release/obj/canopen.o
+ .debug_abbrev  0x0000078e      0x2df ./gcc_arm/ram_release/obj/common.o
+ .debug_abbrev  0x00000a6d      0x108 ./gcc_arm/ram_release/obj/fault.o
+ .debug_abbrev  0x00000b75      0x15e ./gcc_arm/ram_release/obj/i510.o
+ .debug_abbrev  0x00000cd3      0x30b ./gcc_arm/ram_release/obj/lenze.o
+ .debug_abbrev  0x00000fde      0x26c ./gcc_arm/ram_release/obj/main.o
+ .debug_abbrev  0x0000124a      0x191 ./gcc_arm/ram_release/obj/mccClass.o
+ .debug_abbrev  0x000013db      0x1d5 ./gcc_arm/ram_release/obj/pd4.o
+ .debug_abbrev  0x000015b0      0x24e ./gcc_arm/ram_release/obj/ser240.o
+ .debug_abbrev  0x000017fe      0x24f ./gcc_arm/ram_release/obj/slave_can.o
+ .debug_abbrev  0x00001a4d      0x34d ./gcc_arm/ram_release/obj/trx.o
+ .debug_abbrev  0x00001d9a       0xc1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(mqx_main.o)
+ .debug_abbrev  0x00001e5b       0xcf /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(mqx_init.o)
+ .debug_abbrev  0x00001f2a      0x1e8 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(lwgpio_vgpio.o)
+ .debug_abbrev  0x00002112       0x83 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(vectors.o)
+ .debug_abbrev  0x00002195      0x228 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_driver.o)
+ .debug_abbrev  0x000023bd      0x237 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_int.o)
+ .debug_abbrev  0x000025f4      0x1db /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_hal.o)
+ .debug_abbrev  0x000027cf      0x219 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_gpio.o)
+ .debug_abbrev  0x000029e8       0xdf /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_pntf.o)
+ .debug_abbrev  0x00002ac7      0x2dd /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(task.o)
+ .debug_abbrev  0x00002da4       0xd9 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(stack_de.o)
+ .debug_abbrev  0x00002e7d      0x1f0 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(lwevent.o)
+ .debug_abbrev  0x0000306d      0x141 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_ghand.o)
+ .debug_abbrev  0x000031ae      0x241 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(sched.o)
+ .debug_abbrev  0x000033ef       0xd3 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fflsh.o)
+ .debug_abbrev  0x000034c2      0x18c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_dopr.o)
+ .debug_abbrev  0x0000364e       0x14 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(dispatch.o)
+ .debug_abbrev  0x00003662       0xa0 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(cortex.o)
+ .debug_abbrev  0x00003702      0x19b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(taskq.o)
+ .debug_abbrev  0x0000389d      0x283 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mqx.o)
+ .debug_abbrev  0x00003b20      0x1be /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(lwsem.o)
+ .debug_abbrev  0x00003cde      0x172 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(queue.o)
+ .debug_abbrev  0x00003e50      0x177 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(sc_irdyq.o)
+ .debug_abbrev  0x00003fc7       0xd3 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_ioctl.o)
+ .debug_abbrev  0x0000409a      0x236 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mem.o)
+ .debug_abbrev  0x000042d0      0x2d6 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(time.o)
+ .debug_abbrev  0x000045a6      0x157 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tinm.o)
+ .debug_abbrev  0x000046fd       0x14 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(boot.o)
+ .debug_abbrev  0x00004711       0xe2 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_read.o)
+ .debug_abbrev  0x000047f3       0x8f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mat3.o)
+ .debug_abbrev  0x00004882      0x148 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fopen.o)
+ .debug_abbrev  0x000049ca      0x252 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(int.o)
+ .debug_abbrev  0x00004c1c      0x185 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tisu.o)
+ .debug_abbrev  0x00004da1       0xca /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mat1.o)
+ .debug_abbrev  0x00004e6b      0x113 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(nvic.o)
+ .debug_abbrev  0x00004f7e       0xe2 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fputc.o)
+ .debug_abbrev  0x00005060       0xca /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tiol.o)
+ .debug_abbrev  0x0000512a      0x12d /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(stack_bu.o)
+ .debug_abbrev  0x00005257       0xd3 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_write.o)
+ .debug_abbrev  0x0000532a      0x1b4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(comp.o)
+ .debug_abbrev  0x000054de      0x14e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_usti.o)
+ .debug_abbrev  0x0000562c      0x1f5 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mutex.o)
+ .debug_abbrev  0x00005821       0xc4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fseek.o)
+ .debug_abbrev  0x000058e5      0x12f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_spr.o)
+ .debug_abbrev  0x00005a14      0x156 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(inittask.o)
+ .debug_abbrev  0x00005b6a      0x183 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tims.o)
+ .debug_abbrev  0x00005ced      0x13f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(idletask.o)
+ .debug_abbrev  0x00005e2c       0x75 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(irouter_vybrid.o)
+ .debug_abbrev  0x00005ea1      0x13f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_seti.o)
+ .debug_abbrev  0x00005fe0      0x10f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fp.o)
+ .debug_abbrev  0x000060ef      0x15b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mstiq.o)
+ .debug_abbrev  0x0000624a       0xca /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mat2.o)
+ .debug_abbrev  0x00006314      0x14e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_msti.o)
+ .debug_abbrev  0x00006462      0x15d /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tiad.o)
+ .debug_abbrev  0x000065bf      0x1e4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_api.o)
+ .debug_abbrev  0x000067a3      0x16c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_common.o)
+ .debug_abbrev  0x0000690f      0x1c1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_mqx.o)
+ .debug_abbrev  0x00006ad0      0x118 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_vf600.o)
+ .debug_abbrev  0x00006be8      0x173 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_hw.o)
+ .debug_abbrev  0x00006d5b      0x206 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_bsp.o)
+ .debug_abbrev  0x00006f61       0x69 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_core_mutex.o)
+ .debug_abbrev  0x00006fca      0x230 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(hwtimer_systick.o)
+ .debug_abbrev  0x000071fa       0xb7 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_dma.o)
+ .debug_abbrev  0x000072b1       0xb0 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_sai.o)
+ .debug_abbrev  0x00007361      0x2a8 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(bsp_cm.o)
+ .debug_abbrev  0x00007609       0x90 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_sci.o)
+ .debug_abbrev  0x00007699       0x69 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_esdhc.o)
+ .debug_abbrev  0x00007702      0x1b2 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi.o)
+ .debug_abbrev  0x000078b4      0x203 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(core_mutex_sema4.o)
+ .debug_abbrev  0x00007ab7      0x195 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(dma.o)
+ .debug_abbrev  0x00007c4c       0xd5 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_spi.o)
+ .debug_abbrev  0x00007d21      0x149 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(hwtimer_vybrid_m4.o)
+ .debug_abbrev  0x00007e6a      0x353 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sai_dma_ksai.o)
+ .debug_abbrev  0x000081bd      0x130 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(io_sinit.o)
+ .debug_abbrev  0x000082ed      0x24c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_int_kuart.o)
+ .debug_abbrev  0x00008539       0xf1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(core_mutex.o)
+ .debug_abbrev  0x0000862a      0x261 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_pol_kuart.o)
+ .debug_abbrev  0x0000888b       0x69 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_i2c.o)
+ .debug_abbrev  0x000088f4      0x2fd /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(esdhc.o)
+ .debug_abbrev  0x00008bf1      0x16e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(hwtimer.o)
+ .debug_abbrev  0x00008d5f      0x217 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_pol_qi2c.o)
+ .debug_abbrev  0x00008f76      0x237 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_int_qi2c.o)
+ .debug_abbrev  0x000091ad      0x162 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sai_int.o)
+ .debug_abbrev  0x0000930f      0x31e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(edma.o)
+ .debug_abbrev  0x0000962d      0x141 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_int.o)
+ .debug_abbrev  0x0000976e      0x141 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_pol.o)
+ .debug_abbrev  0x000098af      0x249 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi_dspi_dma.o)
+ .debug_abbrev  0x00009af8       0xf2 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(edma_vybrid_m4.o)
+ .debug_abbrev  0x00009bea       0xfa /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(esdhc_vf65gs10_m4.o)
+ .debug_abbrev  0x00009ce4      0x181 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_pol.o)
+ .debug_abbrev  0x00009e65       0xc1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sema4_vybrid.o)
+ .debug_abbrev  0x00009f26      0x121 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi_vybrid_m4.o)
+ .debug_abbrev  0x0000a047       0xf3 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sai_vf65gs10.o)
+ .debug_abbrev  0x0000a13a      0x139 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi_dspi_common.o)
+ .debug_abbrev  0x0000a273      0x107 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_vybrid.o)
+ .debug_abbrev  0x0000a37a      0x18e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_int.o)
+ .debug_abbrev  0x0000a508       0xf7 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_qi2c_vybrid_m4.o)
+ .debug_abbrev  0x0000a5ff      0x150 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_instx.o)
+ .debug_abbrev  0x0000a74f       0x68 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_iinit.o)
+ .debug_abbrev  0x0000a7b7       0x78 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mem_copy.o)
+ .debug_abbrev  0x0000a82f       0xf5 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(int_vtab.o)
+ .debug_abbrev  0x0000a924       0xb7 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_inst.o)
+ .debug_abbrev  0x0000a9db      0x10c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(cache.o)
+ .debug_abbrev  0x0000aae7      0x132 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_init.o)
+ .debug_abbrev  0x0000ac19      0x130 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(int_inst.o)
 
 .debug_loc      0x00000000    0x1e6e8
  .debug_loc     0x00000000      0x39e ./gcc_arm/ram_release/obj/actuators.o

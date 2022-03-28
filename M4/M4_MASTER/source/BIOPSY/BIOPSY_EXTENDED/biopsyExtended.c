@@ -154,9 +154,15 @@ void BIOPSY_manageDriverConnectedStatus(void){
     // Determina la posizione di dislocazione dell'asse X
     dati[_BP_EXT_ASSEX_POSITION] = generalConfiguration.biopsyCfg.extendedConf.statusH &0x3;
 
+    // Chiede sempre la posizione del cuneo
+    if(!BiopsyDriverGetSH(&generalConfiguration.biopsyCfg.SH)) return;
+    dati[_BP_EXT_SHL] = (unsigned char) (generalConfiguration.biopsyCfg.SH & 0x00FF);
+    dati[_BP_EXT_SHH] = (unsigned char) (generalConfiguration.biopsyCfg.SH >> 8);
 
     static unsigned short old_needle = 0;
-    if(slot==0){
+    switch(slot){
+    case 0:
+
         // Gestione needle
         if(!BiopsyDriverGetNeedle(&generalConfiguration.biopsyCfg.adapterId)) return;
 
@@ -177,12 +183,13 @@ void BIOPSY_manageDriverConnectedStatus(void){
             old_needle = generalConfiguration.biopsyCfg.adapterId;
         }
 
-    }else if(slot==2){
+        break;
+    case 1:
         // Acquisisce posizione attuale
         if(!BiopsyDriverGetX(&generalConfiguration.biopsyCfg.X)) return;
         if(!BiopsyDriverGetY(&generalConfiguration.biopsyCfg.Y)) return;
         if(!BiopsyDriverGetZ(&generalConfiguration.biopsyCfg.Z)) return;
-        if(!BiopsyDriverGetSH(&generalConfiguration.biopsyCfg.SH)) return;
+
 
         dati[_BP_EXT_XL] = (unsigned char) (generalConfiguration.biopsyCfg.X & 0x00FF);
         dati[_BP_EXT_XH] = (unsigned char) (generalConfiguration.biopsyCfg.X >> 8);
@@ -190,18 +197,17 @@ void BIOPSY_manageDriverConnectedStatus(void){
         dati[_BP_EXT_YH] = (unsigned char) (generalConfiguration.biopsyCfg.Y >> 8);
         dati[_BP_EXT_ZL] = (unsigned char) (generalConfiguration.biopsyCfg.Z & 0x00FF);
         dati[_BP_EXT_ZH] = (unsigned char) (generalConfiguration.biopsyCfg.Z >> 8);
-        dati[_BP_EXT_SHL] = (unsigned char) (generalConfiguration.biopsyCfg.SH & 0x00FF);
-        dati[_BP_EXT_SHH] = (unsigned char) (generalConfiguration.biopsyCfg.SH >> 8);
-
-    }else if(slot==3){
-
+        break;
+    case 2:
         // Scrittura dello stepval
         if(!BiopsyDriverSetStepVal(generalConfiguration.biopsyCfg.extendedConf.stepVal, 0 ));
+        break;
+
     }
 
     // Tutto OK
     slot++;
-    if(slot>3) slot = 0;
+    if(slot>2) slot = 0;
     timer_stat = 2000 /_BYM_CONNECTED_STAT_DELAY;
 
     // Gestione comandi posizionatore

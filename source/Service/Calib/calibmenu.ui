@@ -124,7 +124,7 @@ border: 0px;</string>
    <widget class="QPushButton" name="CompressionCalibButton">
     <property name="geometry">
      <rect>
-      <x>240</x>
+      <x>190</x>
       <y>110</y>
       <width>120</width>
       <height>120</height>
@@ -141,7 +141,7 @@ border: 0px;</string>
    <widget class="QPushButton" name="FilterCalibButton">
     <property name="geometry">
      <rect>
-      <x>440</x>
+      <x>340</x>
       <y>110</y>
       <width>120</width>
       <height>120</height>
@@ -175,7 +175,7 @@ border: 0px;</string>
    <widget class="QPushButton" name="TiltCalibButton">
     <property name="geometry">
      <rect>
-      <x>640</x>
+      <x>510</x>
       <y>110</y>
       <width>120</width>
       <height>120</height>
@@ -248,6 +248,24 @@ background-image:url(//transparent.png);</string>
     <property name="styleSheet">
      <string notr="true">border-image:url(://Service_Calib/Service_Calib/parking.png);
 background-image:url(//transparent.png);</string>
+    </property>
+    <property name="text">
+     <string notr="true"/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ExtendedBiopsyCalibButton">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>110</y>
+      <width>120</width>
+      <height>120</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/Service_Calib/Service_Calib/biop_extended_calib_icon.png);
+
+</string>
     </property>
     <property name="text">
      <string notr="true"/>

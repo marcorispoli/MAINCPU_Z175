@@ -44,6 +44,7 @@ CalibMenu::CalibMenu(int rotview, QWidget *parent) :
     connect(ui->lenzePotCalibButton,SIGNAL(released()),this,SLOT(onLenzePotCalibButton()),Qt::UniqueConnection);
     connect(ui->parkingCalibButton,SIGNAL(released()),this,SLOT(onParkingCalibButton()),Qt::UniqueConnection);
     connect(ui->colliCalibButton,SIGNAL(released()),this,SLOT(onColliCalibButton()),Qt::UniqueConnection);
+    connect(ui->ExtendedBiopsyCalibButton,SIGNAL(released()),this,SLOT(onExtendedBiopsyCalibButton()),Qt::UniqueConnection);
 
 
 }
@@ -173,6 +174,15 @@ void CalibMenu::onColliCalibButton(void)
 {
 
         GWindowRoot.setNewPage(_PG_SERVICE_CALIB_COLLI,GWindowRoot.curPage,0);
+}
+
+void CalibMenu::onExtendedBiopsyCalibButton(void)
+{
+    if(!pBiopsy->connected) return;
+    if(pBiopsy->model != BYM_EXTENDED_DEVICE) return;
+
+
+    GWindowRoot.setNewPage(_PG_SERVICE_CALIB_EXTENDED_BIOPSY,GWindowRoot.curPage,0);
 }
 
 
