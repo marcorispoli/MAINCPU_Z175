@@ -4691,7 +4691,8 @@ void console::handleBiopsyExtendedMoveXYZ(protoConsole* frame, protoConsole* ans
 
 /*
     Comando di impostazione (con attivazione) della Home:
-    Parametro: [L/C/R] Left / Center / Right [0/90]
+    Parametro1: [L/C/R] Left / Center / Right
+    Parametro2: [0/90/CALIB]Posizionatore o comando di visualizzazione cursore per calibrazione
 
     Risposta:
         -> OK 0 Già in posizione;
@@ -4717,9 +4718,20 @@ void console::handleBiopsyExtendedMoveHome(protoConsole* frame, protoConsole* an
         return;
     }
 
+    if(frame->parametri[1] == "0"){
+        ApplicationDatabase.setData(_DB_BIOP_SHOW_SH, (unsigned char) 0);
+    }else if(frame->parametri[1] == "90"){
+        ApplicationDatabase.setData(_DB_BIOP_SHOW_SH, (unsigned char) 0);
+    }else{
+        // Abilita la visualizzazione del cursore
+        ApplicationDatabase.setData(_DB_BIOP_SHOW_SH, (unsigned char) 1);
+    }
+
 
     if(pBiopsyExtended->requestBiopsyHome(frame->id,lat,frame->parametri[0].toInt() )==0) emit consoleTxHandler(answer->answToQByteArray("OK 0"));
     else  emit consoleTxHandler(answer->answToQByteArray("OK 255"));
+
+
 
     return;
 }

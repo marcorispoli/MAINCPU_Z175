@@ -157,6 +157,7 @@ void BiopsyExtendedPage::InitBiopsyPage(void)
     // Inizializza visualizzazione del puntatore
     ApplicationDatabase.setData(_DB_BIOP_SHOW_SH, (unsigned char) 0);
 
+
     // Discrimina fra modalità frustoli e standard
     if(ApplicationDatabase.getDataI(_DB_ACCESSORIO_COLLIMATORE) == COLLI_ACCESSORIO_FRUSTOLI){
         specimenMode = true;
@@ -428,6 +429,7 @@ void BiopsyExtendedPage::valueChanged(int index,int opt)
         setArmAngolo();
         break;
 
+    case _DB_BIOP_SHOW_SH:
     case _DB_BIOP_UNLOCK_BUTTON:
     case _DB_BIOP_LAT_X:
     case _DB_BIOP_ADAPTER_ID:
@@ -572,6 +574,8 @@ void BiopsyExtendedPage::updateCursorPointer(void){
 void BiopsyExtendedPage::updateBiopsyView(void){
     // int adapter = ApplicationDatabase.getDataI(_DB_BIOP_ADAPTER_ID);
     unsigned char cursor_enabled = ApplicationDatabase.getDataU(_DB_BIOP_SHOW_SH);
+
+
 
     // Se il bottone di sblocco è premuto ha la precedenza
     if(ApplicationDatabase.getDataI(_DB_BIOP_UNLOCK_BUTTON)){

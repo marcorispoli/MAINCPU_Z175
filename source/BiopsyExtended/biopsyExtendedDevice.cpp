@@ -783,8 +783,6 @@ void biopsyExtendedDevice::manageRequestErrors(int error){
 int biopsyExtendedDevice::requestBiopsyHome(int id, unsigned char lat, int rot_holder){
     QString activationString;
 
-    // Disabilita la visualizzazione del cursore
-    ApplicationDatabase.setData(_DB_BIOP_SHOW_SH, (unsigned char) 0);
 
     req_rot_holder = rot_holder;
     req_home_lat = lat;
