@@ -89,9 +89,9 @@ public:
     #define _BIOPSY_MOVING_INCY             9
 
     int  movingError;
-    #define _BIOPSY_MOVING_NO_ERROR         0    
-    #define _BIOPSY_MOVING_ERROR_TIMEOUT    1
-    #define _BIOPSY_MOVING_ERROR_TARGET     2
+    #define _BIOPSY_MOVING_NO_ERROR         0        
+    #define _BIOPSY_MOVING_ERROR_TARGET     1
+    #define _BIOPSY_MOVING_ERROR_TIMEOUT    2
     #define _BIOPSY_MOVING_ERROR_BUSY       3
     #define _BIOPSY_MOVING_UNDEFINED_ERROR  4 // Il codice sequenza non corrisponde. E' un problema software
 

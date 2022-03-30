@@ -725,7 +725,7 @@ void PageAlarms::createMessageList(void){
     classitem.errlist.clear();
 
     erritem.codestr = QString("00001");
-    erritem.codeval = _BIOPSY_MOVING_ERROR_TIMEOUT;
+    erritem.codeval = _BIOPSY_MOVING_ERROR_TARGET;
     erritem.errmsg  = QString(QApplication::translate("ERRORE-BIOPSIA","BIOPSIA:ERRORE MOVIMENTO CURSORE", 0, QApplication::UnicodeUTF8));
     erritem.errpix =  QPixmap(ERR_PIX);
     erritem.errdescr= QString("The cursor  didn't complete the activation properly");
@@ -754,6 +754,7 @@ void PageAlarms::createMessageList(void){
 
 
     errors.replace(_DB_ALLARMI_BIOPSIA-FIRST_ALR_CLASS,classitem);
+
 
     //___________________________________________________________________________________________________________________________________________________________________
 

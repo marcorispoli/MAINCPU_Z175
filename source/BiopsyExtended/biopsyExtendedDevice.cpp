@@ -590,6 +590,7 @@ void biopsyExtendedDevice::manageHomeSequence(void){
         isHome = true;
 
         // Notifica di fine movimento
+        movingError = 0;
         if(pBiopsy->activationId) pToConsole->endCommandAck(pBiopsy->activationId, movingError);
         pBiopsy->activationId = 0;
         GWindowRoot.setNewPage(GWindowRoot.parentPage,GWindowRoot.curPage,0);
