@@ -10,13 +10,17 @@
 #define _PRINT_SERVICE_PORT  10010
 
 //                              INDIRIZZI DI RETE DEL SISTEMA
-#define _CONSOLE_IN_PORT        10002 // Ricezione comandi da Console
-#define _CONSOLE_OUT_PORT       10003 // Invio Notifiche a console
-#define _CONSOLE_ERROR_PORT     10004 // Invio messaggi Popup a Console
-#define _CONSOLE_LOG_PORT       10005 // Invio messaggi di log a Console
-#define _CONFIG_SLAVE_IN_PORT   10007 // POrta su GUI SLAVE di ricezione comandi da Master
-#define _ECHO_PORT              10001 // Protocollo ECHO su entrambi Master/Slave
-#define _AWS_OUT_PORT           10010 // Porta servizio a basso livello con il PC per Power On Off
+#define _CONSOLE_IN_PORT            10002 // Ricezione comandi da Console
+#define _CONSOLE_OUT_PORT           10003 // Invio Notifiche a console
+#define _CONSOLE_ERROR_PORT         10004 // Invio messaggi Popup a Console
+#define _CONSOLE_LOG_PORT           10005 // Invio messaggi di log a Console
+#define _CONFIG_SLAVE_IN_PORT       10007 // POrta su GUI SLAVE di ricezione comandi da Master
+#define _ECHO_PORT                  10001 // Protocollo ECHO su entrambi Master/Slave
+#define _AWS_OUT_PORT               10010 // Porta servizio a basso livello con il PC per Power On Off
+
+#define _DIAGNOSTIC_CMD_PORT        10011 // Porta dedicata alla diagnostica remota  per ricezione comandi
+#define _DIAGNOSTIC_EVENT_PORT      10012 // Porta dedicata alla diagnostica remota per comunicazione eventi
+
 
 // Definizione standard Unicode per i messaggi di protocollo esterni(da e per console)
 // ATTENZIONE, EFFETTUARE UN CLEAN DEL PROGETTO SE SI CAMBIA QUESTA DEFINE

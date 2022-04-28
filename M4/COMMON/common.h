@@ -147,6 +147,8 @@ typedef struct
     unsigned char  statusH;        // Registro di stato H
     unsigned char  stepVal;        // Quantità di dm per step
 
+    bool power_led;                // Stato di accensione del led di potenza
+
 }biopsyStatExtended_Str;
 
 typedef struct

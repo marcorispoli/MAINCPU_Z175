@@ -1792,6 +1792,12 @@ void mccBiopsyCmd(void)
   case _MCC_EXT_BIOPSY_CMD_SET_BUZZER:
       BiopsyDriverSetBuzzer();
       break;
+
+  case _MCC_EXT_BIOPSY_CMD_SET_POWERLED:
+      if(mcc_cmd.buffer[1]) generalConfiguration.biopsyCfg.extendedConf.power_led = true;
+      else generalConfiguration.biopsyCfg.extendedConf.power_led = false;
+
+      break;
   }
 
   return;

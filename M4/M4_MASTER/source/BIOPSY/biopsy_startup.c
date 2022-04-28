@@ -31,6 +31,7 @@ void BIOPSY_driver(uint32_t taskRegisters)
 
     // Configurazione Biopsia Estesa    
     generalConfiguration.biopsyCfg.extendedConf.stepVal = 10; // Default = 10
+    generalConfiguration.biopsyCfg.extendedConf.power_led = false; // Power led spento
 
     // Attende la configurazione del sistema prima di procedere
     while(generalConfiguration.deviceConfigOk==FALSE) _time_delay(1000);

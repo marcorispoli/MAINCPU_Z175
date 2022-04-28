@@ -4017,6 +4017,8 @@ void serverDebug::handleExtendedBiopsy(QByteArray data)
         serviceTcp->txData(QByteArray("moveXYZ   x,y,z       ? X,Y,Z in dmm \r\n"));
         serviceTcp->txData(QByteArray("moveHome  [L,C,R]     ? Imposta lateralità \r\n"));
         serviceTcp->txData(QByteArray("testBuzzer            ? attiva buzzer BYM X\r\n"));
+        serviceTcp->txData(QByteArray("powerLed  ON|OFF      ? attiva Power led\r\n"));
+
 
         serviceTcp->txData(QByteArray("--------------- INQUIRY ----------------------------\r\n"));
         serviceTcp->txData(QByteArray("getAdapter            ? legge adapter rilevato \r\n"));
@@ -4116,6 +4118,15 @@ void serverDebug::handleExtendedBiopsy(QByteArray data)
             serviceTcp->txData(stringa.toAscii().data());
         }else if(data.contains("testBuzzer")){
             pBiopsyExtended->setBuzzer();
+            serviceTcp->txData(QByteArray("DONE \r\n"));
+        }else if(data.contains("powerLed")){
+            parametri = getNextFieldsAfterTag(data, QString("powerLed"));
+            if(parametri.size()!=1){
+                serviceTcp->txData(QByteArray("PARAM ERROR: powerLed ON or OFF \r\n"));
+                return;
+            }
+            if(parametri[0]=="ON") pBiopsyExtended->setPowerled(true);
+            else pBiopsyExtended->setPowerled(false);
             serviceTcp->txData(QByteArray("DONE \r\n"));
         }else handleBiopsySimulator(data);
     }

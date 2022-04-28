@@ -45,6 +45,7 @@ tiltingtool* pTiltingTool;
 armtool* pArmTool;
 lenzetool* pLenzeTool;
 invertertool* pInverterTool;
+diagnosticInterface* pDiagnosticInterface;
 
 /*
  *
@@ -304,6 +305,7 @@ int main(int argc, char *argv[])
         pConsole =      new console();
         pToConsole =    new protoToConsole();
         pDebug =        new serverDebug();
+        pDiagnosticInterface = new diagnosticInterface();
 
     }else
     {// SLAVE
@@ -386,6 +388,7 @@ int main(int argc, char *argv[])
         pConsole->activateConnections();
         pToConsole->activateConnections();
         pDebug->activateConnections();
+        pDiagnosticInterface->activateConnections();
         pInfo->activateConnections();
 
 

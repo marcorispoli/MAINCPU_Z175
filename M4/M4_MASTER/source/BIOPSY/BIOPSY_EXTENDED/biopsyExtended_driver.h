@@ -25,6 +25,7 @@ ext bool BiopsyDriverGetStat(unsigned char* statL, unsigned char* statH, bool re
 ext bool BiopsyDriverGetRevision(unsigned char* val);
 ext bool BiopsyDriverGetChecksum(unsigned char* chkl, unsigned char* chkh);
 ext bool BiopsyDriverReset(void);
+ext bool BiopsyDriverSetPowerLed(bool stat);
 
 
 // Needle

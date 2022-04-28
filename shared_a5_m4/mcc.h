@@ -295,6 +295,8 @@ typedef enum
 #define _MCC_EXT_BIOPSY_CMD_SET_STEPVAL 9
 #define _MCC_EXT_BIOPSY_CMD_SET_ZLIMIT  10
 #define _MCC_EXT_BIOPSY_CMD_SET_BUZZER  11
+#define _MCC_EXT_BIOPSY_CMD_SET_POWERLED 12
+
 
 //____________________________________________________________
 // CODICI COMANDI SIMULATORE DI BIOPSIA SE COMPILATO

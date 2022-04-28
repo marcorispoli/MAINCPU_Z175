@@ -26,8 +26,9 @@ public:
     int setStepVal(unsigned char step);
     unsigned char getLatX(void);
     unsigned char getAdapterId(void);
-    void  setBuzzer(void);
 
+    void  setBuzzer(void);
+    void  setPowerled(bool stat);
 
     #define _DEF_TIMEOUT_USER_FEEDBACK  300 // 100ms unit
 

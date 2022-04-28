@@ -547,6 +547,21 @@ PageAlarms::_alarmStruct* PageAlarms::getErrorInfo(int code){
     return 0;
 }
 
+// Restituisce la struttura errore associata al codice
+QString PageAlarms::getErrorCode(int classe, int code ){
+
+    unsigned short index=classe-FIRST_ALR_CLASS;
+    if(index>=errors.size()) return 0;
+
+    for(int i=0; i<errors[index].errlist.size(); i++){
+        if(code == errors[index].errlist[i].codeval){
+            return errors[index].errlist[i].codestr;
+        }
+    }
+
+    return "";
+}
+
 
 /*__________________________________________________________________________________________________________________
  *          ATTIVAZIONE/DISATTIVAZIONE DI UN ALLARME NON AUTORIPRISTINABILE

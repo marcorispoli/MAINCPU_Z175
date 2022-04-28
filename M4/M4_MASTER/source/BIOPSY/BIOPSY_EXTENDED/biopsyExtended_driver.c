@@ -54,6 +54,35 @@ bool BiopsyDriverGetStat(unsigned char* statL, unsigned char* statH, bool reset)
 }
 
 /*
+   SET_POWER_LED()
+   - reset: clear resettable status flags
+*/
+bool BiopsyDriverSetPowerLed(bool stat)
+{
+    unsigned char rx_buffer[4];
+    unsigned char tx_buffer[4];
+
+    tx_buffer[0] = 0x8D;
+    tx_buffer[1] = 0x2;
+    if(stat) tx_buffer[2] = 0x1;
+    else tx_buffer[2] = 0;
+
+#ifdef __BIOPSY_SIMULATOR
+    sim_serialCommand(tx_buffer,rx_buffer);
+#else
+    Ser422SendRaw(tx_buffer[0], tx_buffer[1], tx_buffer[2], rx_buffer, 5);
+#endif
+
+
+  if(rx_buffer[0]==tx_buffer[0])
+  {
+      return TRUE;
+  }
+
+  return FALSE;
+}
+
+/*
    GET_REVISION()
 */
 bool BiopsyDriverGetRevision(unsigned char* val)

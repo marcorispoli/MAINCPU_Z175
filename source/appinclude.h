@@ -22,5 +22,6 @@
 #include "biopsymodule.h"
 #include "loader.h"
 #include "print.h"
+#include "diagnostic.h"
 
 #endif // APPINCLUDE_H

@@ -156,6 +156,7 @@ class PageAlarms : public GWindow
 
 
         void createMessageList(void);
+        QString getErrorCode(int classe, int code );
 
     public slots:
         void valueChanged(int,int); // Link esterno alla fonte dei contenuti dei campi valore

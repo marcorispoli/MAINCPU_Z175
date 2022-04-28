@@ -1254,3 +1254,14 @@ void  biopsyExtendedDevice::setBuzzer(void){
     pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_CMD,1,data,1);
 
 }
+
+void  biopsyExtendedDevice::setPowerled(bool stat){
+    unsigned char data[2];
+
+    data[0]=_MCC_EXT_BIOPSY_CMD_SET_POWERLED; // Codice comando
+    if(stat) data[1]=1;
+    else data[1]=0;
+    pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_CMD,1,data,2);
+
+}
+

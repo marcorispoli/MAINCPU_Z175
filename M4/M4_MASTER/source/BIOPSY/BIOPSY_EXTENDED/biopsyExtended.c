@@ -201,6 +201,9 @@ void BIOPSY_manageDriverConnectedStatus(void){
     case 2:
         // Scrittura dello stepval
         if(!BiopsyDriverSetStepVal(generalConfiguration.biopsyCfg.extendedConf.stepVal, 0 ));
+
+        // Scrittura del power led
+        BiopsyDriverSetPowerLed(generalConfiguration.biopsyCfg.extendedConf.power_led);
         break;
 
     }
