@@ -57,7 +57,7 @@ biopsyExtendedDevice::biopsyExtendedDevice(int rotview, QWidget *parent) :
 
     // Solo il Master gestisce il device
     if(!isMaster) return;
-
+    calibrationMode = false;
 
 
     // Inizializzazione sequenze
@@ -861,11 +861,11 @@ void biopsyExtendedDevice::onConfirmButton(void){
 
 // Calibrates the shaft value
 // Return dmm offset over the 0 point
-int biopsyExtendedDevice::calibrateSh(void){
+int biopsyExtendedDevice::calibrateSh(ushort sh,ushort sh_m15, ushort sh_p15, ushort sh0){
 
 
-    float k = (float) 300 / (float) (pBiopsy->configExt.sh_150_level - pBiopsy->configExt.sh_m150_level);
-    float  val = (((float) curSh_dmm  - (float) pBiopsy->configExt.sh_zero_level) * k);
+    float k = (float) 300 / (float) (sh_p15 - sh_m15);
+    float  val = (((float) sh  - (float) sh0) * k);
     return - (int) val ;
 }
 
@@ -945,16 +945,18 @@ void biopsyExtendedDevice::mccStatNotify(unsigned char id_notify,unsigned char c
     curX_dmm = data.at(_BP_EXT_XL) + 256 * data.at(_BP_EXT_XH) ;
     curY_dmm = data.at(_BP_EXT_YL) + 256 * data.at(_BP_EXT_YH) ;
     curZ_dmm = data.at(_BP_EXT_ZL) + 256 * data.at(_BP_EXT_ZH) ;
-    curSh_dmm= data.at(_BP_EXT_SHL) + 256 * data.at(_BP_EXT_SHH) ;
-    int calibratedSh = calibrateSh();
-    if( (calibratedSh > bCalibratedSh + 5) || (calibratedSh < bCalibratedSh - 5)){
+    curSh_raw = data.at(_BP_EXT_SHL) + 256 * data.at(_BP_EXT_SHH) ;
+    curSh_dmm = calibrateSh(curSh_raw, pBiopsy->configExt.sh_m150_level, pBiopsy->configExt.sh_150_level, pBiopsy->configExt.sh_zero_level);
+
+
+    if( (curSh_dmm > bCalibratedSh + 5) || (curSh_dmm < bCalibratedSh - 5)){
         update_aws = true;
-        bCalibratedSh = calibratedSh;
+        bCalibratedSh = curSh_dmm;
     }
     ApplicationDatabase.setData(_DB_BIOP_X,(int) curX_dmm,0);
     ApplicationDatabase.setData(_DB_BIOP_Y,(int) curY_dmm,0);
     ApplicationDatabase.setData(_DB_BIOP_Z,(int) curZ_dmm,0);
-    ApplicationDatabase.setData(_DB_BIOP_SH,(int) calibratedSh,0);
+    ApplicationDatabase.setData(_DB_BIOP_SH,(int) curSh_dmm,0);
 
 
     if(bp_motion!=data.at(_BP_EXT_MOTION)){

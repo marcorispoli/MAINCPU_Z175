@@ -73,6 +73,7 @@ HEADERS += \
     source/print.h \
     source/Service/Calib/calibColli.h \
     source/Service/Calib/calibParking.h \
+    source/Service/Calib/calibBiopsyExtended.h \
     source/BiopsyExtended/biopsyExtendedPage.h \
     source/BiopsyExtended/biopsyExtendedDevice.h \
     source/BiopsyStandard/biopsyStandardPage.h \
@@ -129,6 +130,7 @@ SOURCES += \
     source/print.cpp \
     source/Service/Calib/calibColli.cpp \
     source/Service/Calib/calibParking.cpp \
+    source/Service/Calib/calibBiopsyExtended.cpp \
     source/BiopsyExtended/biopsyExtendedPage.cpp \
     source/BiopsyExtended/biopsyExtendedDevice.cpp \
     source/BiopsyStandard/biopsyStandardPage.cpp \
@@ -159,6 +161,7 @@ FORMS += \
     source/Service/Tools/inverter.ui \
     source/Service/Calib/calibColli.ui \
     source/Service/Calib/calibParking.ui \
+    source/Service/Calib/calibBiopsyExtended.ui \
     source/BiopsyExtended/biopsy.ui
 
 

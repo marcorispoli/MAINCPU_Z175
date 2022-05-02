@@ -16,6 +16,7 @@
 #include "Service/Calib/calibParking.h"
 #include "Service/Calib/calibstarter.h"
 #include "Service/Calib/calibColli.h"
+#include "Service/Calib/calibBiopsyExtended.h"
 #include "Service/Setup/system.h"
 #include "Service/Tools/toolsmenu.h"
 #include "Service/Tools/tiltingtool.h"
@@ -40,6 +41,7 @@ calibpot* pCalibPot;
 calibParking* pCalibParking;
 calibstarter* pCalibStarter;
 calibColli* pCalibColli;
+CalibBiopsyExtendedClass* pCalibBiopsyExtended;
 toolsmenu* pToolsMenu;
 tiltingtool* pTiltingTool;
 armtool* pArmTool;
@@ -352,6 +354,7 @@ int main(int argc, char *argv[])
     pCalibParking = new calibParking(rotView) ;
     pCalibColli = new calibColli(rotView) ;
     pCalibStarter = new calibstarter(rotView) ;
+    pCalibBiopsyExtended = new CalibBiopsyExtendedClass(rotView) ;
     pToolsMenu = new toolsmenu(rotView) ;
     pTiltingTool = new tiltingtool(rotView) ;
     pArmTool = new armtool(rotView) ;

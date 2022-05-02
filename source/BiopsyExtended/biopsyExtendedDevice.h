@@ -65,6 +65,8 @@ public slots:
 
     void onConfirmButton(void);
 
+    int calibrateSh(ushort sh,ushort sh_m15, ushort sh_p15, ushort sh0);
+
 public:
     Ui::biopsyUI *ui;
     QGraphicsScene *scene;
@@ -74,6 +76,8 @@ public:
     int rotview;
     void initPage(void);
     void exitPage(void);
+
+    bool calibrationMode;
 
     // Comandi in corso
     int movingCommand;  // Codice comando in esecuzione
@@ -101,6 +105,7 @@ public:
     unsigned short curX_dmm;    // (0.1mm) Posizione corrente X
     unsigned short curY_dmm;    // (0.1mm) Posizione corrente Y
     unsigned short curZ_dmm;    // (0.1mm) Posizione corrente Z
+    unsigned short curSh_raw;   // cursor dac level
     unsigned short curSh_dmm;   // (0.1mm) Posizione corrente Sh
     unsigned char  curLatX;     // Posizione dislocazione asse X
 
@@ -223,7 +228,7 @@ private:
     void manageChangeHomeSeq(int sub_seq,int param1, int param2);
     void manageChangeMoveXYZSeq(int sub_seq,int param1, int param2);
     void hideFrames(void);
-    int calibrateSh(void);
+
 
     // Movimenti su tre assi
     int moveXYZ(unsigned short X, unsigned short Y, unsigned short Z); // Chiede il movimento sui tre assi
