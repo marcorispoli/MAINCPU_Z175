@@ -22,8 +22,6 @@ public:
     typedef enum {
         _BUTT_SELECT_CALIB_CURSOR = 0,
         _BUTT_SELECT_CALIB_X,
-        _BUTT_SELECT_CALIB_Y,
-        _BUTT_SELECT_CALIB_Z,
 
         _BUTT_CURSOR_START,
         _BUTT_CURSOR_CANCEL,
@@ -36,23 +34,12 @@ public:
         _BUTT_X_STORE,
         _BUTT_X_NEXT,
 
-        _BUTT_Y_START,
-        _BUTT_Y_CANCEL,
-        _BUTT_Y_STORE,
-        _BUTT_Y_NEXT,
-
-        _BUTT_Z_START,
-        _BUTT_Z_CANCEL,
-        _BUTT_Z_STORE,
-        _BUTT_Z_NEXT,
-
     }_ButtonEnumeration;
+
     typedef enum {
         _BIOPCAL_FRAME_MENU = 0,
         _BIOPCAL_FRAME_CURSOR,
         _BIOPCAL_FRAME_X,
-        _BIOPCAL_FRAME_Y,
-        _BIOPCAL_FRAME_Z,
         _BIOPCAL_CURSOR_FRAME_ERROR,
     }_WorkingFrame;
 
@@ -66,8 +53,6 @@ public slots:
 
     void onCursorMenuButton(void);
     void onXMenuButton(void);
-    void onYMenuButton(void);
-    void onZMenuButton(void);
 
     void onCursorCancelButton(void);
     void onCursorNextButton(void);
@@ -79,15 +64,6 @@ public slots:
     void onXStartButton(void);
     void onXStoreButton(void);
 
-    void onYCancelButton(void);
-    void onYNextButton(void);
-    void onYStartButton(void);
-    void onYStoreButton(void);
-
-    void onZCancelButton(void);
-    void onZNextButton(void);
-    void onZStartButton(void);
-    void onZStoreButton(void);
 
 private:
     Ui::CalibBiopsyExtended *ui;
@@ -105,7 +81,7 @@ private:
     uchar   workingFrame;
 
     // Cursor calibration variables
-    ushort     rawSh;
+    int        rawSh;
     ushort     SH_M15;
     ushort     SH_P15;
     ushort     SH_0;
@@ -113,8 +89,6 @@ private:
 
     void CursorSequenceHandler(uchar seq);
     void XSequenceHandler(uchar seq);
-    void YSequenceHandler(uchar seq);
-    void ZSequenceHandler(uchar seq);
 
     bool cursorStore(void);
     int  cursor_errcode;

@@ -4109,7 +4109,7 @@ void serverDebug::handleExtendedBiopsy(QByteArray data)
         }else if(data.contains("getAdapter")){
             serviceTcp->txData(QString("current adapter: %1\n\r").arg(pBiopsyExtended->getAdapterId()).toAscii().data());
         }else if(data.contains("getSignals")){
-            QString stringa = QString("SIGNALS: X:%1, Y:%2, Z:%3, SH:%4\r\n").arg(pBiopsyExtended->curX_dmm).arg(pBiopsyExtended->curY_dmm).arg(pBiopsyExtended->curZ_dmm).arg(pBiopsyExtended->curSh_dmm);
+            QString stringa = QString("SIGNALS: X:%1, Y:%2, Z:%3, SHR:%4, SH:%5\r\n").arg(pBiopsyExtended->curX_dmm).arg(pBiopsyExtended->curY_dmm).arg(pBiopsyExtended->curZ_dmm).arg(pBiopsyExtended->curSh_raw).arg(pBiopsyExtended->curSh_dmm);
             serviceTcp->txData(stringa.toAscii().data());
         }else if(data.contains("getRevision")){
             serviceTcp->txData(QString("current revision: %1\n\r").arg(pBiopsy->revisione).toAscii().data());

@@ -392,5 +392,8 @@
         <file>BiopsyExtended/BiopsyExecX.png</file>
         <file>BiopsyExtended/BiopsyExecY.png</file>
         <file>BiopsyExtended/BiopsyExecZ.png</file>
+        <file>BiopsyExtended/LampAuto.png</file>
+        <file>BiopsyExtended/LampDisabled.png</file>
+        <file>BiopsyExtended/LampOn.png</file>
     </qresource>
 </RCC>

@@ -106,7 +106,7 @@ public:
     unsigned short curY_dmm;    // (0.1mm) Posizione corrente Y
     unsigned short curZ_dmm;    // (0.1mm) Posizione corrente Z
     unsigned short curSh_raw;   // cursor dac level
-    unsigned short curSh_dmm;   // (0.1mm) Posizione corrente Sh
+    int curSh_dmm;   // (0.1mm) Posizione corrente Sh
     unsigned char  curLatX;     // Posizione dislocazione asse X
 
 

@@ -864,7 +864,7 @@ void biopsyExtendedDevice::onConfirmButton(void){
 int biopsyExtendedDevice::calibrateSh(ushort sh,ushort sh_m15, ushort sh_p15, ushort sh0){
 
 
-    float k = (float) 300 / (float) (sh_p15 - sh_m15);
+    float k = (float) 300 / (float) (sh_m15 - sh_p15);
     float  val = (((float) sh  - (float) sh0) * k);
     return - (int) val ;
 }

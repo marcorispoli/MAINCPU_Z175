@@ -13,10 +13,9 @@
 #define _BIOPCAL_BUTTON_HANDLER _DB_SERVICE1_INT
 #define _BIOPCAL_CURSOR_SEQUENCE _DB_SERVICE2_INT
 #define _BIOPCAL_X_SEQUENCE _DB_SERVICE3_INT
-#define _BIOPCAL_Y_SEQUENCE _DB_SERVICE4_INT
-#define _BIOPCAL_Z_SEQUENCE _DB_SERVICE5_INT
 #define _BIOCAL_SHRAW_UPDATE  _DB_SERVICE6_INT
 #define _BIOCAL_CURSOR_ERROR  _DB_SERVICE7_INT
+#define _BIOCAL_WORKING_FRAME  _DB_SERVICE8_INT
 
 CalibBiopsyExtendedClass::CalibBiopsyExtendedClass(int rotview, QWidget *parent) :
     QWidget(parent),
@@ -45,8 +44,6 @@ CalibBiopsyExtendedClass::CalibBiopsyExtendedClass(int rotview, QWidget *parent)
 
     connect(ui->CursorMenuButton,SIGNAL(released()),this,SLOT(onCursorMenuButton()),Qt::UniqueConnection);
     connect(ui->XMenuButton,SIGNAL(released()),this,SLOT(onXMenuButton()),Qt::UniqueConnection);
-    connect(ui->YMenuButton,SIGNAL(released()),this,SLOT(onYMenuButton()),Qt::UniqueConnection);
-    connect(ui->ZMenuButton,SIGNAL(released()),this,SLOT(onZMenuButton()),Qt::UniqueConnection);
 
     connect(ui->CursorCancelButton,SIGNAL(released()),this,SLOT(onCursorCancelButton()),Qt::UniqueConnection);
     connect(ui->ButtonCursorErr,SIGNAL(released()),this,SLOT(onCursorCancelButton()),Qt::UniqueConnection);
@@ -59,29 +56,14 @@ CalibBiopsyExtendedClass::CalibBiopsyExtendedClass(int rotview, QWidget *parent)
     connect(ui->XStartButton,SIGNAL(released()),this,SLOT(onXStartButton()),Qt::UniqueConnection);
     connect(ui->XStoreButton,SIGNAL(released()),this,SLOT(onXStoreButton()),Qt::UniqueConnection);
 
-    connect(ui->YCancelButton,SIGNAL(released()),this,SLOT(onYCancelButton()),Qt::UniqueConnection);
-    connect(ui->YNextButton,SIGNAL(released()),this,SLOT(onYNextButton()),Qt::UniqueConnection);
-    connect(ui->YStartButton,SIGNAL(released()),this,SLOT(onYStartButton()),Qt::UniqueConnection);
-    connect(ui->YStoreButton,SIGNAL(released()),this,SLOT(onYStoreButton()),Qt::UniqueConnection);
-
-    connect(ui->ZCancelButton,SIGNAL(released()),this,SLOT(onZCancelButton()),Qt::UniqueConnection);
-    connect(ui->ZNextButton,SIGNAL(released()),this,SLOT(onZNextButton()),Qt::UniqueConnection);
-    connect(ui->ZStartButton,SIGNAL(released()),this,SLOT(onZStartButton()),Qt::UniqueConnection);
-    connect(ui->ZStoreButton,SIGNAL(released()),this,SLOT(onZStoreButton()),Qt::UniqueConnection);
-
-
     ui->BiopsyMenuFrame->setGeometry(0,100,800,380);
     ui->CursorCalibrationFrame->setGeometry(0,100,800,380);
     ui->XCalibrationFrame->setGeometry(0,100,800,380);
-    ui->YCalibrationFrame->setGeometry(0,100,800,380);
-    ui->ZCalibrationFrame->setGeometry(0,100,800,380);
     ui->cursorErrorFrame->setGeometry(215,100,380,260);
 
     ui->BiopsyMenuFrame->hide();
     ui->CursorCalibrationFrame->hide();
     ui->XCalibrationFrame->hide();
-    ui->YCalibrationFrame->hide();
-    ui->ZCalibrationFrame->hide();
     ui->cursorErrorFrame->hide();
 
     seqTimer = 0;
@@ -136,7 +118,7 @@ void CalibBiopsyExtendedClass::initPage(void){
 
     connect(&ApplicationDatabase,SIGNAL(dbDataChanged(int,int)), this,SLOT(valueChanged(int,int)),Qt::UniqueConnection);
 
-    selectionWorkingFrame(_BIOPCAL_FRAME_MENU);
+    ApplicationDatabase.setData(_BIOCAL_WORKING_FRAME,_BIOPCAL_FRAME_MENU, DBase::_DB_FORCE_SGN);
 
     if(!isMaster) return;
 
@@ -189,14 +171,6 @@ void CalibBiopsyExtendedClass::onXMenuButton(void){
     ApplicationDatabase.setData(_BIOPCAL_BUTTON_HANDLER, (int) _BUTT_SELECT_CALIB_X,DBase::_DB_FORCE_SGN);
     return;
 }
-void CalibBiopsyExtendedClass::onYMenuButton(void){
-    ApplicationDatabase.setData(_BIOPCAL_BUTTON_HANDLER, (int) _BUTT_SELECT_CALIB_Y,DBase::_DB_FORCE_SGN);
-    return;
-}
-void CalibBiopsyExtendedClass::onZMenuButton(void){
-    ApplicationDatabase.setData(_BIOPCAL_BUTTON_HANDLER, (int) _BUTT_SELECT_CALIB_Z,DBase::_DB_FORCE_SGN);
-    return;
-}
 
 void CalibBiopsyExtendedClass::onCursorCancelButton(void){
     ApplicationDatabase.setData(_BIOPCAL_BUTTON_HANDLER, (int) _BUTT_CURSOR_CANCEL,DBase::_DB_FORCE_SGN);
@@ -233,68 +207,28 @@ void CalibBiopsyExtendedClass::onXStoreButton(void){
 }
 
 
-void CalibBiopsyExtendedClass::onYCancelButton(void){
-    ApplicationDatabase.setData(_BIOPCAL_BUTTON_HANDLER, (int) _BUTT_Y_CANCEL,DBase::_DB_FORCE_SGN);
-    return;
-}
-void CalibBiopsyExtendedClass::onYNextButton(void){
-    ApplicationDatabase.setData(_BIOPCAL_BUTTON_HANDLER, (int) _BUTT_Y_NEXT,DBase::_DB_FORCE_SGN);
-    return;
-}
-void CalibBiopsyExtendedClass::onYStartButton(void){
-    ApplicationDatabase.setData(_BIOPCAL_BUTTON_HANDLER, (int) _BUTT_Y_START,DBase::_DB_FORCE_SGN);
-    return;
-}
-void CalibBiopsyExtendedClass::onYStoreButton(void){
-    ApplicationDatabase.setData(_BIOPCAL_BUTTON_HANDLER, (int) _BUTT_Y_STORE,DBase::_DB_FORCE_SGN);
-    return;
-}
-
-void CalibBiopsyExtendedClass::onZCancelButton(void){
-    ApplicationDatabase.setData(_BIOPCAL_BUTTON_HANDLER, (int) _BUTT_Z_CANCEL,DBase::_DB_FORCE_SGN);
-    return;
-}
-void CalibBiopsyExtendedClass::onZNextButton(void){
-    ApplicationDatabase.setData(_BIOPCAL_BUTTON_HANDLER, (int) _BUTT_Z_NEXT,DBase::_DB_FORCE_SGN);
-    return;
-}
-void CalibBiopsyExtendedClass::onZStartButton(void){
-    ApplicationDatabase.setData(_BIOPCAL_BUTTON_HANDLER, (int) _BUTT_Z_START,DBase::_DB_FORCE_SGN);
-    return;
-}
-void CalibBiopsyExtendedClass::onZStoreButton(void){
-    ApplicationDatabase.setData(_BIOPCAL_BUTTON_HANDLER, (int) _BUTT_Z_STORE,DBase::_DB_FORCE_SGN);
-    return;
-}
-
 
 void CalibBiopsyExtendedClass::buttonHandler(_ButtonEnumeration button_code){
     uchar cval;
 
     switch(button_code){
     case _BUTT_SELECT_CALIB_CURSOR:
-        selectionWorkingFrame(_BIOPCAL_FRAME_CURSOR);
+        if(isMaster) ApplicationDatabase.setData(_BIOCAL_WORKING_FRAME,(int) _BIOPCAL_FRAME_CURSOR, DBase::_DB_FORCE_SGN);
         break;
     case _BUTT_SELECT_CALIB_X:
-        selectionWorkingFrame(_BIOPCAL_FRAME_X);
-        break;
-    case _BUTT_SELECT_CALIB_Y:
-        selectionWorkingFrame(_BIOPCAL_FRAME_Y);
-        break;
-    case _BUTT_SELECT_CALIB_Z:
-        selectionWorkingFrame(_BIOPCAL_FRAME_Z);
+        if(isMaster) ApplicationDatabase.setData(_BIOCAL_WORKING_FRAME,(int) _BIOPCAL_FRAME_X, DBase::_DB_FORCE_SGN);
         break;
 
     case _BUTT_CURSOR_START:
         if(isMaster) ApplicationDatabase.setData(_BIOPCAL_CURSOR_SEQUENCE,(int) 1, DBase::_DB_FORCE_SGN);
         break;
     case _BUTT_CURSOR_CANCEL:
-        selectionWorkingFrame(_BIOPCAL_FRAME_MENU);
+        if(isMaster) ApplicationDatabase.setData(_BIOCAL_WORKING_FRAME,(int) _BIOPCAL_FRAME_MENU, DBase::_DB_FORCE_SGN);
         break;
     case _BUTT_CURSOR_STORE:
         if(isMaster){
-            if(cursorStore() == true) selectionWorkingFrame(_BIOPCAL_FRAME_MENU);
-            else selectionWorkingFrame(_BIOPCAL_CURSOR_FRAME_ERROR);
+            if(cursorStore() == true) ApplicationDatabase.setData(_BIOCAL_WORKING_FRAME,(int) _BIOPCAL_FRAME_MENU, DBase::_DB_FORCE_SGN);
+            else ApplicationDatabase.setData(_BIOCAL_WORKING_FRAME,(int) _BIOPCAL_CURSOR_FRAME_ERROR, DBase::_DB_FORCE_SGN);
         }
         break;
     case _BUTT_CURSOR_NEXT:
@@ -309,31 +243,12 @@ void CalibBiopsyExtendedClass::buttonHandler(_ButtonEnumeration button_code){
     case _BUTT_X_START:
         break;
     case _BUTT_X_CANCEL:
-        selectionWorkingFrame(_BIOPCAL_FRAME_MENU);
+         if(isMaster) ApplicationDatabase.setData(_BIOCAL_WORKING_FRAME,(int) _BIOPCAL_FRAME_MENU, DBase::_DB_FORCE_SGN);
+
         break;
     case _BUTT_X_STORE:
         break;
     case _BUTT_X_NEXT:
-        break;
-
-    case _BUTT_Y_START:
-        break;
-    case _BUTT_Y_CANCEL:
-        selectionWorkingFrame(_BIOPCAL_FRAME_MENU);
-        break;
-    case _BUTT_Y_STORE:
-        break;
-    case _BUTT_Y_NEXT:
-        break;
-
-    case _BUTT_Z_START:
-        break;
-    case _BUTT_Z_CANCEL:
-        selectionWorkingFrame(_BIOPCAL_FRAME_MENU);
-        break;
-    case _BUTT_Z_STORE:
-        break;
-    case _BUTT_Z_NEXT:
         break;
 
     }
@@ -430,20 +345,12 @@ void CalibBiopsyExtendedClass::CursorSequenceHandler(uchar seq){
 void CalibBiopsyExtendedClass::XSequenceHandler(uchar seq){
 
 }
-void CalibBiopsyExtendedClass::YSequenceHandler(uchar seq){
-
-}
-void CalibBiopsyExtendedClass::ZSequenceHandler(uchar seq){
-
-}
 
 void CalibBiopsyExtendedClass::selectionWorkingFrame(_WorkingFrame working){
     ui->BiopsyMenuFrame->hide();
     ui->CursorCalibrationFrame->hide();
     ui->XCalibrationFrame->hide();
-    ui->YCalibrationFrame->hide();
-    ui->ZCalibrationFrame->hide();
-    ui->CursorCalibrationFrame->hide();
+    ui->cursorErrorFrame->hide();
 
     workingFrame = working;
 
@@ -459,21 +366,10 @@ void CalibBiopsyExtendedClass::selectionWorkingFrame(_WorkingFrame working){
         ui->XCalibrationFrame->show();
         if(isMaster) ApplicationDatabase.setData(_BIOPCAL_X_SEQUENCE,(int) 0, DBase::_DB_FORCE_SGN);
         break;
-    case _BIOPCAL_FRAME_Y:
-        ui->YCalibrationFrame->show();
-        if(isMaster) ApplicationDatabase.setData(_BIOPCAL_Y_SEQUENCE,(int) 0, DBase::_DB_FORCE_SGN);
-        break;
-    case _BIOPCAL_FRAME_Z:
-        ui->ZCalibrationFrame->show();
-        if(isMaster) ApplicationDatabase.setData(_BIOPCAL_Z_SEQUENCE,(int) 0, DBase::_DB_FORCE_SGN);
-        break;
 
      case _BIOPCAL_CURSOR_FRAME_ERROR:
-        ui->CursorCalibrationFrame->show();
-        if(isMaster){
-            ApplicationDatabase.setData(_BIOCAL_CURSOR_ERROR, (int) cursor_errcode);
-
-        }
+        ui->cursorErrorFrame->show();
+        if(isMaster) ApplicationDatabase.setData(_BIOCAL_CURSOR_ERROR, (int) cursor_errcode);
         break;
     }
 }
@@ -482,6 +378,10 @@ void CalibBiopsyExtendedClass::selectionWorkingFrame(_WorkingFrame working){
 void CalibBiopsyExtendedClass::valueChanged(int index,int opt)
 {
     switch(index){
+    case _BIOCAL_WORKING_FRAME:
+        selectionWorkingFrame((_WorkingFrame) ApplicationDatabase.getDataI(index));
+        break;
+
     case _BIOPCAL_BUTTON_HANDLER:
         buttonHandler((_ButtonEnumeration) ApplicationDatabase.getDataI(index));
         break;
@@ -491,27 +391,23 @@ void CalibBiopsyExtendedClass::valueChanged(int index,int opt)
     case _BIOPCAL_X_SEQUENCE:
         XSequenceHandler((_ButtonEnumeration) ApplicationDatabase.getDataI(index));
         break;
-    case _BIOPCAL_Y_SEQUENCE:
-        YSequenceHandler((_ButtonEnumeration) ApplicationDatabase.getDataI(index));
-        break;
-    case _BIOPCAL_Z_SEQUENCE:
-        ZSequenceHandler((_ButtonEnumeration) ApplicationDatabase.getDataI(index));
-        break;
 
     case _BIOCAL_SHRAW_UPDATE:
         rawSh = ApplicationDatabase.getDataI(index);
         if(viewShRaw){
             ui->CursorTitle->setText("DIGITAL SENSOR  VALUE");
+            ui->cursorVal->setText(QString("%1").arg(rawSh));
         }else{
             ui->CursorTitle->setText("CURRENT CURSOR VALUE");
+            ui->cursorVal->setText(QString("%1").arg((int) rawSh));
         }
-        ui->cursorVal->setText(QString("%1").arg(rawSh));
+
         break;
     case _BIOCAL_CURSOR_ERROR:
         int err = ApplicationDatabase.getDataI(index);
-        if(err == 1) ui->CursorErrorLabel->setText("!1 (P15 - M15) > 500");
-        else if(err == 2) ui->CursorErrorLabel->setText("!2 (P0 - M15) > (P15 - M15)/3");
-        else  ui->CursorErrorLabel->setText("!3 (P15 - P0) > (P15 - M15)/3");
+        if(err == 1) ui->CursorErrorLabel->setText("!1 (M15 - P15) < 500");
+        else if(err == 2) ui->CursorErrorLabel->setText("!2 (M15 - P0) < (M15 - P15)/3");
+        else  ui->CursorErrorLabel->setText("!3 (P0 - P15) > (M15 - P15)/3");
         break;
     }
 }
@@ -519,16 +415,17 @@ void CalibBiopsyExtendedClass::valueChanged(int index,int opt)
 bool CalibBiopsyExtendedClass::cursorStore(void){
 
      // Check the sampled values
-     if(SH_P15 - SH_M15 < 500) {
+     if(SH_M15 - SH_P15 < 500) {
          cursor_errcode = 1;
          return false;
      }
-     float D = (SH_P15 - SH_M15) / 3;
-     if(SH_0 < SH_M15 + D){
+
+     float D = (SH_M15 - SH_P15) / 3;
+     if(SH_0 > SH_M15 - D){
          cursor_errcode = 2;
          return false;
      }
-     if(SH_0 > SH_P15 - D){
+     if(SH_0 < SH_P15 + D){
          cursor_errcode = 3;
          return false;
      }

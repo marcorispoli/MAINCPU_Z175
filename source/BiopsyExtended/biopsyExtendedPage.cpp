@@ -82,6 +82,13 @@ BiopsyExtendedPage::BiopsyExtendedPage(bool local, QString bgl, QString bgs , bo
     pulsanteImgOn->setVisible(false);
     pulsanteImgOn->setOptions(DBase::_DB_NO_ECHO); // pulsante utilizzato esclusivamente dal terminale proprietario
 
+    // Pulsante Lampada
+    pulsanteLuceMode  = 2; // Auto
+    powerledAutoOn = false;
+    pulsanteLamp = new GPush((GWindow*) this,QPixmap("://BiopsyExtended/BiopsyExtended/LampAuto.png"), QPixmap("://BiopsyExtended/BiopsyExtended/LampAuto.png"),setPointPath(8,432,340,532,340,532,440,432,440),432,340,0,0);
+    pulsanteLamp->setEnable(true);
+    pulsanteLamp->setVisible(true);
+
     // Simbolo raggi
     xrayPix = addPixmap(QPixmap("://BiopsyExtended/BiopsyExtended/Xray.png"));
     xrayPix->setPos(310,35);
@@ -531,13 +538,17 @@ void BiopsyExtendedPage::buttonActivationNotify(int id, bool status,int opt)
     if(pbutton->parentWindow!=this) return; // Scarta i segnali da altre pagine
 
 
-    // Solo stati attivi
     if(opt&DBase::_DB_NO_ACTION) return; // Questa condizione si impone per evitare rimbalzi da echo
 
     if(pbutton == pulsanteImgOn){
         paginaImmagine->showPage();
         return;
     }
+    if(pbutton == pulsanteLamp){
+        managePulsanteLuce();
+        return;
+    }
+
 
     // Gestione pulsanti di step Z per biopsia
     /*
@@ -706,6 +717,8 @@ void BiopsyExtendedPage::setInfoPanelView(bool stat){
         cursorPix->hide();
         cursorValue->hide();
 
+        powerledAutoOn = false;
+
     }else{
         // Pannello info OFF
         tubeTempValue->hide();
@@ -719,6 +732,46 @@ void BiopsyExtendedPage::setInfoPanelView(bool stat){
         cursorPix->show();
         cursorValue->show();
 
+        powerledAutoOn = true;
+
+
+    }
+    if(isMaster){
+        if(pulsanteLuceMode == 2) managePowerLed();
     }
 
+}
+
+void BiopsyExtendedPage::managePulsanteLuce(void){
+    switch(pulsanteLuceMode){
+    case 0: // Off
+        pulsanteLuceMode = 1;
+        pulsanteLamp->setPix("://BiopsyExtended/BiopsyExtended/LampOn.png","://BiopsyExtended/BiopsyExtended/LampOn.png");
+        break;
+    case 1: // ON
+        pulsanteLuceMode = 2;
+        pulsanteLamp->setPix("://BiopsyExtended/BiopsyExtended/LampAuto.png","://BiopsyExtended/BiopsyExtended/LampAuto.png");
+        break;
+    case 2: // Auto
+        pulsanteLuceMode = 0;
+        pulsanteLamp->setPix("://BiopsyExtended/BiopsyExtended/LampDisabled.png","://BiopsyExtended/BiopsyExtended/LampDisabled.png");
+        break;
+    }
+
+    if(isMaster) managePowerLed();
+
+}
+
+void BiopsyExtendedPage::managePowerLed(void){
+    if(pulsanteLuceMode == 0){
+        // Off
+        pBiopsyExtended->setPowerled(false);
+    }else if(pulsanteLuceMode == 1){
+        // On
+        pBiopsyExtended->setPowerled(true);
+    }else{
+        // Auto
+        if(powerledAutoOn) pBiopsyExtended->setPowerled(true);
+        else pBiopsyExtended->setPowerled(false);
+    }
 }

@@ -65,6 +65,12 @@ private:
     // Pulsante apertura pagina immagine presente
     GPush* pulsanteImgOn;
 
+    // Pulsante accensione luce biopsia
+    GPush* pulsanteLamp;
+    int pulsanteLuceMode;
+    bool powerledAutoOn; // Stato luce quando in modo automatico
+    void managePulsanteLuce(void);
+    void managePowerLed(void);
 
     // Campo Compressione
     GLabel* targetValue;
