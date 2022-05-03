@@ -2357,6 +2357,10 @@ void Config::configSlaveRxHandler(QByteArray frame)
 
         QByteArray risposta = QByteArray(SLAVE_EXECUTE_SHELL).append(" ").append(pConfig->executeShell(answ.unformatData(comando)));
         emit configSlaveTx(answ.cmdToQByteArray(risposta));
+    }else if(comando==SLAVE_EXECUTE_SET_RESTORE_POINT){
+        setRestorePoint();
+    }else if(comando==SLAVE_EXECUTE_GET_RESTORE_POINT){
+        getRestorePoint();
     }else if(comando==SYNC_TO_SLAVE){
         slaveInitialization();
         if(slaveDataInitialized)  emit configSlaveTx(answ.cmdToQByteArray(SYNC_TO_SLAVE));
@@ -3561,4 +3565,65 @@ void Config::enableSlavePrint(void){
 
 }
 
+void Config::setRestorePoint(void){
+    QString command;
+    protoConsole frame(1,false);
+
+    if(isMaster){
+        emit configMasterTx( frame.cmdToQByteArray(SLAVE_EXECUTE_SET_RESTORE_POINT));
+
+        command = QString("rm -r /restore_point");
+        system(command.toStdString().c_str());
+        command = QString("mkdir /restore_point");
+        system(command.toStdString().c_str());
+        command = QString("cp /DBTController /restore_point");
+        system(command.toStdString().c_str());
+        command = QString("cp /m4_master.bin /restore_point");
+        system(command.toStdString().c_str());
+        command = QString("cp -r resource /restore_point");
+        system(command.toStdString().c_str());
+        command = QString("sync");
+        system(command.toStdString().c_str());
+
+
+    }else{
+        command = QString("rm -r /restore_point");
+        system(command.toStdString().c_str());
+        command = QString("mkdir /restore_point");
+        system(command.toStdString().c_str());
+        command = QString("cp /DBTController /restore_point");
+        system(command.toStdString().c_str());
+        command = QString("cp /m4_slave.bin /restore_point");
+        system(command.toStdString().c_str());
+        command = QString("cp -r resource /restore_point");
+        system(command.toStdString().c_str());
+        command = QString("sync");
+        system(command.toStdString().c_str());
+
+    }
+
+
+}
+
+void Config::getRestorePoint(void){
+    QString command;
+    protoConsole frame(1,false);
+
+    if(isMaster){
+        emit configMasterTx( frame.cmdToQByteArray(SLAVE_EXECUTE_GET_RESTORE_POINT));
+
+        command = QString("cp -r /restore_point/* /");
+        system(command.toStdString().c_str());
+
+        command = QString("sync");
+        system(command.toStdString().c_str());
+    }else{
+        command = QString("cp -r /restore_point/* /");
+        system(command.toStdString().c_str());
+
+        command = QString("sync");
+        system(command.toStdString().c_str());
+    }
+
+}
 

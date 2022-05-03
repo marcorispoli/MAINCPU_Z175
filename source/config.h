@@ -103,6 +103,8 @@ public:
     #define SLAVE_TOOLS_DATA         "SlaveToolsData"
     #define SYNC_TO_SLAVE            "SyncToSlave"
     #define SLAVE_ENABLE_PRINT       "SlaveEnablePrint"
+    #define SLAVE_EXECUTE_SET_RESTORE_POINT "SlaveSetRestorePoint"
+    #define SLAVE_EXECUTE_GET_RESTORE_POINT "SlaveGetRestorePoint"
 
 
     // Comandi aggiornamento firmware
@@ -393,6 +395,10 @@ public:
     // Bitfield relativi al test della configurazione di sistema
     // TRUE = ERROR
     bool testConfigError(bool msgon, bool forceshow);
+
+
+    void setRestorePoint(void);
+    void getRestorePoint(void);
 
 };
 

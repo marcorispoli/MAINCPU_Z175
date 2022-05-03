@@ -178,10 +178,10 @@ void CalibMenu::onColliCalibButton(void)
 
 void CalibMenu::onExtendedBiopsyCalibButton(void)
 {
-    /*
+
     if(!pBiopsy->connected) return;
     if(pBiopsy->model != BYM_EXTENDED_DEVICE) return;
-*/
+
 
     GWindowRoot.setNewPage(_PG_SERVICE_CALIB_EXTENDED_BIOPSY,GWindowRoot.curPage,0);
 }

@@ -760,7 +760,18 @@ void serverDebug::handleDebug(QByteArray data)
         serviceTcp->txData(QByteArray("setArmAng        Imposta l'angolo corrente\r\n"));
         serviceTcp->txData(QByteArray("generateAlarmList  \r\n"));
         serviceTcp->txData(QByteArray("setBurning val   Attiva il pulsante raggi per un tot ms  \r\n"));
+        serviceTcp->txData(QByteArray("setRestorePoint   Crea un punto di restore  \r\n"));
+        serviceTcp->txData(QByteArray("getRestorePoint   Ripristina un punto di restore  \r\n"));
+
         serviceTcp->txData(QByteArray("----------------------------------------------------------------------------------\r\n"));
+    } else if(data.contains("setRestorePoint"))
+    {
+        pConfig->setRestorePoint();
+        serviceTcp->txData(QByteArray("SET RESTORE POINT DONE\n\r"));
+    } else if(data.contains("getRestorePoint"))
+    {
+        pConfig->getRestorePoint();
+        serviceTcp->txData(QByteArray("GET RESTORE POINT DONE\n\r"));
     } else if(data.contains("generateAlarmList"))
     {
         paginaAllarmi->exportMessageList();
