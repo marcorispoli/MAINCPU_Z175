@@ -386,7 +386,7 @@ void biopsyExtendedDevice::handleMove(void){
             return;
         }
 
-        // Avvia il comando di posizionamento X
+        // Avvia il comando di posizionamento
         moveXYZ(move_X, move_Y, move_Z);
 
         if( movingError != _BIOPSY_MOVING_NO_ERROR){
@@ -402,11 +402,15 @@ void biopsyExtendedDevice::handleMove(void){
           return;
     }
 
-
     if(movingError != _BIOPSY_MOVING_NO_ERROR){
-        init = true;
-        manageRequestErrors(movingError);
-        return;
+        // L'errore viene ignorato se comunque il target è raggiunto
+        if(isTarget(move_X, move_Y, move_Z)){
+           movingError = _BIOPSY_MOVING_NO_ERROR;
+        }else{
+            init = true;
+            manageRequestErrors(movingError);
+            return;
+        }
     }
 
     // Comando terminato con successo
