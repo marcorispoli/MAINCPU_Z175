@@ -405,6 +405,7 @@ private:
         bool isCombo;
         bool isAE;      // Alta energia
 
+        int n_pulses; // Numero di impulsi per la sequenza in oggetto
         bool isValid;
         unsigned char samples;  // Numero campioni in calibrazione Tomo
         int arm_angolo;         // Angolo richiesto da console
@@ -415,10 +416,26 @@ private:
 
         unsigned char workingMode;   // Definisce la modalit√  operativa selezionata
 
-        // Dati da ultime impostazioni
+        // Dati esposizione in corso
         float kVExposePRE;
+        QString filtroPRE;
+        int mAsPRE;
+
         float kVExposeLE;
+        QString filtroLE;
+        int mAsLE;
+
         float kVExposeAE;
+        QString filtroAE;
+        int   mAsAE;
+
+        int   exposureType; // Codice ultima esposizione eseguita
+
+        int breastThick;
+        int breastForce;
+        int armAngle;
+
+
 
     }_Raggi_Str;
 
@@ -450,11 +467,12 @@ private:
       int   mAs;       // mAs da utilizzare durante la sequenza
     }_iACalibData_Str;
 
-    _Raggi_Str xSequence;
+
     _kVCalibData_Str kvCalibData; // Dati per esecuzione sequenza raggi in calibrazione KV
     _iACalibData_Str iACalibData; // Dati per la calibrazione mA anodici
 
 public:
+   _Raggi_Str xSequence;
 
 public:
     mccCom*  pGuiMcc;           // Comunicazione con Master M4 Core

@@ -4026,6 +4026,8 @@ void serverDebug::handleExtendedBiopsy(QByteArray data)
     {
         serviceTcp->txData(QByteArray("--------------- ACTIVATION ----------------------------\r\n"));
         serviceTcp->txData(QByteArray("moveXYZ   x,y,z       ? X,Y,Z in dmm \r\n"));
+        serviceTcp->txData(QByteArray("moveLoop   x0,y0,z0 x1,y1,z1   \r\n"));
+
         serviceTcp->txData(QByteArray("moveHome  [L,C,R]     ? Imposta lateralità \r\n"));
         serviceTcp->txData(QByteArray("testBuzzer            ? attiva buzzer BYM X\r\n"));
         serviceTcp->txData(QByteArray("powerLed  ON|OFF      ? attiva Power led\r\n"));
@@ -4074,6 +4076,25 @@ void serverDebug::handleExtendedBiopsy(QByteArray data)
             if(retval==0)  serviceTcp->txData(QByteArray("BYM already in Target\r\n"));
             else if(retval<0) serviceTcp->txData(QString("Error condition %1\r\n").arg(retval).toAscii());
             else serviceTcp->txData(QByteArray("DONE \r\n"));
+
+        }else if(data.contains("moveLoop")){
+            parametri = getNextFieldsAfterTag(data, QString("moveLoop"));
+            if(parametri.size()!=7){
+                pBiopsyExtended->setBiopsyLoop(0,0,0,0,0,0,0);
+                serviceTcp->txData(QByteArray("LOOP STOP\r\n"));
+                return;
+            }
+
+            int n = parametri[0].toInt();
+            int x1 = parametri[1].toInt();
+            int y1 = parametri[2].toInt();
+            int z1 = parametri[3].toInt();
+            int x2 = parametri[4].toInt();
+            int y2 = parametri[5].toInt();
+            int z2 = parametri[6].toInt();
+
+            if(pBiopsyExtended->setBiopsyLoop(n,x1,y1,z1,x2,y2,z2)) serviceTcp->txData(QByteArray("LOOP INITIATED \r\n"));
+            else serviceTcp->txData(QByteArray("LOOP FAILED \r\n"));
 
         }else if(data.contains("moveHome")){
             parametri = getNextFieldsAfterTag(data, QString("moveHome"));

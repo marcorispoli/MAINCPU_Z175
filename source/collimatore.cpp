@@ -141,11 +141,12 @@ void Collimatore::pcb249U1Notify(unsigned char id, unsigned char notifyCode, QBy
     {
         case PCB249U1_NOTIFY_DATA:
             if(pConfig->userCnf.demoMode){
+                this->tempCuffia = 25;
                 tempCuffia = 25; // 25° in demo
                 alrCuffia = FALSE;
                 alrSensCuffia = FALSE;
             }else{                
-                tempCuffia = (int) buffer.at(1);
+                this->tempCuffia = tempCuffia = (int) buffer.at(1);
                 if((tempCuffia<5)||(tempCuffia>69)){
                     //if(!alrSensCuffia) PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_GEN, ERROR_SENS_CUFFIA);
                     alrSensCuffia = TRUE;

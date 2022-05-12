@@ -213,6 +213,8 @@ void Config::selectOperatingPage(){
          GWindowRoot.setNewPage(_PG_OPEN_STUDY_DIGITAL,GWindowRoot.curPage,0);
     }
 
+    emit changeStudy(true);
+
 }
 
 // Funzione per uscire dalla pagina Operativa del sistema.
@@ -222,6 +224,7 @@ void Config::selectMainPage(){
     // Distinzione tra macchina Analogica e Digitale
     GWindowRoot.setNewPage(_PG_MAIN_DIGITAL,GWindowRoot.curPage,0);
 
+    emit changeStudy(false);
 }
 
 

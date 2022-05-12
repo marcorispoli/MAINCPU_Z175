@@ -81,6 +81,7 @@ public:
     bool     alrCuffia;     // Allarme temperatura cuffia
     bool     alrSensCuffia; // Allarme temperatura cuffia
     bool     lampStat;      // Stato Lampada centratore: TRUE = ACCESA
+    int     tempCuffia;     // Temperatura della cuffia
 
     unsigned char accessorio; // Accessorio riconosciuto
 

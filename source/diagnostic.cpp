@@ -16,9 +16,11 @@ bool diagnosticInterface::isIp(int val){
 
 void diagnosticInterface::activateConnections(void) {
 
-    QObject::connect(commandTcp,SIGNAL(rxData(QByteArray)),this,SLOT(commandRxHandler(QByteArray)),Qt::UniqueConnection);
-    QObject::connect(commandTcp,SIGNAL(serverConnection(bool)),this,SLOT(commandConnectionHandler(bool)),Qt::UniqueConnection);
-    QObject::connect(eventTcp,SIGNAL(serverConnection(bool)),this,SLOT(eventConnectionHandler(bool)),Qt::UniqueConnection);
+    connect(commandTcp,SIGNAL(rxData(QByteArray)),this,SLOT(commandRxHandler(QByteArray)),Qt::UniqueConnection);
+    connect(commandTcp,SIGNAL(serverConnection(bool)),this,SLOT(commandConnectionHandler(bool)),Qt::UniqueConnection);
+    connect(eventTcp,SIGNAL(serverConnection(bool)),this,SLOT(eventConnectionHandler(bool)),Qt::UniqueConnection);
+
+
 
     commandTcp->Start(_DIAGNOSTIC_CMD_PORT);
     eventTcp->Start(_DIAGNOSTIC_EVENT_PORT);
@@ -47,6 +49,7 @@ void diagnosticInterface::commandConnectionHandler(bool stat)
     commandConnectionStat = stat;
     if(stat)
     {
+
         protoConsole cmd(0,UNICODE_FORMAT);
         cmd.addParam(REVISION);
         commandTcp->txData(cmd.cmdToQByteArray(EVENT_GANTRY_REVISION));
@@ -61,13 +64,21 @@ void diagnosticInterface::eventConnectionHandler(bool stat)
     eventConnectionStat = stat;
     if(stat)
     {
+        /*
         protoConsole cmd(0,UNICODE_FORMAT);
         cmd.addParam(REVISION);
         eventTcp->txData(cmd.cmdToQByteArray(EVENT_GANTRY_REVISION));
-        connect(paginaAllarmi,SIGNAL(newAlarmSgn(int,QString)),this,SLOT(alarmNotify(int,QString)),Qt::UniqueConnection);
+        */
+        gantryStatus();
+
+        connect(paginaAllarmi,SIGNAL(newAlarmSgn(int,QString)),this,SLOT(alarmNotify(int,QString)),Qt::QueuedConnection);
+        connect(pConsole,SIGNAL(raggiDataSgn(QByteArray)),this,SLOT(exposureEventSlot(QByteArray)),Qt::QueuedConnection);
+        connect(pConfig,SIGNAL(changeStudy(bool)),this,SLOT(gantryStudy(bool)),Qt::QueuedConnection);
 
     }else{
         disconnect(paginaAllarmi,SIGNAL(newAlarmSgn(int,QString)),this,SLOT(alarmNotify(int,QString)));
+        disconnect(pConsole,SIGNAL(raggiDataSgn(QByteArray)),this,SLOT(exposureEventSlot(QByteArray)));
+        disconnect(pConfig,SIGNAL(changeStudy(bool)),this,SLOT(gantryStudy(bool)));
     }
     return;
 
@@ -116,6 +127,159 @@ void diagnosticInterface::alarmNotify(int codice, QString msg)
     protoConsole cmd(0,UNICODE_FORMAT);
     cmd.addParam(QString("%1").arg(codice));
     eventTcp->txData(cmd.answToQByteArray(EVENT_GANTRY_ERRORS));
-
     return;
+}
+
+void diagnosticInterface::exposureEventSlot(QByteArray buffer){
+    protoConsole dgnframe(0,UNICODE_FORMAT);
+    int ival;
+
+    // Solo in operativo
+    if(pConsole->xSequence.workingMode != _EXPOSURE_MODE_OPERATING_MODE) return;
+
+    int NAEC = buffer.at(NSAMPLES_AEC);
+    int NPLS = buffer.at(NSAMPLES_PLS);
+    int NTIME=0;
+    int TPLS;
+
+    // Codice di fine sequenza
+    if(buffer.at(RX_END_CODE) == RXOK) ival = (int) 0;
+    else if(buffer.at(RX_END_CODE) < LAST_ERROR_NO_PREP) ival = (int) 2;
+    else if(buffer.at(RX_END_CODE) < LAST_ERROR_WITH_PREP ) ival = 1;
+    else ival = 2;
+    dgnframe.addParam(QString("%1").arg(ival));
+
+    // Exposure Type
+    if(pConsole->xSequence.exposureType == MCC_CMD_RAGGI_STD) dgnframe.addParam("MAN-2D");
+    else if(pConsole->xSequence.exposureType  == MCC_CMD_RAGGI_AEC) dgnframe.addParam("AEC-2D");
+    else if(pConsole->xSequence.exposureType  == MCC_CMD_RAGGI_TOMO) dgnframe.addParam("MAN-3D");
+    else if(pConsole->xSequence.exposureType  == MCC_CMD_RAGGI_AEC_TOMO) dgnframe.addParam("AEC-3D");
+    else if(pConsole->xSequence.exposureType  == MCC_CMD_RAGGI_AE) dgnframe.addParam("MAN-AE");
+    else if(pConsole->xSequence.exposureType  == MCC_CMD_RAGGI_AE_AEC) dgnframe.addParam("AEC-AE");
+
+    // Exposure context
+    if(pBiopsy->connected) dgnframe.addParam("BIOPSY");
+    else if(pConsole->xSequence.isCombo) dgnframe.addParam("COMBO");
+    else if(pPotter->isMagnifier()) dgnframe.addParam("MAG");
+    else dgnframe.addParam("STD");
+
+    // Number of shots
+    if(pConsole->xSequence.exposureType == MCC_CMD_RAGGI_STD) dgnframe.addParam("1");
+    else if(pConsole->xSequence.exposureType == MCC_CMD_RAGGI_AEC) dgnframe.addParam("2");
+    else if(pConsole->xSequence.exposureType == MCC_CMD_RAGGI_TOMO)  dgnframe.addParam(QString("%1").arg(pConsole->xSequence.n_pulses));
+    else if(pConsole->xSequence.exposureType == MCC_CMD_RAGGI_AEC_TOMO) dgnframe.addParam(QString("%1").arg(pConsole->xSequence.n_pulses + 1));
+    else if(pConsole->xSequence.exposureType == MCC_CMD_RAGGI_AE) dgnframe.addParam("2");
+    else if(pConsole->xSequence.exposureType == MCC_CMD_RAGGI_AE_AEC) dgnframe.addParam("3");
+
+    // Pre pulse data
+    if((pConsole->xSequence.exposureType == MCC_CMD_RAGGI_AEC) ||
+       (pConsole->xSequence.exposureType == MCC_CMD_RAGGI_AEC_TOMO) ||
+       (pConsole->xSequence.exposureType == MCC_CMD_RAGGI_AE_AEC)){
+
+        dgnframe.addParam(QString("%1").arg(pConsole->xSequence.kVExposePRE));
+        ival = (int) buffer.at(MAS_PRE_L) + 256 * (int) buffer.at(MAS_PRE_H);
+        dgnframe.addParam(QString("%1").arg(ival/50));
+
+    }else{
+        dgnframe.addParam("0");
+        dgnframe.addParam("0");
+    }
+    dgnframe.addParam(pConsole->xSequence.filtroPRE); // Pre Filtro
+
+    // Pulse data
+    dgnframe.addParam(QString("%1").arg(pConsole->xSequence.kVExposeLE));
+
+    int mas_pls = (int) buffer.at(MAS_PLS_L) + 256 * (int) buffer.at(MAS_PLS_H);
+    dgnframe.addParam(QString("%1").arg(mas_pls/50));
+
+    dgnframe.addParam(pConsole->xSequence.filtroLE); // Pulse filter
+
+    // Pulse AE data
+    dgnframe.addParam(QString("%1").arg(pConsole->xSequence.kVExposeAE));
+    dgnframe.addParam(QString("%1").arg(pConsole->xSequence.mAsAE));
+    dgnframe.addParam(pConsole->xSequence.filtroAE); // AE filter
+
+    // Effective kV
+    if(buffer.at(NSAMPLES_PLS)){
+        float vmean = pGeneratore->convertPcb190Kv(buffer.at(V_MEAN),1.0);
+        dgnframe.addParam(QString("%1").arg(vmean));
+
+    }else{
+        dgnframe.addParam("0");
+    }
+
+    // Anodic current for pulse
+    TPLS = 0;
+    if((pConsole->xSequence.exposureType == MCC_CMD_RAGGI_TOMO) ||
+       (pConsole->xSequence.exposureType == MCC_CMD_RAGGI_AEC_TOMO) ||
+       (pConsole->xSequence.exposureType == MCC_CMD_RAGGI_AEC_TOMO)){
+
+        if(SAMPLES_BUFFER + 2 * (NAEC + NPLS) < buffer.size()){
+            NTIME = buffer.at(SAMPLES_BUFFER + 2 * (NAEC + NPLS) );
+            if(NTIME>1) TPLS = (int) buffer.at(SAMPLES_BUFFER + 2 * (NAEC + NPLS)+1+1);
+        }
+    }else{
+        TPLS = (int) buffer.at(T_MEAN_PLS_L) + 256 * (int) buffer.at(T_MEAN_PLS_H);
+    }
+
+    if(TPLS){
+        float imean = (float) mas_pls * 1000 / ((float) TPLS*50);
+        dgnframe.addParam(QString("%1").arg(imean));
+    }else {
+        dgnframe.addParam("0");
+    }
+
+    // Pulse mean time
+    dgnframe.addParam(QString("%1").arg((int) TPLS));
+
+    // Power voltage
+    dgnframe.addParam(QString("%1").arg((int) pGeneratore->convertHvexp(buffer.at(HV_POST_RAGGI))));
+
+    // Tube Temperature
+    dgnframe.addParam(QString("%1").arg(pCollimatore->tempCuffia));
+
+    // Thicknes and force
+    dgnframe.addParam(QString("%1").arg(pConsole->xSequence.breastThick));
+    dgnframe.addParam(QString("%1").arg(pConsole->xSequence.breastForce));
+
+    // Arm Angle
+    dgnframe.addParam(QString("%1").arg(pConsole->xSequence.armAngle));
+
+    eventTcp->txData(dgnframe.answToQByteArray(EVENT_GANTRY_EXPOSURE));
+}
+
+void diagnosticInterface::gantryStudy(bool stat){
+    protoConsole dgnframe(0,UNICODE_FORMAT);
+
+    if(stat) dgnframe.addParam("OPEN");
+    else dgnframe.addParam("CLOSE");
+
+    eventTcp->txData(dgnframe.answToQByteArray(EVENT_GANTRY_STUDY));
+}
+
+void diagnosticInterface::gantryStatus(void){
+    protoConsole dgnframe(0,UNICODE_FORMAT);
+
+    // Revision code
+    dgnframe.addParam(REVISION);
+
+    // X-RAY Tube
+    dgnframe.addParam(pConfig->userCnf.tubeFileName);
+
+    // Opzione uso starter alta velocità
+    if(pConfig->sys.highSpeedStarter) dgnframe.addParam("YES");
+    else dgnframe.addParam("NO");
+
+    // Opzione rotazione motorizzata
+    if(pConfig->sys.armMotor) dgnframe.addParam("YES");
+    else dgnframe.addParam("NO");
+
+    // Opzione Tilt motorizzata
+    if(pConfig->sys.trxMotor) dgnframe.addParam("YES");
+    else dgnframe.addParam("NO");
+
+    // Numero allarmi attivi
+    dgnframe.addParam(QString("%1").arg(ApplicationDatabase.getDataU(_DB_NALLARMI_ATTIVI)));
+
+    eventTcp->txData(dgnframe.answToQByteArray(EVENT_GANTRY_STATUS));
 }

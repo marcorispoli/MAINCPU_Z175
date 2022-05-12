@@ -22,7 +22,9 @@ public:
     // Comandi Gantry to Remote
     #define EVENT_GANTRY_REVISION     "GANTRY_REVISION"
     #define EVENT_GANTRY_ERRORS       "GANTRY_ERRORS"
-
+    #define EVENT_GANTRY_EXPOSURE     "GANTRY_EXPOSURE"
+    #define EVENT_GANTRY_STUDY        "GANTRY_STUDY"
+    #define EVENT_GANTRY_STATUS       "GANTRY_STATUS"
 
     // Remote to Gantry
     #define CMD_GET_ERRORS          "GET_ERRORS"
@@ -35,9 +37,12 @@ public slots:
     bool isIp(int val);
     void commandConnectionHandler(bool stat);    // Handler cambio stato connessione
     void eventConnectionHandler(bool stat);    // Handler cambio stato connessione
+    void exposureEventSlot(QByteArray buffer);
 
     void commandRxHandler(QByteArray data); // Handler ricezione comandi
     void alarmNotify(int codice, QString msg);
+    void gantryStudy(bool stat);
+    void gantryStatus(void);
 
     private:
 

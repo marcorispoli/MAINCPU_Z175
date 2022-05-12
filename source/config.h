@@ -179,6 +179,7 @@ signals:
 
     void sgnRemoteShell(QByteArray); // Rispoosta ricevuta da slave su comando shell
     void awsTxHandler(QByteArray); // Segnale per invio su socket
+    void changeStudy(bool);
 
 public slots:
     void configSlaveRxHandler(QByteArray data); // Ricezione da Master frame di controllo su protocollo console

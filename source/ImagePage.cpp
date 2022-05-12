@@ -216,7 +216,7 @@ void ImagePage::eraseImage(void){
 
     // Cancella il file
     QString command;
-    command = QString("rm /home/user/*.png");
+    command = QString("rm /home/user/Biopsy_*.png");
     system(command.toStdString().c_str());
 
 }

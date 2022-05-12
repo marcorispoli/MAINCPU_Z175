@@ -1016,6 +1016,8 @@ void console::handleSetAECdata(QString qkV, QString qmAs)
         return;
     }
     xSequence.kVExposeLE = pGeneratore->selectedKv;
+    xSequence.filtroLE = pCollimatore->getFilterTag(pCollimatore->getFiltroStat());
+
 
     data[0] =  (unsigned char) (pGeneratore->selectedVdac&0x00FF);
     data[1] =  (unsigned char) (pGeneratore->selectedVdac>>8);
@@ -1087,6 +1089,8 @@ void console::handleSetAEdata(QString qkV, QString qmAs)
         return;
     }
     xSequence.kVExposeAE = pGeneratore->selectedKv;
+    xSequence.mAsAE = (int) mAs;
+    xSequence.filtroAE = pCollimatore->getFilterTag(pCollimatore->getFiltroStat());
 
     // Invia il log con la stringa di dati dei raggi in corso
     QString stringa =  QString("RX_DATA_INPUT: AE PULSE mAs=%1 ").arg(pGeneratore->selectedmAsDac/50);
@@ -1150,7 +1154,7 @@ void console::handleSetTomoAecData(QString qkV, QString qnum, QString qmAs)
         return;
     }
     xSequence.kVExposeLE = pGeneratore->selectedKv;
-
+    xSequence.filtroLE = pCollimatore->getFilterTag(pCollimatore->getFiltroStat());
 
     data[0] =  (unsigned char) (pGeneratore->selectedVdac&0x00FF);
     data[1] =  (unsigned char) (pGeneratore->selectedVdac>>8);
@@ -1819,9 +1823,12 @@ void console::RxStart(void)
     QString mccstr;
 
     // Salva i kV selezioni
-    xSequence.kVExposeLE = pGeneratore->selectedKv;
-    xSequence.kVExposePRE = pGeneratore->selectedKv;
-    xSequence.kVExposeAE = 0;
+    xSequence.kVExposePRE = xSequence.kVExposeLE = xSequence.kVExposeAE =pGeneratore->selectedKv;
+    xSequence.filtroPRE = xSequence.filtroLE = xSequence.filtroAE = pCollimatore->getFilterTag(pCollimatore->getFiltroStat());
+
+    xSequence.breastThick = pCompressore->breastThick;
+    xSequence.breastForce = pCompressore->comprStrenght;
+    xSequence.armAngle = pConfig->convertDangolo(ApplicationDatabase.getDataI(_DB_DANGOLO));
 
     // Allarme cuffia: non può fare raggi
 
@@ -3004,6 +3011,8 @@ void console::guiNotify(unsigned char id, unsigned char mcccode, QByteArray data
     short arm ;
     short trx;
     short gonio;
+    int ival;
+
     unsigned char arm_mem_dir;
     protoConsole cmd(id,UNICODE_FORMAT);
 
@@ -3015,6 +3024,8 @@ void console::guiNotify(unsigned char id, unsigned char mcccode, QByteArray data
     case MCC_CMD_RAGGI_AEC_TOMO: //if(tipo.isEmpty()) tipo=QString("TAEC ");
     case MCC_CMD_RAGGI_AE: //if(tipo.isEmpty()) tipo=QString("TAEC ");
     case MCC_CMD_RAGGI_AE_AEC: //if(tipo.isEmpty()) tipo=QString("TAEC ");
+
+        xSequence.exposureType = mcccode;
 
         // Nel caso in cui sia stato chiamato con un numero di byte inferiore al previsto
         // aggiunge la parte mancante
@@ -3041,10 +3052,13 @@ void console::guiNotify(unsigned char id, unsigned char mcccode, QByteArray data
             pCollimatore->resetColliFlags();
         }
 
-        if(data.at(0)==RXOK) cmd.addParam(QString("%1").arg((int)protoToConsole::_RAGGI_OK));
-        else if(data.at(0)<LAST_ERROR_NO_PREP) cmd.addParam(QString("%1").arg((int)protoToConsole::_NO_RAGGI));
-        else if(data.at(0)<LAST_ERROR_WITH_PREP) cmd.addParam(QString("%1").arg((int)protoToConsole::_RAGGI_PARZIALI));
-        else cmd.addParam(QString("%1").arg((int)protoToConsole::_NO_RAGGI));
+        if(data.at(0)==RXOK) ival = (int) protoToConsole::_RAGGI_OK;
+        else if(data.at(0)<LAST_ERROR_NO_PREP) ival = (int) protoToConsole::_NO_RAGGI;
+        else if(data.at(0)<LAST_ERROR_WITH_PREP) ival = (int) protoToConsole::_RAGGI_PARZIALI;
+        else ival = (int)protoToConsole::_NO_RAGGI;
+
+        // Codice di fine raggi
+        cmd.addParam(QString("%1").arg(ival));
 
         // Aggiunge i dati dell'ultima esposizione
         cmd.addParam(QString("%1").arg((int)data.at(0))); // Aggiunge il codice ritornato
@@ -5104,7 +5118,7 @@ void console:: RxShot3DSequence(void)
         data[13] = pConfig->trxConfig.tomo.n.pre_samples;
         data[14] = pConfig->trxConfig.tomo.n.samples;
         data[16] = pConfig->trxConfig.tomo.n.skip_samples;
-
+        xSequence.n_pulses = pConfig->trxConfig.tomo.n.samples;
     }else if(xSequence.isTomoI)
     {
         if(xSequence.isTomoMoving==FALSE) data[15] = _TOMO_MODE_STATIC;  //  Modo static
@@ -5113,6 +5127,7 @@ void console:: RxShot3DSequence(void)
         data[13] = pConfig->trxConfig.tomo.i.pre_samples;
         data[14] = pConfig->trxConfig.tomo.i.samples;
         data[16] = pConfig->trxConfig.tomo.i.skip_samples;
+        xSequence.n_pulses = pConfig->trxConfig.tomo.n.samples;
 
     }else
     {
@@ -5122,6 +5137,7 @@ void console:: RxShot3DSequence(void)
         data[13] = pConfig->trxConfig.tomo.w.pre_samples;
         data[14] = pConfig->trxConfig.tomo.w.samples;
         data[16] = pConfig->trxConfig.tomo.w.skip_samples;
+        xSequence.n_pulses = pConfig->trxConfig.tomo.n.samples;
 
     }
 

@@ -235,6 +235,8 @@ void BiopsyExtendedPage::InitBiopsyPage(void)
     setArmAngolo();
     setBiopXYZ();
 
+    paginaImmagine->eraseImage();
+
 }
 
 
@@ -574,7 +576,8 @@ void BiopsyExtendedPage::updateCursorPointer(void){
     int sh = ApplicationDatabase.getDataI(_DB_BIOP_SH);
     if(sh < -170) sh = -170;
     else if(sh > 150) sh = 150;
-    if((sh < 5) && (sh>-5)) sh = 0;
+
+    //if((sh < 5) && (sh>-5)) sh = 0;
 
     if(sh == -170) cursorValue->setPlainText(QString("^^^"));
     else if(sh == 150) cursorValue->setPlainText(QString("___"));

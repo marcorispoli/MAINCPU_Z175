@@ -66,6 +66,8 @@ public slots:
     void onConfirmButton(void);
 
     int calibrateSh(ushort sh,ushort sh_m15, ushort sh_p15, ushort sh0);
+    bool setBiopsyLoop(int n, int x1,int y1, int z1, int x2, int y2, int z2);
+
 
 public:
     Ui::biopsyUI *ui;
@@ -248,6 +250,16 @@ private:
     void handleXScroll(void);
     void handleYScroll(void);
     void handleMove(void);
+
+
+    int nLoop;
+    int x1Loop;
+    int y1Loop;
+    int z1Loop;
+    int x2Loop;
+    int y2Loop;
+    int z2Loop;
+    int seq;
 
 };
 

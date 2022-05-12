@@ -631,11 +631,14 @@ void biopsyExtendedDevice::manageXYZSequence(void){
         }
 
         // Verifica se ci può essere rischio di impatto
-        if(testUpsidePosition(req_X)){
-            if(curLatX == _BP_EXT_ASSEX_POSITION_LEFT) sub_sequence = _REQ_SUBSEQ_XYZ_EXE_SCROLL_Y_LEFT;
-            else if(curLatX == _BP_EXT_ASSEX_POSITION_RIGHT) sub_sequence = _REQ_SUBSEQ_XYZ_EXE_SCROLL_Y_RIGHT;
-            else sub_sequence = _REQ_SUBSEQ_XYZ_EXE_SCROLL_Y_CENTER;
+        /*if(testUpsidePosition(req_X)){
+
+            manageRequestErrors(_BIOPSY_MOVING_UNDEFINED_ERROR);
+            return;
         } else sub_sequence = _REQ_SUBSEQ_XYZ_EXE_X;
+        */
+sub_sequence = _REQ_SUBSEQ_XYZ_EXE_X;
+
 
         nextStepSequence(1);
         break;
@@ -920,6 +923,7 @@ void biopsyExtendedDevice::mccStatNotify(unsigned char id_notify,unsigned char c
         ApplicationDatabase.setData(_DB_ACCESSORIO, (unsigned char) BIOPSY_DEVICE,0);
         ApplicationDatabase.setData(_DB_ACCESSORY_NAME,QString(QApplication::translate("BIOPSY","NOME ACCESSORIO", 0, QApplication::UnicodeUTF8)),0);        
         update_aws = true;
+        nLoop = 0;
     }
 
     // Pulsante di sblocco Braccio e funzioni biopsia
@@ -994,6 +998,17 @@ void biopsyExtendedDevice::mccStatNotify(unsigned char id_notify,unsigned char c
 
             movingCommand =_BIOPSY_MOVING_COMPLETED;
             update_aws = true;
+
+            if(nLoop){
+                nLoop--;
+                if(seq==0){
+                    seq = 1;
+                    moveXYZ(x2Loop,y2Loop,z2Loop);
+                }else{
+                    seq = 0;
+                    moveXYZ(x1Loop,y1Loop,z1Loop);
+                }
+            }
         break;
 
 
@@ -1268,6 +1283,27 @@ void  biopsyExtendedDevice::setPowerled(bool stat){
     if(stat) data[1]=1;
     else data[1]=0;
     pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_CMD,1,data,2);
+
+}
+
+bool  biopsyExtendedDevice::setBiopsyLoop(int n, int x1,int y1, int z1, int x2, int y2, int z2){
+    if(n==0){
+        nLoop = 0;
+
+        return true;
+    }
+
+    x1Loop = x1;
+    y1Loop = y1;
+    z1Loop = z1;
+    x2Loop = x2;
+    y2Loop = y2;
+    z2Loop = z2;
+    seq = 1;
+
+    moveXYZ(x2,y2,z2);
+    nLoop = n;
+    return true;
 
 }
 
