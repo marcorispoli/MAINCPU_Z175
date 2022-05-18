@@ -403,14 +403,9 @@ void biopsyExtendedDevice::handleMove(void){
     }
 
     if(movingError != _BIOPSY_MOVING_NO_ERROR){
-        // L'errore viene ignorato se comunque il target è raggiunto
-        if(isTarget(move_X, move_Y, move_Z)){
-           movingError = _BIOPSY_MOVING_NO_ERROR;
-        }else{
-            init = true;
-            manageRequestErrors(movingError);
-            return;
-        }
+        init = true;
+        manageRequestErrors(movingError);
+        return;
     }
 
     // Comando terminato con successo
@@ -480,6 +475,13 @@ void biopsyExtendedDevice::manageHomeSequence(void){
 
     // Scroll up Y and X
     case _REQ_SUBSEQ_HOME_TEST_Y_UP:
+        // Se la lateralità è già quella richiesta va direttamente a muovere X
+        if(req_home_lat == curLatX)
+        {
+            sub_sequence = _REQ_SUBSEQ_HOME_EXE_X;
+            nextStepSequence(1);
+            return;
+        }
 
         // Y is alreade upright
         if(testYisUp()){
@@ -543,7 +545,8 @@ void biopsyExtendedDevice::manageHomeSequence(void){
     break;
 
 
-    case _REQ_SUBSEQ_HOME_TEST_SCROLL_X:        
+    case _REQ_SUBSEQ_HOME_TEST_SCROLL_X:
+        // Se la lateralità è già quella richiesta va direttamente a muovere X
         if(req_home_lat == curLatX)
         {
             sub_sequence = _REQ_SUBSEQ_HOME_EXE_X;
@@ -594,8 +597,8 @@ void biopsyExtendedDevice::manageHomeSequence(void){
         isHome = true;
 
         // Notifica di fine movimento
-        movingError = 0;
-        if(pBiopsy->activationId) pToConsole->endCommandAck(pBiopsy->activationId, movingError);
+        movingError = _BIOPSY_MOVING_NO_ERROR;
+        if(pBiopsy->activationId) pToConsole->endCommandAck(pBiopsy->activationId, _BIOPSY_MOVING_NO_ERROR);
         pBiopsy->activationId = 0;
         GWindowRoot.setNewPage(GWindowRoot.parentPage,GWindowRoot.curPage,0);
         break;
@@ -637,27 +640,69 @@ void biopsyExtendedDevice::manageXYZSequence(void){
             return;
         } else sub_sequence = _REQ_SUBSEQ_XYZ_EXE_X;
         */
-sub_sequence = _REQ_SUBSEQ_XYZ_EXE_X;
-
-
+        sub_sequence = _REQ_SUBSEQ_XYZ_EXE_Z;
         nextStepSequence(1);
         break;
 
-    // Richiede il posizionamento dell'asse Y
-    case _REQ_SUBSEQ_XYZ_EXE_SCROLL_Y_LEFT:
-    case _REQ_SUBSEQ_XYZ_EXE_SCROLL_Y_RIGHT:
-    case _REQ_SUBSEQ_XYZ_EXE_SCROLL_Y_CENTER:
+    case _REQ_SUBSEQ_XYZ_EXE_Z:
 
-        // Attende che l'utente confermi correttamente la regolazione dell'asse X
-        if(!user_confirmation){
+        // Avvia il comando di posizionamento Z
+        moveXYZ(curX_dmm, curY_dmm, req_Z);
+        if( movingError != _BIOPSY_MOVING_NO_ERROR){
+            manageRequestErrors(movingError);
+            return;
+        }
+
+        sub_sequence = _REQ_SUBSEQ_XYZ_WAIT_Z;
+        nextStepSequence(100);
+        break;
+
+    case _REQ_SUBSEQ_XYZ_WAIT_Z:
+
+        if(movingCommand > _BIOPSY_MOVING_COMPLETED){
               event_req_sequence = startTimer(100);
               return;
+        }
+
+        // Comando terminato
+        if(movingError != _BIOPSY_MOVING_NO_ERROR){
+            manageRequestErrors(movingError);
+            return;
+        }
+
+        //sub_sequence = _REQ_SUBSEQ_XYZ_COMPLETED;
+        sub_sequence = _REQ_SUBSEQ_XYZ_EXE_Y;
+        nextStepSequence(1);
+        break;
+    case _REQ_SUBSEQ_XYZ_EXE_Y:
+
+        // Avvia il comando di posizionamento X
+        moveXYZ(curX_dmm, req_Y, curZ_dmm);
+        if( movingError != _BIOPSY_MOVING_NO_ERROR){
+            manageRequestErrors(movingError);
+            return;
+        }
+
+        sub_sequence = _REQ_SUBSEQ_XYZ_WAIT_Y;
+        nextStepSequence(100);
+        break;
+
+    case _REQ_SUBSEQ_XYZ_WAIT_Y:
+
+        if(movingCommand > _BIOPSY_MOVING_COMPLETED){
+              event_req_sequence = startTimer(100);
+              return;
+        }
+
+        // Comando terminato
+        if(movingError != _BIOPSY_MOVING_NO_ERROR){
+            manageRequestErrors(movingError);
+            return;
         }
 
         sub_sequence = _REQ_SUBSEQ_XYZ_EXE_X;
         nextStepSequence(1);
         break;
-
 
     case _REQ_SUBSEQ_XYZ_EXE_X:
 
@@ -685,77 +730,18 @@ sub_sequence = _REQ_SUBSEQ_XYZ_EXE_X;
             return;
         }
 
-        sub_sequence = _REQ_SUBSEQ_XYZ_EXE_Y;
-        nextStepSequence(1);
-        break;
-
-    case _REQ_SUBSEQ_XYZ_EXE_Y:
-
-        // Avvia il comando di posizionamento X
-        moveXYZ(curX_dmm, req_Y, curZ_dmm);
-        if( movingError != _BIOPSY_MOVING_NO_ERROR){
-            manageRequestErrors(movingError);
-            return;
-        }
-
-        sub_sequence = _REQ_SUBSEQ_XYZ_WAIT_Y;
-        nextStepSequence(100);
-        break;
-
-    case _REQ_SUBSEQ_XYZ_WAIT_Y:
-
-        if(movingCommand > _BIOPSY_MOVING_COMPLETED){
-              event_req_sequence = startTimer(100);
-              return;
-        }
-
-        // Comando terminato
-        if(movingError != _BIOPSY_MOVING_NO_ERROR){
-            manageRequestErrors(movingError);
-            return;
-        }
-
-        sub_sequence = _REQ_SUBSEQ_XYZ_EXE_Z;
-        nextStepSequence(1);
-        break;
-
-    case _REQ_SUBSEQ_XYZ_EXE_Z:
-
-        // Avvia il comando di posizionamento X
-        moveXYZ(curX_dmm, curY_dmm, req_Z);
-        if( movingError != _BIOPSY_MOVING_NO_ERROR){
-            manageRequestErrors(movingError);
-            return;
-        }
-
-        sub_sequence = _REQ_SUBSEQ_XYZ_WAIT_Z;
-        nextStepSequence(100);
-        break;
-
-    case _REQ_SUBSEQ_XYZ_WAIT_Z:
-
-        if(movingCommand > _BIOPSY_MOVING_COMPLETED){
-              event_req_sequence = startTimer(100);
-              return;
-        }
-
-        // Comando terminato
-        if(movingError != _BIOPSY_MOVING_NO_ERROR){
-            manageRequestErrors(movingError);
-            return;
-        }
-
         sub_sequence = _REQ_SUBSEQ_XYZ_COMPLETED;
         nextStepSequence(1);
         break;
+
 
     case _REQ_SUBSEQ_XYZ_COMPLETED:
 
 
         // Notifica di fine movimento
-        if(pBiopsy->activationId) pToConsole->endCommandAck(pBiopsy->activationId, movingError);
+        if(pBiopsy->activationId) pToConsole->endCommandAck(pBiopsy->activationId, _BIOPSY_MOVING_NO_ERROR);
         pBiopsy->activationId = 0;
-        GWindowRoot.setNewPage(GWindowRoot.parentPage,GWindowRoot.curPage,0);
+        GWindowRoot.setNewPage(_PG_BIOPSY_EXTENDED_PAGE,GWindowRoot.curPage,0);
         break;
     }
 }
@@ -769,13 +755,14 @@ sub_sequence = _REQ_SUBSEQ_XYZ_EXE_X;
 void biopsyExtendedDevice::manageRequestErrors(int error){
 
     pToConsole->endCommandAck(pBiopsy->activationId, error);
+    movingError = _BIOPSY_MOVING_NO_ERROR;
     pBiopsy->activationId = 0;
-    GWindowRoot.setNewPage(GWindowRoot.parentPage,GWindowRoot.curPage,0);
+    GWindowRoot.setNewPage(_PG_BIOPSY_EXTENDED_PAGE,GWindowRoot.curPage,0);
     sub_sequence = 0;
     req_sequence = 0;
 
     // Attiva una finestra di allarme
-    PageAlarms::activateNewAlarm(_DB_ALLARMI_BIOPSIA,error,TRUE);
+    //PageAlarms::activateNewAlarm(_DB_ALLARMI_BIOPSIA,error,TRUE);
 }
 
 /*
