@@ -415,8 +415,172 @@ void biopsyExtendedDevice::handleMove(void){
     return;
 
 }
+void biopsyExtendedDevice::manageHomeSequence(void){
+
+    switch(sub_sequence){
 
 
+    // Inizializzazione della sequenza
+    case _REQ_SUBSEQ_HOME_INIT:
+
+        user_confirmation = false;
+
+
+        // Assegna la fase in corso
+        if(movingCommand > _BIOPSY_MOVING_COMPLETED) {
+            manageRequestErrors(_BIOPSY_MOVING_ERROR_BUSY);
+            return;
+        }
+        move_Y = curY_dmm;
+        move_Z = curZ_dmm;
+
+        if(curLatX == _BP_EXT_ASSEX_POSITION_CENTER){
+            move_X = _DEF_EXT_XHOME_CENTER;
+            seq_param1 == _PARAM_CENTER;
+            sub_sequence = _REQ_SUBSEQ_HOME_TEST_Y_UP;
+            nextStepSequence(1);
+            break;
+        }
+
+        if(curLatX == _BP_EXT_ASSEX_POSITION_RIGHT) move_X = _DEF_EXT_XHOME_RIGHT;
+        else if(curLatX == _BP_EXT_ASSEX_POSITION_LEFT) move_X = _DEF_EXT_XHOME_LEFT;
+        sub_sequence = _REQ_SUBSEQ_HOME_X_MOVE;
+        if((req_home_lat != prev_home_lat) && (prev_home_lat != _BP_EXT_ASSEX_POSITION_CENTER)) next_seq = _REQ_SUBSEQ_HOME_TEST_Y_UP; // Chiede di riportare Y upright
+        else next_seq = _REQ_SUBSEQ_HOME_EXE_Y; // Chiederà di muover Y direttamente
+        nextStepSequence(1);
+        break;
+
+        // Attesa Y UpRight
+        case _REQ_SUBSEQ_HOME_TEST_Y_UP:
+
+            // Y is alreade upright
+            if(testYisUp()){
+                sub_sequence = _REQ_SUBSEQ_HOME_TEST_SCROLL_X;
+                nextStepSequence(1);
+                break;
+            }
+
+            // Scroll Y -UP and continue
+            sub_sequence = _REQ_SUBSEQ_HOME_Y_SCROLL;
+            seq_param2 = _PARAM_UP;
+
+            if(curLatX == _BP_EXT_ASSEX_POSITION_RIGHT) seq_param1 == _PARAM_RIGHT;
+            else if(curLatX == _BP_EXT_ASSEX_POSITION_LEFT) seq_param1 == _PARAM_LEFT;
+            else if(curLatX == _BP_EXT_ASSEX_POSITION_CENTER) seq_param1 == _PARAM_CENTER;
+
+            next_seq = _REQ_SUBSEQ_HOME_TEST_SCROLL_X;
+            nextStepSequence(1);
+
+        break;
+
+        case _REQ_SUBSEQ_HOME_TEST_SCROLL_X:
+            // Se la lateralità è già quella richiesta va direttamente a muovere X
+            if(req_home_lat == curLatX)
+            {
+                sub_sequence = _REQ_SUBSEQ_HOME_EXE_X;
+                nextStepSequence(1);
+                return;
+            }
+
+            if(req_home_lat == _BP_EXT_ASSEX_POSITION_CENTER) seq_param1 = _PARAM_CENTER;
+            else if(req_home_lat == _BP_EXT_ASSEX_POSITION_LEFT) seq_param1 = _PARAM_LEFT;
+            else seq_param1 = _PARAM_RIGHT;
+            next_seq = _REQ_SUBSEQ_HOME_EXE_X; // Return to the same sequence
+            sub_sequence = _REQ_SUBSEQ_HOME_X_SCROLL;
+            nextStepSequence(1);
+        break;
+
+    case _REQ_SUBSEQ_HOME_X_SCROLL: handleXScroll();break;
+    case _REQ_SUBSEQ_HOME_Y_SCROLL: handleYScroll();break;
+    case _REQ_SUBSEQ_HOME_X_MOVE:   handleMove();break;
+    case _REQ_SUBSEQ_HOME_Y_MOVE:   handleMove();break;
+    case _REQ_SUBSEQ_HOME_Z_MOVE:   handleMove();break;
+
+    case _REQ_SUBSEQ_HOME_EXE_X:
+        move_X = req_X;
+        move_Y = curY_dmm;
+        move_Z = curZ_dmm;
+        seq_param1  = _PARAM_CENTER;
+
+        sub_sequence = _REQ_SUBSEQ_HOME_X_MOVE;
+        //next_seq = _REQ_SUBSEQ_HOME_TEST_Y_DOWN;
+        next_seq = _REQ_SUBSEQ_HOME_EXE_Y;
+        nextStepSequence(1);
+        break;
+
+    // Attivazione dell'azzeramento Y
+    case _REQ_SUBSEQ_HOME_EXE_Y:
+        move_X = curX_dmm;
+        move_Y = req_Y;
+        move_Z = curZ_dmm;
+        if(req_Y < curY_dmm) seq_param1 = _PARAM_IN;
+        else seq_param1 = _PARAM_OUT;
+        sub_sequence = _REQ_SUBSEQ_HOME_Y_MOVE;
+
+        next_seq = _REQ_SUBSEQ_HOME_EXE_Z;
+        nextStepSequence(1);
+    break;
+
+
+    // Movimento asse Z verso posizione di parcheggio
+    case _REQ_SUBSEQ_HOME_EXE_Z:
+        move_X = curX_dmm;
+        move_Y = curY_dmm;
+        move_Z = req_Z;
+
+        if(req_Z < curZ_dmm) seq_param1 = _PARAM_UP;
+        else seq_param1 = _PARAM_DOWN;
+        sub_sequence = _REQ_SUBSEQ_HOME_Z_MOVE;
+
+        if((req_home_lat != prev_home_lat) && (req_home_lat != _BP_EXT_ASSEX_POSITION_CENTER)) next_seq = _REQ_SUBSEQ_HOME_TEST_Y_DOWN; // Chiede di riportare Y upright
+        else next_seq = _REQ_SUBSEQ_HOME_COMPLETED;
+        nextStepSequence(1);
+    break;
+
+    case _REQ_SUBSEQ_HOME_TEST_Y_DOWN:
+
+        if(req_home_lat == _BP_EXT_ASSEX_POSITION_CENTER) {
+            // Se home è al centro, finisce qui
+            sub_sequence = _REQ_SUBSEQ_HOME_COMPLETED;
+            nextStepSequence(1);
+            break;
+        }
+
+        // Scroll Y
+        sub_sequence = _REQ_SUBSEQ_HOME_Y_SCROLL;
+        if(req_home_lat == _BP_EXT_ASSEX_POSITION_LEFT)   seq_param1 = _PARAM_LEFT;
+        else seq_param1 = _PARAM_RIGHT;
+        seq_param2 = _PARAM_DOWN;
+        next_seq = _REQ_SUBSEQ_HOME_COMPLETED;
+        nextStepSequence(1);
+    break;
+
+
+    case _REQ_SUBSEQ_HOME_COMPLETED:
+        isHome = true;
+
+        // Notifica di fine movimento
+        movingError = _BIOPSY_MOVING_NO_ERROR;
+        if(pBiopsy->activationId) pToConsole->endCommandAck(pBiopsy->activationId, _BIOPSY_MOVING_NO_ERROR);
+        pBiopsy->activationId = 0;
+        GWindowRoot.setNewPage(GWindowRoot.parentPage,GWindowRoot.curPage,0);
+        break;
+
+
+
+    // _________________________________________________
+    defaut:
+        // Case anomalo: si chiude il comando come se fosse tutto ok
+        if(pBiopsy->activationId) pToConsole->endCommandAck(pBiopsy->activationId, _BIOPSY_MOVING_NO_ERROR);
+        pBiopsy->activationId = 0;
+        GWindowRoot.setNewPage(GWindowRoot.parentPage,GWindowRoot.curPage,0);
+        break;
+    }
+
+
+    return ;
+}
+/*
 void biopsyExtendedDevice::manageHomeSequence(void){
 
     switch(sub_sequence){
@@ -618,6 +782,7 @@ void biopsyExtendedDevice::manageHomeSequence(void){
     return ;
 }
 
+*/
 
 void biopsyExtendedDevice::manageXYZSequence(void){
     switch(sub_sequence){
@@ -778,8 +943,15 @@ int biopsyExtendedDevice::requestBiopsyHome(int id, unsigned char lat, int rot_h
     QString activationString;
 
 
-    req_rot_holder = rot_holder;
+    if(
+            (curLatX !=_BP_EXT_ASSEX_POSITION_LEFT) &&
+            (curLatX !=_BP_EXT_ASSEX_POSITION_CENTER) &&
+            (curLatX !=_BP_EXT_ASSEX_POSITION_RIGHT) ) return -1;
+
+    prev_home_lat = req_home_lat;
     req_home_lat = lat;
+    req_rot_holder = rot_holder;
+
 
     // Determina il target X in funzione della lateralità
     if(lat == _BP_EXT_ASSEX_POSITION_LEFT){

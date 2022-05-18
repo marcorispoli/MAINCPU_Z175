@@ -193,7 +193,9 @@ private:
 
     // Requested positionning target
     int           req_rot_holder;
-    unsigned char req_home_lat;    
+    unsigned char req_home_lat;
+    unsigned char prev_home_lat;
+
     unsigned short req_X;
     unsigned short req_Y;
     unsigned short req_Z;
