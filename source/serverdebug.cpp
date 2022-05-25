@@ -4141,7 +4141,13 @@ void serverDebug::handleExtendedBiopsy(QByteArray data)
         }else if(data.contains("getAdapter")){
             serviceTcp->txData(QString("current adapter: %1\n\r").arg(pBiopsyExtended->getAdapterId()).toAscii().data());
         }else if(data.contains("getSignals")){
-            QString stringa = QString("SIGNALS: X:%1, Y:%2, Z:%3, SHR:%4, SH:%5\r\n").arg(pBiopsyExtended->curX_dmm).arg(pBiopsyExtended->curY_dmm).arg(pBiopsyExtended->curZ_dmm).arg(pBiopsyExtended->curSh_raw).arg(pBiopsyExtended->curSh_dmm);
+            QString lat;
+            if(pBiopsyExtended->curLatX == _BP_EXT_ASSEX_POSITION_CENTER) lat = "CENTER";
+            else if(pBiopsyExtended->curLatX == _BP_EXT_ASSEX_POSITION_LEFT) lat = "LEFT";
+            else if(pBiopsyExtended->curLatX == _BP_EXT_ASSEX_POSITION_RIGHT) lat = "RIGHT";
+            else lat = "UNDEF";
+
+            QString stringa = QString("SIGNALS: X:%1, Y:%2, Z:%3, SHR:%4, SH:%5 LAT:%6\r\n").arg(pBiopsyExtended->curX_dmm).arg(pBiopsyExtended->curY_dmm).arg(pBiopsyExtended->curZ_dmm).arg(pBiopsyExtended->curSh_raw).arg(pBiopsyExtended->curSh_dmm).arg(lat);
             serviceTcp->txData(stringa.toAscii().data());
         }else if(data.contains("getRevision")){
             serviceTcp->txData(QString("current revision: %1\n\r").arg(pBiopsy->revisione).toAscii().data());

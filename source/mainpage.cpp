@@ -192,6 +192,9 @@ void MainPage::childStatusPage(bool stat,int opt)
     changePannello(_MAIN_PANEL);
     paginaAllarmi->alarm_enable=true;
 
+    // Imposta la pagina di rientro delle attivazioni
+    pBiopsyExtended->setExitPage(_PG_MAIN_DIGITAL);
+
     if(isMaster){
         if(pConfig->lenzeConfig.startupInParkingMode)
             ApplicationDatabase.setData(_DB_PARKING_MODE,(unsigned char) 1);

@@ -4675,7 +4675,9 @@ bool console::handleSetIaRxData(protoConsole* frame, protoConsole* answer)
  *      -> OK 0 Già in posizione;
         -> OK 255: comando attivato, completamento differito
         -> NOK 1: numero parametri errato
-        -> NOK 2: lateralità non definita
+        -> NOK 2: lateralità non definita o errore attivo
+        -> NOK 3: Finestra di errore attiva
+        -> NOK 4: BUSY
  *
  */
 void console::handleBiopsyExtendedMoveXYZ(protoConsole* frame, protoConsole* answer)
@@ -4692,11 +4694,18 @@ void console::handleBiopsyExtendedMoveXYZ(protoConsole* frame, protoConsole* ans
         return;
     }
 
+    if(pBiopsy->activationId) {
+        emit consoleTxHandler(answer->answToQByteArray("NOK 4 BUSY"));
+        return;
+    }
+
     unsigned short X = frame->parametri[0].toUInt(); // dam
     unsigned short Y = frame->parametri[1].toUInt(); // dam
     unsigned short Z = frame->parametri[2].toUInt(); // dam
 
-    if( pBiopsyExtended->requestBiopsyMoveXYZ(X,Y,Z,frame->id)==0) emit consoleTxHandler(answer->answToQByteArray("OK 0"));
+    int ret = pBiopsyExtended->requestBiopsyMoveXYZ(X,Y,Z,frame->id);
+    if(ret < 0) emit consoleTxHandler(answer->answToQByteArray("NOK 3 FINESTRA ERRORE ATTIVO"));
+    else if(ret ==0) emit consoleTxHandler(answer->answToQByteArray("OK 0"));
     else emit consoleTxHandler(answer->answToQByteArray("OK 255"));
 
     return;
@@ -4713,12 +4722,19 @@ void console::handleBiopsyExtendedMoveXYZ(protoConsole* frame, protoConsole* ans
         -> OK 255: comando attivato, completamento differito
         -> NOK 1: numero parametri errato
         -> NOK 2: parametro non conforme
-
+        -> NOK 3: Finestra di errore attiva o lateralità indefinita
+        -> NOK 4: BUSY
  */
 void console::handleBiopsyExtendedMoveHome(protoConsole* frame, protoConsole* answer)
 {
     if(frame->parametri.size() != 2 ) {
         emit consoleTxHandler(answer->answToQByteArray("NOK 1 ERRORE NUMERO DI PARAMETRI: ->  LAT"));
+        return;
+    }
+
+
+    if(pBiopsy->activationId) {
+        emit consoleTxHandler(answer->answToQByteArray("NOK 4 BUSY"));
         return;
     }
 
@@ -4742,10 +4758,10 @@ void console::handleBiopsyExtendedMoveHome(protoConsole* frame, protoConsole* an
     }
 
 
-    if(pBiopsyExtended->requestBiopsyHome(frame->id,lat,frame->parametri[0].toInt() )==0) emit consoleTxHandler(answer->answToQByteArray("OK 0"));
-    else  emit consoleTxHandler(answer->answToQByteArray("OK 255"));
-
-
+    int ret = pBiopsyExtended->requestBiopsyHome(frame->id,lat,frame->parametri[0].toInt() );
+    if(ret < 0) emit consoleTxHandler(answer->answToQByteArray("NOK 3 FINESTRA DI ERRORE ATTIVA"));
+    else if(ret ==0) emit consoleTxHandler(answer->answToQByteArray("OK 0"));
+    else emit consoleTxHandler(answer->answToQByteArray("OK 255"));
 
     return;
 }

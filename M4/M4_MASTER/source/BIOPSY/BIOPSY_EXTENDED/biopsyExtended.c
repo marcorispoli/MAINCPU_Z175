@@ -81,7 +81,7 @@ void biopsyExtendedLoop(void)
         }
 
         // Effettua la notifica dello stato se necessario
-        if(notifica) while(!mccBiopsyExtendedNotify(1,BIOP_NOTIFY_STAT,dati, sizeof(dati))) _time_delay(50);
+        if(notifica) while(!mccBiopsyExtendedNotify(1,BIOP_NOTIFY_STAT,dati, sizeof(dati))) _time_delay(500);
 
     }
 }

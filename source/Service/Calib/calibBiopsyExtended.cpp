@@ -120,6 +120,9 @@ void CalibBiopsyExtendedClass::initPage(void){
 
     ApplicationDatabase.setData(_BIOCAL_WORKING_FRAME,_BIOPCAL_FRAME_MENU, DBase::_DB_FORCE_SGN);
 
+    // Imposta la pagina di rientro delle attivazioni
+    pBiopsyExtended->setExitPage(_PG_SERVICE_CALIB_EXTENDED_BIOPSY);
+
     if(!isMaster) return;
 
     seqTimer = startTimer(500);

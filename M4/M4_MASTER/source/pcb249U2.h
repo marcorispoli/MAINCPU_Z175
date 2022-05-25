@@ -75,7 +75,7 @@ Data di Creazione: 01/11/2014
   
   // Parametri per il posizionamento dello specchio
   #define RG249U2_PR_MIRROR_STEPS  8,_PADDR+4    ,_BNK01,_16BIT ,_RW, _NVL, (unsigned short)0 // Steps posizionamento specchio        
-  #define RG249U2_PR_MAX_FR        9,_PADDR+14   ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0 // Max numero di steps posizionamento lama frontale        
+  #define RG249U2_PR_FILTER_DISABLED  9,_PADDR+14   ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0 // Set to 1 se disabilitato da teaching
   
   #define RG249U2_PR_CALIBRATED    10,_PADDR+15  ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0 // Sistema è sttato calibrato
     
@@ -114,7 +114,7 @@ volatile _DeviceRegItem_Str  PCB249U2_Registers[]=
     _REGDEF(RG249U2_PR_FILTER2),
     _REGDEF(RG249U2_PR_FILTER3),
     _REGDEF(RG249U2_PR_MIRROR_STEPS),
-    _REGDEF(RG249U2_PR_MAX_FR),
+    _REGDEF(RG249U2_PR_FILTER_DISABLED),
     _REGDEF(RG249U2_PR_CALIBRATED),
 
     _REGDEF(RG249U2_FILTER_CURPOS),
@@ -228,6 +228,7 @@ volatile _DeviceRegItem_Str  PCB249U2_Registers[]=
   ext bool pcb249U2RxSetFiltroCmd(unsigned char cmd);
   ext bool waitRxFilterCompletion(void);
   ext bool wait2DBackFrontCompletion(int timeout);
+  ext bool pcb249U2testFilterDisabledRegister(void);
 
   // Sezione dedicata al filtro e alla lampada
   ext unsigned char filtro_req;     // ultima richiesta di filtro

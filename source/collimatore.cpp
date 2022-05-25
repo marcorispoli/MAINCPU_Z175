@@ -696,7 +696,7 @@ void Collimatore::guiNotifySlot(unsigned char id, unsigned char mcccode, QByteAr
         if(buffer.at(0)==0)
         {
             LOG("COLLIMATORE: POSIZIONAMENTO FILTRO FALLITO");
-            //PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_COLLI, COLLI_FILTRO_FALLITO, TRUE);
+            PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_COLLI, COLLI_FILTRO_FALLITO, TRUE);
             filterIndexExecuted = 255;
             filterPosExecuted = 255;
             return;
@@ -724,7 +724,7 @@ void Collimatore::guiNotifySlot(unsigned char id, unsigned char mcccode, QByteAr
         if(buffer.at(1)==1){
             // Collimazione lame laterali
             if(buffer.at(0)==0){
-               //PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_COLLI, COLLI_UPDATE_FALLITO, TRUE);
+               PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_COLLI, COLLI_UPDATE_FALLITO, TRUE);
                LOG("COLLIMATORE ERRORE COLLIMAZIONE LAME LATERALI");
                cursen_left = 255;
                cursen_right = 255;
@@ -739,7 +739,7 @@ void Collimatore::guiNotifySlot(unsigned char id, unsigned char mcccode, QByteAr
         }else{
             // Collimazine lama frontale + back
             if(buffer.at(0)==0){
-               //PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_COLLI, COLLI_UPDATE_FALLITO, TRUE);
+               PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_COLLI, COLLI_UPDATE_FALLITO, TRUE);
                LOG("COLLIMATORE ERRORE COLLIMAZIONE FRONTE/RETRO");
                cursen_front = 255;
                cursen_back = 255;

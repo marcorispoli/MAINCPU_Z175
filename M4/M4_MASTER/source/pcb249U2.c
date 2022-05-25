@@ -171,10 +171,17 @@ void pcb249U2_driver(uint32_t taskRegisters)
 
             debugPrintI2("PCB249U2 ESECUZIONE POSIZIONAMENTO FILTRO, INDEX",filtro_req,"POS",pos_req);
 
-            // Legge la posizione corrente
-            pcb249U2getFilterCurrentPosition();
 
-            // Se la posizione correnter è quella attesa allora termina subito qui
+            if(pcb249U2testFilterDisabledRegister()){
+                // Riabilita se necessario il filtro
+                pcb249U2clearFilterDisabledRegister();
+                posizioneFiltro=-1;
+            }else{
+                // Legge la posizione corrente
+                pcb249U2getFilterCurrentPosition();
+            }
+
+            // Se la posizione corrente è quella attesa allora termina subito qui
             if(posizioneFiltro==pos_req){
                 debugPrintI2("PCB249U2 POSIZIONAMENTO FILTRO TERMINATO, CMD", comando_filtro, "POS",posizioneFiltro);
                 data[0]=1; // OK
@@ -245,6 +252,18 @@ void pcb249U2_driver(uint32_t taskRegisters)
            // Legge la posizione finale
            pcb249U2getFilterCurrentPosition();
 
+           // Verifica se il fitro è ancora abilitato
+           if(pcb249U2testFilterDisabledRegister()){
+               debugPrintI3("PCB249U2 FILTRO: FILTRO IN TIMEOUT! CMD:", comando_filtro, "P-TARGET",target_filtro, "POS", posizioneFiltro);
+               data[0] = 0; // Errore
+               data[1] = comando_filtro;  // Indice filtro
+               data[2] = 0; // Posizione filtro
+               data[3] = target_filtro;   // posizione filtro richiesto
+               mccGuiNotify(_COLLI_ID,MCC_SET_FILTRO,data,4);
+               _EVCLR(_EV0_PCB249U2_FILTRO);
+               continue;
+           }
+
            // Rilegge il registro di fault se necessario
            if(_TEST_BIT(PCB249U2_FAULT)){
                debugPrintI3("PCB249U2 ERRORE POSIZIONAMENTO FILTRO: ESECUZIONE FALLITA, CMD", comando_filtro, "P-TARGET",target_filtro, "POS", posizioneFiltro);
@@ -255,10 +274,7 @@ void pcb249U2_driver(uint32_t taskRegisters)
                mccGuiNotify(_COLLI_ID,MCC_SET_FILTRO,data,4);
                _EVCLR(_EV0_PCB249U2_FILTRO);
                continue;
-            }
-
-           // Verifica per un altro comando richiesto in successione
-           else{               
+            }else{      // Verifica per un altro comando richiesto in successione
                debugPrintI3("PCB249U2 POSIZIONAMENTO FILTRO COMPLETATA, CMD", comando_filtro, "P-TARGET",target_filtro, "POS", posizioneFiltro);
                data[0]=1; // OK
                filtro_eseguito = true;
@@ -373,6 +389,20 @@ int pcb249U2getFilterCurrentPosition(void){
     else posizioneFiltro=-1;
 
     return posizioneFiltro;
+}
+
+bool pcb249U2testFilterDisabledRegister(void){
+    // Legge la posizione corrente
+    if(Ser422ReadRegister(_REGID(RG249U2_PR_FILTER_DISABLED),10,&CONTEST)==_SER422_NO_ERROR){
+        if(_DEVREGL(RG249U2_PR_FILTER_DISABLED,CONTEST)) return true;
+    }
+
+    return false;
+}
+
+void pcb249U2clearFilterDisabledRegister(void){
+    Ser422WriteRegister(_REGID(RG249U2_PR_FILTER_DISABLED),0,10,&CONTEST);
+    return ;
 }
 
 

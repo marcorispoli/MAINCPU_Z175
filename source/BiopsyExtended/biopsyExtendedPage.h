@@ -21,6 +21,8 @@ public:
     void setXrayOn(bool stat); // Attiva il simbolo raggi in corso
     void setCalibOn(bool stat); // Attivazione simboli modo Calibrazione
 
+
+
 public slots:
     void InitBiopsyPage(void); // Funzione per entrare nella pagina di Biopsia
     void valueChanged(int,int); // Link esterno alla fonte dei contenuti dei campi valore

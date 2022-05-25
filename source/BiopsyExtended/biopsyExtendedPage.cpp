@@ -148,6 +148,10 @@ void BiopsyExtendedPage::setCloseStudy(void){
     paginaImmagine->eraseImage();
 
     isOpen = false;
+
+    // Imposta la pagina di rientro delle attivazioni
+    pBiopsyExtended->setExitPage(_PG_MAIN_DIGITAL);
+
     if(isMaster) pBiopsyExtended->setPowerled(false);
     if(isMaster) pConfig->selectMainPage();
 }
@@ -161,6 +165,9 @@ void BiopsyExtendedPage::setCloseStudy(void){
  */
 void BiopsyExtendedPage::InitBiopsyPage(void)
 {    
+
+    // Imposta la pagina di rientro delle attivazioni
+    pBiopsyExtended->setExitPage(_PG_BIOPSY_EXTENDED_PAGE);
 
     // Inizializza visualizzazione del puntatore
     ApplicationDatabase.setData(_DB_BIOP_SHOW_SH, (unsigned char) 0);
@@ -264,6 +271,7 @@ void BiopsyExtendedPage::childStatusPage(bool stat,int opt)
         // Caso di rientro da allarme o immagine
         if(ApplicationDatabase.getDataS(_DB_CALIB_SYM)==""){
             pulsanteImgOn->setVisible(ImagePage::existImage(ApplicationDatabase.getDataS(_DB_IMAGE_NAME)));
+            //updateBiopsyView();
         }
 
     }

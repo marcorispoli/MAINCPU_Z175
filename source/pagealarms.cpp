@@ -171,6 +171,8 @@ PageAlarms::~PageAlarms()
     if(timerPg) killTimer(timerPg);
 }
 
+
+
 // Questa funzione viene chiamata ogni volta che viene ricevuto il segnale di cambio
 // pagina dalla Classe Base. Viene utilizzata per effettuare tutte le inizializzazioni del caso
 void PageAlarms::childStatusPage(bool stat,int opt)
@@ -264,14 +266,6 @@ void PageAlarms::setWindow(void){
 
     // Impostazione grafica
     _alarmStruct* pErr = setErrorWindow(classe,allarme);
-    if(pErr==0) return;
-    if(!isMaster) return;
-
-    // Preparazione messaggio per AWS:
-    if(!newAlarm) return;
-    newAlarm=false;
-
-    emit newAlarmSgn(pErr->codestr.toInt(),pErr->errmsg);
     return;
 
 }
@@ -301,7 +295,22 @@ void PageAlarms::valueChanged(int index,int opt)
 
     if((index>=FIRST_ALR_CLASS)&&(index<=LAST_ALR_CLASS))
     {
-        // Verifica quanti allarmi sono presenti
+        // Rileva il codice dell'allarme
+        allarme = (0xFF&ApplicationDatabase.getDataI(index));
+
+        // Invia segnalazione alla AWS
+        if((allarme) && (isMaster)){
+             _alarmStruct* pErr = getErrorInfo(index,allarme);
+             if(pErr) emit newAlarmSgn(pErr->codestr.toInt(),pErr->errmsg);
+        }
+
+        // Se la finestra di allarme non è attiva o non deve aprirsi allora gli auto-ripristinanti devono essere subito azzerati
+        if((allarme) && (ApplicationDatabase.getDataI(index) & 0xFF00) && ((!alarm_enable) || (opt & DBase::_DB_NO_ACTION))){
+            ApplicationDatabase.setData(index,(int)0, DBase::_DB_NO_CHG_SGN|DBase::_DB_NO_ECHO);
+            return;
+        }
+
+        // Aggiorna il numero totale degli allarmi presenti
         num=refreshAlarmStatus();
 
         // Nessun allarme  attivo: chiusura pagina
@@ -310,19 +319,13 @@ void PageAlarms::valueChanged(int index,int opt)
             return;
         }
 
-        // valore relativo all'allarme cambiato
-        allarme = (0xFF&ApplicationDatabase.getDataI(index));
-
         // Se la variazione riguarda l'attivazione di un allarme allora lo mostra
-        if(allarme!=0){
-            newAlarm=true;
+        if(allarme){
+
             curClass = index;
-            if((alarm_enable)&&(!(opt & DBase::_DB_NO_ACTION))) {
-                this->activatePage(DBase::_DB_NO_ECHO);
-            }
+            if((alarm_enable)&&(!(opt & DBase::_DB_NO_ACTION))) this->activatePage(DBase::_DB_NO_ECHO);
         }else{
             curClass=0;
-            newAlarm=false;
             setWindow();
         }
 
@@ -387,7 +390,7 @@ void PageAlarms::buttonActivationNotify(int id, bool status,int opt)
             if(codice)
             {
                 curClass = i;
-                newAlarm=false;
+
                 setWindow();
                 return;
             }else i++;
@@ -535,8 +538,22 @@ PageAlarms::_alarmStruct*  PageAlarms::setErrorWindow(int classe, int code)
     return 0;
 }
 
+// Restituisce la struttura errore associata al codice interno + classe
+PageAlarms::_alarmStruct* PageAlarms::getErrorInfo(int classe, int code){
 
-// Restituisce la struttura errore associata al codice
+    unsigned short index=classe-FIRST_ALR_CLASS;
+    if(index>=errors.size()) return 0;
+
+    for(int i=0; i<errors[index].errlist.size(); i++){
+        if(code==errors[index].errlist[i].codeval){
+            return &(errors[index].errlist[i]);
+        }
+    }
+
+    return 0;
+}
+
+// Restituisce la struttura errore associata al codice univoco di errore
 PageAlarms::_alarmStruct* PageAlarms::getErrorInfo(int code){
     for(int i=0; i<errors.size();i++){
         for(int ii=0; ii<errors[i].errlist.size();ii++){

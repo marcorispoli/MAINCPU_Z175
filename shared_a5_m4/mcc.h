@@ -456,7 +456,7 @@ typedef enum
     MCC_SERVICE_NOTIFY,       // Notifica ad A5 da parte di Service
     MCC_LOADER_NOTIFY,        // Notifica ad A5 da parte di Loader
     MCC_BIOP_STANDARD_NOTIFY, // Notifica da Biopsia Standard
-    MCC_BIOP_EXTENDED_NOTIFY, // Notifica da Biopsia Extended
+    MCC_BIOP_EXTENDED_NOTIFY, // (56) Notifica da Biopsia Extended
     MCC_PCB190_NOTIFY,        // Notifiche da driver della scheda PCB190
 
     // Sezione dedicata ai test

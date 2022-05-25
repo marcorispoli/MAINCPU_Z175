@@ -79,6 +79,11 @@ public:
     void initPage(void);
     void exitPage(void);
 
+    void setExitPage(uint page){
+        exitPageCode = page;
+    }
+    uint exitPageCode;
+
     bool calibrationMode;
 
     // Comandi in corso

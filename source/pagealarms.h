@@ -152,6 +152,7 @@ class PageAlarms : public GWindow
         bool isAlarmOn(int classe); // True se un allarme per la classe è attivo
         bool openAlarmPage(void); // Richiede l'apertura della pagina
 
+        _alarmStruct* getErrorInfo(int classe, int code);
         _alarmStruct* getErrorInfo(int code); // Restituisce il blocco descrittivo dell'errore di codice 00XXX
 
 
@@ -168,7 +169,7 @@ class PageAlarms : public GWindow
         bool alarm_enable;  // Abilitazione generazione allarmi
         int  curClass;      // Classe correntemente visualizzata
         int  numAlarm;      // Numero di allarmi presenti
-        bool newAlarm;      // Indica se si tratta di un nuovo allarme
+
 
         int timerId; // Usato per la gestione del timer della data
         int timerPg; // Usato per la gestione del timer della data
