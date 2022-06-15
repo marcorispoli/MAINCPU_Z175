@@ -731,6 +731,7 @@ void biopsyExtendedDevice::manageRequestErrors(int error){
  *  *  0: si trova già in HOME
  *  *  1: comando in esecuzione
  *  * -1: errore lateralità
+ *  * -2: braccio non in posizione
  */
 int biopsyExtendedDevice::requestBiopsyHome(int id, unsigned char lat, int rot_holder){
     QString activationString;
@@ -738,6 +739,10 @@ int biopsyExtendedDevice::requestBiopsyHome(int id, unsigned char lat, int rot_h
 
     // Non può essere eseguita con una pagina di errore in corso
     if(paginaAllarmi->isCurrentPage()) return -1;
+
+    // Prima di tutto controlla che il braccio si trovi in CC
+    if(ApplicationDatabase.getDataI(_DB_TRX) > 50) return -2;
+    if(ApplicationDatabase.getDataI(_DB_TRX) < -50) return -2;
 
     // Non può essere eseguita senza una rilevazione corretta della lateralità
     if(

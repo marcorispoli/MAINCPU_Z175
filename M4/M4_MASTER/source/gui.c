@@ -634,11 +634,12 @@ void mcc_cmd_trx(void)
 
     // Se il comando è già in esecuzione deve rispondere un errore
     if((generalConfiguration.trxExecution.run == true) || (generalConfiguration.trxExecution.completed == false) || (!generalConfiguration.trxExecution.idle)){
-        unsigned char buffer[2];
+        unsigned char buffer[4];
         debugPrint("GUI ERRORE COMANDO TRX: BUSY");
         buffer[0] = TRX_BUSY;
         buffer[1] = 0; // sub codice in caso di errore da fault
-        mccGuiNotify(mcc_cmd.id,MCC_CMD_TRX,buffer,2);
+        TO_LE16(&buffer[2],generalConfiguration.trxExecution.cAngolo);
+        mccGuiNotify(mcc_cmd.id,MCC_CMD_TRX,buffer,4);
         return;
     }
 

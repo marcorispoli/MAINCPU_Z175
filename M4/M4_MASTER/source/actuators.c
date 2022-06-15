@@ -1009,7 +1009,8 @@ void actuatorsRxFromTrx(uint8_t* data){
 
         buffer[0] = data[1]; // Codice esito proveniente dai drivers..
         buffer[1] = data[2]; // sub codice in caso di errore da fault
-        mccGuiNotify(generalConfiguration.trxExecution.id,MCC_CMD_TRX,buffer,2);
+        TO_LE16(&buffer[2],generalConfiguration.trxExecution.cAngolo);
+        mccGuiNotify(generalConfiguration.trxExecution.id,MCC_CMD_TRX,buffer,4);
 
         break;
 
@@ -1056,7 +1057,8 @@ void actuatorsRxFromTrx(uint8_t* data){
 
         buffer[0] = data[1]; // Codice esito proveniente dai drivers..
         buffer[1] = data[2]; // sub codice in caso di errore da fault
-        mccGuiNotify(generalConfiguration.trxExecution.id,MCC_CMD_TRX,buffer,2);
+        TO_LE16(&buffer[2],generalConfiguration.trxExecution.cAngolo);
+        mccGuiNotify(generalConfiguration.trxExecution.id,MCC_CMD_TRX,buffer,4);
 
         break;
 
@@ -1129,7 +1131,8 @@ void actuatorsRxFromTrx(uint8_t* data){
 
                 buffer[0] = TRX_ERROR_UNDEFINED; // Evento non definibile
                 buffer[1] = 0;
-                mccGuiNotify(generalConfiguration.trxExecution.id,MCC_CMD_TRX,buffer,2);
+                TO_LE16(&buffer[2],generalConfiguration.trxExecution.cAngolo);
+                mccGuiNotify(generalConfiguration.trxExecution.id,MCC_CMD_TRX,buffer,4);
                 generalConfiguration.trxExecution.id=0;
 
             }else{

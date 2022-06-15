@@ -3087,9 +3087,14 @@ void console::guiNotify(unsigned char id, unsigned char mcccode, QByteArray data
         break;
 
     case MCC_CMD_TRX:
+        trx =     (short) (data.at(2) + 256 * data.at(3)) / 10; // Espresso in decimi di grado
+        ApplicationDatabase.setData(_DB_TRX,(int) trx,0);
+        PRINT(QString("ANGOLO TRX A FINE MOVIMENTO:%1").arg(trx));
+
         // Handler di segnali di fine movimento Tubo
         PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_TRX, data.at(0),TRUE); // in caso di fallimento viene segnalato un   errore auto-resettante
         pToConsole->sendNotificheTcp(cmd.ackToQByteArray(data.at(0)));      // Segnalazione alla AWS di movimento terminato
+
         break;
 
     case MCC_ARM_ERRORS:
@@ -4759,7 +4764,8 @@ void console::handleBiopsyExtendedMoveHome(protoConsole* frame, protoConsole* an
 
 
     int ret = pBiopsyExtended->requestBiopsyHome(frame->id,lat,frame->parametri[0].toInt() );
-    if(ret < 0) emit consoleTxHandler(answer->answToQByteArray("NOK 3 FINESTRA DI ERRORE ATTIVA"));
+    if(ret == -1) emit consoleTxHandler(answer->answToQByteArray("NOK 1 FINESTRA DI ERRORE ATTIVA"));
+    else if(ret == -2) emit consoleTxHandler(answer->answToQByteArray("NOK 2 BRACCIO FUORI POSIZIONE"));
     else if(ret ==0) emit consoleTxHandler(answer->answToQByteArray("OK 0"));
     else emit consoleTxHandler(answer->answToQByteArray("OK 255"));
 

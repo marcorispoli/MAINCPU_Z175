@@ -30,7 +30,7 @@ public:
     void  setBuzzer(void);
     void  setPowerled(bool stat);
 
-    #define _DEF_TIMEOUT_USER_FEEDBACK  300 // 100ms unit
+    #define _DEF_TIMEOUT_USER_FEEDBACK  1200 // 100ms unit
 
     #define _DEF_EXT_XHOME_LEFT      2580
     #define _DEF_EXT_XHOME_CENTER    1290
