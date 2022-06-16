@@ -25,7 +25,7 @@ void biopsyModule::defaultConfigDataStandard(void){
     configStd.Z_basePosizionatore = 189;   // Distanza base metallica - fibra di carbonio
 
     // Gestion Movimento Pad
-    configStd.offsetPad = 59;              // Offset linea di calibrazione posizione - superficie staffe metalliche
+    configStd.offsetPad = 50;              // Offset linea di calibrazione posizione - superficie staffe metalliche
     configStd.margineRisalita = 15;        // Margine di sicurezza per impatto con il compressore in risalita
     configStd.marginePosizionamento = 5;   // Margine di sicurezza impatto con il compressore in puntamento
 

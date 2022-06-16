@@ -731,7 +731,8 @@ void biopsyExtendedDevice::manageRequestErrors(int error){
  *  *  0: si trova già in HOME
  *  *  1: comando in esecuzione
  *  * -1: errore lateralità
- *  * -2: braccio non in posizione
+ *  * -2: Asse X non in posizione
+ *  * -3: braccio non in posizione
  */
 int biopsyExtendedDevice::requestBiopsyHome(int id, unsigned char lat, int rot_holder){
     QString activationString;
@@ -748,7 +749,7 @@ int biopsyExtendedDevice::requestBiopsyHome(int id, unsigned char lat, int rot_h
     if(
             (curLatX !=_BP_EXT_ASSEX_POSITION_LEFT) &&
             (curLatX !=_BP_EXT_ASSEX_POSITION_CENTER) &&
-            (curLatX !=_BP_EXT_ASSEX_POSITION_RIGHT) ) return -2;
+            (curLatX !=_BP_EXT_ASSEX_POSITION_RIGHT) ) return -3;
 
     prev_home_lat = req_home_lat;
     req_home_lat = lat;

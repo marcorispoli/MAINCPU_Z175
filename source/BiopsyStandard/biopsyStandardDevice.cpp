@@ -116,10 +116,11 @@ void biopsyStandardDevice::mccStatNotify(unsigned char id_notify,unsigned char c
         // Disabilita i movimenti manuali
         ApplicationDatabase.setData(_DB_BIOP_MANUAL_ENA,(unsigned char) 0 ,0);
 
+        // <0 viene visualizzato "ND"
         curX=curY=curZ=-1;
-        ApplicationDatabase.setData(_DB_BIOP_X,(int) curX);
-        ApplicationDatabase.setData(_DB_BIOP_Y,(int) curY);
-        ApplicationDatabase.setData(_DB_BIOP_Z,(int) curZ);
+        ApplicationDatabase.setData(_DB_BIOP_X,(int) -1);
+        ApplicationDatabase.setData(_DB_BIOP_Y,(int) -1);
+        ApplicationDatabase.setData(_DB_BIOP_Z,(int) -1);
 
 
         // Notifies the AWS with Async message
@@ -232,32 +233,36 @@ void biopsyStandardDevice::mccStatNotify(unsigned char id_notify,unsigned char c
             if(!(data.at(_BP_STD_MOTION_END)&1))
             {// Errore su X
                 errore = 0x2;
-                curX = 0xFFFF;
-                ApplicationDatabase.setData(_DB_BIOP_X,QString("ND"));
+                curX = -1;
+                ApplicationDatabase.setData(_DB_BIOP_X,(int) -1);
                 if(pBiopsy->activationId) PageAlarms::activateNewAlarm(_DB_ALLARMI_BIOPSIA,ERROR_BIOP_MOVE_X,TRUE);
             }else{
                 curX = targetX;
-
-                ApplicationDatabase.setData(_DB_BIOP_X,QString("%1").arg((float)curX/10.0,0,'f',1));
+                ApplicationDatabase.setData(_DB_BIOP_X,(int) curX);
+                //ApplicationDatabase.setData(_DB_BIOP_X,QString("%1").arg((float)curX/10.0,0,'f',1));
             }
 
             if(!(data.at(_BP_STD_MOTION_END)&2))
             {// Errore su Y
                 errore = 0x4;
-                curY = 0xFFFF;
-                ApplicationDatabase.setData(_DB_BIOP_Y,QString("ND"));
+                curY = -1;
+                ApplicationDatabase.setData(_DB_BIOP_Y,(int) -1);
+                //ApplicationDatabase.setData(_DB_BIOP_Y,QString("ND"));
                 if(pBiopsy->activationId) PageAlarms::activateNewAlarm(_DB_ALLARMI_BIOPSIA,ERROR_BIOP_MOVE_Y,TRUE);
             }else{
                 curY = targetY;
-                ApplicationDatabase.setData(_DB_BIOP_Y,QString("%1").arg((float)curY/10.0,0,'f',1));
+                ApplicationDatabase.setData(_DB_BIOP_Y,(int) curY);
             }
 
             if(!(data.at(_BP_STD_MOTION_END)&4))
             {// Errore su Z
                 errore = 0x8;
+                curZ = -1;
+                ApplicationDatabase.setData(_DB_BIOP_Z,(int) -1);
                 if(pBiopsy->activationId) PageAlarms::activateNewAlarm(_DB_ALLARMI_BIOPSIA,ERROR_BIOP_MOVE_Z,TRUE);
             }else{
-
+                curZ = targetZ;
+                ApplicationDatabase.setData(_DB_BIOP_Z,(int) curZ);
             }
 
             // Anche in caso di errore abilita i movimenti manuali
@@ -270,10 +275,10 @@ void biopsyStandardDevice::mccStatNotify(unsigned char id_notify,unsigned char c
 
         break;
         case 5: // TIMEOUT TORRETTA
-            curX=curY=curZ=0xFFFF;
-            ApplicationDatabase.setData(_DB_BIOP_X,QString("ND"));
-            ApplicationDatabase.setData(_DB_BIOP_Y,QString("ND"));
-            ApplicationDatabase.setData(_DB_BIOP_Z,QString("ND"));
+            curX=curY=curZ=-1;
+            ApplicationDatabase.setData(_DB_BIOP_X,(int) -1);
+            ApplicationDatabase.setData(_DB_BIOP_Y,(int) -1);
+            ApplicationDatabase.setData(_DB_BIOP_Z,(int) -1);
 
             if(pBiopsy->activationId) pToConsole->endCommandAck(pBiopsy->activationId, 0x1);
             pBiopsy->activationId = 0;

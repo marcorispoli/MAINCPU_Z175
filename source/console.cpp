@@ -4765,7 +4765,8 @@ void console::handleBiopsyExtendedMoveHome(protoConsole* frame, protoConsole* an
 
     int ret = pBiopsyExtended->requestBiopsyHome(frame->id,lat,frame->parametri[0].toInt() );
     if(ret == -1) emit consoleTxHandler(answer->answToQByteArray("NOK 1 FINESTRA DI ERRORE ATTIVA"));
-    else if(ret == -2) emit consoleTxHandler(answer->answToQByteArray("NOK 2 BRACCIO FUORI POSIZIONE"));
+    else if(ret == -2) emit consoleTxHandler(answer->answToQByteArray("NOK 2 ASSE-X FUORI POSIZIONE"));
+    else if(ret == -3) emit consoleTxHandler(answer->answToQByteArray("NOK 3 BRACCIO FUORI POSIZIONE"));
     else if(ret ==0) emit consoleTxHandler(answer->answToQByteArray("OK 0"));
     else emit consoleTxHandler(answer->answToQByteArray("OK 255"));
 
