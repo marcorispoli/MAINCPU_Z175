@@ -174,6 +174,10 @@ void ImagePage::prevPageHandler(void)
 //______________________________________________________
 // Parent page è la pagina chiamante
 void ImagePage::OpenPage(void){
+
+    // Non apre con la pagina allarme attiva
+    if(GWindowRoot.curPage == _PG_ALARM) return;
+
     QString filename=FILE_HOME;
     filename.append(imageName);
 
@@ -192,6 +196,7 @@ void ImagePage::OpenPage(void){
     int h = (480-Pix->pixmap().height())/2;
     Pix->setPos(w,h);
     Pix->show();
+
 
     this->prevPage=GWindowRoot.parentPage; // pagina di rientro
     activateTimer=true;
