@@ -173,7 +173,7 @@ void tomo_rx_task(uint32_t taskRegisters)
         if(waitPcb190Ready(50)==FALSE) _SEQERROR(_SEQ_PCB190_BUSY);
 
         int rc = pcb190StartRxTomo();
-        if(rc==SER422_BUSY) _SEQERROR(_SEQ_PCB190_BUSY);
+        // if(rc==SER422_BUSY) _SEQERROR(_SEQ_PCB190_BUSY);
         if(rc==SER422_ILLEGAL_FUNCTION) _SEQERROR(ERROR_PUSHRX_NO_PREP);
 
         // Spin Lock ogni 100ms per testare anche eventuali blocchi sul braccio in movimento

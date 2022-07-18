@@ -125,7 +125,7 @@ void std_ae_rx_task(uint32_t taskRegisters)
     if(isAEC) rc = pcb190StartRxAecStd();
     else rc = pcb190StartRxStd();
 
-    if(rc==SER422_BUSY) _SEQERROR(_SEQ_PCB190_BUSY);
+    // if(rc==SER422_BUSY) _SEQERROR(_SEQ_PCB190_BUSY);
     if(rc==SER422_ILLEGAL_FUNCTION) _SEQERROR(ERROR_PUSHRX_NO_PREP);
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -218,7 +218,7 @@ void std_ae_rx_task(uint32_t taskRegisters)
 
     // Ricarica nuova sequenza
     rc = pcb190StartRxStd();
-    if(rc==SER422_BUSY) _SEQERROR(_SEQ_PCB190_BUSY);
+    // if(rc==SER422_BUSY) _SEQERROR(_SEQ_PCB190_BUSY);
     if(rc==SER422_ILLEGAL_FUNCTION) _SEQERROR(ERROR_PUSHRX_NO_PREP);
     _time_delay(500);
 

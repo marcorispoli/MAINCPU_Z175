@@ -423,6 +423,7 @@ int pcb190StartRxStd(void)
   debugPrintI2("PCB190 START EXPOSURE 2D COMMAND, D1",frame.data1,"D2",frame.data2);
   Ser422Send(&frame, SER422_BLOCKING,CONTEST.ID);
   
+
   return (int) frame.retcode;
   
 }
@@ -673,10 +674,12 @@ bool pcb190OffStarter(void)
 // Attende ATTEMPT*100ms il ready dalla PCB190
 bool waitPcb190Ready(unsigned char attempt)
 {
+
   while(attempt--)
   {
-    Ser422ReadRegister(_REGID(RG190_FLAGS0),20,&CONTEST);
-    if(!_TEST_BIT(PCB190_RX_BUSY)) return TRUE;
+    if(Ser422ReadRegister(_REGID(RG190_SEQ_RAGGI),4,&CONTEST) == _SER422_NO_ERROR) {
+        if(_DEVREGL(RG190_SEQ_RAGGI,CONTEST) == 0) return TRUE;
+    }
     _time_delay(100);
   }
 

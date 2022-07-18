@@ -118,7 +118,7 @@ void std_aec_rx_task(uint32_t taskRegisters)
         _EVCLR(_EV2_WAIT_AEC);    
 
         int rc = pcb190StartRxAecStd();
-        if(rc==SER422_BUSY) _SEQERROR(_SEQ_PCB190_BUSY);
+        // if(rc==SER422_BUSY) _SEQERROR(_SEQ_PCB190_BUSY);
         if(rc==SER422_ILLEGAL_FUNCTION) _SEQERROR(ERROR_PUSHRX_NO_PREP);
 
 

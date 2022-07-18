@@ -229,6 +229,7 @@ volatile _DeviceRegItem_Str  PCB249U2_Registers[]=
   ext bool waitRxFilterCompletion(void);
   ext bool wait2DBackFrontCompletion(int timeout);
   ext bool pcb249U2testFilterDisabledRegister(void);
+  ext void pcb249U2clearFilterDisabledRegister(void);
 
   // Sezione dedicata al filtro e alla lampada
   ext unsigned char filtro_req;     // ultima richiesta di filtro

@@ -67,7 +67,8 @@ Data di Creazione: 24/10/2014
   #define _pMainData 0x60       // BANCO 2,3
   #define PCB190_NSAMPLES 0x20 
   #define PCB190_NSAMPLES_TIME 0x20
-          
+  #define pRaggi 0x59
+
   #define RG190_FLAGS0             0,0+_MAP_0  ,_BNK01,_8BIT ,_RD, _NVL, (unsigned short)0 // Flags 
   #define RG190_FAULTS             1,6+_MAP_0  ,_BNK01,_8BIT ,_RD, _NVL, (unsigned short)0 // Flags 
   #define RG190_RXHVTMO            2,7+_MAP_0  ,_BNK01,_8BIT ,_RW, _VL, (unsigned short)0 // Tempo massimo di esposizione in 100ms unit
@@ -159,8 +160,10 @@ Data di Creazione: 24/10/2014
 
   #define PR_RX_OPT               68,4+_pPAR ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0
 
+  #define RG190_SEQ_RAGGI         69,1+pRaggi ,_BNK23,_8BIT ,_RD, _NVL, (unsigned short)0
 
-  #define PCB190_NREGISTERS       69
+
+  #define PCB190_NREGISTERS       70
 
   //////////////////////////////////////////////////////////////////////////////
   // ATTIVAZIONE DEI REGISTRI
@@ -250,20 +253,21 @@ Data di Creazione: 24/10/2014
     _REGDEF(RG190_AR_MAIN_IOFF),
     _REGDEF(RG190_AR_SHIFT_IOFF),
 
-      _REGDEF(RG190_ARLS_COUNT),
-      _REGDEF(RG190_ARHS_COUNT),
+    _REGDEF(RG190_ARLS_COUNT),
+    _REGDEF(RG190_ARHS_COUNT),
 
-      _REGDEF(PR_IMAIN_OFF_MAX),
-      _REGDEF(PR_ISHIFT_OFF_MAX),
-      _REGDEF(PR_IMAIN_RUN_MAX),
-      _REGDEF(PR_ISHIFT_RUN_MAX),
-      _REGDEF(PR_IMAIN_KEEP_MAX),
-      _REGDEF(PR_ISHIFT_KEEP_MAX),
-      _REGDEF(PR_IMAIN_RUN_MIN),
-      _REGDEF(PR_ISHIFT_RUN_MIN),
-      _REGDEF(PR_IMAIN_KEEP_MIN),
-      _REGDEF(PR_ISHIFT_KEEP_MIN),
-      _REGDEF(PR_RX_OPT)
+    _REGDEF(PR_IMAIN_OFF_MAX),
+    _REGDEF(PR_ISHIFT_OFF_MAX),
+    _REGDEF(PR_IMAIN_RUN_MAX),
+    _REGDEF(PR_ISHIFT_RUN_MAX),
+    _REGDEF(PR_IMAIN_KEEP_MAX),
+    _REGDEF(PR_ISHIFT_KEEP_MAX),
+    _REGDEF(PR_IMAIN_RUN_MIN),
+    _REGDEF(PR_ISHIFT_RUN_MIN),
+    _REGDEF(PR_IMAIN_KEEP_MIN),
+    _REGDEF(PR_ISHIFT_KEEP_MIN),
+    _REGDEF(PR_RX_OPT),
+    _REGDEF(RG190_SEQ_RAGGI)
 
 
   }; 

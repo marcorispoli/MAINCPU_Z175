@@ -112,7 +112,7 @@ void std_rx_task(uint32_t taskRegisters)
 
         // VErifica l'attivazione della PCB190
         int rc = pcb190StartRxStd();
-        if(rc==SER422_BUSY) _SEQERROR(_SEQ_PCB190_BUSY);
+        //if(rc==SER422_BUSY) _SEQERROR(_SEQ_PCB190_BUSY);
         if(rc==SER422_ILLEGAL_FUNCTION) _SEQERROR(ERROR_PUSHRX_NO_PREP);
 
         // Un minimo di attesa per consentire ai vari segnali di sincronizzarsi
