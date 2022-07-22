@@ -507,7 +507,7 @@ bool lenzeActivateUnpark(void){
     }
 
     upward_dir = true; // Deve salire;
-    lenzeSetSpeedAuto(0,targetPosition,PRESET_PARKING);
+    lenzeSetSpeedAuto(0,targetPosition,PRESET_MANUAL);
 
     // Partenza braccio
     lenzeActivateAuto(upward_dir);
