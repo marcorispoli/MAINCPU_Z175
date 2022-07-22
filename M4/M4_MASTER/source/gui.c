@@ -2090,13 +2090,6 @@ void mcc_unparking_mode(void)
         return;
     }
 
-    // Verifica se il potenziometro ha raggiunto il target atteso
-    if(generalConfiguration.armExecution.lenze_pot < generalConfiguration.lenzeCfg.parkingSafePoint){
-        debugPrint("GUI UNPARKING LENZ ERROR IN POSITIONNING");
-        buffer[1] = ERROR_PARKING_LENZE_POSITION;
-        mccGuiNotify(1,MCC_PARKING_MODE_COMMANDS, buffer, 2);
-        return;
-    }
 
     debugPrintI("GUI UNPARKING LENZE OK, POT", generalConfiguration.armExecution.lenze_pot);
     generalConfiguration.lenzeCfg.startupInParkingMode = 0;
