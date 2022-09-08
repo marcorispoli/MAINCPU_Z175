@@ -1403,7 +1403,7 @@ bool Config::saveArmConfig(void)
 // Lettura file di configurazione pendolazione
 bool Config::readLenzeConfig(void)
 {
-    lenzeConfig.calibrated = 0;
+    lenzeConfig.calibrated = 1;
     lenzeConfig.min_lenze_position = 15;  // %
     lenzeConfig.max_lenze_position = 85;  // %
     lenzeConfig.manual_speed =  50;       // 50Hz
