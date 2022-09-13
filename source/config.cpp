@@ -1407,7 +1407,7 @@ bool Config::readLenzeConfig(void)
     lenzeConfig.min_lenze_position = 15;  // %
     lenzeConfig.max_lenze_position = 85;  // %
     lenzeConfig.manual_speed =  50;       // 50Hz
-    lenzeConfig.automatic_speed =20;      // 20Hz
+    lenzeConfig.automatic_speed =50;      // 50Hz
     lenzeConfig.parking_speed = 10;       // 10Hz
     lenzeConfig.startupInParkingMode = false;
     lenzeConfig.parkingTarget = 400;
