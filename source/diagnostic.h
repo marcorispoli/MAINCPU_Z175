@@ -28,6 +28,8 @@ public:
 
     // Remote to Gantry
     #define CMD_GET_ERRORS          "GET_ERRORS"
+    #define CMD_GET_STATUS          "GET_STATUS"
+    #define CMD_SET_ERROR           "SET_ERROR"
 
 
 signals:

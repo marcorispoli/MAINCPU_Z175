@@ -116,6 +116,13 @@ void diagnosticInterface::commandRxHandler(QByteArray rxbuffer)
         commandTcp->txData(answ.answToQByteArray("OK"));
 
 
+    }else if(comando == CMD_GET_STATUS){
+
+        gantryStatus();
+
+    }else if(comando == CMD_SET_ERROR){
+
+       PageAlarms::debugActivateNewAlarm(44, 1,true);
 
     }else{
        commandTcp->txData(answ.answToQByteArray("NA"));
