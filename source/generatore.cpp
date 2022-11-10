@@ -154,31 +154,34 @@ void Generatore::storeHVcalibFile(void){
  *  return: TRUE se c'è stato un cambio di stato
  */
 void Generatore::testFilamento(void){
+    static unsigned char debounce = 0 ;
 
     // Con il filamento spento non è verificare la corrente in IDLE
     if(!(flags0 & 8)){
         warningIFilamento = false;
         faultIFilamento = false;
+        debounce = 0;
         return;
     }
 
-
-    int dfil = pConfig->userCnf.correnteFilamento * 5 / 100;
-
-    if((iFilamento > pConfig->userCnf.correnteFilamento + dfil) ||(iFilamento < pConfig->userCnf.correnteFilamento - dfil) ){
-       warningIFilamento = true;
-
-       // Nel caso sia abilitato il controllo anche sull'errore allora verifica che non sia superato il 10%
-       if(pConfig->userCnf.enableIFil){
-           if((iFilamento > pConfig->userCnf.correnteFilamento + 2 * dfil) ||(iFilamento < pConfig->userCnf.correnteFilamento - 2 * dfil) )
-              faultIFilamento = true;
-           else faultIFilamento = false;
-       }else{
-           faultIFilamento = false;
-       }
-    }else {
+    // Controllo disabilitato
+    if(!pConfig->userCnf.enableIFil){
         warningIFilamento = false;
         faultIFilamento = false;
+        debounce = 0;
+        return;
+    }
+
+    if(iFilamento < (pConfig->userCnf.correnteFilamento /2) ){
+
+        if(debounce > 100){
+            faultIFilamento = true;
+        }else debounce++;
+
+    }else{
+        warningIFilamento = false;
+        faultIFilamento = false;
+        debounce = 0;
     }
 
     return;
@@ -522,7 +525,8 @@ bool Generatore::openTube(QString tubeDir)
 bool Generatore::openCurrentTube(){
 
     QString tubeDir = QString(_TUBEPATH) + QString("/") + pConfig->userCnf.tubeFileName + QString("/");
-    return openTube(tubeDir);
+    pConfig->generator_configured = openTube(tubeDir);
+    return pConfig->generator_configured;
 
 }
 
