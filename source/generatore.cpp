@@ -174,7 +174,7 @@ void Generatore::testFilamento(void){
 
     if(iFilamento < (pConfig->userCnf.correnteFilamento /2) ){
 
-        if(debounce > 100){
+        if(debounce > 10){
             faultIFilamento = true;
         }else debounce++;
 

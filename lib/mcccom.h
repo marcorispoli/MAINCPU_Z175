@@ -60,7 +60,26 @@ typedef struct
  *
  */
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Oggetto di gestione di una thread di ricezione
+class mccComRx : public QObject
+ {
+    Q_OBJECT
 
+signals:
+    void mccRxSgn(_MccFrame_Str  mccframe);  // Segnale di ricezione del pacchetto mcc da inviare a gui
+
+public slots:
+     void mccThreadRx(void); // Funzione di inizio thread
+     void restartMcc(void);
+
+public:
+     bool isFrameCorrect(_MccFrame_Str* mccframe); // Verifica se il frame è corretto
+     _MccFrame_Str mcc_cmd;
+     MCC_ENDPOINT rx_ep;  // End point di ricezione
+
+     QThread *pThread;
+     bool restart;
+};
 
 class mccCom : public QObject
 {
@@ -87,6 +106,7 @@ signals:
     // Segnali generati in caso di ricezione frame
     void mccRxSignal(QByteArray data);
     void mccRxFrameSignal(_MccFrame_Str* mccframe);
+    void restartMcc(void);
 
 public slots:
     // Se non viene reimplementata la funzione emette la mccRxSignal
@@ -100,32 +120,19 @@ public:
     unsigned short max_len;    
     QString mccRev;
 
+    void setRestart(void){
+        emit restartMcc();
+    }
+
 private:
     MCC_ENDPOINT tx_ep;   
-
+    mccComRx *mccThObj;
 
 };
 
 
 
-// Oggetto di gestione di una thread di ricezione
-class mccComRx : public QObject
- {
-    Q_OBJECT
 
-signals:
-    void mccRxSgn(_MccFrame_Str  mccframe);  // Segnale di ricezione del pacchetto mcc da inviare a gui
-
-public slots:
-     void mccThreadRx(void); // Funzione di inizio thread
-
-public:
-     bool isFrameCorrect(_MccFrame_Str* mccframe); // Verifica se il frame è corretto
-     _MccFrame_Str mcc_cmd;
-     MCC_ENDPOINT rx_ep;  // End point di ricezione
-
-     QThread *pThread;
-};
 
 class mccSendThread : public QRunnable
  {
@@ -160,5 +167,6 @@ public:
      MCC_ENDPOINT rx_ep;  // End point di ricezione
      _MccFrame_Str mcc_buffer;
      QThread *pThread;
+     bool restart;
 };
 #endif // MCCCOM_H

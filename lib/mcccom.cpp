@@ -10,7 +10,7 @@ unsigned char mccCom::mccID=0;      // Inizializza il contatore degli Id sulla c
 mccCom::mccCom(unsigned char core, unsigned char node, unsigned char port,bool mode) :
     QObject(0)
 {
-    mccComRx *mccThObj;
+    //mccComRx *mccThObj;
     MCC_INFO_STRUCT mccDriverInfo; // Info Driver MCC
 
     qRegisterMetaType<_MccFrame_Str>("_MccFrame_Str");
@@ -56,8 +56,10 @@ mccCom::mccCom(unsigned char core, unsigned char node, unsigned char port,bool m
         mccThObj->moveToThread(Thread);
 
         // Effettua la connect tra threads differenti per poter comunicare l'evento di ricezione
-        //connect(mccThObj,SIGNAL(mccRxSgn(_MccFrame_Str)),this,SLOT(mccRxHandler(_MccFrame_Str)),Qt::BlockingQueuedConnection);
-        connect(mccThObj,SIGNAL(mccRxSgn(_MccFrame_Str)),this,SLOT(mccRxHandler(_MccFrame_Str)),Qt::QueuedConnection);
+        connect(mccThObj,SIGNAL(mccRxSgn(_MccFrame_Str)),this,SLOT(mccRxHandler(_MccFrame_Str)),Qt::BlockingQueuedConnection);
+        connect(this,SIGNAL(restartMcc(void)),mccThObj,SLOT(restartMcc(void)),Qt::QueuedConnection);
+
+        //connect(mccThObj,SIGNAL(mccRxSgn(_MccFrame_Str)),this,SLOT(mccRxHandler(_MccFrame_Str)),Qt::QueuedConnection);
 
         mccThObj->pThread = Thread;
 
@@ -111,8 +113,10 @@ mccCom::mccCom(unsigned char core, unsigned char node, unsigned char port) : // 
     mccThObj->moveToThread(Thread);
 
     // Effettua la connect tra threads differenti per poter comunicare l'evento di ricezione
-    //connect(mccThObj,SIGNAL(mccRxSgn(_MccFrame_Str)),this,SLOT(mccRxHandler(_MccFrame_Str)),Qt::BlockingQueuedConnection);
-    connect(mccThObj,SIGNAL(mccRxSgn(_MccFrame_Str)),this,SLOT(mccRxHandler(_MccFrame_Str)),Qt::QueuedConnection);
+    connect(mccThObj,SIGNAL(mccRxSgn(_MccFrame_Str)),this,SLOT(mccRxHandler(_MccFrame_Str)),Qt::BlockingQueuedConnection);
+    connect(this,SIGNAL(restartMcc(void)),mccThObj,SLOT(restartMcc(void)),Qt::QueuedConnection);
+
+    //connect(mccThObj,SIGNAL(mccRxSgn(_MccFrame_Str)),this,SLOT(mccRxHandler(_MccFrame_Str)),Qt::QueuedConnection);
 
     mccThObj->pThread = Thread;
 
@@ -351,6 +355,10 @@ QByteArray mccCom::toQByteArray(unsigned char cmd, unsigned char id, unsigned ch
  *  Verifica se il messaggio è corretto
  */
 ////////////////////////////////////////////////////////////////////
+void mccComRx::restartMcc(void){
+    restart = true;
+}
+
 bool mccComRx::isFrameCorrect(_MccFrame_Str* mccframe)
 {
     int i;
@@ -368,23 +376,29 @@ bool mccComRx::isFrameCorrect(_MccFrame_Str* mccframe)
 void mccComRx::mccThreadRx(void)
 {
     int mcc_len;
-    int i;
-    unsigned char chk;
+
+
 
     // Creazione end-point di ricezione
     if(mcc_create_endpoint(&rx_ep,rx_ep.port)!=MCC_SUCCESS) exit(-1);
 
     // Ciclo di attesa da M4
+    restart = false;
 
     while(1)
     {
         mcc_len = 0;
-        if((mcc_recv_copy(&rx_ep,&mcc_cmd,sizeof(mcc_cmd),(MCC_MEM_SIZE*) &mcc_len,0xFFFFFFFF)==MCC_SUCCESS) && (mcc_len))
+        if((mcc_recv_copy(&rx_ep,&mcc_cmd,sizeof(mcc_cmd),(MCC_MEM_SIZE*) &mcc_len,1000000)==MCC_SUCCESS) && (mcc_len))
         {
             // Controlla il pacchetto e chiama la funzione della classe mccParent di gestione del comando
             if(isFrameCorrect(&mcc_cmd)) emit mccRxSgn(mcc_cmd);
         }
 
+        if(restart){
+            mcc_destroy_endpoint(&rx_ep);
+            mcc_create_endpoint(&rx_ep,rx_ep.port);
+            restart = false;
+        }
     }
 
 }
@@ -397,12 +411,20 @@ void mccComRxRaw::mccThreadRx(void)
     if(mcc_create_endpoint(&rx_ep,rx_ep.port)!=MCC_SUCCESS) exit(-1);
 
     // Ciclo di attesa
+    restart = false;
+
     while(1)
     {
         mcc_len = 0;
-        if((mcc_recv_copy(&rx_ep,&mcc_buffer.buffer,sizeof(mcc_buffer.buffer),(MCC_MEM_SIZE*) &mcc_len,0xFFFFFFFF)==MCC_SUCCESS) && (mcc_len)){
+        if((mcc_recv_copy(&rx_ep,&mcc_buffer.buffer,sizeof(mcc_buffer.buffer),(MCC_MEM_SIZE*) &mcc_len,100000)==MCC_SUCCESS) && (mcc_len)){
             mcc_buffer.len = mcc_len;
             emit mccRxSgn(mcc_buffer);
+        }
+
+        if(restart){
+            mcc_destroy_endpoint(&rx_ep);
+            mcc_create_endpoint(&rx_ep,rx_ep.port);
+            restart = false;
         }
     }
 

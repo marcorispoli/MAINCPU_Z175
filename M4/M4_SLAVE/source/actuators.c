@@ -358,6 +358,7 @@ void manageLenzeEvents(void){
         buffer[2]= (unsigned char) (event_data>>8);
         buffer[3]= (unsigned char) (event_data>>16);
         buffer[4]= (unsigned char) (event_data>>24);
+
         mccGuiNotify(1,MCC_LENZE_ERRORS,buffer,5);
     break;
     case LENZE_POT_UPDATE:

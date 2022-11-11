@@ -2129,11 +2129,8 @@ void Config::configMasterRxHandler(QByteArray frame)
 
         // Impostazione database dipendente da Master
         masterUpdateDatabase();
-    }else if(comando==SLAVE_ENABLE_PRINT){
-        data[0] = MCC_DRIVER_PRINT_ENABLE_CMD;
-        data[1] = 1;
-        pConfig->pSlaveMcc->sendFrame(MCC_PRINT,1,data,2);
     }
+
     return;
 }
 
@@ -2367,6 +2364,14 @@ void Config::configSlaveRxHandler(QByteArray frame)
     }else if(comando==SYNC_TO_SLAVE){
         slaveInitialization();
         if(slaveDataInitialized)  emit configSlaveTx(answ.cmdToQByteArray(SYNC_TO_SLAVE));
+    }else if(comando==SLAVE_ENABLE_PRINT){
+        data[0] = MCC_DRIVER_PRINT_ENABLE_CMD;
+        data[1] = 1;
+        pConfig->pSlaveMcc->sendFrame(MCC_PRINT,1,data,2);
+
+    }else if(comando==SLAVE_RESTART_MCC){
+        DEBUG("RESTART MCC");
+        pConfig->pSlaveMcc->setRestart();
     }
 }
 
@@ -3562,9 +3567,17 @@ void Config::rebootSlot(void){
 
 // Abilita le print a basso livello sullo slave
 void Config::enableSlavePrint(void){
-    // Invia comando di reboot allo slave
+
     protoConsole frame(1,false);
     emit configMasterTx( frame.cmdToQByteArray(SLAVE_ENABLE_PRINT));
+
+}
+
+
+void Config::slaveRestartMcc(void){
+
+    protoConsole frame(1,false);
+    emit configMasterTx( frame.cmdToQByteArray(SLAVE_RESTART_MCC));
 
 }
 

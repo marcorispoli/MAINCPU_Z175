@@ -52,7 +52,7 @@ public:
     QString getTomoFilename(void);
 
     void enableSlavePrint(void);
-
+    void slaveRestartMcc(void);
 
     bool readArmConfig(void);
     bool readLenzeConfig(void);
@@ -103,6 +103,9 @@ public:
     #define SLAVE_TOOLS_DATA         "SlaveToolsData"
     #define SYNC_TO_SLAVE            "SyncToSlave"
     #define SLAVE_ENABLE_PRINT       "SlaveEnablePrint"
+    #define SLAVE_RESTART_MCC        "SlaveRestartMcc"
+
+
     #define SLAVE_EXECUTE_SET_RESTORE_POINT "SlaveSetRestorePoint"
     #define SLAVE_EXECUTE_GET_RESTORE_POINT "SlaveGetRestorePoint"
 

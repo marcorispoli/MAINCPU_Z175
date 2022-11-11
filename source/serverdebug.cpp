@@ -762,6 +762,7 @@ void serverDebug::handleDebug(QByteArray data)
         serviceTcp->txData(QByteArray("setBurning val   Attiva il pulsante raggi per un tot ms  \r\n"));
         serviceTcp->txData(QByteArray("setRestorePoint   Crea un punto di restore  \r\n"));
         serviceTcp->txData(QByteArray("getRestorePoint   Ripristina un punto di restore  \r\n"));
+        serviceTcp->txData(QByteArray("restartSlaveMcc     \r\n"));
 
         serviceTcp->txData(QByteArray("----------------------------------------------------------------------------------\r\n"));
     } else if(data.contains("setRestorePoint"))
@@ -841,6 +842,9 @@ void serverDebug::handleDebug(QByteArray data)
         serviceTcp->txData(QByteArray("DONE \n\r"));
 
         pConfig->enableSlavePrint();
+   }else if(data.contains("restartSlaveMcc")){
+        pConfig->slaveRestartMcc();
+        serviceTcp->txData(QByteArray("DONE \n\r"));
    }
 }
 
