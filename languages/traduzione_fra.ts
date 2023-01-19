@@ -100,7 +100,7 @@
     <message>
         <location filename="../source/Service/Calib/calibmenu.ui" line="280"/>
         <source>Collimator</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -152,7 +152,7 @@ Appliquez d’abord une compression</translation>
         <source>POTTER NON VALIDO O NON RICONOSCIUTO</source>
         <translation>[M:01707]
 SYSTÈME PAS PRÊT POUR L’EXPOSITION !
-Accessoire non valide.</translation>
+Composant non valide.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1959"/>
@@ -712,8 +712,8 @@ Il est fortement recommandé de compresser un sein uniquement en EXAMEN OUVERT. 
         <source>ACCESSORIO DISCONNESSO
 </source>
         <translation>[M:00705]
-ACCESSOIRE NON DÉTECTÉ&#xa0;!
-Le système n&apos;a pas détecté un accessoire valide.</translation>
+COMPOSANT NON DÉTECTÉ&#xa0;!
+Le système n&apos;a pas détecté un composant valide.</translation>
     </message>
 </context>
 <context>
@@ -1115,7 +1115,7 @@ POTTER NON RICONOSCIUTO
 </source>
         <translation>[M:00934]
 SÉQUENCE DE RAYONS X INTERROMPUE !
-Accessoire non détecté.</translation>
+Composant non détecté.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1472"/>
@@ -1611,7 +1611,7 @@ Le système a détecté le blocage du bouton-poussoir des rayons X.</translation
     <message>
         <location filename="../source/mainpage.cpp" line="737"/>
         <source>ACCESSORIO</source>
-        <translation>ACCESSOIRE</translation>
+        <translation>COMPOSANT</translation>
     </message>
     <message>
         <location filename="../source/mainpage.cpp" line="740"/>
@@ -1693,7 +1693,7 @@ Appuyez sur la flèche gauche pour annuler.</translation>
     <message>
         <location filename="../source/openStudyPage.cpp" line="1014"/>
         <source>ACCESSORIO</source>
-        <translation>ACCESSOIRE</translation>
+        <translation>COMPOSANT</translation>
     </message>
     <message>
         <location filename="../source/console.cpp" line="272"/>

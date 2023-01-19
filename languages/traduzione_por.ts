@@ -100,7 +100,7 @@
     <message>
         <location filename="../source/Service/Calib/calibmenu.ui" line="280"/>
         <source>Collimator</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -153,7 +153,7 @@ Aplique a compressão primeiro.</translation>
         <source>POTTER NON VALIDO O NON RICONOSCIUTO</source>
         <translation>[M:01707]
 O SISTEMA NÃO ESTÁ PRONTO PARA EXPOSIÇÃO!
-Acessório inválido.</translation>
+Componente inválido.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1959"/>
@@ -705,8 +705,8 @@ COMPRESOR DA MAMA COM ESTUDO FECHADO!
         <source>ACCESSORIO DISCONNESSO
 </source>
         <translation>[M:00705]
-ACESSÓRIO NÃO DETECTADO!
-O sistema não detectou um acessório válido.</translation>
+COMPONENTE NÃO DETECTADO!
+O sistema não detectou um componente válido.</translation>
     </message>
 </context>
 <context>
@@ -1104,7 +1104,7 @@ POTTER NON RICONOSCIUTO
 </source>
         <translation>[M:00934]
 SEQUÊNCIA DE RAIOS X ABORTADA!
-Acessório não detectado.</translation>
+Componente não detectado.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1472"/>
@@ -1593,7 +1593,7 @@ O sistema detectou que o botão X-RAY foi bloqueado.</translation>
     <message>
         <location filename="../source/mainpage.cpp" line="737"/>
         <source>ACCESSORIO</source>
-        <translation>ACESSÓRIO</translation>
+        <translation>COMPONENTE</translation>
     </message>
     <message>
         <location filename="../source/mainpage.cpp" line="740"/>
@@ -1675,7 +1675,7 @@ Pressione a seta para a esquerda para cancelar.</translation>
     <message>
         <location filename="../source/openStudyPage.cpp" line="1014"/>
         <source>ACCESSORIO</source>
-        <translation>ACESSÓRIO</translation>
+        <translation>COMPONENTE</translation>
     </message>
     <message>
         <location filename="../source/console.cpp" line="272"/>
@@ -1786,7 +1786,7 @@ Por favor, vá embora após a confirmação.</translation>
     <message>
         <location filename="../source/Service/Calib/calibColli.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -1794,34 +1794,34 @@ Por favor, vá embora após a confirmação.</translation>
     <message>
         <location filename="../source/Service/Calib/calibParking.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../source/Service/Calib/calibParking.ui" line="135"/>
         <source>STORE</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../source/Service/Calib/calibParking.ui" line="172"/>
         <source>LENZE POSITION</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../source/Service/Calib/calibParking.ui" line="215"/>
         <source>100%</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../source/Service/Calib/calibParking.ui" line="288"/>
         <source>ARM 
 0°</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../source/Service/Calib/calibParking.ui" line="315"/>
         <source>ARM 
 180°</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 </TS>

@@ -100,7 +100,7 @@
     <message>
         <location filename="../source/Service/Calib/calibmenu.ui" line="280"/>
         <source>Collimator</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -152,7 +152,7 @@ Applicare la compressione corretta per proseguire.</translation>
         <source>POTTER NON VALIDO O NON RICONOSCIUTO</source>
         <translation>[M:01707]
 SYSTEMA NON PRONTO PER RAGGI!
-Accessorio non valido o non riconosciuto.</translation>
+Componente non valido o non riconosciuto.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1959"/>
@@ -699,8 +699,8 @@ La compressione a Studio chiuso è sconsigliata ma non  inibita. In caso di sess
         <source>ACCESSORIO DISCONNESSO
 </source>
         <translation>[M:00705]
-ACCESSORIO DISCONNESSO!
-Nessun accessorio è stato rilevato dal Mammografo.</translation>
+COMPONENTE DISCONNESSO!
+Nessun componente è stato rilevato dal Mammografo.</translation>
     </message>
 </context>
 <context>
@@ -787,14 +787,14 @@ ERRORE SISTEMA DI COMPRESSIONE!
         <location filename="../source/pagealarms.cpp" line="1243"/>
         <source>INGRANDITORE: FATTORE DI INGRANDIMENTO NON VALIDO</source>
         <translation>[M:00801]
-ERRORE ACCESSORIO INGRANDITORE!
+ERRORE DISPOSITIVO INGRANDITORE!
 Fattore di ingrandimento non valido.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1250"/>
         <source>INGRANDITORE: FATTORE DI INGRANDIMENTO NON CONFIGURATO</source>
         <translation>[M:00802]
-ERRORE ACCESSORIO INGRANDITORE!
+ERRORE DISPOSITIVO INGRANDITORE!
 Ingranditore non configurato.</translation>
     </message>
 </context>
@@ -1100,7 +1100,7 @@ POTTER NON RICONOSCIUTO
 </source>
         <translation>[M:00934]
 INTERRUZIONE SEQUENZA RAGGI!
-Accessorio non rilevato.</translation>
+Componente non rilevato.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1472"/>
@@ -1297,7 +1297,7 @@ SI STA UTILIZZANDO IL FUOCO GRANDE
 CON L&apos;INGRANDITORE INSERITO</source>
         <translation>[M:00955]
 INTERRUZIONE SEQUENZA RAGGI!
-Selezione del Fuoco Grande non valida con l&apos;accessorio Ingranditore inserito.</translation>
+Selezione del Fuoco Grande non valida con Ingranditore inserito.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1618"/>
@@ -1306,7 +1306,7 @@ SI STA UTILIZZANDO IL FUOCO PICCOLO
 SENZA USO DELL&apos;INGRANDITORE</source>
         <translation>[M:00956]
 INTERRUZIONE SEQUENZA RAGGI!
-Selezione del Fuoco Piccolo non valida senza l&apos;accessorio Ingranditore inserito.</translation>
+Selezione del Fuoco Piccolo non valida senza l&apos;Ingranditore inserito.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1625"/>
@@ -1401,8 +1401,8 @@ Possibile impatto con il pavimento.</translation>
         <location filename="../source/pagealarms.cpp" line="1746"/>
         <source>ACCESSORIO DI COLLIMAZIONE NON CONSENTITO</source>
         <translation>[M:00967]
-ACCESSORIO DI COLLIMAZIONE NON CONSENTITO!
-Rimuover l&apos;accessorio per continuare con l&apos;esposizione.</translation>
+COMPOINENTE DI COLLIMAZIONE NON CONSENTITO!
+Rimuover il componente per continuare con l&apos;esposizione.</translation>
     </message>
 </context>
 <context>
@@ -1587,7 +1587,7 @@ Il pulsante raggi risulta bloccato.</translation>
     <message>
         <location filename="../source/mainpage.cpp" line="737"/>
         <source>ACCESSORIO</source>
-        <translation>ACCESSORIO</translation>
+        <translation>COMPONENTE</translation>
     </message>
     <message>
         <location filename="../source/mainpage.cpp" line="740"/>
@@ -1667,7 +1667,7 @@ Premere la freccia sinistra per Annullare.</translation>
     <message>
         <location filename="../source/openStudyPage.cpp" line="1014"/>
         <source>ACCESSORIO</source>
-        <translation>ACCESSORIO</translation>
+        <translation>COMPONENTE</translation>
     </message>
     <message>
         <location filename="../source/console.cpp" line="272"/>
@@ -1777,7 +1777,7 @@ Prestare attenzione al braccio in movimento</translation>
     <message>
         <location filename="../source/Service/Calib/calibColli.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -1785,34 +1785,34 @@ Prestare attenzione al braccio in movimento</translation>
     <message>
         <location filename="../source/Service/Calib/calibParking.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../source/Service/Calib/calibParking.ui" line="135"/>
         <source>STORE</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../source/Service/Calib/calibParking.ui" line="172"/>
         <source>LENZE POSITION</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../source/Service/Calib/calibParking.ui" line="215"/>
         <source>100%</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../source/Service/Calib/calibParking.ui" line="288"/>
         <source>ARM 
 0°</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../source/Service/Calib/calibParking.ui" line="315"/>
         <source>ARM 
 180°</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 </TS>

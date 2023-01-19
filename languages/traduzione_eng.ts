@@ -101,7 +101,7 @@
     <message>
         <location filename="../source/Service/Calib/calibmenu.ui" line="280"/>
         <source>Collimator</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -154,7 +154,7 @@ Apply compression first.</translation>
         <source>POTTER NON VALIDO O NON RICONOSCIUTO</source>
         <translation>[M:01707]
 SYSTEM NOT READY FOR EXPOSURE!
-Invalid Accessory.</translation>
+Invalid Component.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1959"/>
@@ -711,8 +711,8 @@ In case of test session, ignore  this message.</translation>
 </source>
         <translatorcomment>ERRORE PAD</translatorcomment>
         <translation>[M:00705]
-UNDETECTED ACCESSORY!
-The system didn&apos;t detect a valid accessory.</translation>
+UNDETECTED COMPONENT!
+The system didn&apos;t detect a valid component.</translation>
     </message>
 </context>
 <context>
@@ -1118,7 +1118,7 @@ POTTER NON RICONOSCIUTO
 </source>
         <translation>[M:00934]
 X-RAY SEQUENCE ABORTED!
-Accessory not detected.</translation>
+Component not detected.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1472"/>
@@ -1420,7 +1420,7 @@ The tube could exceed the limit angle.</translation>
         <location filename="../source/pagealarms.cpp" line="1746"/>
         <source>ACCESSORIO DI COLLIMAZIONE NON CONSENTITO</source>
         <translation>[M:00967]
-INVALID COLLIMATION ACCESSORY PLATE!
+INVALID COLLIMATION COMPONENT PLATE!
 Remove the plate to continue with the current exposure.</translation>
     </message>
 </context>
@@ -1600,7 +1600,7 @@ The system detected the X-RAY push button blocked.</translation>
     <message>
         <location filename="../source/mainpage.cpp" line="737"/>
         <source>ACCESSORIO</source>
-        <translation>ACCESSORY</translation>
+        <translation>COMPONENT</translation>
     </message>
     <message>
         <location filename="../source/mainpage.cpp" line="740"/>
@@ -1680,7 +1680,7 @@ Press left arrow to cancel.</translation>
     <message>
         <location filename="../source/openStudyPage.cpp" line="1014"/>
         <source>ACCESSORIO</source>
-        <translation>ACCESSORY</translation>
+        <translation>COMPONENT</translation>
     </message>
     <message>
         <location filename="../source/console.cpp" line="272"/>
@@ -1790,7 +1790,7 @@ Please go away after confirmation.</translation>
     <message>
         <location filename="../source/Service/Calib/calibColli.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -1798,34 +1798,34 @@ Please go away after confirmation.</translation>
     <message>
         <location filename="../source/Service/Calib/calibParking.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../source/Service/Calib/calibParking.ui" line="135"/>
         <source>STORE</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../source/Service/Calib/calibParking.ui" line="172"/>
         <source>LENZE POSITION</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../source/Service/Calib/calibParking.ui" line="215"/>
         <source>100%</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../source/Service/Calib/calibParking.ui" line="288"/>
         <source>ARM 
 0°</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../source/Service/Calib/calibParking.ui" line="315"/>
         <source>ARM 
 180°</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 </TS>

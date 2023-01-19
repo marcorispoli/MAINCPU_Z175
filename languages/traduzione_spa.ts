@@ -100,7 +100,7 @@
     <message>
         <location filename="../source/Service/Calib/calibmenu.ui" line="280"/>
         <source>Collimator</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -154,7 +154,7 @@ Primero, aplique compresión.</translation>
         <source>POTTER NON VALIDO O NON RICONOSCIUTO</source>
         <translation>[M:01707]
 ¡EL SISTEMA NO ESTÁ LISTO PARA LA EXPOSICIÓN!
-Accesorio no válido.</translation>
+Componente no válido.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1959"/>
@@ -710,8 +710,8 @@ Se recomienda encarecidamente comprimir la mama únicamente con un ESTUDIO ABIER
         <source>ACCESSORIO DISCONNESSO
 </source>
         <translation>[M:00705]
-¡ACCESORIO NO DETECTADO!
-El sistema no ha detectado un accesorio válido.</translation>
+¡COMPONENTE NO DETECTADO!
+El sistema no ha detectado un componente válido.</translation>
     </message>
 </context>
 <context>
@@ -1112,7 +1112,7 @@ POTTER NON RICONOSCIUTO
 </source>
         <translation>[M:00934]
 ¡SECUENCIA DE RAYOS X ANULADA!
-No se ha detectado el accesorio.</translation>
+No se ha detectado el componente.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1472"/>
@@ -1604,7 +1604,7 @@ El sistema detectó el botón de rayos X bloqueado.</translation>
     <message>
         <location filename="../source/mainpage.cpp" line="737"/>
         <source>ACCESSORIO</source>
-        <translation>ACCESORIO</translation>
+        <translation>COMPONENTE</translation>
     </message>
     <message>
         <location filename="../source/mainpage.cpp" line="740"/>
@@ -1686,7 +1686,7 @@ Presione la flecha izquierda para cancelar.</translation>
     <message>
         <location filename="../source/openStudyPage.cpp" line="1014"/>
         <source>ACCESSORIO</source>
-        <translation>ACCESORIO</translation>
+        <translation>COMPONENTE</translation>
     </message>
     <message>
         <location filename="../source/console.cpp" line="272"/>
