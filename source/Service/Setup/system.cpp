@@ -103,8 +103,12 @@ void systemPage::initPage(void){
 
     //______________________________________________________________________________________________________
 
+    connect(ui->buttonLeftFilter,SIGNAL(released()),this,SLOT(onLeftFilter()),Qt::UniqueConnection);
+    connect(ui->buttonLeftDetector,SIGNAL(released()),this,SLOT(onLeftDetector()),Qt::UniqueConnection);
     connect(ui->buttonLeftStarter,SIGNAL(released()),this,SLOT(onLeftStarter()),Qt::UniqueConnection);
     connect(ui->buttonLeftDetector,SIGNAL(released()),this,SLOT(onLeftDetector()),Qt::UniqueConnection);    
+
+    connect(ui->buttonRightFilter,SIGNAL(released()),this,SLOT(onRightFilter()),Qt::UniqueConnection);
     connect(ui->buttonRightStarter,SIGNAL(released()),this,SLOT(onRightStarter()),Qt::UniqueConnection);
     connect(ui->buttonRightDetector,SIGNAL(released()),this,SLOT(onRightDetector()),Qt::UniqueConnection);
     connect(ui->buttonRightRotation,SIGNAL(released()),this,SLOT(onRightRotation()),Qt::UniqueConnection);
@@ -119,6 +123,7 @@ void systemPage::initPage(void){
     ApplicationDatabase.setData(_DB_SERVICE3_INT,(int) pConfig->sys.armMotor,DBase::_DB_FORCE_SGN);
     ApplicationDatabase.setData(_DB_SERVICE4_INT,(int) pConfig->sys.detectorType,DBase::_DB_FORCE_SGN);
     ApplicationDatabase.setData(_DB_SERVICE5_INT,(int) pConfig->sys.trxMotor,DBase::_DB_FORCE_SGN);
+    ApplicationDatabase.setData(_DB_SERVICE6_INT,(int) pConfig->sys.autoFilter,DBase::_DB_FORCE_SGN);
 
 }
 
@@ -134,6 +139,8 @@ void systemPage::exitPage(void){
         pConfig->sys.armMotor = ApplicationDatabase.getDataI(_DB_SERVICE3_INT);
         pConfig->sys.trxMotor = ApplicationDatabase.getDataI(_DB_SERVICE5_INT);
         pConfig->sys.detectorType = ApplicationDatabase.getDataI(_DB_SERVICE4_INT);
+        pConfig->sys.autoFilter = ApplicationDatabase.getDataI(_DB_SERVICE6_INT);
+
         pConfig->saveSysCfg();
         pConfig->executeReboot();
     }
@@ -174,12 +181,24 @@ void systemPage::valueChanged(int index,int opt)
     case _DB_SERVICE5_INT:
         ui->tilt->setText(getTiltStr(ApplicationDatabase.getDataI(index)));
     break;
+    case _DB_SERVICE6_INT:
+        ui->filter->setText(getFilterStr(ApplicationDatabase.getDataI(index)));
+    break;
 
 
     }
 
 }
 
+void systemPage::onLeftFilter(void){
+    int val = ApplicationDatabase.getDataI(_DB_SERVICE6_INT);
+    if(val) val = 0;
+    else val = 1;
+    ApplicationDatabase.setData(_DB_SERVICE6_INT,val);
+}
+void systemPage::onRightFilter(void){
+    onLeftFilter();
+}
 
 void systemPage::onLeftStarter(void){
     int val = ApplicationDatabase.getDataI(_DB_SERVICE2_INT);
@@ -226,6 +245,11 @@ void systemPage::onLeftDetector(void){
     ApplicationDatabase.setData(_DB_SERVICE4_INT,val);
 }
 
+
+QString systemPage::getFilterStr(unsigned char val){
+    if(val) return QString("AUTO");
+    else return QString("FIX");
+}
 
 QString systemPage::getStarterStr(unsigned char val){
     if(val) return QString("HIGH SPEED STARTER");

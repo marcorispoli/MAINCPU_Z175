@@ -165,6 +165,12 @@ void pcb249U2_driver(uint32_t taskRegisters)
         // AZIONAMENTO FILTRO _____________________________________________________
         if(_IS_EVENT(_EV0_PCB249U2_FILTRO)){            
 
+            if(!generalConfiguration.gantryCfg.autoFilter){
+                filtro_eseguito = true;
+                _EVCLR(_EV0_PCB249U2_FILTRO);
+                continue;
+            }
+
             // Copia ila richiesta nei dati effettivi
             comando_filtro = filtro_req;
             target_filtro = pos_req;
@@ -384,6 +390,8 @@ void pcb249U2_driver(uint32_t taskRegisters)
 }
 
 int pcb249U2getFilterCurrentPosition(void){
+    if(!generalConfiguration.gantryCfg.autoFilter) return 0;
+
     // Legge la posizione corrente
     if(Ser422ReadRegister(_REGID(RG249U2_FILTER_CURPOS),10,&CONTEST)==_SER422_NO_ERROR) posizioneFiltro = _DEVREGL(RG249U2_FILTER_CURPOS,CONTEST);
     else posizioneFiltro=-1;
@@ -392,7 +400,8 @@ int pcb249U2getFilterCurrentPosition(void){
 }
 
 bool pcb249U2testFilterDisabledRegister(void){
-    // Legge la posizione corrente
+    if(!generalConfiguration.gantryCfg.autoFilter) return true;
+
     if(Ser422ReadRegister(_REGID(RG249U2_PR_FILTER_DISABLED),10,&CONTEST)==_SER422_NO_ERROR){
         if(_DEVREGL(RG249U2_PR_FILTER_DISABLED,CONTEST)) return true;
     }
@@ -401,6 +410,8 @@ bool pcb249U2testFilterDisabledRegister(void){
 }
 
 void pcb249U2clearFilterDisabledRegister(void){
+
+    if(!generalConfiguration.gantryCfg.autoFilter) return;
     Ser422WriteRegister(_REGID(RG249U2_PR_FILTER_DISABLED),0,10,&CONTEST);
     return ;
 }
@@ -498,6 +509,7 @@ bool pcb249U2MirrorHomeCmd(void)
 
 bool pcb249U2SetFiltroCmd(unsigned char cmd)
 {
+    if(!generalConfiguration.gantryCfg.autoFilter) return true;
     if(generalConfiguration.collimator_model_error) return false;
 
 
@@ -519,6 +531,7 @@ bool pcb249U2SetFiltroCmd(unsigned char cmd)
 bool pcb249U2RxSetFiltroCmd(unsigned char cmd)
 {
     unsigned char data[5];
+    if(!generalConfiguration.gantryCfg.autoFilter) return true;
     if(generalConfiguration.collimator_model_error) return false;
 
 
@@ -825,6 +838,7 @@ bool pcb249U2SetColli(unsigned char backin, unsigned char frontin)
 */
 void pcb249U2SetFiltro(unsigned char cmd, unsigned char posizione_target)
 {
+    if(!generalConfiguration.gantryCfg.autoFilter) return;
     if(generalConfiguration.collimator_model_error) return ;
 
 
@@ -891,6 +905,7 @@ bool config_pcb249U2(bool setmem, unsigned char blocco, unsigned char* buffer, u
 // Questa funzione è pensata sotto RX, quindi con il driver fermo
 bool pcb249U2SetFiltroRaw(unsigned char val)
 {
+   if(!generalConfiguration.gantryCfg.autoFilter) return true;
    if(generalConfiguration.collimator_model_error) return false;
 
 
@@ -931,6 +946,8 @@ int getTomoDeltaFilter(int angolo){
 
  */
 bool waitRxFilterCompletion(void){
+    if(!generalConfiguration.gantryCfg.autoFilter) return true;
+
     int timeout = 50;
 
     int tmo=timeout;

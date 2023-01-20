@@ -286,6 +286,7 @@ void startupDigitalGantry(void){
 
 // Stampa della configurazione hardware
 void mainPrintHardwareConfig(void){
+    printf("---------------------------------------------------------------\n");
     printf("HARDWARE CONFIGURATION:\n");
 
 
@@ -309,6 +310,10 @@ void mainPrintHardwareConfig(void){
     if(generalConfiguration.gantryCfg.highSpeedStarter) printf("IAE HIGH SPEED STARTER\n");
     else printf("INTERNAL LOW SPEED STARTER\n");
 
+    if(generalConfiguration.gantryCfg.autoFilter) printf("FILTER SELECTION: AUTO FILTER\n");
+    else printf("FILTER SELECTION: FIXED\n");
+
+    printf("---------------------------------------------------------------\n");
 
 }
 

@@ -593,6 +593,11 @@ void serverDebug::handleConfig(QByteArray data)
     if(data.contains("?"))
     {
         serviceTcp->txData(QByteArray("----------------------------------------------------------------------------------\r\n"));
+        serviceTcp->txData(QByteArray("setAutoFilter    [ON/OFF]   ON=AutoFilter OFF=Fixed Filter \r\n"));
+        serviceTcp->txData(QByteArray("setHsStarter     [ON/OFF]   ON=HS Starter OFF=LS Starter \r\n"));
+        serviceTcp->txData(QByteArray("setArmMotor      [ON/OFF]   ON=ARM with motor OFF=ARM without motor \r\n"));
+        serviceTcp->txData(QByteArray("setTrxMotor      [ON/OFF]   ON=TRX with motor OFF=No TRX \r\n"));
+
         serviceTcp->txData(QByteArray("enableAccessory   [ON/OFF]   ON=Enabled OFF=Disabled \r\n"));
         serviceTcp->txData(QByteArray("setSN             [n/.]       .=erase SN, n=gantry serial number (only digits)\r\n"));
         serviceTcp->txData(QByteArray("setPSW            [n]         n=Service panel password (only digits)\r\n"));
@@ -605,6 +610,46 @@ void serverDebug::handleConfig(QByteArray data)
         serviceTcp->txData(QByteArray("sysRestore        filename    Restore da home\r\n"));
 
         serviceTcp->txData(QByteArray("----------------------------------------------------------------------------------\r\n"));
+    }else if(data.contains("setAutoFilter")){
+        if(data.contains("ON")) {
+            pConfig->sys.autoFilter = 1;
+            serviceTcp->txData(QByteArray("AUTO FILTER ON. Request a system reboot!!\n\r"));
+            pConfig->saveSysCfg();
+        }else if(data.contains("OFF")){
+            pConfig->sys.autoFilter = 0;
+            serviceTcp->txData(QByteArray("AUTO FILTER OFF. Request a system reboot!!\n\r"));
+            pConfig->saveSysCfg();
+        }
+    }else if(data.contains("setHsStarter")){
+        if(data.contains("ON")) {
+            pConfig->sys.highSpeedStarter = 1;
+            serviceTcp->txData(QByteArray("HS Starter. Request a system reboot!!\n\r"));
+            pConfig->saveSysCfg();
+        }else if(data.contains("OFF")){
+            pConfig->sys.highSpeedStarter = 0;
+            serviceTcp->txData(QByteArray("LS Starter. Request a system reboot!!\n\r"));
+            pConfig->saveSysCfg();
+        }
+    }else if(data.contains("setArmMotor")){
+        if(data.contains("ON")) {
+            pConfig->sys.armMotor = 1;
+            serviceTcp->txData(QByteArray("ARM with motor. Request a system reboot!!\n\r"));
+            pConfig->saveSysCfg();
+        }else if(data.contains("OFF")){
+            pConfig->sys.armMotor = 0;
+            serviceTcp->txData(QByteArray("ARM without motor. Request a system reboot!!\n\r"));
+            pConfig->saveSysCfg();
+        }
+    }else if(data.contains("setTrxMotor")){
+        if(data.contains("ON")) {
+            pConfig->sys.trxMotor = 1;
+            serviceTcp->txData(QByteArray("TRX with motor. Request a system reboot!!\n\r"));
+            pConfig->saveSysCfg();
+        }else if(data.contains("OFF")){
+            pConfig->sys.trxMotor = 0;
+            serviceTcp->txData(QByteArray("NO TRX. Request a system reboot!!\n\r"));
+            pConfig->saveSysCfg();
+        }
     }else if(data.contains("enableAccessory")){
                 if(data.contains("ON")) {
                     pConfig->userCnf.enableCheckAccessorio = 1;

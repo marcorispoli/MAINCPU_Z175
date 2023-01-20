@@ -61,7 +61,6 @@ void std_ae_rx_task(uint32_t taskRegisters)
     else  debugPrint("RX-AE ATTIVAZIONE SEQUENZA");
 
 
-
     // Prima di andare in freeze bisogna accertarsi che collimazione e filtro siano OK
     if(wait2DBackFrontCompletion(100)==false) _SEQERROR(ERROR_INVALID_COLLI);
     if(waitRxFilterCompletion()==FALSE)  _SEQERROR(ERROR_INVALID_FILTRO);

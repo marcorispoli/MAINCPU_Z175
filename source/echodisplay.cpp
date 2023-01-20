@@ -312,6 +312,8 @@ void  EchoDisplay::masterDatabaseInitialization(void)
     if(pConfig->sys.highSpeedStarter) conf|=_ARCH_HIGH_SPEED_STARTER;
     if(pConfig->sys.trxMotor) conf|=_ARCH_TRX_MOTOR ;
     if(pConfig->sys.armMotor) conf|=_ARCH_ARM_MOTOR ;    
+    if(pConfig->sys.autoFilter) conf|=_ARCH_FILTER_AUTO ;
+
     ApplicationDatabase.setData(_DB_SYSTEM_CONFIGURATION, (unsigned char) conf , DBase::_DB_FORCE_SGN);
 
     ApplicationDatabase.setData(_DB_VPRIMARIO, (int) pGeneratore->genCnf.pcb190.HV_VPRIMARIO, DBase::_DB_FORCE_SGN);

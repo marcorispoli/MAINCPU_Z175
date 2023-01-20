@@ -1286,12 +1286,18 @@ bool console::handleSetAf(QString param)
         pCollimatore->filtroCmd = Collimatore::FILTRO_Mo;
     }else return FALSE;
 
-    // Impostazione del Filtro
-    if(pCollimatore->setFiltro()==FALSE)
-    {
-        DEBUG("CONSOLE: <handleSetAf> FALLITA!");
-        return FALSE;
+
+    if(!pConfig->sys.autoFilter){
+        // Filtro fisso, non deve fare nulla
+    }else{
+        // Impostazione del Filtro
+        if(pCollimatore->setFiltro()==FALSE)
+        {
+            DEBUG("CONSOLE: <handleSetAf> FALLITA!");
+            return FALSE;
+        }
     }
+
 
     return TRUE;
 }
@@ -1950,7 +1956,8 @@ void console::RxStart(void)
         return;
     }
 
-    if(pCollimatore->getFiltroStat() == Collimatore::FILTRO_ND)
+
+    if((pConfig->sys.autoFilter) && (pCollimatore->getFiltroStat() == Collimatore::FILTRO_ND))
     {
         ret.clear();
         ret.append(ERROR_INVALID_FILTRO);

@@ -857,6 +857,7 @@ void biopsyExtendedDevice::mccStatNotify(unsigned char id_notify,unsigned char c
 
     // Se arriva qui il modulo ha comunicato con successo con la torretta estesa
     pBiopsy->model = BYM_EXTENDED_DEVICE;
+    ApplicationDatabase.setData(_DB_BIOP_MODEL, (int) BYM_EXTENDED_DEVICE);
 
     // Se il sistema risulta NON connesso non fa altro..
     if(data.at(_BP_EXT_CONNESSIONE)==_BP_EXT_CONNESSIONE_DISCONNECTED)

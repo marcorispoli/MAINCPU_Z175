@@ -12,7 +12,7 @@ typedef struct
    bool             armMotor;               // Presenza della rotazione motorizzata o del freno
    bool             trxMotor;               // Presenza Pendolazione
    bool             highSpeedStarter;       // Abilitazione presenza Starter IAE
-   bool             spare;            // Configurazione Tubo ad aria
+   bool             autoFilter;             // Presence of roto-filter
 }systemCfg_Str;
 
 //______________________________________________________________________________________
