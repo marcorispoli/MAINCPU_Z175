@@ -154,7 +154,7 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
         debugPrint("RX-3D-AEC ATTESA FINE POSIZIONAMENO");
         if(actuatorsTrxWaitReady(100)==false) _SEQERROR(_SEQ_ERR_WIDE_HOME);
 
-        if((generalConfiguration.filterTomoEna!=0)&&(Param->tomo_mode!=_TOMO_MODE_STATIC)){
+        if((generalConfiguration.filterTomoEna!=0)&&(Param->tomo_mode!=_TOMO_MODE_STATIC)&&(generalConfiguration.gantryCfg.autoFilter)){
             Ser422ReadRegister(_REGID(RG249U1_GONIO_REL),4,&PCB249U1_CONTEST);
             int angolo = (int) _DEVREGL(RG249U1_GONIO_REL,PCB249U1_CONTEST);
             if(angolo&0x80) angolo = -1 * (angolo&0x7F); 
@@ -239,7 +239,7 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
              if(SystemInputs.CPU_XRAY_COMPLETED==1) break; // Fine sequenza
            }else delay--;
            
-           if((generalConfiguration.filterTomoEna!=0)&&(Param->tomo_mode!=_TOMO_MODE_STATIC)){
+           if((generalConfiguration.filterTomoEna!=0)&&(Param->tomo_mode!=_TOMO_MODE_STATIC)&&(generalConfiguration.gantryCfg.autoFilter)){
               Ser422ReadRegister(_REGID(RG249U1_GONIO_REL),4,&PCB249U1_CONTEST);
               int angolo = (int) _DEVREGL(RG249U1_GONIO_REL,PCB249U1_CONTEST);
               if(angolo&0x80) angolo = -1 * (angolo&0x7F); 
@@ -268,7 +268,7 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
         _EVSET(_EV0_OUTPUT_CAMBIATI);         
         _mutex_unlock(&output_mutex);
 
-        if((generalConfiguration.filterTomoEna!=0)&&(Param->tomo_mode!=_TOMO_MODE_STATIC)){
+        if((generalConfiguration.filterTomoEna!=0)&&(Param->tomo_mode!=_TOMO_MODE_STATIC)&&(generalConfiguration.gantryCfg.autoFilter)){
           if(tomoAecCurrentFilterPosition!=0){
             if(pcb249U2SetFiltroRaw(tomoAecCurrentFilterPosition) == false) {
                   debugPrint("RX-3D-AEC COMANDO IMPOSTAZIONE FILTRO STANDARD FALLITA");
@@ -516,7 +516,7 @@ void _SEQERRORFUNC(int code)
     pcb249U2SetColli( generalConfiguration.colliCfg.lame2D.back , generalConfiguration.colliCfg.lame2D.front);
     pcb249U1SetColli(generalConfiguration.colliCfg.lame2D.left,generalConfiguration.colliCfg.lame2D.right,generalConfiguration.colliCfg.lame2D.trap);
 
-    if((generalConfiguration.filterTomoEna!=0)&&(Param->tomo_mode!=_TOMO_MODE_STATIC)){
+    if((generalConfiguration.filterTomoEna!=0)&&(Param->tomo_mode!=_TOMO_MODE_STATIC)&&(generalConfiguration.gantryCfg.autoFilter)){
       if(tomoAecCurrentFilterPosition!=0){
         if(pcb249U2SetFiltroRaw(tomoAecCurrentFilterPosition) == false) {
             debugPrint("RX-3D-AEC COMANDO IMPOSTAZIONE FILTRO STANDARD FALLITA");

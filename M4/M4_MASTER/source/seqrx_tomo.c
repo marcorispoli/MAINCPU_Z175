@@ -87,7 +87,9 @@ void tomo_rx_task(uint32_t taskRegisters)
     // Impostazione collimazione Dinamica solo se non in calibrazione
     // Questi comandi sono compatibili con il modo FREEZE
     pcb249U1ResetFaults();
-    if((Param->tomo_mode!=_TOMO_MODE_STATIC)&&(!generalConfiguration.demoMode))
+
+
+    if((Param->tomo_mode!=_TOMO_MODE_STATIC)&&(!generalConfiguration.demoMode)&&(generalConfiguration.gantryCfg.autoFilter))
     {
       if(generalConfiguration.filterTomoEna!=0){
           Ser422ReadRegister(_REGID(RG249U2_POS_TARGET),4,&PCB249U2_CONTEST);
@@ -145,8 +147,9 @@ void tomo_rx_task(uint32_t taskRegisters)
         if(actuatorsTrxWaitReady(100)==false) _SEQERROR(_SEQ_ERR_WIDE_HOME);
         if(Param->tomo_mode!=_TOMO_MODE_STATIC) actuatorsMoveTomoTrxEnd(Param->tomo_mode,true); // actuatorsActivateTrxTriggerStart();
 
+
         // Impostazione iniziale filtro
-        if((generalConfiguration.filterTomoEna!=0)&&(Param->tomo_mode!=_TOMO_MODE_STATIC)){
+        if((generalConfiguration.filterTomoEna!=0)&&(Param->tomo_mode!=_TOMO_MODE_STATIC) && (generalConfiguration.gantryCfg.autoFilter)){
           Ser422ReadRegister(_REGID(RG249U1_GONIO_REL),4,&PCB249U1_CONTEST);
           int angolo = (int) _DEVREGL(RG249U1_GONIO_REL,PCB249U1_CONTEST);
           if(angolo&0x80) angolo = -1 * (angolo&0x7F); 
@@ -186,7 +189,8 @@ void tomo_rx_task(uint32_t taskRegisters)
              if(SystemInputs.CPU_XRAY_COMPLETED==1) break; // Fine sequenza
            }else delay--;
 
-           if((generalConfiguration.filterTomoEna!=0)&&(Param->tomo_mode!=_TOMO_MODE_STATIC)){
+
+           if((generalConfiguration.filterTomoEna!=0) && (Param->tomo_mode!=_TOMO_MODE_STATIC) && (generalConfiguration.gantryCfg.autoFilter)){
               Ser422ReadRegister(_REGID(RG249U1_GONIO_REL),4,&PCB249U1_CONTEST);
               int angolo = (int) _DEVREGL(RG249U1_GONIO_REL,PCB249U1_CONTEST);
               if(angolo&0x80) angolo = -1 * (angolo&0x7F); 
@@ -213,10 +217,9 @@ void tomo_rx_task(uint32_t taskRegisters)
        _EVSET(_EV0_OUTPUT_CAMBIATI);         
        _mutex_unlock(&output_mutex);
 
-       // Ferma subito il braccio
-       // actuatorsTrxStop(50); // Attende 2 secondi
+       // Ferma subito il braccio       
 
-       if((generalConfiguration.filterTomoEna!=0)&&(Param->tomo_mode!=_TOMO_MODE_STATIC)){
+       if((generalConfiguration.filterTomoEna!=0) && (Param->tomo_mode != _TOMO_MODE_STATIC)&& (generalConfiguration.gantryCfg.autoFilter)){
           if(tomoCurrentFilterPosition!=0){
             if(pcb249U2SetFiltroRaw(tomoCurrentFilterPosition) == false) {
                   debugPrint("RX-3D FILTER COMMAND FAILED");
@@ -447,7 +450,8 @@ void RxTomoSeqError(int code)
     // Carica i dati relativi all'esposizione se necessario
     if(!generalConfiguration.demoMode) rxNotifyData(2,code);
 
-    if((generalConfiguration.filterTomoEna!=0)&&(Param->tomo_mode!=_TOMO_MODE_STATIC)){
+
+    if((generalConfiguration.filterTomoEna!=0)&&(Param->tomo_mode!=_TOMO_MODE_STATIC)&&(generalConfiguration.gantryCfg.autoFilter)){
       if(tomoCurrentFilterPosition!=0){
         if(pcb249U2SetFiltroRaw(tomoCurrentFilterPosition) == false) {
             debugPrint("RX-3D FILTER COMMAND FAILED");

@@ -285,6 +285,10 @@ void diagnosticInterface::gantryStatus(void){
     if(pConfig->sys.trxMotor) dgnframe.addParam("YES");
     else dgnframe.addParam("NO");
 
+    // OpzioneAuto Filter
+    if(pConfig->sys.autoFilter) dgnframe.addParam("YES");
+    else dgnframe.addParam("NO");
+
     // Numero allarmi attivi
     dgnframe.addParam(QString("%1").arg(ApplicationDatabase.getDataU(_DB_NALLARMI_ATTIVI)));
 

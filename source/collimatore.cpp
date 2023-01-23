@@ -483,6 +483,12 @@ bool Collimatore::setFiltro(_FilterCmd_Enum cmd, bool update)
         return TRUE;
     }
 
+    // Filtro fisso, non deve fare nulla
+    if(!pConfig->sys.autoFilter){
+        return true;
+    }
+
+
     // Controlli preliminari sui comandi
     if(pConfig->collimator_configured==FALSE)
     {
@@ -528,6 +534,11 @@ bool Collimatore::setFiltro(void)
     {
         DEBUG("COLLIMATORE: collimatore in modo manuale");
         return TRUE;
+    }
+
+    // Filtro fisso, non deve fare nulla
+    if(!pConfig->sys.autoFilter){
+        return true;
     }
 
     // Controlli preliminari sui comandi
@@ -597,6 +608,12 @@ bool Collimatore::manualSetFiltro(void)
         return FALSE;
     }
 
+    // Filtro fisso, non deve fare nulla
+    if(!pConfig->sys.autoFilter){
+        LOG("manualSetFiltro: Collimatore con Filtro Fisso");
+        return false;
+    }
+
     // Selezione la posizione del filtro
     for(i=0;i<4;i++) if(pCollimatore->colliConf.filterType[i] == manualFilter) break;
     data[0] = i;
@@ -615,10 +632,22 @@ bool Collimatore::manualSetFiltro(unsigned char index)
 
     if(index>3) return false;
 
+
+    // With Fixed filter there is not the manual filter activation
+    if(!pConfig->sys.autoFilter){
+        return FALSE;
+    }
+
     // Collimazione manuale attivata
     if(!manualFiltroCollimation)
     {
         return FALSE;
+    }
+
+
+    if(!pConfig->sys.autoFilter){
+
+        return false;
     }
 
     // Selezione la posizione del filtro
@@ -693,6 +722,12 @@ void Collimatore::guiNotifySlot(unsigned char id, unsigned char mcccode, QByteAr
         break;
 
     case MCC_SET_FILTRO:
+
+        // Filtro fisso, non deve fare nulla
+        if(!pConfig->sys.autoFilter){
+            return ;
+        }
+
         if(buffer.at(0)==0)
         {
             LOG("COLLIMATORE: POSIZIONAMENTO FILTRO FALLITO");

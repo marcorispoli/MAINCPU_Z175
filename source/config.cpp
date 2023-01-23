@@ -228,19 +228,16 @@ void Config::selectMainPage(){
 }
 
 
-// SE IL FIL EDI CONFIGURAZIONE NON VIENE TROVATO O RISULTASSE
-// ILLEGGIBILE ALLORA IL SISTEMA APRIRA' LA FINESTRA DI FACTORY INIT
-#define SYS_ITEMS 4
 bool Config::openSysCfg(void)
 {
     QList<QString> dati;
-    unsigned char nItems = 0;
 
     // Inizializzazione
     sys.detectorType =  DETECTOR_LMAM2;         // Di default usa LMAM2    
     sys.armMotor    =   true;                   // Presenza rotazione motorizzata/freno
     sys.trxMotor    =   true;                   // Presenza pendolazione
     sys.highSpeedStarter = true;                // Presenza starter alta velocità
+    sys.autoFilter = true;                      // Default roto-filter present
 
     // Verifica se esiste il file: se non esiste lo crea dai defaults
     QFile file(QString(SYSCFG).toAscii());
@@ -265,31 +262,24 @@ bool Config::openSysCfg(void)
 
         // Sblocco/Blocco compressore
         if(dati.at(0)=="DETECTOR"){
-            nItems++;
             sys.detectorType=dati.at(1).toInt();
         }else  if(dati.at(0)=="ARMMOT"){
-            nItems++;
             if(dati.at(1).toInt()==1)      sys.armMotor=true;
             else sys.armMotor=false;
         }else  if(dati.at(0)=="TILTMOT"){
-            nItems++;
             if(dati.at(1).toInt()==1)      sys.trxMotor=true;
             else sys.trxMotor=false;
         }else if(dati.at(0)=="HS_STARTER"){
-            nItems++;
             if(dati.at(1)=="1") sys.highSpeedStarter = true; // IAE
             else sys.highSpeedStarter = false; // Starter Low Speed interno
+        }else if(dati.at(0)=="AUTO_FILTER"){
+            if(dati.at(1)=="1") sys.autoFilter = true;
+            else sys.autoFilter = false;
         }
 
     }
 
     file.close();
-
-    // In caso di mancanza di items (nuovi items aggiunti)
-    if(nItems < SYS_ITEMS){
-        return false;
-    }
-
     return TRUE;
 }
 
@@ -322,6 +312,9 @@ bool Config::saveSysCfg(void)
     // Ozione uso starter alta velocità
     if(sys.highSpeedStarter) file.write("<HS_STARTER,1>    // opzione utilizzo hs starter\n");
     else file.write("<HS_STARTER,0>    // opzione utilizzo hs starter\n");
+
+    if(sys.autoFilter) file.write("<AUTO_FILTER,1>    // opzione modello selettore filtro\n");
+    else file.write("<AUTO_FILTER,0>    // opzione modello filtro fisso\n");
 
 
     file.close();

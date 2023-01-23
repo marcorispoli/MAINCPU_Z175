@@ -32,6 +32,7 @@
 #define _ARCH_HIGH_SPEED_STARTER    0x01
 #define _ARCH_TRX_MOTOR             0x02
 #define _ARCH_ARM_MOTOR             0x04
+#define _ARCH_FILTER_AUTO           0x08
 
 #define _COLLI_TYPE_NOT_ASSIGNED   0 // Vecchio collimatore
 #define _COLLI_TYPE_ASSY_01   1 // Vecchio collimatore

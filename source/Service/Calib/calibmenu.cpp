@@ -101,6 +101,10 @@ void CalibMenu::initPage(void){
     if(architettura & _ARCH_HIGH_SPEED_STARTER) ui->StarterCalibButton->hide();
     else ui->StarterCalibButton->show();
 
+    // Calibrazione Filtro solo se configurato
+    if(architettura & _ARCH_FILTER_AUTO) ui->FilterCalibButton->show();
+    else ui->FilterCalibButton->hide();
+
     return;
 }
 
@@ -131,7 +135,7 @@ void CalibMenu::onTiltCalibButton(void)
 
 void CalibMenu::onFilterCalibButton(void)
 {
-
+        // Filtro fisso, non deve fare nulla
         GWindowRoot.setNewPage(_PG_SERVICE_CALIB_FILTER,GWindowRoot.curPage,0);
 }
 
@@ -179,10 +183,7 @@ void CalibMenu::onColliCalibButton(void)
 void CalibMenu::onExtendedBiopsyCalibButton(void)
 {
 
-    if(!pBiopsy->connected) return;
-    if(pBiopsy->model != BYM_EXTENDED_DEVICE) return;
-
-
+    if(ApplicationDatabase.getDataI(BYM_EXTENDED_DEVICE) != BYM_EXTENDED_DEVICE)   return;
     GWindowRoot.setNewPage(_PG_SERVICE_CALIB_EXTENDED_BIOPSY,GWindowRoot.curPage,0);
 }
 

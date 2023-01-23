@@ -43,6 +43,8 @@ public slots:
     void onRightRotation(void);
     void onRightTilt(void);
     void onLeftTilt(void);
+    void onRightFilter(void);
+    void onLeftFilter(void);
 
 private:
     Ui::systemUI *ui;
@@ -65,6 +67,7 @@ private:
     QString getRotationStr(unsigned char val);
     QString getTiltStr(unsigned char val);
     QString getDetectorStr(unsigned char val);
+    QString getFilterStr(unsigned char val);
 };
 
 #endif

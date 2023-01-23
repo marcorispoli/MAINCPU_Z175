@@ -94,6 +94,7 @@ void biopsyStandardDevice::mccStatNotify(unsigned char id_notify,unsigned char c
 
     // Se arriva qui il modulo ha comunicato con successo con la torretta standard
     pBiopsy->model = BYM_STANDARD_DEVICE;
+    ApplicationDatabase.setData(_DB_BIOP_MODEL, (int) BYM_STANDARD_DEVICE);
 
     // _____________________  Stato connessione____________________________________________________________________________________
     if(data.at(_BP_STD_CONNESSIONE)==1)
