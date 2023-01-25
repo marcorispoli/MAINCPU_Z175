@@ -728,11 +728,11 @@ void biopsyExtendedDevice::manageRequestErrors(int error){
  *  lat = lateralità richiesta;
  *
  *  return:
- *  *  0: si trova già in HOME
- *  *  1: comando in esecuzione
- *  * -1: errore lateralità
- *  * -2: Asse X non in posizione
- *  * -3: braccio non in posizione
+ *   0: già in posizione
+ *   1: comando accettato ed in esecuzione
+ *  -1: Errore attivo
+ *  -2: TRX fuori posiizone
+ *  -3: ASSE X fuori lateralità
  */
 int biopsyExtendedDevice::requestBiopsyHome(int id, unsigned char lat, int rot_holder){
     QString activationString;

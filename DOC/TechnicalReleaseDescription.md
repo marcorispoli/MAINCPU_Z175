@@ -103,6 +103,14 @@ release's documentation if necessary:
 
 + New Feature: the Auto/Fixed Filter option selection is now available:
   + For Mammography Digital units of the Z175 family only the Automatic Filter selection was available: the Fixed filter option was not available. Due to diferent requirements of the MTL Kits, sharing the same Software Package, althogh at the moment the MET production still keep the Automatic Filter as a must, the Fixed filter option has been introduced to keep the Kits and Production units sharing the same software.
+
++ Feature Modified: the term *ACCESSORY* has been replaced with the therm *COMPONENT*  in all the GUI and message strings for all the Translated languages:
+  + ENGLISH;
+  + ITALIAN;
+  + RUSSIAN;
+  + FRANCE;
+  + PORTUGUESE;
+  + SPANISH;
     
 
 # 4. Software Requirement Specification 
