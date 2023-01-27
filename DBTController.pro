@@ -177,5 +177,8 @@ RESOURCES += \
 OTHER_FILES += \
     Deploy/RELEASE/Release_Note \
     Deploy/PACKAGE/Release_note \
-    Deploy/PACKAGE/Release_note.txt
+    Deploy/PACKAGE/Release_note.txt \
+    DOC/TechnicalReleaseDescription.md \
+    DOC/IRS Command Description.md \
+    DOC/IRS Command Description.md
 

@@ -1948,12 +1948,14 @@ void PageAlarms::createMessageList(void){
   classitem.classDescription=QString("MESSAGGI INFORMATIVI");
   classitem.errlist.clear();
 
+  /*
   erritem.codestr = QString("01701");
   erritem.codeval = INFOMSG_NOT_READY_STARTUP;
   erritem.errmsg  = QString(QApplication::translate("ERROR NOT-READY","STARTUP INCOMPLETO", 0, QApplication::UnicodeUTF8));
   erritem.errpix =  QPixmap(INFO_PIX);
   erritem.errdescr= QString("Il sistema non ha completato correttamente lo startup");
   classitem.errlist.append(erritem);
+
 
   erritem.codestr = QString("01702");
   erritem.codeval = INFOMSG_NOT_READY_HV_NOT_CALIBRATED;
@@ -1962,12 +1964,14 @@ void PageAlarms::createMessageList(void){
   erritem.errdescr= QString("Manca la calibrazione della lettura della tensione di rete");
   classitem.errlist.append(erritem);
 
+
   erritem.codestr = QString("01703");
   erritem.codeval = INFOMSG_NOT_READY_LSSTARTER_NOT_CALIBRATED;
   erritem.errmsg  = QString(QApplication::translate("ERROR NOT-READY","LOW SPEED STARTER NON CALIBRATO", 0, QApplication::UnicodeUTF8));
   erritem.errpix =  QPixmap(INFO_PIX);
   erritem.errdescr= QString("Lo starter a bassa velocità è attivo ma non calibrato");
   classitem.errlist.append(erritem);
+
 
   erritem.codestr = QString("01704");
   erritem.codeval = INFOMSG_NOT_READY_STUDY_OPEN;
@@ -1976,12 +1980,14 @@ void PageAlarms::createMessageList(void){
   erritem.errdescr= QString("La porta dello studio risulta aperta");
   classitem.errlist.append(erritem);
 
+
   erritem.codestr = QString("01705");
   erritem.codeval = INFOMSG_NOT_READY_INVALID_PAD;
   erritem.errmsg  = QString(QApplication::translate("ERROR NOT-READY","COMPRESSORE NON RICONOSCIUTO", 0, QApplication::UnicodeUTF8));
   erritem.errpix =  QPixmap(INFO_PIX);
   erritem.errdescr= QString("Il compressore non è stato riconosciuto o non correttamente bloccato");
   classitem.errlist.append(erritem);
+
 
   erritem.codestr = QString("01706");
   erritem.codeval = INFOMSG_NOT_READY_NOT_COMPRESSED;
@@ -1990,12 +1996,14 @@ void PageAlarms::createMessageList(void){
   erritem.errdescr= QString("Non è stata riconosciuta una valida compressione");
   classitem.errlist.append(erritem);
 
+
   erritem.codestr = QString("01707");
   erritem.codeval = INFOMSG_NOT_READY_INVALID_POTTER;
   erritem.errmsg  = QString(QApplication::translate("ERROR NOT-READY","POTTER NON VALIDO O NON RICONOSCIUTO", 0, QApplication::UnicodeUTF8));
   erritem.errpix =  QPixmap(INFO_PIX);
   erritem.errdescr= QString("Non è stato riconosciuto un potter valido");
   classitem.errlist.append(erritem);
+
 
   erritem.codestr = QString("01708");
   erritem.codeval = INFOMSG_NOT_READY_MISSING_PATIENT_PROTECTION;
@@ -2011,7 +2019,7 @@ void PageAlarms::createMessageList(void){
   erritem.errpix =  QPixmap(INFO_PIX);
   erritem.errdescr= QString("Con il PC connesso non è ammesso accedere alla pagina operativa Analogica");
   classitem.errlist.append(erritem);
-
+*/
 
   errors.replace(_DB_ALLARME_INFO_STAT-FIRST_ALR_CLASS,classitem);
 
@@ -2028,6 +2036,7 @@ void PageAlarms::createMessageList(void){
   erritem.errdescr= QString("Il file di configurazione del generatore è errato");
   classitem.errlist.append(erritem);
 
+  /*
   erritem.codestr = QString("01802");
   erritem.codeval = ERROR_DOSE_CALCULATOR_CONFIGURATION;
   erritem.errmsg  = QString(QApplication::translate("ERRORE-CONFIGURAZIONE","CALCOLATORE DI DOSE NON CONFIGURATO", 0, QApplication::UnicodeUTF8));
@@ -2042,7 +2051,7 @@ void PageAlarms::createMessageList(void){
   erritem.errpix =  QPixmap(ERR_PIX);
   erritem.errdescr= QString("I file di configurazione per CG o airkerma non sono correttamente configurati o sono corrotti");
   classitem.errlist.append(erritem);
-
+*/
 
   erritem.codestr = QString("01804");
   erritem.codeval = ERROR_STARTUP;

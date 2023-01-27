@@ -84,6 +84,8 @@ class PageAlarms : public GWindow
     #define ARM_PUSH_TIMEOUT 1 // Pulsante raggi rimasto attivo troppo tempo
 
     // __________________________ _DB_ALLARME_INFO_STAT,
+
+    /*
     #define INFOMSG_NOT_READY_STARTUP                       1           // Il systema non ha completato lo startup
     #define INFOMSG_NOT_READY_HV_NOT_CALIBRATED             2           // La tensione di rete non è stata calibrata
     #define INFOMSG_NOT_READY_LSSTARTER_NOT_CALIBRATED      3           // Starter a bassa velocità non calibrat
@@ -95,12 +97,12 @@ class PageAlarms : public GWindow
     #define INFOMSG_OPERATING_PAGE_DISABLED_WITH_AWS        9           // Non si apre la pagina operativa se c'è il pc
     #define INFOMSG_NOT_READY_MISSING_CASSETTE              10          // Errore mancanza cassetta
     #define INFOMSG_NOT_READY_EXPOSED_CASSETTE              11          // Errore cassetta già esposta
-
+    */
 
     // __________________________ _DB_ALLARME_SYSCONF,                   // Configurazione di sistema
     #define ERROR_STARTUP           1   // Errore nella fase di startup
-    #define ERROR_DOSE_CALCULATOR_CONFIGURATION   2   // Il calcolatore di dose non è configurato o la configurazione è corrotta
-    #define ERROR_DOSE_FILTER_CALCULATOR   3  // E' selezionato un filtro senza il rispettivo file kerma
+
+
     #define COLLI_WRONG_CONFIG      4   // Collimatore non configurato
     #define ERROR_CONF_GENERATOR    5   // Il generatore non è configurato
     #define ERROR_CONF_COMPRESSOR   6   // Il compressore non è configurato

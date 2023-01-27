@@ -111,6 +111,11 @@ release's documentation if necessary:
   + FRANCE;
   + PORTUGUESE;
   + SPANISH;
+
++ Language Translation:
+  + removed error codes from 1700 to 1709;
+  + removed error codes from 1802 to 1803;
+
     
 
 # 4. Software Requirement Specification 
@@ -331,3 +336,8 @@ with the following indication:
 + When the Filter option is FIXED:
 
  ![sysFilterFixPanel](./IMG/Manual/ServiceCalibMenuWithoutFilter.png)
+
+# 7. Language Translation
+
++ Remove the Gantry Z175 Error code in the range 1700 to 1709: those errors are not implemented in this platform.
++ Remove the Gantry Z175 Error code in the range 1802 to 1803: those errors are not implemented in this platform.
