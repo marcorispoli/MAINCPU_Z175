@@ -120,12 +120,12 @@
         <file>AlarmPage/alarmPix.png</file>
     </qresource>
     <qresource prefix="/Translate">
-        <file>Translate/traduzione_rus.qm</file>
         <file>Translate/traduzione_eng.qm</file>
         <file>Translate/traduzione_fra.qm</file>
         <file>Translate/traduzione_ita.qm</file>
         <file>Translate/traduzione_por.qm</file>
         <file>Translate/traduzione_spa.qm</file>
+        <file>Translate/traduzione_rus.qm</file>
     </qresource>
     <qresource prefix="/Logo">
         <file>Logo/anm.png</file>

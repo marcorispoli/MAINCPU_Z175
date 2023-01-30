@@ -4,28 +4,29 @@
 <context>
     <name>BIOPSY</name>
     <message>
-        <location filename="../source/biopsy.cpp" line="160"/>
+        <location filename="../source/BiopsyExtended/biopsyExtendedDevice.cpp" line="891"/>
+        <location filename="../source/BiopsyStandard/biopsyStandardDevice.cpp" line="133"/>
         <source>NOME ACCESSORIO</source>
         <translation>DISPOSITIVO DE BIOPSIA</translation>
     </message>
     <message>
-        <location filename="../source/biopsy.cpp" line="192"/>
+        <location filename="../source/BiopsyStandard/biopsyStandardDevice.cpp" line="166"/>
         <source>ACCESSORIO GUASTO</source>
         <translation>FALHA</translation>
     </message>
     <message>
-        <location filename="../source/biopsy.cpp" line="198"/>
-        <location filename="../source/biopsy.cpp" line="209"/>
+        <location filename="../source/BiopsyStandard/biopsyStandardDevice.cpp" line="172"/>
+        <location filename="../source/BiopsyStandard/biopsyStandardDevice.cpp" line="183"/>
         <source>ACCESSORIO NON AMMESSO</source>
         <translation>NÃO APLICÁVEL</translation>
     </message>
     <message>
-        <location filename="../source/biopsy.cpp" line="203"/>
+        <location filename="../source/BiopsyStandard/biopsyStandardDevice.cpp" line="177"/>
         <source>PORTA AGO</source>
         <translation>SUPORTE DE AGULHA</translation>
     </message>
     <message>
-        <location filename="../source/biopsy.cpp" line="214"/>
+        <location filename="../source/BiopsyStandard/biopsyStandardDevice.cpp" line="188"/>
         <source>ACCESSORIO ASSENTE</source>
         <translation>NÃO DETECTADO</translation>
     </message>
@@ -33,18 +34,20 @@
 <context>
     <name>BIOPSY-PAGE</name>
     <message>
-        <location filename="../source/biopsypage.cpp" line="260"/>
-        <location filename="../source/biopsypage.cpp" line="582"/>
+        <location filename="../source/BiopsyStandard/biopsyStandardPage.cpp" line="258"/>
+        <location filename="../source/BiopsyStandard/biopsyStandardPage.cpp" line="593"/>
         <source>TARGET</source>
         <translation>TARGET</translation>
     </message>
     <message>
-        <location filename="../source/biopsypage.cpp" line="366"/>
+        <location filename="../source/BiopsyExtended/biopsyExtendedPage.cpp" line="321"/>
+        <location filename="../source/BiopsyStandard/biopsyStandardPage.cpp" line="364"/>
         <source>Nome Paziente</source>
         <translation>Nome do paciente</translation>
     </message>
     <message>
-        <location filename="../source/biopsypage.cpp" line="370"/>
+        <location filename="../source/BiopsyExtended/biopsyExtendedPage.cpp" line="325"/>
+        <location filename="../source/BiopsyStandard/biopsyStandardPage.cpp" line="368"/>
         <source>Studio Locale</source>
         <translation>Estudo Local</translation>
     </message>
@@ -52,20 +55,20 @@
 <context>
     <name>COLLIMATORE</name>
     <message>
-        <location filename="../source/collimatore.cpp" line="306"/>
-        <location filename="../source/collimatore.cpp" line="376"/>
-        <location filename="../source/collimatore.cpp" line="384"/>
+        <location filename="../source/collimatore.cpp" line="317"/>
+        <location filename="../source/collimatore.cpp" line="387"/>
+        <location filename="../source/collimatore.cpp" line="395"/>
         <location filename="../source/echodisplay.cpp" line="304"/>
         <source>NON DEFINITA</source>
         <translation>INDEFINIDO</translation>
     </message>
     <message>
-        <location filename="../source/collimatore.cpp" line="313"/>
+        <location filename="../source/collimatore.cpp" line="324"/>
         <source>MANUALE</source>
         <translation>MANUAL</translation>
     </message>
     <message>
-        <location filename="../source/collimatore.cpp" line="397"/>
+        <location filename="../source/collimatore.cpp" line="408"/>
         <source>APERTA</source>
         <translation>ABRIR</translation>
     </message>
@@ -73,162 +76,140 @@
 <context>
     <name>COMPRESSORE</name>
     <message>
-        <location filename="../source/compressor.cpp" line="575"/>
-        <location filename="../source/compressor.cpp" line="586"/>
+        <location filename="../source/compressor.cpp" line="584"/>
+        <location filename="../source/compressor.cpp" line="595"/>
         <source>NON RICONOSCIUTO</source>
         <translation>NÃO DETECTADO</translation>
     </message>
     <message>
-        <location filename="../source/compressor.cpp" line="576"/>
-        <location filename="../source/compressor.cpp" line="588"/>
+        <location filename="../source/compressor.cpp" line="585"/>
+        <location filename="../source/compressor.cpp" line="597"/>
         <source>CODICE ERRATO</source>
         <translation>CÓDIGO ERRADO</translation>
     </message>
     <message>
-        <location filename="../source/compressor.cpp" line="583"/>
+        <location filename="../source/compressor.cpp" line="592"/>
         <source>COMPRESSORE NON BLOCCATO</source>
         <translation>DESBLOQUEADO</translation>
     </message>
     <message>
-        <location filename="../source/compressor.cpp" line="585"/>
+        <location filename="../source/compressor.cpp" line="594"/>
         <source>NACCHERA NON BLOCCATA</source>
         <translation>DESBLOQUEADO</translation>
     </message>
 </context>
 <context>
+    <name>CalibBiopsyExtended</name>
+    <message>
+        <location filename="../source/Service/Calib/calibBiopsyExtended.ui" line="139"/>
+        <source>CURSOR CALIBRATION</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/Service/Calib/calibBiopsyExtended.ui" line="165"/>
+        <source>PAD CALIBRATION</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/Service/Calib/calibBiopsyExtended.ui" line="212"/>
+        <location filename="../source/Service/Calib/calibBiopsyExtended.ui" line="589"/>
+        <source>NEXT</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/Service/Calib/calibBiopsyExtended.ui" line="238"/>
+        <location filename="../source/Service/Calib/calibBiopsyExtended.ui" line="615"/>
+        <source>START/RESTART</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/Service/Calib/calibBiopsyExtended.ui" line="264"/>
+        <location filename="../source/Service/Calib/calibBiopsyExtended.ui" line="641"/>
+        <source>STORE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/Service/Calib/calibBiopsyExtended.ui" line="290"/>
+        <location filename="../source/Service/Calib/calibBiopsyExtended.ui" line="667"/>
+        <location filename="../source/Service/Calib/calibBiopsyExtended.ui" line="872"/>
+        <source>CANCEL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/Service/Calib/calibBiopsyExtended.ui" line="844"/>
+        <location filename="../source/Service/Calib/calibBiopsyExtended.ui" line="896"/>
+        <source>Cursor Calibration Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>CalibMenuObject</name>
     <message>
-        <location filename="../source/Service/Calib/calibmenu.ui" line="280"/>
+        <location filename="../source/Service/Calib/calibmenu.ui" line="298"/>
         <source>Collimator</source>
         <translation></translation>
     </message>
 </context>
 <context>
-    <name>ERROR NOT-READY</name>
-    <message>
-        <location filename="../source/pagealarms.cpp" line="1910"/>
-        <source>STARTUP INCOMPLETO</source>
-        <translation>[M:01701]
-O SISTEMA NÃO ESTÁ PRONTO PARA EXPOSIÇÃO!
-O sistema não começou corretamente
-</translation>
-    </message>
-    <message>
-        <location filename="../source/pagealarms.cpp" line="1917"/>
-        <source>LETTURA HV NON CALIBRATA</source>
-        <translation>[M:01702]
-O SISTEMA NÃO ESTÁ PRONTO PARA EXPOSIÇÃO!
-A calibração de energia principal está faltando</translation>
-    </message>
-    <message>
-        <location filename="../source/pagealarms.cpp" line="1924"/>
-        <source>LOW SPEED STARTER NON CALIBRATO</source>
-        <translation>[M:01703]
-O SISTEMA NÃO ESTÁ PRONTO PARA EXPOSIÇÃO!
-Baixa velocidade de arranque não calibrado</translation>
-    </message>
-    <message>
-        <location filename="../source/pagealarms.cpp" line="1931"/>
-        <source>STUDIO APERTO</source>
-        <translation>[M:01704]
-O SISTEMA NÃO ESTÁ PRONTO PARA EXPOSIÇÃO!
-Os resultados da porta da sala aberta</translation>
-    </message>
-    <message>
-        <location filename="../source/pagealarms.cpp" line="1938"/>
-        <source>COMPRESSORE NON RICONOSCIUTO</source>
-        <translation>[M:01705]
-O SISTEMA NÃO ESTÁ PRONTO PARA EXPOSIÇÃO!
-O sistema detectou um código de pá de compressão incorreto.</translation>
-    </message>
-    <message>
-        <location filename="../source/pagealarms.cpp" line="1945"/>
-        <source>SISTEMA NON IN COMPRESSIONE</source>
-        <translation>[M:01706]
-O SISTEMA NÃO ESTÁ PRONTO PARA EXPOSIÇÃO!
-Aplique a compressão primeiro.</translation>
-    </message>
-    <message>
-        <location filename="../source/pagealarms.cpp" line="1952"/>
-        <source>POTTER NON VALIDO O NON RICONOSCIUTO</source>
-        <translation>[M:01707]
-O SISTEMA NÃO ESTÁ PRONTO PARA EXPOSIÇÃO!
-Componente inválido.</translation>
-    </message>
-    <message>
-        <location filename="../source/pagealarms.cpp" line="1959"/>
-        <source>MANCA PROTEZIONE PAZIENTE</source>
-        <translation>[M:01708]
-O SISTEMA NÃO ESTÁ PRONTO PARA EXPOSIÇÃO!
-Falta proteção do paciente</translation>
-    </message>
-    <message>
-        <location filename="../source/pagealarms.cpp" line="1967"/>
-        <source>PAGINA OPERATIVA DISABILITATA CON PC CONNESSO</source>
-        <translation>[M:01709]
-AÇÃO NÃO PERMITIDA!</translation>
-    </message>
-</context>
-<context>
     <name>ERRORE-ARM</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="757"/>
+        <location filename="../source/pagealarms.cpp" line="800"/>
         <source>ARM: ATTIVAZIONE NON CONSENTITA</source>
         <translation>[M:00101]
 ROTAÇÃO DO C-ARM NÃO PERMITIDA!
 Uma das condições de segurança impede a ativação do braço C.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="764"/>
+        <location filename="../source/pagealarms.cpp" line="807"/>
         <source>ARM: ERRORE PARAMETRI DI PREPARAZIONE AZZERAMENTO</source>
         <translation>[M:00102]
 C-ARM ZERO ERRO DE CONFIGURAÇÃO!
 Foi solicitada uma configuração zero do braço C não permitida.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="770"/>
+        <location filename="../source/pagealarms.cpp" line="813"/>
         <source>ARM: ERRORE PARAMETRI DI MOVIMENTO DI AZZERAMENTO</source>
         <translation>[M:00103]
 C-ARM ZERO ERRO DE CONFIGURAÇÃO!
 Foi solicitada uma configuração zero do braço C não permitida.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="776"/>
+        <location filename="../source/pagealarms.cpp" line="819"/>
         <source>ARM: TIMEOUT MOVIMENTO DI AZZERAMENTO</source>
         <translation>[M:00104]
 C-ARM ZERO ERRO DE CONFIGURAÇÃO!
 Tempo de espera excedido durante o processo de ajuste do zero do braço C.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="782"/>
+        <location filename="../source/pagealarms.cpp" line="825"/>
         <source>ARM: ERRORE PARAMETRI PREPARAZIONE POSIZIONAMENTO</source>
         <translation>[M:00105]
 ERRO DE POSICIONAMENTO do C-ARM!
 Foi solicitado um posicionamento do braço C não permitido.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="788"/>
+        <location filename="../source/pagealarms.cpp" line="831"/>
         <source>ARM: ERRORE PARAMETRI MOVIMENTO DI POSIZIONAMENTO</source>
         <translation>[M:00106]
 ERRO DE POSICIONAMENTO do C-ARM!
 Foi solicitado um posicionamento braço C não permitido.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="794"/>
+        <location filename="../source/pagealarms.cpp" line="837"/>
         <source>ARM: TIMEOUT MOVIMENTO DI POSIZIONAMENTO</source>
         <translation>[M:00107]
 ERRO DE POSICIONAMENTO do C-ARM!
 Tempo de espera esgotado durante o processo de posicionamento do braço C.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="800"/>
+        <location filename="../source/pagealarms.cpp" line="843"/>
         <source>ARM: RILEVATO OSTACOLO DURANTE POSIZIONAMENTO</source>
         <translation>[M:00108]
 ERRO DE POSICIONAMENTO do C-ARM!
 Obstáculo detectado durante o processo de posicionamento.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="806"/>
+        <location filename="../source/pagealarms.cpp" line="849"/>
         <source>ARM:ERRORE INTERNO DISPOSITIVO</source>
         <translation>[M:00109]
 C-ARM DRIVER ERROR!
@@ -237,35 +218,35 @@ Consulte o painel de serviço do driver C-ARMO driver do Braço C detectou um er
 Consulte o painel de serviço do driver C-ARM</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="812"/>
+        <location filename="../source/pagealarms.cpp" line="855"/>
         <source>ARM: MOVIMENTO NON ABILITATO</source>
         <translation>[M:00110]
 C-ARM INVALID ACTIVATION ERROR!
 A ativação do braço C está atualmente desativada.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="818"/>
+        <location filename="../source/pagealarms.cpp" line="861"/>
         <source>ARM: INTERVALLO DI MOVIMENTO NON CONSENTITO</source>
         <translation>[M:00111]
 ERRO DE ALCANCE DO C-ARM !!
 Fora do intervalo de posição permitido foi solicitado.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="824"/>
+        <location filename="../source/pagealarms.cpp" line="867"/>
         <source>ARM: COMANDO IN CORSO</source>
         <translation>[M:00112]
 C-ARM ERRO!
 O braço C ou a estativa porta tubo estão em execução.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="830"/>
+        <location filename="../source/pagealarms.cpp" line="873"/>
         <source>ARM: PROTEZIONE MOTORE ROTAZIONE</source>
         <translation>[M:00113]
 ERRO DE SEGURANÇA DO C-ARM!
 A tampa do motor do Braço C está fora do lugar.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="836"/>
+        <location filename="../source/pagealarms.cpp" line="879"/>
         <source>ARM: ERRORE DI COMUNICAZIONE SUL CAN BUS</source>
         <translation>[M:00114]
 ERRO DE COMUNICAÇÃO DO DRIVER C-ARM 
@@ -273,14 +254,14 @@ O sistema não consegue se comunicar com o driver  do braço em C.
 Consulte o painel de serviço do driver C-ARM e verifique a integridade e cabeamento do CAN BUS</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="842"/>
+        <location filename="../source/pagealarms.cpp" line="885"/>
         <source>ARM: DISPOSITIVO RILEVAMENTO OSTACOLO BLOCCATO</source>
         <translation>[M:00115]
 FALHA NO SISTEMA DE OBSTÁCULO C-ARM
 A entrada do sistema de detecção de obstáculo está bloqueada</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="848"/>
+        <location filename="../source/pagealarms.cpp" line="891"/>
         <source>ARM: RILEVATA OSTRUZIONE DURANTE IL MOVIMENTO</source>
         <translation>[M:00116]
 ERRO DE POSICIONAMENTO DO C-ARM
@@ -290,7 +271,7 @@ Um excesso de força de resistência foi detectado durante a rotação</translat
 <context>
     <name>ERRORE-ARMPUSH</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1895"/>
+        <location filename="../source/pagealarms.cpp" line="1938"/>
         <source>PULSANTI ROTAZIONE MANUALE BLOCCATI
 </source>
         <translation>[M:01601]
@@ -301,31 +282,37 @@ Resultado dos botões de ativação manual do Braço C está bloqueado!</transla
 <context>
     <name>ERRORE-BIOPSIA</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="728"/>
-        <source>BIOPSIA:ERRORE MOVIMENTO ASSE X</source>
+        <location filename="../source/pagealarms.cpp" line="761"/>
+        <source>BIOPSIA:ERRORE MOVIMENTO CURSORE</source>
         <translation>[M:00001]
-BIOPSY ERROR!
-A ativação do eixo X não atingiu a posição de destino solicitada.</translation>
+ERRO DE BIOPSIA!
+Falha de ativação.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="735"/>
-        <source>BIOPSIA:ERRORE MOVIMENTO ASSE Y</source>
+        <location filename="../source/pagealarms.cpp" line="768"/>
+        <source>BIOPSIA: TIMEOUT MOVIMENTO</source>
         <translation>[M:00002]
-BIOPSY ERROR!
-A ativação do eixo Y não atingiu a posição de destino solicitada.</translation>
+ERRO DE BIOPSIA!
+Timeout activation.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="742"/>
-        <source>BIOPSIA:ERRORE MOVIMENTO ASSE Z</source>
+        <location filename="../source/pagealarms.cpp" line="775"/>
+        <source>BIOPSIA: BUSY</source>
         <translation>[M:00003]
-BIOPSY ERROR!
-A ativação do eixo Z não atingiu a posição de destino solicitada.</translation>
+ERRO DE BIOPSIA!
+Dispositivo ocupado.</translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="782"/>
+        <source>BIOPSIA: UNDEFINED ERROR</source>
+        <translation>[M:00004]
+ERRO DE BIOPSIA!</translation>
     </message>
 </context>
 <context>
     <name>ERRORE-COLLIMATORE</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="865"/>
+        <location filename="../source/pagealarms.cpp" line="908"/>
         <source>COLLIMAZIONE FALLITA
 RIPETERE SEQUENZA DI COLLIMAZIONE
 </source>
@@ -335,7 +322,7 @@ Destrave e trave a pá de compressão para forçar uma nova tentativa de colima�
 Se não tiver sucesso, reinicie o sistema.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="871"/>
+        <location filename="../source/pagealarms.cpp" line="914"/>
         <source>IMPOSTAZIONE FILTRO FALLITA!
 </source>
         <translation>[M:00302]
@@ -343,7 +330,7 @@ FALHA NA SELEÇÃO DO FILTRO!
 Repita a seleção do filtro ou reinicie o sistema</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="877"/>
+        <location filename="../source/pagealarms.cpp" line="920"/>
         <source>IMPOSTAZIONE SPECCHIO FALLITA!
 </source>
         <translation>[M:00303]
@@ -351,7 +338,7 @@ ATIVAÇÃO DO ESPELHO FALHOU!
 Repita a ativação do Mirror ou reinicie o sistema.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="884"/>
+        <location filename="../source/pagealarms.cpp" line="927"/>
         <source>IMPOSTAZIONE LAMPADA CENTRATORE FALLITA!
 </source>
         <translation>[M:00304]
@@ -362,7 +349,7 @@ Repita a ação de ativação da lâmpada de colimação.</translation>
 <context>
     <name>ERRORE-COMPPUSH</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1867"/>
+        <location filename="../source/pagealarms.cpp" line="1910"/>
         <source>PEDALI COMPRESSORE BLOCCATI
 </source>
         <translation>[M:01401]
@@ -374,35 +361,21 @@ Solte os pedais ou verifique a integridade do pedal</translation>
 <context>
     <name>ERRORE-CONFIGURAZIONE</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1983"/>
+        <location filename="../source/pagealarms.cpp" line="2034"/>
         <source>ERRORE CONFIG GENERATORE</source>
         <translation>[M:01801]
 ERRO NO SISTEMA!
 O arquivo de configuração do gerador está corrompido.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1990"/>
-        <source>CALCOLATORE DI DOSE NON CONFIGURATO</source>
-        <translation>[M:01802]
-ERRO DE CONFIGURAÇÃO!
-O arquivo de configuração do gerador está corrompido.</translation>
-    </message>
-    <message>
-        <location filename="../source/pagealarms.cpp" line="1998"/>
-        <source>CALCOLATORE DI DOSE NON CONFIGURATO PER I FILTRI ATTIVI</source>
-        <translation>[M:01803]
-ERRO DE CONFIGURAÇÃO!
-A calculadora de dose não está configurada para os filtros instalados.</translation>
-    </message>
-    <message>
-        <location filename="../source/pagealarms.cpp" line="2006"/>
+        <location filename="../source/pagealarms.cpp" line="2058"/>
         <source>STARTUP ERROR IN OPERATIVO</source>
         <translation>[M:01804]
 ERRO NO SISTEMA!
 O sistema detectou uma conclusão de sequência de inicialização inválida. Tente reiniciar o sistema</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="2013"/>
+        <location filename="../source/pagealarms.cpp" line="2065"/>
         <source>ERRORE FILE DI CONFIGURAZIONE COLLIMATORE!
 </source>
         <translation>[M:01805]
@@ -410,7 +383,7 @@ ERRO DE CONFIGURAÇÃO!
 Arquivo de configuração do colimador ausente.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="2020"/>
+        <location filename="../source/pagealarms.cpp" line="2072"/>
         <source>ERRORE FILE DI CONFIGURAZIONE COMPRESSORE!
 </source>
         <translation>[M:01806]
@@ -418,7 +391,7 @@ ERRO DE CONFIGURAÇÃO!
 Arquivo de configuração do compressor ausente.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="2027"/>
+        <location filename="../source/pagealarms.cpp" line="2079"/>
         <source>ERRORE FILE DI CONFIGURAZIONE SISTEMA!
 </source>
         <translation>[M:01807]
@@ -426,7 +399,7 @@ ERRO DE CONFIGURAÇÃO!
 Arquivo de configuração do sistema ausente</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="2034"/>
+        <location filename="../source/pagealarms.cpp" line="2086"/>
         <source>ERRORE FILE DI CONFIGURAZIONE USER!
 </source>
         <translation>[M:01808]
@@ -434,7 +407,7 @@ ERRO DE CONFIGURAÇÃO!
 Arquivo de configuração do sistema ausente</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="2041"/>
+        <location filename="../source/pagealarms.cpp" line="2093"/>
         <source>ERRORE FILE DI CONFIGURAZIONE PACKAGE!
 </source>
         <translation>[M:01809]
@@ -442,7 +415,7 @@ ERRO DE CONFIGURAÇÃO!
 Arquivo de configuração do sistema ausente</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="2048"/>
+        <location filename="../source/pagealarms.cpp" line="2100"/>
         <source>ERRORE MANCANZA SERIAL NUMBER!
 </source>
         <translation>[M:01810]
@@ -453,14 +426,14 @@ Número de série ausente.</translation>
 <context>
     <name>ERRORE-GENERATORE</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1008"/>
+        <location filename="../source/pagealarms.cpp" line="1051"/>
         <source>TEMPERATURA TUBO ECCESSIVA</source>
         <translation>[M:00501]
 TEMPERATURA DO TUBO MUITO ALTA!
 O sistema não pode continuar com a sequência de RAIOS X até que a temperatura do tubo diminua para um nível mais seguro.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1015"/>
+        <location filename="../source/pagealarms.cpp" line="1058"/>
         <source>IMPOSTAZIONE FUOCO FALLITA
 </source>
         <translation>[M:00502]
@@ -468,7 +441,7 @@ AJUSTE DO FOCO FALHOU!
 Repita a operação ou reinicie o sistema.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1022"/>
+        <location filename="../source/pagealarms.cpp" line="1065"/>
         <source>ANOMALIA SENSING CORRENTE ANODICA</source>
         <translation>[M:00503]
 ANÓDICO ERRO ATUAL!
@@ -477,14 +450,14 @@ Reinicialize o sistema.O sistema detectou um mau funcionamento no monitoramento 
 Reinicialize o sistema.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1029"/>
+        <location filename="../source/pagealarms.cpp" line="1072"/>
         <source>ANOMALIA CONNESSIONE CONNESSIONE DI TERRA</source>
         <translation>[M:00504]
 ERRO DE CONEXÃO COM O ATERRAMENTO!
 O sistema detectou uma falta de aterramento no dispositivo inversor. Verifique a conexão de aterramento</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1036"/>
+        <location filename="../source/pagealarms.cpp" line="1079"/>
         <source>MANCANZA CALIBRAZIONE HV</source>
         <translation>[M:00505]
 ERRO DE CALIBRAÇÃO DO SISTEMA
@@ -493,7 +466,7 @@ Veja o painel de serviço de calibração HVA calibração de energia principal 
 Veja o painel de serviço de calibração HV</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1043"/>
+        <location filename="../source/pagealarms.cpp" line="1086"/>
         <source>ANOMALIA TENSIONE HV</source>
         <translation>[M:00506]
 ERRO DE TENSÃO DE ENERGIA!
@@ -502,28 +475,28 @@ Verifique a alimentação principal ou a calibração do nível de potência.O s
 Verifique a alimentação principal ou a calibração do nível de potência.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1050"/>
+        <location filename="../source/pagealarms.cpp" line="1093"/>
         <source>ANOMALIA mAsMETRO</source>
         <translation>[M:00507]
 ERRO DE MONITORAMENTO DO MEDIDOR MAS!
 O sistema detectou uma anomalia no dispositivo medidos de mAs.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1057"/>
+        <location filename="../source/pagealarms.cpp" line="1100"/>
         <source>ANOMALIA CORRENTE DI FILAMENTO</source>
         <translation>[M:00508]
 ERRO DE CORRENTE DE FILAMENTO EM ESPERA!
 O sistema detectou uma corrente de filamento reserva incorreta.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1064"/>
+        <location filename="../source/pagealarms.cpp" line="1107"/>
         <source>ANOMALIA TEMPERATURA AMPLIFICATORE DI FILAMENTO</source>
         <translation>[M:00509]
 ERRO DE TEMPERATURA DO AMPLIFICADOR DE FILAMENTO!
 O sistema detectou uma temperatura do amplificador de filamento muito alta.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1071"/>
+        <location filename="../source/pagealarms.cpp" line="1114"/>
         <source>ANOMALIA STARTER BASSA VELOCITA
 CORRENTE MAIN-OFF</source>
         <translation>[M:00510]
@@ -531,7 +504,7 @@ ERRO DE PARTIDA DE BAIXA VELOCIDADE!
 Corrente MAIN-OFF errada detectada</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1078"/>
+        <location filename="../source/pagealarms.cpp" line="1121"/>
         <source>ANOMALIA STARTER BASSA VELOCITA
 CORRENTE SHIFT-OFF</source>
         <translation>[M:00511]
@@ -539,7 +512,7 @@ ERRO DE PARTIDA DE BAIXA VELOCIDADE!
 Corrente SHIFT-OFF errada detectada</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1085"/>
+        <location filename="../source/pagealarms.cpp" line="1128"/>
         <source>ANOMALIA STARTER BASSA VELOCITA
 CORRENTE MAIN RUN-MAX</source>
         <translation>[M:00512]
@@ -547,7 +520,7 @@ ERRO DE PARTIDA DE BAIXA VELOCIDADE!
 Corrente MAIN-RUN-MAX errada detectada</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1092"/>
+        <location filename="../source/pagealarms.cpp" line="1135"/>
         <source>ANOMALIA STARTER BASSA VELOCITA
 CORRENTE MAIN RUN-MIN</source>
         <translation>[M:00513]
@@ -555,7 +528,7 @@ ERRO DE PARTIDA DE BAIXA VELOCIDADE!
 Corrente MAIN-RUN-MIN errada detectada</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1099"/>
+        <location filename="../source/pagealarms.cpp" line="1142"/>
         <source>ANOMALIA STARTER BASSA VELOCITA
 CORRENTE MAIN KEEP-MAX</source>
         <translation>[M:00514]
@@ -563,7 +536,7 @@ ERRO DE PARTIDA DE BAIXA VELOCIDADE!
 Corrente MAIN-KEEP-MAX errada detectada</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1106"/>
+        <location filename="../source/pagealarms.cpp" line="1149"/>
         <source>ANOMALIA STARTER BASSA VELOCITA
 CORRENTE MAIN KEEP-MIN</source>
         <translation>[M:00515]
@@ -571,7 +544,7 @@ ERRO DE PARTIDA DE BAIXA VELOCIDADE!
 Corrente MAIN-KEEP-MIN incorreta detectada.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1113"/>
+        <location filename="../source/pagealarms.cpp" line="1156"/>
         <source>ANOMALIA STARTER BASSA VELOCITA
 CORRENTE SHIFT RUN-MAX</source>
         <translation>[M:00516]
@@ -579,7 +552,7 @@ ERRO DE PARTIDA DE BAIXA VELOCIDADE!
 Corrente SHIFT-RUN-MAX errada detectada</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1120"/>
+        <location filename="../source/pagealarms.cpp" line="1163"/>
         <source>ANOMALIA STARTER BASSA VELOCITA
 CORRENTE SHIFT RUN-MIN</source>
         <translation>[M:00517]
@@ -587,7 +560,7 @@ ERRO DE PARTIDA DE BAIXA VELOCIDADE!
 Corrente SHIFT-RUN-MIN incorreta detectada</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1127"/>
+        <location filename="../source/pagealarms.cpp" line="1170"/>
         <source>ANOMALIA STARTER BASSA VELOCITA
 CORRENTE SHIFT KEEP-MAX</source>
         <translation>[M:00518]
@@ -595,7 +568,7 @@ ERRO DE PARTIDA DE BAIXA VELOCIDADE!
 Corrente SHIFT-KEEP-MAX errada detectada</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1134"/>
+        <location filename="../source/pagealarms.cpp" line="1177"/>
         <source>ANOMALIA STARTER BASSA VELOCITA
 CORRENTE SHIFT KEEP-MIN</source>
         <translation>[M:00519]
@@ -603,21 +576,21 @@ ERRO DE PARTIDA DE BAIXA VELOCIDADE!
 Corrente SHIFT-KEEP-MIN incorreta detectada.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1141"/>
+        <location filename="../source/pagealarms.cpp" line="1184"/>
         <source>STARTER NON CALIBRATO</source>
         <translation>[M:00520]
 ERRO DE PARTIDA DE BAIXA VELOCIDADE!
 Baixa velocidade de arranque não calibrado.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1148"/>
+        <location filename="../source/pagealarms.cpp" line="1191"/>
         <source>HU ANODO ECCESSIVI</source>
         <translation>[M:00521]
 HU ANODO muito alta!
 O ânodo do tubo está muito quente para futuras exposições</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1155"/>
+        <location filename="../source/pagealarms.cpp" line="1198"/>
         <source>ANOMALIA SENSORE TEMPERATURA TUBO</source>
         <translation>[M:00522]
 ERRO DE TEMPERATURA DO TUBO DE RAIO X!
@@ -629,21 +602,21 @@ Substitua o sensor.
 <context>
     <name>ERRORE-LENZE</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1817"/>
+        <location filename="../source/pagealarms.cpp" line="1860"/>
         <source>LENZE: ERRORE CONNESSIONE SENSORE DI POSIZIONE</source>
         <translation>[M:01201]
 DRIVER LENZE ERROR!
 O cabo do sensor de posição parece desconectado</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1823"/>
+        <location filename="../source/pagealarms.cpp" line="1866"/>
         <source>LENZE: ERRORE SENSORE DI POSIZIONE</source>
         <translation>[M:01202]
 DRIVER LENZE ERROR!
 Conexão do sensor de posição errada detectada</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1829"/>
+        <location filename="../source/pagealarms.cpp" line="1872"/>
         <source>LENZE: ERRORE DISPOSITIVO</source>
         <translation>[M:01203]
 DRIVER LENZE ERROR!
@@ -651,7 +624,7 @@ O driver detectou um erro interno.
 Verifique o painel de serviço Lenze Driver.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1835"/>
+        <location filename="../source/pagealarms.cpp" line="1878"/>
         <source>LENZE: ALLARME CADUTA BRACCIO</source>
         <translation>[M:01204]
 SINAL DROP C-ARM DETECTADO!
@@ -661,7 +634,7 @@ O sistema de controle do braço C pode ser danificado. Desligue o sistema e entr
 <context>
     <name>ERRORE-LIFTPUSH</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1881"/>
+        <location filename="../source/pagealarms.cpp" line="1924"/>
         <source>PEDALI ALTO/BASSO BLOCCATI
 </source>
         <translation>[M:01501]
@@ -673,35 +646,35 @@ Solte os pedais ou verifique a integridade do pedal</translation>
 <context>
     <name>ERRORE-PAD</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1204"/>
+        <location filename="../source/pagealarms.cpp" line="1247"/>
         <source>COMPRESSORE SBLOCCATO</source>
         <translation>[M:00701]
 PÁ DE COMPRESSÃO NÃO BLOQUEADA CORRETAMENTE!
 Insira corretamente o compressor e trave-a com o botão superior.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1210"/>
+        <location filename="../source/pagealarms.cpp" line="1253"/>
         <source>SUPPORTO COMPRESSORE SBLOCCATO</source>
         <translation>[M:00702]
 SUPORTE DA PÁ DE COMPRESSÃO NÃO BLOQUEADO CORRETAMENTE!
 Insira corretamente o suporte do compressor e trave-o com o botão inferior.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1216"/>
+        <location filename="../source/pagealarms.cpp" line="1259"/>
         <source>COMPRESSORE NON RICONOSCIUTO</source>
         <translation>[M:00703]
 PÁ DE COMPRESSÃO INDETECTADA!
 O sistema detectou um código de pá de compressão incorreto.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1222"/>
+        <location filename="../source/pagealarms.cpp" line="1265"/>
         <source>COMPRESSIONE IN CORSO A STUDIO CHIUSO</source>
         <translation>[M:00704]
 COMPRESOR DA MAMA COM ESTUDO FECHADO!
 É altamente recomendável comprimir a mama apenas durante o ESTUDO ABERTO. Em caso de sessão de teste, ignore esta mensagem.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1228"/>
+        <location filename="../source/pagealarms.cpp" line="1271"/>
         <source>ACCESSORIO DISCONNESSO
 </source>
         <translation>[M:00705]
@@ -712,35 +685,35 @@ O sistema não detectou um componente válido.</translation>
 <context>
     <name>ERRORE-PARCHEGGIO</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="2065"/>
+        <location filename="../source/pagealarms.cpp" line="2117"/>
         <source>ERRORE POSIZIONAMENTO TUBO</source>
         <translation>[M:01901]
 ERRO DE CAMPO DO DETECTOR!
 Incapaz de completar a seleção do campo do detector.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="2072"/>
+        <location filename="../source/pagealarms.cpp" line="2124"/>
         <source>MOTORE ALTO-BASSO ATTIVO</source>
         <translation>[M:01902]
 ERRO DE ESTACIONAMENTO DO C-ARM!
 Motor para cima e para baixo ocupado.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="2080"/>
+        <location filename="../source/pagealarms.cpp" line="2132"/>
         <source>TIMEOUT MOTORE ALTO-BASSO</source>
         <translation>[M:01903]
 ERRO DE ESTACIONAMENTO DO C-ARM!
 Tempo limite de ativação do motor para cima/para baixo.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="2088"/>
+        <location filename="../source/pagealarms.cpp" line="2140"/>
         <source>FALLIO POSIZIONAMENTO ALTO-BASSO</source>
         <translation>[M:01904]
 ERRO DE ESTACIONAMENTO DO C-ARM!
 O posicionamento para cima/para baixo falhou.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="2095"/>
+        <location filename="../source/pagealarms.cpp" line="2147"/>
         <source>TIMEOUT ROTAZIONE C-ARM
 </source>
         <translation>[M:01905]
@@ -748,28 +721,28 @@ ERRO DE ESTACIONAMENTO DO C-ARM!
 Tempo limite de rotação do C-ARM.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="2102"/>
+        <location filename="../source/pagealarms.cpp" line="2154"/>
         <source>ERRORE ARM NON IN POSIZIONE</source>
         <translation>[M:01906]
 ERRO DE ESTACIONAMENTO DO C-ARM!
 O C-ARM deve ser girado 180 ° para prosseguir.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="2109"/>
+        <location filename="../source/pagealarms.cpp" line="2161"/>
         <source>START PARCHEGGIO</source>
         <translation>[M:01907]
 ATIVAÇÃO DE ESTACIONAMENTO DO C-ARM!
 Cuidado, o C-ARM está se movendo.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="2116"/>
+        <location filename="../source/pagealarms.cpp" line="2168"/>
         <source>START USCITA DA PARCHEGGIO</source>
         <translation>[M:01908]
 DESEMBARQUE DO C-ARM ATIVADO!
 Cuidado, o C-ARM está se movendo.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="2123"/>
+        <location filename="../source/pagealarms.cpp" line="2175"/>
         <source>POSIZIONE DI PARCHEGGIO NON CALIBRATA</source>
         <translation>[M:01909]
 ERRO DE ATIVAÇÃO DO ESTACIONAMENTO C-ARM!
@@ -779,7 +752,7 @@ A posição de estacionamento não está calibrada.</translation>
 <context>
     <name>ERRORE-PCB269</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1772"/>
+        <location filename="../source/pagealarms.cpp" line="1815"/>
         <source>COMPRESSIONE ECCESSIVA</source>
         <translation>[M:01003]
 ERRO NO DISPOSITIVO COMPRESSOR!
@@ -789,14 +762,14 @@ O dispositivo Compressor detectou uma compressão excessiva.</translation>
 <context>
     <name>ERRORE-POTTER</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1243"/>
+        <location filename="../source/pagealarms.cpp" line="1286"/>
         <source>INGRANDITORE: FATTORE DI INGRANDIMENTO NON VALIDO</source>
         <translation>[M:00801]
 ERRO DE DISPOSITIVO DE AMPLIAÇÃO!
 Fator de ampliação inválido.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1250"/>
+        <location filename="../source/pagealarms.cpp" line="1293"/>
         <source>INGRANDITORE: FATTORE DI INGRANDIMENTO NON CONFIGURATO</source>
         <translation>[M:00802]
 ERRO DE DISPOSITIVO DE AMPLIAÇÃO!
@@ -806,21 +779,21 @@ Dispositivo de ampliação não configurado.</translation>
 <context>
     <name>ERRORE-POWERDOWN</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1789"/>
+        <location filename="../source/pagealarms.cpp" line="1832"/>
         <source>ERRORE MANCANZA RETE</source>
         <translation>[M:01101]
 ERRO DE MONITORAMENTO DE POTÊNCIA!
 Desligue o sistema e verifique a integridade do dispositivo</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1795"/>
+        <location filename="../source/pagealarms.cpp" line="1838"/>
         <source>ERRORE PULSANTE DI EMERGENZA</source>
         <translation>[M:01102]
 ERRO DE MONITORAMENTO DE POTÊNCIA!
 O botão de emergência foi ativado.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1801"/>
+        <location filename="../source/pagealarms.cpp" line="1844"/>
         <source>WARNING CARICA CONDENSATORI IN CORSO</source>
         <translation>[M:01103]
 ERRO DE MONITORAMENTO DE POTÊNCIA!
@@ -831,7 +804,7 @@ Aguarde a conclusão da inicialização de energia antes de ativar o braço em C
 <context>
     <name>ERRORE-RAGGI</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1267"/>
+        <location filename="../source/pagealarms.cpp" line="1310"/>
         <source>IMPOSSIBILE PROCEDERE CON I RAGGI!!
 INSERIRE ACCESSORIO PIOMBO
 </source>
@@ -840,7 +813,7 @@ SEQUÊNCIA DE RAIOS X DESATIVADA!
 O concurso atual requer o uso de proteção de chumbo.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1273"/>
+        <location filename="../source/pagealarms.cpp" line="1316"/>
         <source>IMPOSSIBILE PROCEDERE CON I RAGGI!!
 INSERIRE ACCESSORIO PLEXYGLASS
 </source>
@@ -849,7 +822,7 @@ SEQUÊNCIA DE RAIOS X DESATIVADA!
 O concurso atual requer o uso de phantom de teste</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1279"/>
+        <location filename="../source/pagealarms.cpp" line="1322"/>
         <source>IMPOSSIBILE PROCEDERE CON I RAGGI!!
 INSERIRE ACCESSORIO PROTEZIONE PAZIENTE
 </source>
@@ -858,7 +831,7 @@ SEQUÊNCIA DE RAIOS X DESATIVADA!
 O concurso atual requer o uso de tela de proteção 2D.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1285"/>
+        <location filename="../source/pagealarms.cpp" line="1328"/>
         <source>IMPOSSIBILE PROCEDERE CON I RAGGI!!
 PORTA STUDIO APERTA
 </source>
@@ -867,7 +840,7 @@ SEQUÊNCIA DE RAIOS X DESATIVADA!
 Os resultados da porta da sala aberta</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1291"/>
+        <location filename="../source/pagealarms.cpp" line="1334"/>
         <source>ERRORE DATI SU DRIVER PCB190!!
 </source>
         <translation>[M:00905]
@@ -875,7 +848,7 @@ SEQUÊNCIA DE RAIOS X DESATIVADA!
 Erro nos dados de exposição. Repita a sequência ou reinicie o sistema.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1297"/>
+        <location filename="../source/pagealarms.cpp" line="1340"/>
         <source>IO ERROR: IMPOSSIBILE ATTIVARE XRAY ENA
 </source>
         <translation>[M:00906]
@@ -883,7 +856,7 @@ SEQUÊNCIA DE RAIOS X DESATIVADA!
 Erro do sistema IO. Repita a sequência ou reinicie o sistema.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1303"/>
+        <location filename="../source/pagealarms.cpp" line="1346"/>
         <source>TIMEOUT STARTER ANODO ROTANTE
 </source>
         <translation>[M:00907]
@@ -891,7 +864,7 @@ SEQUÊNCIA DE RAIOS X DESATIVADA!
 Timeout alta de arranque velocidade. Repita a sequência ou reinicie o sistema.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1309"/>
+        <location filename="../source/pagealarms.cpp" line="1352"/>
         <source>RILASCIO ANTICIPATO DEL PULSANTE RAGGI
 </source>
         <translation>[M:00908]
@@ -899,7 +872,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 O botão de raio-X foi liberado antecipadamente.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1315"/>
+        <location filename="../source/pagealarms.cpp" line="1358"/>
         <source>RILASCIO ANTICIPATO DEL PULSANTE RAGGI NO PREP
 </source>
         <translation>[M:00909]
@@ -907,7 +880,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 O botão de raio-X foi liberado antecipadamente.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1321"/>
+        <location filename="../source/pagealarms.cpp" line="1364"/>
         <source>RILASCIO ANTICIPATO DEL PULSANTE RAGGI AFTER PREP
 </source>
         <translation>[M:00910]
@@ -915,14 +888,14 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 O botão de raio-X foi liberado antecipadamente.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1327"/>
+        <location filename="../source/pagealarms.cpp" line="1370"/>
         <source>STARTER BUSY
 </source>
         <translation>[M:00911]
 NA</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1333"/>
+        <location filename="../source/pagealarms.cpp" line="1376"/>
         <source>TIMEOUT ATTESA SEGNALE EXP WIN DA DETECTOR
 </source>
         <translation>[M:00912]
@@ -930,7 +903,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 O Detector não ativa o sinal EXP-WIN.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1339"/>
+        <location filename="../source/pagealarms.cpp" line="1382"/>
         <source>DIAGNOSTICA PCB190 SEGNALA HV ALTI
 </source>
         <translation>[M:00913]
@@ -938,7 +911,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 O sistema detectou um nível de saída kV muito alto.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1345"/>
+        <location filename="../source/pagealarms.cpp" line="1388"/>
         <source>DIAGNOSTICA PCB190 SEGNALA HV BASSI
 </source>
         <translation>[M:00914]
@@ -946,7 +919,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 O sistema detectou um nível de saída kV muito baixo.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1351"/>
+        <location filename="../source/pagealarms.cpp" line="1394"/>
         <source>DIAGNOSTICA PCB190 SEGNALA CORRENTE ANODICA ALTA
 </source>
         <translation>[M:00915]
@@ -954,7 +927,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 O sistema detectou um nível de saída de corrente anódica muito alto.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1357"/>
+        <location filename="../source/pagealarms.cpp" line="1400"/>
         <source>DIAGNOSTICA PCB190 SEGNALA CORRENTE ANODICA BASSA
 </source>
         <translation>[M:00916]
@@ -962,7 +935,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 O sistema detectou um nível de saída de corrente anódica muito baixo.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1363"/>
+        <location filename="../source/pagealarms.cpp" line="1406"/>
         <source>DIAGNOSTICA PCB190 SEGNALA CORRENTE DI FILAMENTO ALTA
 </source>
         <translation>[M:00917]
@@ -970,7 +943,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 O sistema detectou um nível de saída de corrente de filamento muito mais alto.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1369"/>
+        <location filename="../source/pagealarms.cpp" line="1412"/>
         <source>DIAGNOSTICA PCB190 SEGNALA ANOMALIA SU V DI FILAMENTO
 </source>
         <translation>[M:00918]
@@ -978,7 +951,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 O sistema detectou um nível de saída de tensão de filamento muito mais alto.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1375"/>
+        <location filename="../source/pagealarms.cpp" line="1418"/>
         <source>DIAGNOSTICA PCB190 SEGNALA BASSA TENSIONE DI ALIMENTAZIONE POTENZA
 </source>
         <translation>[M:00919]
@@ -986,7 +959,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 O sistema detectou um nível de tensão da fonte de alimentação muito mais baixo.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1381"/>
+        <location filename="../source/pagealarms.cpp" line="1424"/>
         <source>TIMEOUT DURANTE ESECUZIONE RAGGI
 </source>
         <translation>[M:00920]
@@ -994,7 +967,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 Tempo limite da sequência de raios-X.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1387"/>
+        <location filename="../source/pagealarms.cpp" line="1430"/>
         <source>SELEZIONE kV NON VALIDA
 </source>
         <translation>[M:00921]
@@ -1002,7 +975,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 Seleção de kV inválida. Verifique o arquivo de configuração do tubo de raios-X.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1393"/>
+        <location filename="../source/pagealarms.cpp" line="1436"/>
         <source>SELEZIONE mAs NON VALIDA
 </source>
         <translation>[M:00922]
@@ -1010,7 +983,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 Seleção de mAs inválida. Verifique o arquivo de configuração do tubo de raios-X.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1399"/>
+        <location filename="../source/pagealarms.cpp" line="1442"/>
         <source>CONFIGURAZIONE PARAMETRI GENERATORE NON VALIDA
 </source>
         <translation>[M:00923]
@@ -1018,7 +991,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 Verifique o arquivo de configuração do tubo de raios-X.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1405"/>
+        <location filename="../source/pagealarms.cpp" line="1448"/>
         <source>kv SELEZIONATI RISULTANO NON CALIBRATI
 </source>
         <translation>[M:00924]
@@ -1026,7 +999,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 O nível de kV selecionado não foi calibrado. Continue a calibração.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1411"/>
+        <location filename="../source/pagealarms.cpp" line="1454"/>
         <source>CORRENTE DI FILAMENTO NON CALIBRATA
 </source>
         <translation>[M:00925]
@@ -1034,7 +1007,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 O mA selecionado da corrente do filamento não foi calibrado. Continue a calibração.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1417"/>
+        <location filename="../source/pagealarms.cpp" line="1460"/>
         <source>PARAMETRI GENERATORE NON CONFIGURATI
 </source>
         <translation>[M:00926]
@@ -1042,7 +1015,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 Verifique o arquivo de configuração do tubo de raios-X.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1423"/>
+        <location filename="../source/pagealarms.cpp" line="1466"/>
         <source>SELEZIONE FUOCO NON VALIDA
 </source>
         <translation>[M:00927]
@@ -1050,7 +1023,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 O sistema solicitou a seleção de um foco não configurado.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1429"/>
+        <location filename="../source/pagealarms.cpp" line="1472"/>
         <source>SELEZIONE FILTRO NON VALIDA
 </source>
         <translation>[M:00928]
@@ -1058,7 +1031,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 O sistema solicitou a seleção de um filtro não configurado.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1435"/>
+        <location filename="../source/pagealarms.cpp" line="1478"/>
         <source>SELEZIONE COLLIMAZIONE NON VALIDA
 </source>
         <translation>[M:00929]
@@ -1066,21 +1039,21 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 O sistema solicitou uma seleção de uma colimação não configurada.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1441"/>
+        <location filename="../source/pagealarms.cpp" line="1484"/>
         <source>ANOMALIA TENSIONE DI GRIGLIA
 </source>
         <translation>[M:00930]
 NA</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1447"/>
+        <location filename="../source/pagealarms.cpp" line="1490"/>
         <source>ANOMALIA ALIMENTAZIONE SCHEDA PCB190
 </source>
         <translation>[M:00931]
 NA</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1453"/>
+        <location filename="../source/pagealarms.cpp" line="1496"/>
         <source>ATTIVAZIONE RAGGI NON CONSENTITA
 PAD NON IDONEO AL CONTESTO
 </source>
@@ -1089,7 +1062,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 Pás de compressão inválida neste contexto.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1459"/>
+        <location filename="../source/pagealarms.cpp" line="1502"/>
         <source>ATTIVAZIONE RAGGI NON CONSENTITA
 PAD NON RICONOSCIUTO
 </source>
@@ -1098,7 +1071,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 Classificação inválida da bandeja de compressão.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1465"/>
+        <location filename="../source/pagealarms.cpp" line="1508"/>
         <source>ATTIVAZIONE RAGGI NON CONSENTITA
 POTTER NON RICONOSCIUTO
 </source>
@@ -1107,7 +1080,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 Componente não detectado.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1472"/>
+        <location filename="../source/pagealarms.cpp" line="1515"/>
         <source>ATTIVAZIONE RAGGI NON CONSENTITA
 BRACCIO FUORI POSIZIONE
 </source>
@@ -1116,7 +1089,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 A posição do braço C difere da posição esperada.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1479"/>
+        <location filename="../source/pagealarms.cpp" line="1522"/>
         <source>ATTIVAZIONE RAGGI NON CONSENTITA
 SENO NON COMPRESSO
 APPLICARE COMPRESSIONE PER PROSEGUIRE</source>
@@ -1125,7 +1098,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 Aplique a compressão primeiro.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1486"/>
+        <location filename="../source/pagealarms.cpp" line="1529"/>
         <source>SEQUENZA RAGGI INTERROTTA
 OPERAZIONE DI SCRITTURA REGISTRI
 FALLITA
@@ -1135,7 +1108,7 @@ ERRO NO SISTEMA!
 O erro interno impede a conclusão da sequência atual. Reinicie o sistema.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1493"/>
+        <location filename="../source/pagealarms.cpp" line="1536"/>
         <source>SEQUENZA RAGGI INTERROTTA
 OPERAZIONE DI LETTURA REGISTRI
 FALLITA
@@ -1145,7 +1118,7 @@ ERRO NO SISTEMA!
 O erro interno impede a conclusão da sequência atual. Reinicie o sistema.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1500"/>
+        <location filename="../source/pagealarms.cpp" line="1543"/>
         <source>SEQUENZA RAGGI INTERROTTA
 IO NETWORK BUSY
 RILASCIARE IL PULSANTE RAGGI E RIPETERE
@@ -1155,7 +1128,7 @@ ERRO NO SISTEMA!
 O erro interno impede a conclusão da sequência atual. Reinicie o sistema.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1507"/>
+        <location filename="../source/pagealarms.cpp" line="1550"/>
         <source>SEQUENZA RAGGI INTERROTTA
 IMPOSSIBILE BLOCCARE I DRIVER
 EFFETTUARE RESET HARDWARE!!
@@ -1165,7 +1138,7 @@ ERRO NO SISTEMA!
 O erro interno impede a conclusão da sequência atual. Reinicie o sistema.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1514"/>
+        <location filename="../source/pagealarms.cpp" line="1557"/>
         <source>SEQUENZA RAGGI INTERROTTA
 IMPOSSIBILE SBLOCCARE I DRIVER
 EFFETTUARE RESET HARDWARE!!
@@ -1175,7 +1148,7 @@ ERRO NO SISTEMA!
 O erro interno impede a conclusão da sequência atual. Reinicie o sistema.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1521"/>
+        <location filename="../source/pagealarms.cpp" line="1564"/>
         <source>SEQUENZA RAGGI INTERROTTA
 IMPOSSIBILE CARICARE I PARAMETRI
 DI ESPOSIZIONE!!
@@ -1185,7 +1158,7 @@ ERRO NO SISTEMA!
 O erro interno impede a conclusão da sequência atual. Reinicie o sistema.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1528"/>
+        <location filename="../source/pagealarms.cpp" line="1571"/>
         <source>SEQUENZA RAGGI INTERROTTA
 DRIVER PCB190 BUSY
 RIPETERE ESPOSIZIONE
@@ -1195,7 +1168,7 @@ ERRO NO SISTEMA!
 O erro interno impede a conclusão da sequência atual. Reinicie o sistema.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1536"/>
+        <location filename="../source/pagealarms.cpp" line="1579"/>
         <source>SEQUENZA RAGGI INTERROTTA
 TIMEOUT ATTESA FINE ESPOSIZIONE
 </source>
@@ -1204,7 +1177,7 @@ ERRO NO SISTEMA!
 O erro interno impede a conclusão da sequência atual. Reinicie o sistema.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1543"/>
+        <location filename="../source/pagealarms.cpp" line="1586"/>
         <source>SEQUENZA RAGGI INTERROTTA
 TIMEOUT ATTESA DATI AEC
 </source>
@@ -1213,7 +1186,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 O sistema não recebeu os dados AEC para a próxima exposição.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1549"/>
+        <location filename="../source/pagealarms.cpp" line="1592"/>
         <source>SEQUENZA RAGGI INTERROTTA
 DATI AEC NON DISPONIBILI
 </source>
@@ -1222,7 +1195,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 O sistema não recebeu os dados AEC para a próxima exposição.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1555"/>
+        <location filename="../source/pagealarms.cpp" line="1598"/>
         <source>SEQUENZA RAGGI INTERROTTA
 IMPOSSIBILE IMPOSTARE MODALITA&apos; TOMO
 SU COLLIMATORE
@@ -1232,7 +1205,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 O sistema não consegue ativar a colimação dinâmica para a sequência Tomo. Repita a exposição ou reinicie o sistema.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1561"/>
+        <location filename="../source/pagealarms.cpp" line="1604"/>
         <source>SEQUENZA RAGGI INTERROTTA
 ERRORE POSIZIONAMENTO TUBO IN HOME
 </source>
@@ -1242,7 +1215,7 @@ Erro no posicionamento de HOME Tomo estativa porta tubo
 Repita a exposição ou reinicie o sistema.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1567"/>
+        <location filename="../source/pagealarms.cpp" line="1610"/>
         <source>SEQUENZA RAGGI INTERROTTA
 ERRORE POSIZIONAMENTO TUBO IN HOME WIDE
 </source>
@@ -1252,7 +1225,7 @@ Erro no posicionamento de HOME Tomo estativa porta tubo
 Repita a exposição ou reinicie o sistema.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1574"/>
+        <location filename="../source/pagealarms.cpp" line="1617"/>
         <source>SEQUENZA RAGGI INTERROTTA
 ERRORE ATTIVAZIONE TUBO PER SCANSIONE
 </source>
@@ -1262,7 +1235,7 @@ Erro na ativação da estativa porta tubo para a sequência Tomo de entrada.
 Repita a exposição ou reinicie o sistema.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1581"/>
+        <location filename="../source/pagealarms.cpp" line="1624"/>
         <source>SEQUENZA RAGGI INTERROTTA
 ERRORE ATTIVAZIONE TUBO PER SCANSIONE WIDE
 </source>
@@ -1272,7 +1245,7 @@ Erro na ativação da estativa porta tubo para a sequência Tomo de entrada.
 Repita a exposição ou reinicie o sistema.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1589"/>
+        <location filename="../source/pagealarms.cpp" line="1632"/>
         <source>SEQUENZA RAGGI INTERROTTA
 ERRORE ATTIVAZIONE TUBO IN POSIZIONE CC
 </source>
@@ -1281,7 +1254,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 Erro no posicionamento da estativa porta tubo CC Tomo </translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1596"/>
+        <location filename="../source/pagealarms.cpp" line="1639"/>
         <source>SEQUENZA RAGGI INTERROTTA
 ERRORE SOFTWARE: CODA MCC PIENA
 </source>
@@ -1290,7 +1263,7 @@ ERRO NO SISTEMA!
 O erro interno impede a conclusão da sequência atual. Reinicie o sistema.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1604"/>
+        <location filename="../source/pagealarms.cpp" line="1647"/>
         <source>SEQUENZA RAGGI INTERROTTA
 ERRORE INGRANDITORE: INGRANDIMENTO NON VALIDO
 O NON RICONOSCIUTO</source>
@@ -1299,7 +1272,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 O sistema detectou um mag inválido (ou não configurado) fator.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1611"/>
+        <location filename="../source/pagealarms.cpp" line="1654"/>
         <source>SEQUENZA RAGGI INTERROTTA
 SI STA UTILIZZANDO IL FUOCO GRANDE
 CON L&apos;INGRANDITORE INSERITO</source>
@@ -1308,7 +1281,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 O sistema detectou um uso inválido do Large Focus com o dispositivo de ampliação.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1618"/>
+        <location filename="../source/pagealarms.cpp" line="1661"/>
         <source>SEQUENZA RAGGI INTERROTTA
 SI STA UTILIZZANDO IL FUOCO PICCOLO
 SENZA USO DELL&apos;INGRANDITORE</source>
@@ -1317,21 +1290,21 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 O uso do foco pequeno é permitido apenas com o dispositivo de ampliação neste concurso.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1625"/>
+        <location filename="../source/pagealarms.cpp" line="1668"/>
         <source>ANOMALIA MOVIMENTO TUBO DURANTE RAGGI</source>
         <translation>[M:00957]
 SEQUÊNCIA DE RAIOS X ABORTADA!
 Um obstáculo detectado impede a conclusão da sequência Tomo.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1632"/>
+        <location filename="../source/pagealarms.cpp" line="1675"/>
         <source>ERRORE SPECCHIO FUORI CAMPO</source>
         <translation>[M:00958]
 SEQUÊNCIA DE RAIOS X ABORTADA!
 Erro no posicionamento do espelho fora do campo</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1640"/>
+        <location filename="../source/pagealarms.cpp" line="1683"/>
         <source>SEQUENZA RAGGI INTERROTTA
 ERRORE POSIZIONAMENTO TUBO IN HOME INTERMEDIATE</source>
         <translation>[M:00959]
@@ -1340,7 +1313,7 @@ Erro no posicionamento de HOME Tomo estativa porta tubo
 Repita a exposição ou reinicie o sistema.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1647"/>
+        <location filename="../source/pagealarms.cpp" line="1690"/>
         <source>SEQUENZA RAGGI INTERROTTA
 ERRORE ATTIVAZIONE TUBO PER SCANSIONE INTERMEDIATE</source>
         <translation>[M:00960]
@@ -1349,7 +1322,7 @@ Erro na ativação da estativa porta tubo para a sequência Tomo de entrada.
 Repita a exposição ou reinicie o sistema.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1654"/>
+        <location filename="../source/pagealarms.cpp" line="1697"/>
         <source>PROTEZIONE PAZIENTE 3D
 </source>
         <translation>[M:00961]
@@ -1357,16 +1330,16 @@ SEQUÊNCIA DE RAIOS X DESATIVADA!
 O concurso atual requer o uso de tela protetora 3D.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1661"/>
-        <location filename="../source/pagealarms.cpp" line="1667"/>
-        <location filename="../source/pagealarms.cpp" line="1673"/>
-        <location filename="../source/pagealarms.cpp" line="1679"/>
-        <location filename="../source/pagealarms.cpp" line="1685"/>
-        <location filename="../source/pagealarms.cpp" line="1691"/>
-        <location filename="../source/pagealarms.cpp" line="1697"/>
-        <location filename="../source/pagealarms.cpp" line="1703"/>
-        <location filename="../source/pagealarms.cpp" line="1709"/>
-        <location filename="../source/pagealarms.cpp" line="1715"/>
+        <location filename="../source/pagealarms.cpp" line="1704"/>
+        <location filename="../source/pagealarms.cpp" line="1710"/>
+        <location filename="../source/pagealarms.cpp" line="1716"/>
+        <location filename="../source/pagealarms.cpp" line="1722"/>
+        <location filename="../source/pagealarms.cpp" line="1728"/>
+        <location filename="../source/pagealarms.cpp" line="1734"/>
+        <location filename="../source/pagealarms.cpp" line="1740"/>
+        <location filename="../source/pagealarms.cpp" line="1746"/>
+        <location filename="../source/pagealarms.cpp" line="1752"/>
+        <location filename="../source/pagealarms.cpp" line="1758"/>
         <source>SEQUENZA RAGGI INTERROTTA
 ANOMALIA STARTER BASSA VELOCITA
 ERROR CODE: %1</source>
@@ -1375,7 +1348,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 Código de erro do motor de partida de baixa velocidade:% 1.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1722"/>
+        <location filename="../source/pagealarms.cpp" line="1765"/>
         <source>ATTENZIONE, HU ANODO ECCESSIVI
 ATTENDERE CHE IL TUBO SI RAFFREDDI
 PER PROSEGUIRE</source>
@@ -1384,7 +1357,7 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 O ânodo do tubo está muito quente para futuras exposições.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1728"/>
+        <location filename="../source/pagealarms.cpp" line="1771"/>
         <source>ATTENZIONE, TEMPERATURA TUBO ECCESSIVA
 ATTENDERE CHE IL TUBO SI RAFFREDDI
 PER PROSEGUIRE</source>
@@ -1393,21 +1366,21 @@ SEQUÊNCIA DE RAIOS X ABORTADA!
 O sistema não pode continuar com a sequência de RAIOS X até que a temperatura do tubo diminua para um nível mais seguro.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1734"/>
+        <location filename="../source/pagealarms.cpp" line="1777"/>
         <source>ATTENZIONE, SENSORE TEMPERATURA TUBO MALFUNZIONANTE</source>
         <translation>[M:00965]
 SEQUÊNCIA DE RAIOS X ABORTADA!
 O sensor de temperatura do tubo pode ser danificado ou não conectado corretamente.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1740"/>
+        <location filename="../source/pagealarms.cpp" line="1783"/>
         <source>MOVIMENTO TUBO NON CONSENTITO. POSSIBILE IMPATTO CON IL SUOLO</source>
         <translation>[M:00966]
 SEQUÊNCIA DE RAIOS X ABORTADA!
 A sequência Tomo não pode ser executada porque o Tube-Arm não pode ser ativado com do braço em C nesta posição.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1746"/>
+        <location filename="../source/pagealarms.cpp" line="1789"/>
         <source>ACCESSORIO DI COLLIMAZIONE NON CONSENTITO</source>
         <translation>[M:00967]
 DETECTOR DA AEC SUPER EXPOSTO
@@ -1417,7 +1390,7 @@ O detector AEC está parcial ou totalmente fora da mama e foi exposto ao feixe d
 <context>
     <name>ERRORE-SOFTWARE</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1171"/>
+        <location filename="../source/pagealarms.cpp" line="1214"/>
         <source>ALLARME SOFTWARE!!!
 CODE DI PROCESSO PROVVISORIAMENTE PIENE
 RIPETERE L&apos;ULTIMA OPERAZIONE</source>
@@ -1426,7 +1399,7 @@ ERRO NO SISTEMA!
 Reinicie o sistema.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1178"/>
+        <location filename="../source/pagealarms.cpp" line="1221"/>
         <source>ALLARME SOFTWARE!!!
 RILEVATE REVISIONI SOFTWARE NON COMPATIBILI
 CONTATTARE L&apos;ASSISTENZA</source>
@@ -1435,7 +1408,7 @@ ERRO NO SISTEMA!
 O sistema detectou revisões de firmware de dispositivo não compatíveis.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1186"/>
+        <location filename="../source/pagealarms.cpp" line="1229"/>
         <source>ATTENZIONE: SPEGNIMENTO SISTEMA IN CORSO</source>
         <translation>[M:00603]
 ATENÇÃO!
@@ -1445,63 +1418,63 @@ O sistema é desligado em alguns segundos.</translation>
 <context>
     <name>ERRORE-TRX</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="901"/>
+        <location filename="../source/pagealarms.cpp" line="944"/>
         <source>TRX: ATTIVAZIONE NON CONSENTITA</source>
         <translation>[M:00401]
 ATIVAÇÃO DO TUBE-ARM NÃO PERMITIDA!
 O Tube-Arm não pôde ser configurado ou ocupado</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="908"/>
+        <location filename="../source/pagealarms.cpp" line="951"/>
         <source>TRX: ERRORE PARAMETRI DI PREPARAZIONE AZZERAMENTO</source>
         <translation>[M:00402]
 AJUSTE ZERO DO TUBE-ARM NÃO PERMITIDO!
 O Tube-Arm não pôde ser configurado ou ocupado</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="914"/>
+        <location filename="../source/pagealarms.cpp" line="957"/>
         <source>TRX: ERRORE PARAMETRI DI MOVIMENTO DI AZZERAMENTO</source>
         <translation>[M:00403]
 AJUSTE ZERO DO TUBE-ARM NÃO PERMITIDO!
 O Tube-Arm não pôde ser configurado ou ocupado</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="920"/>
+        <location filename="../source/pagealarms.cpp" line="963"/>
         <source>TRX: TIMEOUT MOVIMENTO DI AZZERAMENTO</source>
         <translation>[M:00404]
 TUBE-ARM ERROR!
 Timeout durante o processo de ajuste do zero</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="926"/>
+        <location filename="../source/pagealarms.cpp" line="969"/>
         <source>TRX: ERRORE PARAMETRI PREPARAZIONE POSIZIONAMENTO</source>
         <translation>[M:00405]
 ATIVAÇÃO DO TUBE-ARM NÃO PERMITIDA!
 O Tube-Arm não pôde ser configurado ou ocupado</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="932"/>
+        <location filename="../source/pagealarms.cpp" line="975"/>
         <source>TRX: ERRORE PARAMETRI MOVIMENTO DI POSIZIONAMENTO</source>
         <translation>[M:00406]
 ATIVAÇÃO DO BRAÇO DE TUBO NÃO PERMITIDA
 O Tube-Arm não pôde ser configurado ou ocupado</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="938"/>
+        <location filename="../source/pagealarms.cpp" line="981"/>
         <source>TRX: TIMEOUT DURANTE IL MOVIMENTO</source>
         <translation>[M:00407]
 TUBE-ARM ERROR!
 Timeout durante o processo de ajuste do zero</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="944"/>
+        <location filename="../source/pagealarms.cpp" line="987"/>
         <source>TRX: RILEVATO OSTACOLO DURANTE POSIZIONAMENTO</source>
         <translation>[M:00408]
 TUBE-ARM ERROR!
 Obstáculo detectado durante o processo de posicionamento.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="950"/>
+        <location filename="../source/pagealarms.cpp" line="993"/>
         <source>ERRORE INTERNO DISPOSITIVO</source>
         <translation>[M:00409]
 ERRO DO DRIVER DO BRAÇO DO TUBO
@@ -1510,28 +1483,28 @@ Consulte o painel de serviço do driver TUBE-ARMO driver TUBE-ARM detectou um er
 Consulte o painel de serviço do driver TUBE-ARM</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="956"/>
+        <location filename="../source/pagealarms.cpp" line="999"/>
         <source>TRX: MOVIMENTO NON ABILITATO</source>
         <translation>[M:00410]
 ATIVAÇÃO DO BRAÇO DE TUBO NÃO PERMITIDA
 O Tube-Arm não pôde ser configurado ou ocupado</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="962"/>
+        <location filename="../source/pagealarms.cpp" line="1005"/>
         <source>TRX: INTERVALLO DI MOVIMENTO NON CONSENTITO</source>
         <translation>[M:00411]
 ERRO DE ALCANCE ERRADO DO BRAÇO DE TUBO
 O sistema solicitou um ângulo-alvo do tubo-braço incorreto.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="968"/>
+        <location filename="../source/pagealarms.cpp" line="1011"/>
         <source>TRX: COMANDO IN CORSO</source>
         <translation>[M:00412]
 TUBE-ARM BUSY ERROR
 O braço C ou a estativa porta tubo estão em execução.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="974"/>
+        <location filename="../source/pagealarms.cpp" line="1017"/>
         <source>TRX: DISPOSITIVO DI SICUREZZA ATTIVATO</source>
         <translation>[M:00413]
 ERRO DE SEGURANÇA DO TUBE-ARM
@@ -1540,7 +1513,7 @@ Desligue o sistema e verifique a integridade da estativa porta tuboO dispositivo
 Desligue o sistema e verifique a integridade da estativa porta tubo</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="980"/>
+        <location filename="../source/pagealarms.cpp" line="1023"/>
         <source>TRX: ERRORE DI COMUNICAZIONE SUL CAN BUS</source>
         <translation>[M:00414]
 ERRO DE COMUNICAÇÃO DO DRIVER TUBE-ARM
@@ -1549,14 +1522,14 @@ Consulte o painel de serviço do driver estativa porta tubo  e verifique a integ
 Consulte o painel de serviço do driver estativa porta tubo  e verifique a integridade e o cabeamento do CAN BUS.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="986"/>
+        <location filename="../source/pagealarms.cpp" line="1029"/>
         <source>TRX: DISPOSITIVO RILEVAMENTO OSTACOLO BLOCCATO</source>
         <translation>[M:00415]
 FALHA NO SISTEMA DE OBSTÁCULO DO BRAÇO DE TUBO
 A entrada do sistema de detecção de obstáculo está bloqueada</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="992"/>
+        <location filename="../source/pagealarms.cpp" line="1035"/>
         <source>TRX: RILEVATA OSTRUZIONE DURANTE IL MOVIMENTO</source>
         <translation>[M:00416]
 ERRO DE POSICIONAMENTO DO BRAÇO DO TUBO
@@ -1566,7 +1539,7 @@ Um excesso de força de resistência foi detectado durante a rotação</translat
 <context>
     <name>ERRORE-XRAYPUSH</name>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1853"/>
+        <location filename="../source/pagealarms.cpp" line="1896"/>
         <source>PULSANTE RAGGI BLOCCATO
 </source>
         <translation>[M:01301]
@@ -1586,42 +1559,42 @@ O sistema detectou que o botão X-RAY foi bloqueado.</translation>
 <context>
     <name>MAIN-PAGE</name>
     <message>
-        <location filename="../source/mainpage.cpp" line="734"/>
+        <location filename="../source/mainpage.cpp" line="742"/>
         <source>INTESTAZIONE</source>
         <translation>ESTUDO FECHADO</translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="737"/>
+        <location filename="../source/mainpage.cpp" line="745"/>
         <source>ACCESSORIO</source>
         <translation>COMPONENTE</translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="740"/>
+        <location filename="../source/mainpage.cpp" line="748"/>
         <source>COMPRESSORE</source>
         <translation>PADDLE</translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="743"/>
+        <location filename="../source/mainpage.cpp" line="751"/>
         <source>POSIZIONE</source>
         <translation>POSIÇÃO</translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="745"/>
+        <location filename="../source/mainpage.cpp" line="753"/>
         <source>SPESSORE</source>
         <translation>ESPESSURA</translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="748"/>
+        <location filename="../source/mainpage.cpp" line="756"/>
         <source>FORZA</source>
         <translation>FORÇA</translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="750"/>
+        <location filename="../source/mainpage.cpp" line="758"/>
         <source>TARGET</source>
         <translation>TARGET</translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="790"/>
+        <location filename="../source/mainpage.cpp" line="798"/>
         <source>MESSAGGIO ATTIVAZIONE POWER OFF</source>
         <translation>O SISTEMA DESLIGARÁ!
 Pressione a seta para a esquerda para cancelar.O SISTEMA DESLIGARÁ!
@@ -1633,82 +1606,82 @@ Pressione a seta para a esquerda para cancelar.</translation>
     <name>OPENSTUDY-PAGE</name>
     <message>
         <location filename="../source/openStudyPage.cpp" line="363"/>
-        <location filename="../source/openStudyPage.cpp" line="643"/>
+        <location filename="../source/openStudyPage.cpp" line="647"/>
         <source>TARGET</source>
         <translation>TARGET</translation>
     </message>
     <message>
-        <location filename="../source/openStudyPage.cpp" line="468"/>
+        <location filename="../source/openStudyPage.cpp" line="472"/>
         <source>READY</source>
         <translation>PRONTO</translation>
     </message>
     <message>
-        <location filename="../source/openStudyPage.cpp" line="474"/>
+        <location filename="../source/openStudyPage.cpp" line="478"/>
         <source>NOT READY</source>
         <translation>NÃO ESTÁ PRONTO</translation>
     </message>
     <message>
-        <location filename="../source/openStudyPage.cpp" line="900"/>
+        <location filename="../source/openStudyPage.cpp" line="906"/>
         <source>Nome Paziente</source>
         <translation>Nome do paciente</translation>
     </message>
     <message>
-        <location filename="../source/openStudyPage.cpp" line="904"/>
+        <location filename="../source/openStudyPage.cpp" line="910"/>
         <source>Studio Locale</source>
         <translation>Estudo Local</translation>
     </message>
     <message>
-        <location filename="../source/openStudyPage.cpp" line="1008"/>
+        <location filename="../source/openStudyPage.cpp" line="1014"/>
         <source>SPESSORE</source>
         <translation>ESPESSURA</translation>
     </message>
     <message>
-        <location filename="../source/openStudyPage.cpp" line="1010"/>
+        <location filename="../source/openStudyPage.cpp" line="1016"/>
         <source>COMPRESSIONE</source>
         <translation>COMPRESSÃO</translation>
     </message>
     <message>
-        <location filename="../source/openStudyPage.cpp" line="1012"/>
+        <location filename="../source/openStudyPage.cpp" line="1018"/>
         <source>COLLIMAZIONE</source>
         <translation>COLIMAÇÃO</translation>
     </message>
     <message>
-        <location filename="../source/openStudyPage.cpp" line="1014"/>
+        <location filename="../source/openStudyPage.cpp" line="1020"/>
         <source>ACCESSORIO</source>
         <translation>COMPONENTE</translation>
     </message>
     <message>
-        <location filename="../source/console.cpp" line="272"/>
+        <location filename="../source/console.cpp" line="275"/>
         <source>MODO TEST: CALIBRAZIONE TOMOGRAFIA</source>
         <translation>MODO DE CALIBRAÇÃO DE TOMOGRAFIA</translation>
     </message>
     <message>
-        <location filename="../source/console.cpp" line="277"/>
+        <location filename="../source/console.cpp" line="280"/>
         <source>MODO TEST: ESPOSIZIONI CON DETECTOR</source>
         <translation>EXPOSIÇÃO DE TEXTO COM DETECTOR</translation>
     </message>
     <message>
-        <location filename="../source/console.cpp" line="279"/>
+        <location filename="../source/console.cpp" line="282"/>
         <source>MODO TEST: ESPOSIZIONI SENZA DETECTOR</source>
         <translation>EXPOSIÇÃO DE TEXTO SEM DETECTOR</translation>
     </message>
     <message>
-        <location filename="../source/console.cpp" line="286"/>
+        <location filename="../source/console.cpp" line="289"/>
         <source>MODO TEST: CALIBRAZIONE COLLIMAZIONE DINAMICA</source>
         <translation>CALIBRAÇÃO DE COLIMAÇÃO DINÂMICA</translation>
     </message>
     <message>
-        <location filename="../source/console.cpp" line="291"/>
+        <location filename="../source/console.cpp" line="294"/>
         <source>MODO TEST: CALIBRAZIONE ZERO TOMOGRAFIA</source>
         <translation>TOMOGRAPHY HOME CALIBRATION</translation>
     </message>
     <message>
-        <location filename="../source/console.cpp" line="295"/>
+        <location filename="../source/console.cpp" line="298"/>
         <source>MODO TEST: CALIBRAZIONE CORRENTE DI FILAMENTO</source>
         <translation>CALIBRAÇÃO DE CORRENTE ANÓDICA</translation>
     </message>
     <message>
-        <location filename="../source/console.cpp" line="299"/>
+        <location filename="../source/console.cpp" line="302"/>
         <source>MODO TEST: CALIBRAZIONE KV</source>
         <translation>CALIBRAÇÃO DE kV</translation>
     </message>
@@ -1724,7 +1697,7 @@ Pressione a seta para a esquerda para cancelar.</translation>
 <context>
     <name>POTTER</name>
     <message>
-        <location filename="../source/echodisplay.cpp" line="318"/>
+        <location filename="../source/echodisplay.cpp" line="320"/>
         <location filename="../source/potter.cpp" line="39"/>
         <source>ACCESSORIO NON DEFINITO</source>
         <translation>INDEFINIDO</translation>
@@ -1779,6 +1752,27 @@ Por favor, vá embora após a confirmação.</translation>
         <location filename="../source/projectionPage.cpp" line="343"/>
         <source>SELEZIONE PROIEZIONE</source>
         <translation>SELECIONE O PAINEL DE PROJEÇÃO</translation>
+    </message>
+</context>
+<context>
+    <name>biopsyUI</name>
+    <message>
+        <location filename="../source/BiopsyExtended/biopsy.ui" line="284"/>
+        <location filename="../source/BiopsyExtended/biopsy.ui" line="412"/>
+        <location filename="../source/BiopsyExtended/biopsy.ui" line="540"/>
+        <location filename="../source/BiopsyExtended/biopsy.ui" line="668"/>
+        <location filename="../source/BiopsyExtended/biopsy.ui" line="796"/>
+        <source>CONFIRM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/BiopsyExtended/biopsy.ui" line="325"/>
+        <location filename="../source/BiopsyExtended/biopsy.ui" line="453"/>
+        <location filename="../source/BiopsyExtended/biopsy.ui" line="581"/>
+        <location filename="../source/BiopsyExtended/biopsy.ui" line="709"/>
+        <location filename="../source/BiopsyExtended/biopsy.ui" line="837"/>
+        <source>Press here to confirm</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
