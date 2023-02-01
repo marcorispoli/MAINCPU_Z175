@@ -2482,4 +2482,76 @@ void Generatore::initAnodeHU(void){
     }
 }
 
+/*______________________________________________________________________________
+ *          SEQUENZA RAGGI DI TEST COMANDATA DA IRS
+ *
+ */
+int Generatore::manualXraySequence(void)
+{
+    unsigned char data[14];
+
+    // Verifica se la modalità manuale è attiva
+    if(!manualMode) return -1;
+
+    // Verifica se un tubo è stato selezionato
+    if(!pConfig->generator_configured) return -2;
+
+    DEBUG("Activating Manual Xray Procedure");
+
+    // Selezione del fuoco
+    if(manFuoco == "WL"){
+        data[0] = 0; // F1 Grande
+    }else if(manFuoco == "MoL"){
+        data[0] = 1; // F2 Grande
+    }else if(manFuoco == "WS"){
+        data[0] = 2; // F1 Piccolo
+    }else if(manFuoco == "MoS"){
+        data[0] = 3; // F2 Piccolo
+    }
+
+    // kV di esposizione
+    int vdac = pGeneratore->getVdac(manVnom);
+    data[1] =  (unsigned char) (vdac & 0x00FF);
+    data[2] =  (unsigned char) (vdac >>8);
+
+    // Corrente di esposizione
+    data[3] =  (unsigned char) (manIdac & 0x00FF);
+    data[4] =  (unsigned char) (manIdac >> 8);
+
+    //  mAs
+    data[5] =  (unsigned char) ((manMas * 50) & 0x00FF);
+    data[6] =  (unsigned char) ((manMas * 50) >> 8);
+
+    // Timeout
+    if(manVnom > 35)
+        data[7] =  5 | 0x80;  // 50ms massimi per ogni impulso: usa il timer corto da 10ms
+    else
+        data[7] =  10 | 0x80; // 100ms massimi per ogni impulso: usa il timer corto da 10ms
+
+    bool swa,swb;
+    swa=pGeneratore->getSWA(manVnom);
+    swb=pGeneratore->getSWB(manVnom);
+    data[8]=0;
+    if(swa) data[8]|=1;         // SWA=1, SWB =0
+    if(swb) data[8]|=2;         // SWA=1, SWB =0
+
+    data[8]|=  4;               // Gestione dello Starter:alta velocitÃ  sempre
+    data[9] =  0;               // Griglia da aggiungere
+
+
+    // Valori limite tensione e corrente
+    data[10] = 255;
+    data[11] = 0;
+
+    // La protezione di corrente viene data dal timeout
+    data[12] = 254;
+    data[13] = 0;
+
+    if(pConsole->pGuiMcc->sendFrame(MCC_TEST_RX_SHOT,1,data, 14)==FALSE) return -3;
+
+    // Attiva simbolo grafico per raggi
+    pConsole->handleSetXraySym(true);
+
+    return 0;
+}
 

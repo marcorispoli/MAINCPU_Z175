@@ -116,6 +116,9 @@ release's documentation if necessary:
   + removed error codes from 1700 to 1709;
   + removed error codes from 1802 to 1803;
 
++ IRS command interface:
+    + Introduced commands for debug Manual Exposure activation;
+    + Modifified commands in the config menu;
     
 
 # 4. Software Requirement Specification 

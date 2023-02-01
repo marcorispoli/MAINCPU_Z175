@@ -376,22 +376,7 @@ public:
     QDateTime anodeHuTime; // Data ultimo aggiornamento calore anodico
     float anodeHUSaved;    // VAlore HU al momento della registrazione
 
-    // Esposizioni in manuale
-    bool manualMode;     // Modalit√  manuale attivata
-    bool manAutoIdacInc; // Modalit√  auto incremento Idac
-    unsigned short manDIdac; // Quantit√  di incremento
 
-    unsigned short manVnom;
-    unsigned short manVdac;
-    unsigned short manInom;
-    unsigned short manIdac;
-    QString        manFuoco;
-    unsigned short manMas;
-    unsigned short manHs;
-    unsigned short manSWA;
-    unsigned short manSWB;
-    unsigned short manGrid;
-    unsigned short manTMO;
 
     /*
     *                          (550000 * 0.9) * (Tcuffia-Tamb)
@@ -424,6 +409,16 @@ public:
     // della temperatura della cuffia per poter procedere.
     void initAnodeHU(void);
     void initAnodeHU(int Y, int M, int D, int h, int m, int s);
+
+
+    // Esposizioni in manuale
+    bool           manualMode;     // Modalit√  manuale attivata
+    QString        manSelectedTube;
+    QString        manFuoco;
+    unsigned short manVnom;
+    unsigned short manIdac;
+    unsigned short manMas;
+    int manualXraySequence(void);
 
 };
 

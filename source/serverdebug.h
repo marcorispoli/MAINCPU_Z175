@@ -24,6 +24,8 @@ public:
 signals:
 
 public slots:
+    void fineRaggiManualXray(QByteArray data);
+
     QHostAddress setIpAddress( int val);
     bool isIp(int val);
 

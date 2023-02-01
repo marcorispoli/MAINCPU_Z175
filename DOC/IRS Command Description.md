@@ -51,19 +51,20 @@
     - [7.1.12. ***setPark***](#7112-setpark)
   - [7.2. CONFIGURATION COMMANDS (config:)](#72-configuration-commands-config)
     - [7.2.1. ***setAutoFilter***](#721-setautofilter)
-    - [7.2.1. ***setHsStarter***](#721-sethsstarter)
-    - [7.2.1. ***setArmMotor***](#721-setarmmotor)
-    - [7.2.1. ***setTrxMotor***](#721-settrxmotor)
-    - [7.2.1. ***enableAccessory***](#721-enableaccessory)
-    - [7.2.2. ***setSN***](#722-setsn)
-    - [7.2.3. ***setPSW***](#723-setpsw)
-    - [7.2.4. ***enableStarterKeep***](#724-enablestarterkeep)
-    - [7.2.5. ***setTubeTemp***](#725-settubetemp)
-    - [7.2.6. ***setLanguage***](#726-setlanguage)
-    - [7.2.7. ***resetGantry***](#727-resetgantry)
-    - [7.2.8. ***resetKvCalib***](#728-resetkvcalib)
-    - [7.2.9. ***sysBackup***](#729-sysbackup)
-    - [7.2.10. ***sysRestore***](#7210-sysrestore)
+    - [7.2.2. ***setHsStarter***](#722-sethsstarter)
+    - [7.2.3. ***setArmMotor***](#723-setarmmotor)
+    - [7.2.4. ***setTrxMotor***](#724-settrxmotor)
+    - [7.2.5. ***setDemoMode***](#725-setdemomode)
+    - [7.2.6. ***enableAccessory***](#726-enableaccessory)
+    - [7.2.7. ***setSN***](#727-setsn)
+    - [7.2.8. ***setPSW***](#728-setpsw)
+    - [7.2.9. ***enableStarterKeep***](#729-enablestarterkeep)
+    - [7.2.10. ***setTubeTemp***](#7210-settubetemp)
+    - [7.2.11. ***setLanguage***](#7211-setlanguage)
+    - [7.2.12. ***resetGantry***](#7212-resetgantry)
+    - [7.2.13. ***resetKvCalib***](#7213-resetkvcalib)
+    - [7.2.14. ***sysBackup***](#7214-sysbackup)
+    - [7.2.15. ***sysRestore***](#7215-sysrestore)
   - [7.3. COLLIMATOR COMMANDS (collimatore:)](#73-collimator-commands-collimatore)
     - [7.3.1. Collimator configuration](#731-collimator-configuration)
       - [7.3.1.1. ***readColliConf***](#7311-readcolliconf)
@@ -144,22 +145,35 @@
       - [7.8.3.3. ***moveHome***](#7833-movehome)
       - [7.8.3.4. ***testBuzzer***](#7834-testbuzzer)
       - [7.8.3.5. ***powerLed***](#7835-powerled)
-  - [7.9. LOADER COMMANDS (loader:)](#79-loader-commands-loader)
-    - [7.9.1. ***setCRC***](#791-setcrc)
-    - [7.9.2. ***UPLOAD***](#792-upload)
-  - [7.10. DEBUGGING TOOLS](#710-debugging-tools)
-    - [7.10.1. DEVICE SERIAL PROTOCOL COMMANDS (driver:)](#7101-device-serial-protocol-commands-driver)
-      - [7.10.1.1. ***freeze***](#71011-freeze)
-      - [7.10.1.2. ***run***](#71012-run)
-      - [7.10.1.3. ***read8***](#71013-read8)
-      - [7.10.1.4. ***read16***](#71014-read16)
-      - [7.10.1.5. ***write8***](#71015-write8)
-      - [7.10.1.6. ***write16***](#71016-write16)
-      - [7.10.1.7. ***command***](#71017-command)
-      - [7.10.1.8. ***special***](#71018-special)
-    - [7.10.2. Debug Terminals](#7102-debug-terminals)
-      - [7.10.2.1. The RS232 serial terminal](#71021-the-rs232-serial-terminal)
-      - [7.10.2.2. The TcpIp terinal debug](#71022-the-tcpip-terinal-debug)
+  - [7.9. GENERATOR COMMANDS (generator:)](#79-generator-commands-generator)
+    - [7.9.1. Configuration commands](#791-configuration-commands)
+      - [7.9.1.1. ***reloadTube***](#7911-reloadtube)
+      - [7.9.1.2. ***getStatistics***](#7912-getstatistics)
+      - [7.9.1.3. ***getAnodeHU***](#7913-getanodehu)
+    - [7.9.2. Activation commands](#792-activation-commands)
+      - [7.9.2.1. ***selectFilament***](#7921-selectfilament)
+      - [7.9.2.2. ***activateStarter***](#7922-activatestarter)
+    - [7.9.3. Manual Exposure commands](#793-manual-exposure-commands)
+      - [7.9.3.1. Manual Exposure Overview](#7931-manual-exposure-overview)
+      - [7.9.3.2. ***activateManualXray***](#7932-activatemanualxray)
+      - [7.9.3.3. ***setExposure***](#7933-setexposure)
+      - [7.9.3.4. ***closeManualXray***](#7934-closemanualxray)
+  - [7.10. LOADER COMMANDS (loader:)](#710-loader-commands-loader)
+    - [7.10.1. ***setCRC***](#7101-setcrc)
+    - [7.10.2. ***UPLOAD***](#7102-upload)
+  - [7.11. DEBUGGING TOOLS](#711-debugging-tools)
+    - [7.11.1. DEVICE SERIAL PROTOCOL COMMANDS (driver:)](#7111-device-serial-protocol-commands-driver)
+      - [7.11.1.1. ***freeze***](#71111-freeze)
+      - [7.11.1.2. ***run***](#71112-run)
+      - [7.11.1.3. ***read8***](#71113-read8)
+      - [7.11.1.4. ***read16***](#71114-read16)
+      - [7.11.1.5. ***write8***](#71115-write8)
+      - [7.11.1.6. ***write16***](#71116-write16)
+      - [7.11.1.7. ***command***](#71117-command)
+      - [7.11.1.8. ***special***](#71118-special)
+    - [7.11.2. Debug Terminals](#7112-debug-terminals)
+      - [7.11.2.1. The RS232 serial terminal](#71121-the-rs232-serial-terminal)
+      - [7.11.2.2. The TcpIp terinal debug](#71122-the-tcpip-terinal-debug)
 
 
 
@@ -363,7 +377,7 @@ If set to OFF the system will use the Fixed Filter (no filter selection).
 
 ***NOTE: reboot the Gantry after modification***
 
-### 7.2.1. ***setHsStarter***
+### 7.2.2. ***setHsStarter***
 
 |COMMAND|
 |---|
@@ -373,7 +387,7 @@ If set to OFF the system will use the Fixed Filter (no filter selection).
 
 ***NOTE: reboot the Gantry after modification***
 
-### 7.2.1. ***setArmMotor***
+### 7.2.3. ***setArmMotor***
 
 |COMMAND|
 |---|
@@ -386,7 +400,7 @@ If set to OFF the system will provide a Manual ARM activation (with electrical b
 
 ***NOTE: reboot the Gantry after modification***
 
-### 7.2.1. ***setTrxMotor***
+### 7.2.4. ***setTrxMotor***
 
 |COMMAND|
 |---|
@@ -396,7 +410,17 @@ If set to OFF the system will provide a Manual ARM activation (with electrical b
 
 ***NOTE: reboot the Gantry after modification***
 
-### 7.2.1. ***enableAccessory***
+### 7.2.5. ***setDemoMode***
+
+|COMMAND|
+|---|
+|setDemoMode ON/OFF|
+|**DESCRIPTION**|
+|Activate/Deactivate the Demo Mode|
+
+***NOTE: after the command execution Gantry automatically reboot ***
+
+### 7.2.6. ***enableAccessory***
 
 |COMMAND|
 |---|
@@ -404,7 +428,7 @@ If set to OFF the system will provide a Manual ARM activation (with electrical b
 |**DESCRIPTION**|
 |Activate/Deactivate the test on the Protection Patient|
 
-### 7.2.2. ***setSN***
+### 7.2.7. ***setSN***
 
 |COMMAND|
 |---|
@@ -424,7 +448,7 @@ set the Gantry serial number to 123456
 erases the serial number!
 
 
-### 7.2.3. ***setPSW***
+### 7.2.8. ***setPSW***
 
 |COMMAND|
 |---|
@@ -434,7 +458,7 @@ erases the serial number!
 
 ***NOTE: The password_number shall be composed of only digits***
 
-### 7.2.4. ***enableStarterKeep***
+### 7.2.9. ***enableStarterKeep***
 
 |COMMAND|
 |---|
@@ -444,7 +468,7 @@ erases the serial number!
 
 ***NOTE: For Low speed starter set this parameter to OFF!!***
 
-### 7.2.5. ***setTubeTemp***
+### 7.2.10. ***setTubeTemp***
 
 |COMMAND|
 |---|
@@ -455,7 +479,7 @@ erases the serial number!
 + HT: is the Tube temperature in (°C) to trigger the Alarm;
 + LT: is the Tube temperature in (°C) to reset the Alarm; 
 
-### 7.2.6. ***setLanguage***
+### 7.2.11. ***setLanguage***
 
 |COMMAND|
 |---|
@@ -466,7 +490,7 @@ erases the serial number!
 
 ***NOTE: The Language is immediatelly changed!!***
 
-### 7.2.7. ***resetGantry***
+### 7.2.12. ***resetGantry***
 
 |COMMAND|
 |---|
@@ -481,7 +505,7 @@ for the hardware setup:
 - Tilting presence;
 
 
-### 7.2.8. ***resetKvCalib***
+### 7.2.13. ***resetKvCalib***
 
 |COMMAND|
 |---|
@@ -494,7 +518,7 @@ shall be removed.
 
 ***NOTE: In case of switch between 35kV generator to 49kV or viceversa it is recommended to clear the calibration file!!***
 
-### 7.2.9. ***sysBackup***
+### 7.2.14. ***sysBackup***
 
 |COMMAND|
 |---|
@@ -506,7 +530,7 @@ The command creates the backup files of the Master terminal and the Slave termin
 + MASTER: /home/user/master_***backup_name***.tar
 + SLAVE: /home/user/slave_***backup_name***.tar
 
-### 7.2.10. ***sysRestore***
+### 7.2.15. ***sysRestore***
 
 |COMMAND|
 |---|
@@ -1201,8 +1225,164 @@ To early stop the loop use the same command without the parameters
 |**DESCRIPTION**|
 |Activate (ON) or Deactivate (OFF) the Light|
 
+## 7.9. GENERATOR COMMANDS (generator:)
 
-## 7.9. LOADER COMMANDS (loader:)
+This section provides commands to interact with the Generator functionnalities:
++ Handle with the Tube configuration file;
++ Handle with the current Focus selection;
++ Handle with the Starter commands;
+  
+### 7.9.1. Configuration commands
+
+#### 7.9.1.1. ***reloadTube***
+
+|COMMAND|
+|---|
+|**reloadTube** |
+|**DESCRIPTION**|
+|Reload the current selected Tube|
+
+The data of the current selected tube are reloaded into memory.
+This command allows to update the system with some modification 
+on the configuration file.
+
+#### 7.9.1.2. ***getStatistics***
+
+|COMMAND|
+|---|
+|**getStatistics** |
+|**DESCRIPTION**|
+|Display the content of the statistics file|
+
+The statistic file contains the statistics related to 
+the usage of the Gantry:
+- Tube file name in use;
+- Total number of shots;
+- Total cumulated kHU;
+- Total number of Tomo executed;
+- Total number of Standard Exposure executed;
+
+#### 7.9.1.3. ***getAnodeHU***
+
+|COMMAND|
+|---|
+|**getAnodeHU** |
+|**DESCRIPTION**|
+|Display the current Anode Hu|
+
+> NOTE: the anode Hu is not the Tube temperature: it is the internal HU currently cumulated.
+> The cumulated Hu will reduce with the Time due to the inherent Tube dissipation curve.
+
+### 7.9.2. Activation commands
+
+#### 7.9.2.1. ***selectFilament***
+
+|COMMAND|
+|---|
+|**selectFilament** filament|
+|**DESCRIPTION**|
+|Select the current filament and activate/deactivate the Filament current|
+
+The filament parameter:
++ filament = *WL* : select the W Large focus;
++ filament = *WS* : select the W Small focus;
++ filament = *MoL* : select the Mo Large focus;
++ filament = *MoS* : select the Mo Small focus;
++ filament = *OFF* or other values: set the filament OFF.
+
+#### 7.9.2.2. ***activateStarter***
+
+|COMMAND|
+|---|
+|**activateStarter** command|
+|**DESCRIPTION**|
+|Activate the current starter in one of the possible speeds|
+
+command parameter:
++ command = *HS* : activate the starter at the High Speed (if the High speed starter is present);
++ command = *LS* : activate the starter at low speed;
++ command = *OFF* : stops the starter speed;
+
+### 7.9.3. Manual Exposure commands
+
+#### 7.9.3.1. Manual Exposure Overview
+
+This section provides commands to open a special session 
+that allow to activate a Manual Exposure for test purpose.
+
+The Manual exposure allow to:
++ Select to use a 35kv or 49 kV template file;
++ Set the nominal value of the kV;
++ Set the mAs of the pulse;
++ Set the Focus to be used;
++ Set the IDAC of the anodic current.
+
+The Exposure has the following limitations:
++ The maximum exposure time with kV < 35 is 100ms;
++ The maximum exposure time with kV >= 35 is 50ms;
++ The maximum IDAC is 2500;
+
+In order to execute the Manual exposure:
++ Open the session with the command: ***activateManualXray()***;
++ Set the Exposure parameters to be used: ***setExposure()***;
++ Press the X-Ray button to activate the procedure;
++ To repeat the exposure with the same Exposure parameters only press again the X-RAY push button;
++ When the session termines, close the session with the command:  ***closeManualXray()***
+
+The Exposed data will be displayed at the sequence completion.
+
+
+#### 7.9.3.2. ***activateManualXray***
+
+|COMMAND|
+|---|
+|**activateManualXray** tubeType|
+|**DESCRIPTION**|
+|Activate the Manual Exposure session uploading the Tube template type|
+
+tubeType parameter:
++ tubeType = "35KV": upload the TEMPLATE_35KV_XM1016T configuratin file;
++ tubeType = "49KV": upload the TEMPLATE_XM1016THI configuratin file;
+
+When the session is open the Study is Open and the Gantry is ready to expose.
+
+The initial exposure parameters are:
++ kV = 20;
++ Focus = WL;
++ mAs = 10;
++ Idac = 2000;
+
+#### 7.9.3.3. ***setExposure***
+
+|COMMAND|
+|---|
+|**setExposure** Focus kV mAs Idac|
+|**DESCRIPTION**|
+|Set the next exposure data|
+
+***Focus*** parameter:
++ Focus = "WL": will use the W large focus;
++ Focus = "WS": will use the W small focus;
++ Focus = "MoL": will use the Mo large focus;
++ Focus = "MoS": will use the Mo small focus;
+
+***kV parameter***: set 20 to 49 kV (max 35 for 35 KV template file);
+
+***mAs parameter***: set in a range 1 to 640 (it is time limited anyway);
+
+***Idac parameter***: set the Idac value in a range 1 to 2500;
+
+#### 7.9.3.4. ***closeManualXray***
+
+|COMMAND|
+|---|
+|**closeManualXray** |
+|**DESCRIPTION**|
+|Closes the manual Xray session|
+
+When the session is closed, the configured Tube configuration file is reloaded into the Gantry.
+
+## 7.10. LOADER COMMANDS (loader:)
 
 This section allows to upload a firmware to a remote Device.
 
@@ -1227,7 +1407,7 @@ shall be copied in the /home/user directory then it shall be used the command
 When the firmware is properly formatted, it can be uploaded on the target 
 with the command **UPLOAD**
 
-### 7.9.1. ***setCRC***
+### 7.10.1. ***setCRC***
 
 |COMMAND|
 |---|
@@ -1248,7 +1428,7 @@ with the command **UPLOAD**
 > NOTE: the revision code is compared with the revision table configuration file in order 
 > to keep the compatibility with the current system package.
 
-### 7.9.2. ***UPLOAD***
+### 7.10.2. ***UPLOAD***
 
 |COMMAND|
 |---|
@@ -1268,14 +1448,14 @@ with the command **UPLOAD**
 > NOTE: the firmware related to the target shall be present into the /home/user directory of the Master terminal.
 
 
-## 7.10. DEBUGGING TOOLS
+## 7.11. DEBUGGING TOOLS
 
 In order to provide some tool to help the Application debugging, 
 this chapter describes additional commands and methods.
 
-### 7.10.1. DEVICE SERIAL PROTOCOL COMMANDS (driver:)
+### 7.11.1. DEVICE SERIAL PROTOCOL COMMANDS (driver:)
 
-#### 7.10.1.1. ***freeze***
+#### 7.11.1.1. ***freeze***
 
 |COMMAND|
 |---|
@@ -1285,7 +1465,7 @@ this chapter describes additional commands and methods.
 
 ***NOTE: Only Expert. Dont't use this command!!***
 
-#### 7.10.1.2. ***run***
+#### 7.11.1.2. ***run***
 
 |COMMAND|
 |---|
@@ -1295,7 +1475,7 @@ this chapter describes additional commands and methods.
 
 ***NOTE: Only Expert. Dont't use this command!!***
 
-#### 7.10.1.3. ***read8***
+#### 7.11.1.3. ***read8***
 
 |COMMAND|
 |---|
@@ -1319,7 +1499,7 @@ Example:
 
 This command reads the Bank-0 0x80 register of the PCB269 board.
 
-#### 7.10.1.4. ***read16***
+#### 7.11.1.4. ***read16***
 
 |COMMAND|
 |---|
@@ -1339,7 +1519,7 @@ This command reads the 16 bit register in little endian encoding where:
 + 0x80 is the address of the L-Byte;
 + 0x81 is the address of the H-Byte.
 
-#### 7.10.1.5. ***write8***
+#### 7.11.1.5. ***write8***
 
 |COMMAND|
 |---|
@@ -1360,7 +1540,7 @@ The val can be in hex format (0x00AB) or decimal format.
 
 ***TargetRegister[address] = 8bit-value***
 
-#### 7.10.1.6. ***write16***
+#### 7.11.1.6. ***write16***
 
 |COMMAND|
 |---|
@@ -1381,7 +1561,7 @@ The value can be in hex format (0x00AB) or decimal format.
 
 ***TargetRegister[address] = 16bit-value, little endian address***
 
-#### 7.10.1.7. ***command***
+#### 7.11.1.7. ***command***
 
 |COMMAND|
 |---|
@@ -1399,7 +1579,7 @@ the target can be:
 
 command_code and command_param can be in hex format or decimal format;
 
-#### 7.10.1.8. ***special***
+#### 7.11.1.8. ***special***
 
 |COMMAND|
 |---|
@@ -1417,13 +1597,13 @@ the target can be:
 
 b1 and b2 can be in hex format or decimal format;
 
-### 7.10.2. Debug Terminals
+### 7.11.2. Debug Terminals
 
 There are two possible debugging terminal types:
 + The RS232 serial terminal;
 + The TcpIp terminal.
 
-#### 7.10.2.1. The RS232 serial terminal
+#### 7.11.2.1. The RS232 serial terminal
 
 The Gantry provides a DB9 connector in the back side of the cabinet
 providing two serial link:
@@ -1442,7 +1622,7 @@ use the following a IRS command:
 After the command is used both serial links will be activated until 
 the system Power Off.
 
-#### 7.10.2.2. The TcpIp terinal debug
+#### 7.11.2.2. The TcpIp terinal debug
 
 The user can open two separated Debug Terminals one for the Master activities
 and one for the Slave activities.

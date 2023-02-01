@@ -579,6 +579,7 @@ void OpenStudyPage::valueChanged(int index,int opt)
 {
     QString val;
     unsigned char cval;
+    int ival;
 
     switch(index)
     {
@@ -726,8 +727,18 @@ void OpenStudyPage::valueChanged(int index,int opt)
 
     case _DB_XRAY_PUSH_BUTTON:
         if(!isMaster) break;
+
         // Segnale di attivazione pulsante raggi
-        if(ApplicationDatabase.getDataU(_DB_XRAY_PUSH_BUTTON)) pToConsole->activationXrayPush();
+        if(ApplicationDatabase.getDataU(_DB_XRAY_PUSH_BUTTON)){
+            if(pGeneratore->manualMode){
+                ival = pGeneratore->manualXraySequence();
+                if(ival == -2){
+                    DEBUG("Missing Tube Selection");
+                }else  if(ival == -3){
+                    DEBUG("MCC Error activating the Manual Xray Procedure");
+                }
+            }else pToConsole->activationXrayPush();
+        }
         break;
 
     case _DB_AWS_CONNECTION:

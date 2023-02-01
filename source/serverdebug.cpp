@@ -498,9 +498,9 @@ void serverDebug::serviceRxHandler(QByteArray data)
     {
         handleSetPage(data);
     }
-    else if(data.contains("generatore:"))
+    else if(data.contains("generator:"))
     {
-        cmdGroup="generatore: ";
+        cmdGroup="generator: ";
         handleGeneratore(data);
     }else if(data.contains("aws:"))
     {
@@ -576,7 +576,7 @@ void serverDebug::handleList(void)
     serviceTcp->txData(QByteArray("aws: ----------- Comandi relativi alla Console \r\n"));
     serviceTcp->txData(QByteArray("loader: -------- Comandi relativi al loader \r\n"));
     serviceTcp->txData(QByteArray("biopsy: -------- Comandi di gestione torretta \r\n"));
-    serviceTcp->txData(QByteArray("generatore: ---- Comandi relativi al generatore \r\n"));
+    serviceTcp->txData(QByteArray("generator: ----  Comandi relativi al generatore \r\n"));
     serviceTcp->txData(QByteArray("master: -------- Comandi shell su Master \r\n"));
     serviceTcp->txData(QByteArray("slave: --------- Comandi shell su Slave \r\n"));
     serviceTcp->txData(QByteArray("canopen: --------- Comandi shell su Slave \r\n"));
@@ -598,6 +598,7 @@ void serverDebug::handleConfig(QByteArray data)
         serviceTcp->txData(QByteArray("setArmMotor      [ON/OFF]   ON=ARM with motor OFF=ARM without motor \r\n"));
         serviceTcp->txData(QByteArray("setTrxMotor      [ON/OFF]   ON=TRX with motor OFF=No TRX \r\n"));
 
+        serviceTcp->txData(QByteArray("setDemoMode       [ON/OFF]   ON=Activate Demo OFF=Clear Demo \r\n"));
         serviceTcp->txData(QByteArray("enableAccessory   [ON/OFF]   ON=Enabled OFF=Disabled \r\n"));
         serviceTcp->txData(QByteArray("setSN             [n/.]       .=erase SN, n=gantry serial number (only digits)\r\n"));
         serviceTcp->txData(QByteArray("setPSW            [n]         n=Service panel password (only digits)\r\n"));
@@ -775,6 +776,16 @@ void serverDebug::handleConfig(QByteArray data)
         pConfig->sysRestore(TRUE,parametri[0],0);
         serviceTcp->txData(QByteArray("DONE \r\n"));
         return;
+    }else if(data.contains("setDemoMode")){
+        if(data.contains("ON")) {
+            pConfig->setDemoMode(true);
+            serviceTcp->txData(QByteArray("DEMO MODE ACTIVATED AFTER SYSTEM REBOOT!\n\r"));
+        }else if(data.contains("OFF")){
+            pConfig->setDemoMode(false);
+            serviceTcp->txData(QByteArray("DEMO MODE DISABLED AFTER SYSTEM REBOOT!\n\r"));
+        }else{
+            serviceTcp->txData(QByteArray("WRONG PARAMETER!\n\r"));
+        }
     }
 
 
@@ -784,7 +795,6 @@ void serverDebug::handleConfig(QByteArray data)
 void serverDebug::handleDebug(QByteArray data)
 {
     //int Generatore::getAecData(int plog, int modo_filtro, int odindex, int techmode, int* filtro,float* kV, int* dmAs, int* pulses){
-    unsigned char buffer[10];
     if(data.contains("?"))
     {
         serviceTcp->txData(QByteArray("----------------------------------------------------------------------------------\r\n"));
@@ -2301,61 +2311,47 @@ void serverDebug::serviceNotifyFineRaggi(QByteArray buffer)
 
 
 /*
- *  Gestione delle funzioni legate al Generatore
- *  FUNZIONI:
- *          - setFuoco OFF/ W,Mo Small,Large   Impostazione del fuoco
- *          - validateGen                      Forza la validazione dei dati del generatore
- *          - shot ON/OFF                      Abilitazione dello sparo manuale da file
- *          - starter HS/LS/OFF                  Attiva Starter ad Alta/Bassa velocitÃ  o OFF
  */
 void serverDebug::handleGeneratore(QByteArray data)
 {
     if(data.contains("?"))
     {
         serviceTcp->txData(QByteArray("--------------------------------------------------------------\r\n"));
-        serviceTcp->txData(QByteArray("getMAS                           Restituisce il valore dei mas test\r\n"));
-        serviceTcp->txData(QByteArray("setCalibKv [k,cost]              Coefficienti di claibrazionelettura kV  \r\n"));
-        serviceTcp->txData(QByteArray("getCalibKv                       Rilettura coeff. calibrazione read-kV  \r\n"));
-
-        serviceTcp->txData(QByteArray("getKvDac [float KV]              Restituisce il DAC assegnato\r\n"));
-
-
-        serviceTcp->txData(QByteArray("setFuoco [W/Mo/OFF][Small/Large] Imposta il fuoco corrente  \r\n"));
-        serviceTcp->txData(QByteArray("setStarter  [HS/LS/OFF]          Attivazione Starter  \r\n"));
+        serviceTcp->txData(QByteArray("reloadTube                       Rilegge dati Tubo e configura PCB190 \r\n"));
         serviceTcp->txData(QByteArray("getStatistics [store]            Legge e opzionalmente forza la scrittura\r\n"));
-        serviceTcp->txData(QByteArray("readTube                         Legge dati Tubo e configura PCB190 \r\n"));
-        serviceTcp->txData(QByteArray("getTubeRevision                  Legge la revisione del template \r\n"));
         serviceTcp->txData(QByteArray("getAnodeHU                       Legge gli Hu anodici accumulati\r\n"));
-        serviceTcp->txData(QByteArray("addAnodeHU kHU                   Aggiunge kHU anodici accumulati\r\n"));
-        serviceTcp->txData(QByteArray("getStatAnodeHU                   Legge le variabili di stato per Anode HU\r\n"));
-        serviceTcp->txData(QByteArray("startDemoN                       Attiva seq Tomo N se in DEMO\r\n"));
-        serviceTcp->txData(QByteArray("startDemoI                       Attiva seq Tomo I se in DEMO\r\n"));
-        serviceTcp->txData(QByteArray("startDemoW                       Attiva seq Tomo W se in DEMO\r\n"));
         serviceTcp->txData(QByteArray("--------------------------------------------------------------\r\n"));
-    }else if(data.contains("getMAS")){
-        serviceTcp->txData(QString("MAS = %1 \r\n").arg(pGeneratore->mAsTest).toAscii());
-        serviceTcp->txData(QString("ANODICA = %1 \r\n").arg(pGeneratore->anodicaTest).toAscii());
-    } else if(data.contains("setFuoco"))
+        serviceTcp->txData(QByteArray("selectFilament [WL/WS/MoL/MoS/OFF]    Imposta il fuoco corrente  \r\n"));
+        serviceTcp->txData(QByteArray("activateStarter  [HS/LS/OFF]          Attivazione Starter  \r\n"));
+        serviceTcp->txData(QByteArray("--------------------------------------------------------------\r\n"));
+        serviceTcp->txData(QByteArray("activateManualXray  [tube-model]      Attivazione Modalità Manuale  \r\n"));
+        serviceTcp->txData(QByteArray("closeManualXray                       Chiude Modalità Manuale  \r\n"));
+        serviceTcp->txData(QByteArray("setExposure  Focus kV mAs Idac        Impostazione dati di esposizione  \r\n"));
+        serviceTcp->txData(QByteArray("--------------------------------------------------------------\r\n"));
+    } else if(data.contains("selectFilament"))
     {
-        if(data.contains("OFF")) pGeneratore->fuocoOff();
-        else
-        {
-            if(data.contains("W")) pGeneratore->setFuoco(QString("W"));
-            else if(data.contains("Mo")) pGeneratore->setFuoco(QString("Mo"));
-            else{
-                serviceTcp->txData(QByteArray("Wrong Anode selection!\r\n"));
-                return;
-            }
-            if(data.contains("Small")) pGeneratore->setFuoco(Generatore::FUOCO_SMALL);
-            else if(data.contains("Large")) pGeneratore->setFuoco(Generatore::FUOCO_LARGE);
-            else{
-                serviceTcp->txData(QByteArray("Wrong size selection!\r\n"));
-                return;
-            }
-            pGeneratore->updateFuoco();
-            serviceTcp->txData(QByteArray("Command executed!\r\n"));
+        if(data.contains("WL")){
+            pGeneratore->setFuoco(QString("W"));
+            pGeneratore->setFuoco(Generatore::FUOCO_LARGE);
+        }else if(data.contains("WS")){
+            pGeneratore->setFuoco(QString("W"));
+            pGeneratore->setFuoco(Generatore::FUOCO_SMALL);
+        }else if(data.contains("MoL")){
+            pGeneratore->setFuoco(QString("Mo"));
+            pGeneratore->setFuoco(Generatore::FUOCO_LARGE);
+        }else if(data.contains("MoS")){
+            pGeneratore->setFuoco(QString("Mo"));
+            pGeneratore->setFuoco(Generatore::FUOCO_SMALL);
+        }else {
+            pGeneratore->fuocoOff();
+            serviceTcp->txData(QByteArray("Filament set to OFF!\r\n"));
         }
-    }else if(data.contains("setStarter"))
+
+        pGeneratore->updateFuoco();
+        serviceTcp->txData(QByteArray("Command executed!\r\n"));
+        return;
+
+    }else if(data.contains("activateStarter"))
     {
         if(data.contains(" HS")){
             pGeneratore->setStarter(2);
@@ -2368,21 +2364,8 @@ void serverDebug::handleGeneratore(QByteArray data)
             serviceTcp->txData(QString("Starter: OFF\r\n").toAscii());
         }
 
-    }else if(data.contains("getKvDac")){
-
-        QList<QByteArray> parametri = getNextFieldsAfterTag(data, QString("getKvDac"));
-        float kv = parametri[0].toFloat();
-        unsigned char kvc;
-        unsigned short dac;
-        if(pGeneratore->getValidKv(kv, &kvc, &dac) == FALSE){
-            serviceTcp->txData(QString("KV SELEZIONATI NON VALIDI\r\n").toAscii());
-            return;
-        }
-
-        serviceTcp->txData(QString("DAC(%1) = %2\r\n").arg(kvc).arg(dac).toAscii());
-
     }else if(data.contains("getStatistics")){
-        if(data.contains("store")) pGeneratore->statChanged = true;
+        pGeneratore->statChanged = true;
 
         QString tube = QString(_TUBEPATH) + QString("/") + pConfig->userCnf.tubeFileName + QString("/");
         pGeneratore->saveTubeStatisticsFile(tube);
@@ -2393,162 +2376,94 @@ void serverDebug::handleGeneratore(QByteArray data)
         serviceTcp->txData(QString("kHU: %1\r\n").arg((float) pGeneratore->cumulatedJ * 1.33 / 1000).toAscii());
         serviceTcp->txData(QString("N-TOMO: %1\r\n").arg(pGeneratore->nTomo).toAscii());
         serviceTcp->txData(QString("N-STANDARD: %1\r\n").arg(pGeneratore->nStandard).toAscii());
-    }else if(data.contains("readTube"))
+    }else if(data.contains("reloadTube"))
     {
         if(pGeneratore->openCurrentTube()){
             serviceTcp->txData("Command executed: configuration in progress ..\r\n");
             connect(pConfig,SIGNAL(configUpdatedSgn()),this,SLOT(configurationSlot()),Qt::UniqueConnection);
             pConfig->updatePCB190();
         }else serviceTcp->txData("Command failed!\r\n");
-    }else if(data.contains("getTubeRevision")){
-        serviceTcp->txData(QString("TEMPLATE REV: %1\r\n").arg(pGeneratore->templateRevision).toAscii());
-    }else if(data.contains("setCalibKv")){
-        //     (float) k, (float) cost
-        QList<QByteArray> parametri = getNextFieldsAfterTag(data, QString("setCalibKv"));
-        if(parametri.size() != 2) {
-            serviceTcp->txData(QString("Invalid parameters\n\r").toAscii());
-            return;
-        }
-
-        pGeneratore->genCnf.pcb190.kV_CALIB = (unsigned short) (parametri[0].toFloat() * 1000);
-        pGeneratore->genCnf.pcb190.kV_OFS = (short) (parametri[1].toFloat() * 1000);
-        pGeneratore->saveTubeKvReadCalibrationFile();
-        pConfig->updatePCB190();
-        serviceTcp->txData(QString("New coefficients: kv =%1, cost=%2\r\n").arg((float)pGeneratore->genCnf.pcb190.kV_CALIB/1000).arg((float)pGeneratore->genCnf.pcb190.kV_OFS/1000).toAscii());
-        return;
-    }else if(data.contains("getCalibKv")){
-        serviceTcp->txData(QString("New coefficients: kv =%1, cost=%2\r\n").arg((float)pGeneratore->genCnf.pcb190.kV_CALIB/1000).arg((float)pGeneratore->genCnf.pcb190.kV_OFS/1000).toAscii());
-        return;
     }else if(data.contains("getAnodeHU")){
         serviceTcp->txData(QString("Current Anode HU:%1\r\n").arg((float)pGeneratore->getCurrentHU()).toAscii());
         return;
-    }else if(data.contains("addAnodeHU")){
+    }else if(data.contains("activateManualXray")){
 
-        QList<QByteArray> parametri = getNextFieldsAfterTag(data, QString("addAnodeHU"));
-        if(parametri.size() != 1) {
-            serviceTcp->txData(QString("Invalid parameters\n\r").toAscii());
+        pGeneratore->manSelectedTube = pConfig->userCnf.tubeFileName;
+        QString tubeDir;
+
+        if((data.contains("35KV")) || (data.contains("35kV"))) tubeDir = QString(_TUBEPATH) + QString("/") + "TEMPLATE_35KV_XM1016THI" + QString("/");
+        else if((data.contains("49KV")) || (data.contains("49kV"))) tubeDir = QString(_TUBEPATH) + QString("/") + "TEMPLATE_XM1016THI" + QString("/");
+        else{
+            serviceTcp->txData(QString("Wrong Template file type. Expected: 35KV or 49KV \r\n").toAscii());
             return;
         }
 
-        pGeneratore->updateAnodeHU(parametri[0].toFloat());
-        serviceTcp->txData(QString("Aggiunti %1 kHU. Current Anode HU:%2\r\n").arg(parametri[0].toFloat()).arg((float)pGeneratore->getCurrentHU()).toAscii());
-        return;
-    }else if(data.contains("getStatAnodeHU")){
+        if(!pGeneratore->openTube(tubeDir)) {
+            pGeneratore->openTube(pGeneratore->manSelectedTube);
+            serviceTcp->txData(QString("Wrong Template file selected\r\n").toAscii());
+            return;
+        }
 
+        // Activates the modality
+        pGeneratore->manualMode = true;
+        pGeneratore->manFuoco = "WL";
+        pGeneratore->manVnom = 20;
+        pGeneratore->manIdac = 2000;
+        pGeneratore->manMas = 10;
 
-        if(pGeneratore->anodeHuInitOk) serviceTcp->txData(QString("INIT OK\r\n").toAscii());
-        else serviceTcp->txData(QString("NOT INITIALIZED\r\n").toAscii());
-
-        serviceTcp->txData(QString("anodeHVsaved:%1\r\n").arg(pGeneratore->anodeHUSaved).toAscii());
-        int Y = pGeneratore->anodeHuTime.date().year();
-        int M = pGeneratore->anodeHuTime.date().month();
-        int D = pGeneratore->anodeHuTime.date().day();
-        int s = pGeneratore->anodeHuTime.time().second();
-        int m = pGeneratore->anodeHuTime.time().minute();
-        int h = pGeneratore->anodeHuTime.time().hour();
-        if(pGeneratore->anodeHUSaved) serviceTcp->txData(QString("LAST SAVE Y:%1 M:%2 D:%3 H:%4 m:%5 s:%6 \r\n").arg(Y).arg(M).arg(D).arg(h).arg(m).arg(s).toAscii());
-        else serviceTcp->txData(QString("LAST SAVE: NA\r\n").toAscii());
-
-        if(pGeneratore->alarmAnodeHU) serviceTcp->txData(QString("ANODE IN ALARM!!\r\n").toAscii());
-        else serviceTcp->txData(QString("ANODE NOT IN ALARM!!\r\n").toAscii());
-
-        serviceTcp->txData(QString("T0:%1\r\n").arg(pGeneratore->T0).toAscii());
-        serviceTcp->txData(QString("ANODE kHU:%1\r\n").arg(pGeneratore->anodeHU).toAscii());
-        serviceTcp->txData(QString("ELAPSED seconds:%1\r\n").arg(pGeneratore->hutimer_elapsed/1000).toAscii());
+        // Open Study
+        pConsole->setOpenStudy(true , "MANUAL EXPOSURE WITH IRS");
+        connect(pConsole,SIGNAL(raggiDataSgn(QByteArray)),this,SLOT(fineRaggiManualXray(QByteArray)),Qt::UniqueConnection);
 
         return;
-    }else if(data.contains("startDemoN")){
-        unsigned char data[18];
+    }else if(data.contains("closeManualXray")){
+         if(!pGeneratore->manualMode){
+             serviceTcp->txData(QString("Command Error! The session is already closed!\r\n").toAscii());
+             return;
+         }
 
-        data[0] =  0;
-        data[1] =  0;
-        data[2] =  0;
-        data[3] =  0;
-        data[4] =  0xE8; // mAs
-        data[5] =  0x3;
-        data[6] =  0;
-        data[7]=0;
+         disconnect(pConsole,SIGNAL(raggiDataSgn(QByteArray)),this,SLOT(fineRaggiManualXray(QByteArray)));
+         pGeneratore->manualMode = false;
+         pGeneratore->openTube(pGeneratore->manSelectedTube);
+         pConsole->handleCloseStudy();
+         serviceTcp->txData(QString("Manual XRAY session Closed!\r\n").toAscii());
+         return;
+    }else if(data.contains("setExposure")){
+        if(!pGeneratore->manualMode){
+            serviceTcp->txData(QString("Command Error! The session is closed!\r\n").toAscii());
+            return;
+        }
 
-        data[8] =  0; // Griglia da aggiungere
-        data[9] =  0;
-        data[10] = 0;
-        data[11] = 0;
-        data[12] = 0;
+        QList<QByteArray> parametri;
+        parametri = getNextFieldsAfterTag(data, QString("setExposure"));
+        if(parametri.size() != 4){
+            serviceTcp->txData(QString("Wrong number of expected parameters: Focus, kV, mAs, Idac!\r\n").toAscii());
+            return;
+        }
 
-        data[15] = _TOMO_MODE_NARROW;  //  Modo Narrow
-        data[13] = pConfig->trxConfig.tomo.n.pre_samples;
-        data[14] = pConfig->trxConfig.tomo.n.samples; //  pulses da configurazione
+        if( (parametri[0] != "WL") && (parametri[0] != "WS") && (parametri[0] != "MoL") && (parametri[0] != "MoS")) {
+            serviceTcp->txData(QString("Wrong Focus parameter. Expected: WS or WL or MoS or MoL\r\n").toAscii());
+            return;
+        }
 
+        pGeneratore->manFuoco = parametri[0];
 
+        int kV = parametri[1].toInt();
+        if((kV < 20) || (kV>49)){
+            serviceTcp->txData(QString("Wrong kV parameter. Expected range is 20 kV to 49 kV \r\n").toAscii());
+            return;
+        }
+        pGeneratore->manVnom = kV;
+        pGeneratore->manMas = parametri[2].toInt();
+        if(parametri[3].toInt() > 2500){
+            serviceTcp->txData(QString("Wrong Idac parameter. Expected range is < 2500 \r\n").toAscii());
+            return;
+        }
+        pGeneratore->manIdac = parametri[3].toInt();
 
-        // Dead men
-        data[17]=0;
-
-
-        pConsole->pGuiMcc->sendFrame(MCC_CMD_RAGGI_TOMO,1,data,18);
-        pConsole->handleSetXrayLamp("ON");
-        pConsole->handleSetXraySym(true);
-
-    }else if(data.contains("startDemoI")){
-        unsigned char data[18];
-
-        data[0] =  0;
-        data[1] =  0;
-        data[2] =  0;
-        data[3] =  0;
-        data[4] =  0xE8; // mAs
-        data[5] =  0x3;
-        data[6] =  0;
-        data[7]=0;
-
-        data[8] =  0; // Griglia da aggiungere
-        data[9] =  0;
-        data[10] = 0;
-        data[11] = 0;
-        data[12] = 0;
-
-        data[15] = _TOMO_MODE_INTERMEDIATE;  //  Modo Intermediate
-        data[13] = pConfig->trxConfig.tomo.i.pre_samples;
-        data[14] = pConfig->trxConfig.tomo.i.samples; //  pulses da configurazione
-
-        // Dead men
-        data[17]=0;
-
-
-        pConsole->pGuiMcc->sendFrame(MCC_CMD_RAGGI_TOMO,1,data,18);
-        pConsole->handleSetXrayLamp("ON");
-        pConsole->handleSetXraySym(true);
-
-    }else if(data.contains("startDemoW")){
-        unsigned char data[18];
-
-        data[0] =  0;
-        data[1] =  0;
-        data[2] =  0;
-        data[3] =  0;
-        data[4] =  0xE8; // mAs
-        data[5] =  0x3;
-        data[6] =  0;
-        data[7]=0;
-
-        data[8] =  0; // Griglia da aggiungere
-        data[9] =  0;
-        data[10] = 0;
-        data[11] = 0;
-        data[12] = 0;
-
-        data[15] = _TOMO_MODE_WIDE;  //  Modo Wide
-        data[13] = pConfig->trxConfig.tomo.w.pre_samples;
-        data[14] = pConfig->trxConfig.tomo.w.samples; //  pulses da configurazione
-        // Dead men
-        data[17]=0;
-
-
-        pConsole->pGuiMcc->sendFrame(MCC_CMD_RAGGI_TOMO,1,data,18);
-        pConsole->handleSetXrayLamp("ON");
-        pConsole->handleSetXraySym(true);
-
-    }
+        serviceTcp->txData(QString("Manual Exposure data confirmed! \r\n").toAscii());
+        return;
+   }
 }
 
 void serverDebug::configurationSlot(void){
@@ -4658,6 +4573,29 @@ void serverDebug::handleGetTrolleyNotify(unsigned char id,unsigned char cmd, QBy
     if(cmd!=MCC_GET_TROLLEY) return;
     serviceTcp->txData(QString("Trolley position:  %1\n\r").arg((int) data.at(0)).toAscii());
     disconnect(pConsole,SIGNAL(mccGuiNotify(unsigned char,unsigned char,QByteArray)),this,SLOT(handleGetTrolleyNotify(unsigned char,unsigned char,QByteArray)));
+    return;
+}
+
+void serverDebug::fineRaggiManualXray(QByteArray data)
+{
+
+    int tpls,mas,imean;
+
+    // disconnect(pConsole,SIGNAL(raggiDataSgn(QByteArray)),this,SLOT(fineRaggiManualXray(QByteArray)));
+    float vmean = pGeneratore->convertPcb190Kv(data.at(V_MEAN),1.0);
+    mas = (data.at(MAS_PLS_L)+256*data.at(MAS_PLS_H)); // In 1/50 mAs unit
+    tpls = (unsigned short) (data.at(T_MEAN_PLS_L)+256*data.at(T_MEAN_PLS_H));
+
+    // Calcolo corrente media sulla durata dell'impulso
+    if(tpls!=0) imean = mas * 20 / tpls;
+    else if(data.at(I_MEAN)!=0) imean = pGeneratore->convertPcb190Ianode(data.at(I_MEAN));
+    else imean=0;
+
+    serviceTcp->txData(QString("Fine Raggi: kV=%1, mAs=%2, Time=%3, Imean=%4 \n\r").arg(vmean).arg((float) mas / 50).arg(tpls).arg(imean).toAscii());
+
+    // Disattiva simbolo grafico per raggi
+    pConsole->handleSetXraySym(false);
+
     return;
 }
 
