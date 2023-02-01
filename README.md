@@ -10,7 +10,7 @@ of the Gantry.
 + [Compilation Procedures][CP]: this is the document describing the compilation process;
 + [Deploy Procedures][DP]: this is the document describing the deploy process;
 + [Technical Release Notes][PP]: this is the document describing all the documentation notes;
-+ [IRS Interface Commands][IC]: this is the document describing the IRS Interface commands;
++ [IRS Command Interface][IC]: this is the document describing the IRS Interface commands;
 + [Not resolved issues][ISS]: this is the document describing the known issues;
 
 
@@ -18,7 +18,7 @@ of the Gantry.
 [CP]:./DOC/Project%20Build.md
 [DP]:./DOC/Project%20Deploy.md
 [PP]:./DOC/TechnicalReleaseDescription.md
-[IC]:./DOC/IRS%20Command%20Description.md
+[IC]:./DOC/TN104-IRS_Command_Interface.md
 [ISS]:./DOC/Issues.md
 
 

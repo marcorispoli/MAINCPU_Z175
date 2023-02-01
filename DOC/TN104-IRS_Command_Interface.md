@@ -7,27 +7,58 @@
 
 <!-- ------------------------Document TITLE PAGE --------------------------------->
  
-<center><font size =6">Z175 MAIN CPU</font></center>
-<center><font size =5">IRS Command Interface</font></center>
-<center><font size =4">REV : ID10</font></center>
+<center><font size =7">TECHNICAL</font></center>
+<center><font size =7">NOTE</font></center>
+
+<br/><br/>
+<br/><br/>
+  
+<center><font size =6">TN104</font></center>
 
  <br/><br/>
  <br/><br/>
- <br/><br/>
- <br/><br/>
+<center><font size =6">IRS COMMAND INTERFACE</font></center>
 
+ <br/>
+
+<center><font size =4">REV: 2.0</font></center>
+ <br/>
+ <br/>
+<br/>
+ 
 <center>
 <font size =4">
 
-|Date |Revision | Change log| Author|
-|:---| :----: | :----: |:---|
-|01/01/2023|ID9|First release| M. Rispoli|
-|25/01/2023|ID10|Added Configuration commands| M. Rispoli|
+
+
+**REVISION HISTORY**
+|Rev |Date|Change Description|Prepared By|Verified By|Approved By| 
+|:---:| :----: | :----: |:---|:---|:---| 
+|1.0|16/01/2023|Applicable to<br> Z175/ID09| M. Rispoli<br>.|L.Nastasi<br>.|G.B.Peretta<br>.|
+|2.0|20/02/2023|Applicable to<br> Z175/ID11| M. Rispoli<br>.|L.Nastasi<br>.|G.B.Peretta<br>.|
+||||||| 
+
+
 
 </font>
 </center>
 
 <div style="page-break-after: always;"></div>
+
+<center><font size =5">CHANGE LOG</font></center>
+<br/>
+
+
++ In the ***config:*** menu it has been added the commands to configure the Gantry Options;
++ In the ***config:*** menu it has been added the commands *setDemoMode()*;
++ The menu ***generatore*** has been renamed ***generator:***;
++ In the menu ***generator:*** it has been added commands for the Manual Exposure;
+
+ <div style="page-break-after: always;"></div>
+
+<center><font size =5">TABLE OF CONTENT</font></center>
+<br/>
+
 
 - [1. Document Overview](#1-document-overview)
 - [2. IRS Overview](#2-irs-overview)
@@ -131,7 +162,7 @@
     - [7.7.1. ***simulateRx***](#771-simulaterx)
     - [7.7.2. ***getFormat***](#772-getformat)
     - [7.7.3. ***pcPowerOff***](#773-pcpoweroff)
-  - [7.8. BIOPSY AL COMMANDS (biopsy:)](#78-biopsy-al-commands-biopsy)
+  - [7.8. NEW BIOPSY-AL COMMANDS (biopsy:)](#78-new-biopsy-al-commands-biopsy)
     - [7.8.1. Inquiry commands](#781-inquiry-commands)
       - [7.8.1.1. ***getAdapter***](#7811-getadapter)
       - [7.8.1.2. ***getRevision***](#7812-getrevision)
@@ -281,7 +312,7 @@ setDATE Year Month Day hour minute second
 
 |COMMAND|
 |---|
-|setShotMode|
+|setShotNodetMode|
 |**DESCRIPTION**|
 |Rx Test mode activation (without detector)|
 
@@ -1017,10 +1048,14 @@ The value can be set in a range from 70 to 200 Newton.
 
 |COMMAND|
 |---|
-|**resetGonio** |
+|**getGonio** |
 |**DESCRIPTION**|
-|Resets the inclinometer to the current ARM and TRX position|
+|Returns the TRX, ARM and Gonio angles|
 
+The returned values are:
++ TRX: the value is in 0.01 ° units;
++ ARM: then angle is in 0.1 ° units;
++ GONIO:  then angle is in 0.1 ° units;
 
 ### 7.5.3. Activation Commands
 
@@ -1115,7 +1150,7 @@ that should be simulated.
 The command can be used to test the validity of a frame 
 that should be simulated.
 
-## 7.8. BIOPSY AL COMMANDS (biopsy:)
+## 7.8. NEW BIOPSY-AL COMMANDS (biopsy:)
 
 The following commands refer to the Biopsy device with the lateral Approach.
 

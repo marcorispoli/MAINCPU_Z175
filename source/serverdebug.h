@@ -3,9 +3,9 @@
 
 #include "application.h"
 
-#define IRS_MAJ  1
-#define IRS_MIN  7
-#define IRS_BETA 0
+#define IRS_MAJ  2
+#define IRS_MIN  0
+
 
 /*___________________________________________________________________________________
                 DESCRIZIONE REVISIONI INTERFACCIA IRS

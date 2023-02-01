@@ -457,8 +457,10 @@ void serverDebug::notificheConnectionHandler(bool stat)
 {
     if(stat)
     {
-        // Connessione automatica al servizio di log eventi
-        serviceTcp->txData(QString("---------   INTERFACCIA IRS, Rev %1.%2.%3      -------------\r\n").arg((int)IRS_MAJ).arg((int)IRS_MIN).arg((int)IRS_BETA).toAscii());
+        // Connessione automatica al servizio di log eventi        
+        serviceTcp->txData(QString("---------  IRS COMMAND INTERFACE %1.%2      -------------\r\n").arg((int)IRS_MAJ).arg((int)IRS_MIN).toAscii());
+        serviceTcp->txData(QByteArray("See the technical note TN104 Revision 2.0 for details \r\n\r\n\r\n\r\n"));
+        serviceTcp->txData(QString("---------------------------------------------------------\r\n").arg((int)IRS_MAJ).arg((int)IRS_MIN).toAscii());
         serviceTcp->txData(QByteArray(">"));
     }else
     {
