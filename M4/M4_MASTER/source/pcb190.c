@@ -559,12 +559,11 @@ bool pcb190SetFuoco(unsigned char fuoco)
   
 }
 
-bool pcb190StarterH(void)
+bool pcb190StarterHcommand(void)
 {
   _Ser422_Command_Str frame;
 
-  // Sospende il driver bloccando la mutex del polling
-  // Il driver si blocca esattamente dopo aver letto i registri di stato
+
   debugPrint("PCB190 COMMAND STARTER HS");
 
   // Prepara il comando 
@@ -580,12 +579,46 @@ bool pcb190StarterH(void)
   else return FALSE;  
 }
 
-bool pcb190StarterL(void)
+bool pcb190StarterH(void)
 {
+    unsigned char count;
+    debugPrint("New HS Starter Command execution");
+
+    // Reads the actual command counter
+    if(Ser422ReadRegister(_REGID(RG190_ARHS_COUNT),10,&CONTEST) == _SER422_NO_ERROR) {
+        count = _DEVREGL(RG190_ARHS_COUNT,PCB190_CONTEST);
+    }else return false;
+
+    // Repeats the command until the PCB190 command counter is actually incremented
+    for(int i=10; i>0; i--){
+
+        // Command success
+        if(pcb190StarterHcommand()) return true;
+
+        // Failed: verifies if actually the command has been executed
+        if(Ser422ReadRegister(_REGID(RG190_ARHS_COUNT),10,&CONTEST) == _SER422_NO_ERROR) {
+            if(_DEVREGL(RG190_ARHS_COUNT,PCB190_CONTEST) != count){
+                debugPrint("HS Starter verified as executed");
+                return true;
+            }
+        }
+
+
+        debugPrint("Repeats the HS starter command");
+        _time_delay(100);
+    }
+
+    return false;
+}
+
+
+
+bool pcb190StarterLcommand(void)
+{
+
+    // Start the Starter
   _Ser422_Command_Str frame;
 
-  // Sospende il driver bloccando la mutex del polling
-  // Il driver si blocca esattamente dopo aver letto i registri di stato
   debugPrint("PCB190 COMMAND STARTER LS");
 
   // Prepara il comando
@@ -594,11 +627,46 @@ bool pcb190StarterL(void)
   frame.cmd=SER422_COMMAND;
   frame.data1=_CMD1(PCB190_START_AR_L);
   frame.data2=_CMD2(PCB190_START_AR_L);
-  
+
   Ser422Send(&frame, SER422_BLOCKING,CONTEST.ID);
-   
-  if(frame.retcode==SER422_COMMAND_OK) return TRUE; 
-  else return FALSE;  
+
+  if(frame.retcode==SER422_COMMAND_OK) return TRUE;
+  else return FALSE;
+}
+
+
+bool pcb190StarterL(void)
+{
+    unsigned char count;
+
+    // Reads the actual command counter
+    if(Ser422ReadRegister(_REGID(RG190_ARLS_COUNT),10,&CONTEST) == _SER422_NO_ERROR) {
+        count = _DEVREGL(RG190_ARLS_COUNT,PCB190_CONTEST);
+    }else return false;
+
+    debugPrintI("New LS Starter Command execution", (int) count);
+
+    // Repeats the command until the PCB190 command counter is actually incremented
+    for(int i=10; i>0; i--){
+
+        // Command successfully executed
+        if(pcb190StarterLcommand()){
+            return true;
+        }
+
+        // Failed: verifies if actually the command has been executed
+        if(Ser422ReadRegister(_REGID(RG190_ARLS_COUNT),10,&CONTEST) == _SER422_NO_ERROR) {
+            if(_DEVREGL(RG190_ARLS_COUNT,PCB190_CONTEST) != count){
+                debugPrint("LS Starter verified as executed");
+                return true;
+            }
+        }
+
+        debugPrint("Repeats the LS starter command");
+        _time_delay(100);
+    }
+
+    return false;
 }
 
 bool pcb190StopStarter(void)

@@ -9,58 +9,49 @@
  
 <center><font size =6">Z175 MAIN CPU</font></center>
 <center><font size =5">Technical Release Description</font></center>
-<center><font size =4">REV : 1.0</font></center>
+<center><font size =4">PACKAGE ID11</font></center>
 
  <br/><br/>
  <br/><br/>
  <br/><br/>
  <br/><br/>
-
-<center>
-<font size =4">
-
-|Date |Revision | Change log| Author|
-|:---| :----: | :----: |:---|
-|25/01/2023|1.0|First release| M. Rispoli|
-
-</font>
-</center>
 
 <div style="page-break-after: always;"></div>
 
-# 1. TABLE OF CONTENT
+<center><font size =5">TABLE OF CONTENT</font></center>
+<br/><br/>
 
-- [1. TABLE OF CONTENT](#1-table-of-content)
-- [2. SCOPE](#2-scope)
-- [3. Release Note](#3-release-note)
-  - [3.1. Software Release Table](#31-software-release-table)
-  - [3.2. Change Log](#32-change-log)
-- [4. Software Requirement Specification](#4-software-requirement-specification)
-- [5. Sotware Design Specification](#5-sotware-design-specification)
+- [1. SCOPE](#1-scope)
+- [2. Release Note](#2-release-note)
+  - [2.1. Software Release Table](#21-software-release-table)
+  - [2.2. Change Log](#22-change-log)
+- [3. Software Requirement Specification](#3-software-requirement-specification)
+- [4. Sotware Design Specification](#4-sotware-design-specification)
+  - [4.1. Filter Activation option](#41-filter-activation-option)
+    - [4.1.1. General requirements](#411-general-requirements)
+    - [4.1.2. Service Panel activation](#412-service-panel-activation)
+    - [4.1.3. IRS command activation](#413-irs-command-activation)
+- [5. Test Plan](#5-test-plan)
   - [5.1. Filter Activation option](#51-filter-activation-option)
     - [5.1.1. General requirements](#511-general-requirements)
+      - [5.1.1.1. Test](#5111-test)
+      - [5.1.1.2. Test](#5112-test)
+      - [5.1.1.3. Test](#5113-test)
+      - [5.1.1.4. Test](#5114-test)
+      - [5.1.1.5. Test](#5115-test)
     - [5.1.2. Service Panel activation](#512-service-panel-activation)
+      - [5.1.2.1. Test](#5121-test)
+      - [5.1.2.2. Test](#5122-test)
     - [5.1.3. IRS command activation](#513-irs-command-activation)
-- [6. Test Plan](#6-test-plan)
-  - [6.1. Filter Activation option](#61-filter-activation-option)
-    - [6.1.1. General requirements](#611-general-requirements)
-      - [6.1.1.1. Test](#6111-test)
-      - [6.1.1.2. Test](#6112-test)
-      - [6.1.1.3. Test](#6113-test)
-      - [6.1.1.4. Test](#6114-test)
-      - [6.1.1.5. Test](#6115-test)
-    - [6.1.2. Service Panel activation](#612-service-panel-activation)
-      - [6.1.2.1. Test](#6121-test)
-      - [6.1.2.2. Test](#6122-test)
-    - [6.1.3. IRS command activation](#613-irs-command-activation)
-      - [6.1.3.1. Test](#6131-test)
-- [7. Manual documentation](#7-manual-documentation)
-  - [7.1. System Configuration](#71-system-configuration)
-  - [7.2. Filter Calibration service panel](#72-filter-calibration-service-panel)
+      - [5.1.3.1. Test](#5131-test)
+- [6. Manual documentation](#6-manual-documentation)
+  - [6.1. System Configuration](#61-system-configuration)
+  - [6.2. Filter Calibration service panel](#62-filter-calibration-service-panel)
+- [7. Language Translation](#7-language-translation)
 
 <div style="page-break-after: always;"></div>
 
-# 2. SCOPE 
+# 1. SCOPE 
 
 This document provides technical notes necessary to modify the 
 release's documentation if necessary:
@@ -74,9 +65,9 @@ release's documentation if necessary:
 
 <div style="page-break-after: always;"></div>
 
-# 3. Release Note 
+# 2. Release Note 
 
-## 3.1. Software Release Table
+## 2.1. Software Release Table
 
 ||Previous Code|Current Rev Code|Changed Flag|
 |:---|:---:|:---:|:---:|
@@ -99,7 +90,7 @@ release's documentation if necessary:
 |mcc_ko|2.2|2.2||
 ||||
 
-## 3.2. Change Log
+## 2.2. Change Log
 
 + New Feature: the Auto/Fixed Filter option selection is now available:
   + For Mammography Digital units of the Z175 family only the Automatic Filter selection was available: the Fixed filter option was not available. Due to diferent requirements of the MTL Kits, sharing the same Software Package, althogh at the moment the MET production still keep the Automatic Filter as a must, the Fixed filter option has been introduced to keep the Kits and Production units sharing the same software.
@@ -119,19 +110,23 @@ release's documentation if necessary:
 + IRS command interface:
     + Introduced commands for debug Manual Exposure activation;
     + Modifified commands in the config menu;
+    + The TN104 document shall be released to new revision: 2.0
     
++ Improvement: reinforced the command to start the low speed starter:
+    + To prevent command failure due to serial communication, the command is reiterated
+    more times before to fail.
 
-# 4. Software Requirement Specification 
+# 3. Software Requirement Specification
 
 No modification is requested in the SRS document for this release.
 
 <div style="page-break-after: always;"></div>
 
-# 5. Sotware Design Specification
+# 4. Sotware Design Specification
 
-## 5.1. Filter Activation option
+## 4.1. Filter Activation option
 
-### 5.1.1. General requirements
+### 4.1.1. General requirements
 
 + The Gantry shall allow to configure the Filter device as follows:
   + Fixed Filter;
@@ -155,7 +150,7 @@ file of the Master Terminal.
   + through the service panel of the Master terminal;
   + through IRS interface command;
 
-### 5.1.2. Service Panel activation
+### 4.1.2. Service Panel activation
 
 Like other options of the stCfg.cnf configuration file, 
 this method applies ONLY at the first system installation.
@@ -168,7 +163,7 @@ based on the hardware configuration of the Gantry.
   + FIXED Filter option;
   + AUTO Filter option;
 
-### 5.1.3. IRS command activation
+### 4.1.3. IRS command activation
 
 To help further modification by Service operator,
 a setting command shall be introduced in the IRS interface
@@ -176,13 +171,13 @@ to directly activate/deactivate this option.
 
 <div style="page-break-after: always;"></div>
 
-# 6. Test Plan
+# 5. Test Plan
 
-## 6.1. Filter Activation option
+## 5.1. Filter Activation option
 
-### 6.1.1. General requirements
+### 5.1.1. General requirements
 
-#### 6.1.1.1. Test
+#### 5.1.1.1. Test
 
 Pre condition:
 + System configured with the FIXED filter;
@@ -191,7 +186,7 @@ Test procedure:
 + From the AWS software select an arbitrary filter (Ag, Al, Rh, Cu);
   + Verify that the Gantry will not signal any error message;
   
-#### 6.1.1.2. Test
+#### 5.1.1.2. Test
 
 Pre condition:
 + System configured with the FIXED filter;
@@ -203,7 +198,7 @@ Test procedure:
 + From the AWS software activate a 2D AEC exposure with an arbitrary filter (Ag, Al, Rh, Cu);
   + Verify that the Gantry will not signal any error message;
 
-#### 6.1.1.3. Test
+#### 5.1.1.3. Test
 
 Pre condition:
 + System configured with the FIXED filter;
@@ -214,7 +209,7 @@ Test procedure:
 
 
 
-#### 6.1.1.4. Test
+#### 5.1.1.4. Test
 
 Pre condition:
 + System configured with the AUTOMATIC filter;
@@ -245,7 +240,7 @@ Test procedure:
   + Verify that the Filter device actually select the desidered filter in the low energy pulse;
   + Verify that the Filter device actually select the Cu filter in the high energy pulse;
   
-#### 6.1.1.5. Test
+#### 5.1.1.5. Test
 
 Pre condition:
 + System configured with the AUTOMATIC filter;
@@ -258,9 +253,9 @@ Test procedure:
   + Verify that the filter device executes the given filter selection;
 
   
-### 6.1.2. Service Panel activation
+### 5.1.2. Service Panel activation
 
-#### 6.1.2.1. Test
+#### 5.1.2.1. Test
 
 Pre condition:
 + remove the /resouce/config/sysCfg.cnf file from the Master TS terminal;
@@ -274,7 +269,7 @@ Test procedure:
 + Select the FIXED mode then store the selection;
   + Verify that after the system startup, the file /resource/config/sysCfg.cnf is configured with the Filter option to FIXED;
 
-#### 6.1.2.2. Test
+#### 5.1.2.2. Test
 
 Pre condition:
 + remove the /resouce/config/sysCfg.cnf file from the Master TS terminal;
@@ -287,9 +282,9 @@ Test procedure:
 + Select the Filter AUTOMATIC mode then store the selection;
   + Verify that after the system startup, the file /resource/config/sysCfg.cnf is configured with the Filter option to AUTOMATIC;
 
-### 6.1.3. IRS command activation
+### 5.1.3. IRS command activation
 
-#### 6.1.3.1. Test
+#### 5.1.3.1. Test
 
 Test procedure:
 
@@ -304,9 +299,9 @@ Test procedure:
   
   <div style="page-break-after: always;"></div>
   
-# 7. Manual documentation
+# 6. Manual documentation
 
-## 7.1. System Configuration
+## 6.1. System Configuration
 
 In the chapter related to the System options, update the 
 panel with the following image:
@@ -326,7 +321,7 @@ panel with the following image:
  ![sysFilterFixPanel](./IMG/Manual/SysFilterFixPanel.png)
  
 
-## 7.2. Filter Calibration service panel
+## 6.2. Filter Calibration service panel
 
 In the section related to the Filter calibration tool,
 where it is showed the Filter icon button, modify the description 
