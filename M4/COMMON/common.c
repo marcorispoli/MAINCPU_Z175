@@ -117,7 +117,7 @@ void debugPrintIBuffer(char* destination, int* index, char* tag, int val){
 
     valbuf[0] = '\0';
     destination[(*index)++]=':';
-    sprintf(valbuf,"%d",val);
+    sprintf(valbuf,"%d",(short) val);
     j=0;
     while(1){
         if(valbuf[j]=='\0') return;

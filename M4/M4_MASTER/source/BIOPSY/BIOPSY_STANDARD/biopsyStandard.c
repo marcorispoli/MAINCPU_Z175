@@ -71,6 +71,10 @@ void biopsyStandardLoop(void)
 
    while(1)
    {
+       if(freezeMode){
+           _time_delay(100);
+           continue;
+       }
 
      _mutex_lock(&biopsy_standard_mutex);
 
@@ -282,9 +286,7 @@ void biopsyStandardLoop(void)
 
            static unsigned char valore=255;
            if(dati[_BP_STD_MAX_Z]!=valore){
-               valore = dati[_BP_STD_MAX_Z];
-               //printf("BIOPSIA: ofz=%d, ofsPad=%d, margPos=%d, pad=%d, maxZ=%d\n",generalConfiguration.biopsyCfg.conf.offsetZ,generalConfiguration.biopsyCfg.conf.offsetPad,
-               //       generalConfiguration.biopsyCfg.conf.marginePosizionamento,_DEVREG(RG215_DOSE,PCB215_CONTEST),valore);
+               valore = dati[_BP_STD_MAX_Z];               
            }
          }else
          {
@@ -297,9 +299,7 @@ void biopsyStandardLoop(void)
             maxZ=dati[_BP_STD_MAX_Z];
             notifica = TRUE;
           }
-          
-          //printf("OFFSET=%d, PAD=%d, MARG=%d, MAXZ = %d\n",generalConfiguration.biopsyCfg.conf.offsetZ,generalConfiguration.biopsyCfg.conf.offsetPad,generalConfiguration.biopsyCfg.conf.marginePosizionamento, dati[_BP_MAX_Z]); 
-          // Sicuramente ogni movimento è attualmente terminato
+                    
        }else
        {
          if(!(timeout))
@@ -314,8 +314,7 @@ void biopsyStandardLoop(void)
               }
          }else 
          {           
-           timeout--;
-           // printf("BIOPSIA: TEMPO AL TIMEOUT:%d\n", timeout);
+           timeout--;           
          }
        }
      }else 
@@ -423,8 +422,7 @@ bool BiopsyGetStat(void)
 
 bool biopsyStandardIsPresent(void){
      unsigned char buffer[4];
-     Ser422SendRaw(0x90, 0x73, 0, buffer, 10);
-     //printf("TEST STANDARD BIOPSY:%x %x %x %x\n",buffer[0], buffer[1], buffer[2], buffer[3]);
+     Ser422SendRaw(0x90, 0x73, 0, buffer, 10);     
      if(buffer[0] == 0x90) return true;
 
      return false;

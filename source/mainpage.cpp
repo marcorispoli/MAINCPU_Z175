@@ -851,6 +851,7 @@ void MainPage::activateTilt(int angolo)
     if(angolo>28) angolo=28;
     else if(angolo<-28) angolo=-28;
 
+    angolo = angolo * 100;
     buffer[0]=TRX_MOVE_ANGLE;
     buffer[2] = (unsigned char) angolo;
     buffer[3] = (unsigned char) (angolo>>8);

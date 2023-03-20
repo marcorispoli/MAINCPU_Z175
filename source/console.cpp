@@ -1585,6 +1585,7 @@ bool console::handleSetTube(QString param,unsigned char id)
             return FALSE;
         }
 
+        angolo = angolo * 100;
         data[0]=TRX_MOVE_ANGLE; // Movimento con angolo aggiuntivo
         data[1]=0;
         data[2] = (unsigned char) angolo;

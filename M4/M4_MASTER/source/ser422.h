@@ -263,6 +263,7 @@ Data Ultima Modifica:6/09/2014
   #define __DRIVER_FREEZE(m,ev,tmo,cst) Ser422DriverFreeze(m,&ev,tmo,cst)
   #define _DRIVER_FREEZE(x,y,z) __DRIVER_FREEZE(x,y,z) 
 
-  
+  ext bool serDebug;
+  ext bool freezeMode;
   
 #endif

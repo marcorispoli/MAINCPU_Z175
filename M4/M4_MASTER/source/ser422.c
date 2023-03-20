@@ -51,7 +51,8 @@ void ser422_driver(uint32_t initial_data)
   bool rawTx =FALSE;         // Invio messgagi RAW
 
     _EVCLR(_EV0_COM_STARTED);
-    
+    serDebug = false;
+
     // Inizializzazione delle mutex
     if (_mutex_init(&ser422_stat_mutex, NULL) != MQX_OK)  
     {
@@ -187,6 +188,8 @@ void ser422_driver(uint32_t initial_data)
           
           
           // Driver si sospende fino ad avvenuta trasmissione
+          if(serDebug) printf("INVIO DATI:%x %x %x \n\r", (tx_buffer[0] & 0x1F), tx_buffer[1], tx_buffer[2]);
+
           write( rs485_dev, tx_buffer, 4 );
           fflush( rs485_dev );
           ioctl( rs485_dev, IO_IOCTL_SERIAL_WAIT_FOR_TC, NULL );
@@ -212,17 +215,21 @@ void ser422_driver(uint32_t initial_data)
           // Controllo di Frame corretto (Indirizzo chiamante, CRC, Lunghezza)
           if(rx_len==0)
           { 
+             if(serDebug) printf("NO RX\n\r");
              Ser422_Stat.timeout=1;
              if(Attempt){
                  _time_delay(SER422_WAITING_TIMEOUT);
                  continue;
              }else break;
-          }          
+          }
+
           Ser422_Stat.timeout=0;
  //printf("%x %x %x %x\n",rx_buffer[0],rx_buffer[1],rx_buffer[2],rx_buffer[3]);
+
           // Controllo numero byte e Indirizzo
           if((((_Ser422_Addr_Str*)(&rx_buffer[0]))->address!=Target)||(rx_len!=4))
           {
+            if(serDebug) printf("FRAME ERR\n\r");
             Ser422_Stat.frame_err=1;
             _time_delay(SER422_WAITING_TIMEOUT); //--------------------------------------------------------------
             continue;// Riprova con un nuovo tentativo se necessario
@@ -231,6 +238,7 @@ void ser422_driver(uint32_t initial_data)
           // Controllo checksum del pacchetto ricevuto
           if(rx_buffer[0]^rx_buffer[1]^rx_buffer[2]^rx_buffer[3])
           {
+            if(serDebug) printf("CHK ERR\n\r");
             Ser422_Stat.frame_err=1;         
             if(Attempt){
                 _time_delay(SER422_WAITING_TIMEOUT);
@@ -245,6 +253,7 @@ void ser422_driver(uint32_t initial_data)
           // Verifica la condizione di ripetizione del comando richiesta da slave
           if((rx_buffer[1]==0xFF)&&(rx_buffer[2]==SER422_WAIT_FOR_CONFIRMATION))
           {
+            if(serDebug) printf("WAIT CONFIRM\n\r");
             if(RepeatAttempt--)
             {
               Attempt = pSer422PendingCommand->attempt;
@@ -260,6 +269,7 @@ void ser422_driver(uint32_t initial_data)
       // Casi di errore di frame: abort del comando
       if(Ser422_Stat.frame_err)
       {
+        if(serDebug) printf("ERROR FRAME\n\r");
         pSer422PendingCommand->retcode=SER422_ERRFRAME;    
         pSer422PendingCommand=NULL;    
         _taskq_resume(ser422_answ_queue,TRUE);
@@ -270,6 +280,7 @@ void ser422_driver(uint32_t initial_data)
       // Casi di timeout: abort del comando
       if(Ser422_Stat.timeout)
       {
+        if(serDebug) printf("ERROR TMO\n\r");
         pSer422PendingCommand->retcode=SER422_ERRTMO;    
         pSer422PendingCommand=NULL;    
         _taskq_resume(ser422_answ_queue,TRUE);
@@ -324,23 +335,28 @@ void ser422_driver(uint32_t initial_data)
         switch(*((_Ser422RetCodes_Enum*)(&rx_buffer[2])))
         {
         case SER422_BUSY:
+            if(serDebug) printf("ERROR BUSY\n\r");
             Ser422_Stat.slave_err=1;
             pSer422PendingCommand->retcode=SER422_BUSY;
           break;
         case SER422_ILLEGAL_ADDRESS:
+            if(serDebug) printf("ILLEGAL ADDRESS\n\r");
             Ser422_Stat.slave_err=1;
             pSer422PendingCommand->retcode=SER422_ILLEGAL_ADDRESS;
          break;
         case SER422_ILLEGAL_DATA:
+            if(serDebug) printf("ILLEGAL DATA\n\r");
             Ser422_Stat.slave_err=1;
             pSer422PendingCommand->retcode=SER422_ILLEGAL_DATA;
           break;
         case SER422_ILLEGAL_FUNCTION:
+            if(serDebug) printf("ILLEGAL FUNC\n\r");
            Ser422_Stat.slave_err=1;
            pSer422PendingCommand->retcode=SER422_ILLEGAL_FUNCTION;
 
           break;
         case SER422_UNIMPLEMENTED_FUNCTION:
+            if(serDebug) printf("UNIMPLEMENTED\n\r");
            Ser422_Stat.slave_err=1;
            pSer422PendingCommand->retcode=SER422_ILLEGAL_FUNCTION;
           break;
@@ -353,6 +369,7 @@ void ser422_driver(uint32_t initial_data)
            pSer422PendingCommand->retcode=SER422_WAIT_FOR_CONFIRMATION;
           break;
         default: // Dati generici
+           if(serDebug) printf("DATI GENERICI\n\r");
            Ser422_Stat.slave_err=0;
            pSer422PendingCommand->retcode=SER422_DATA;
            pSer422PendingCommand->data1 = rx_buffer[1];         
@@ -361,6 +378,7 @@ void ser422_driver(uint32_t initial_data)
         }
       }else if((rx_buffer[1]==0)&&(rx_buffer[2]== SER422_COMMAND_OK))
       {// Comando eseguito
+           if(serDebug) printf("COMMAND OK\n\r");
            Ser422_Stat.slave_err=0;
            pSer422PendingCommand->retcode=SER422_COMMAND_OK;
            pSer422PendingCommand->data1 = 0;  
@@ -368,6 +386,7 @@ void ser422_driver(uint32_t initial_data)
       }
        else
       {// Dati generici
+          if(serDebug) printf("DATA OK\n\r");
            Ser422_Stat.slave_err=0;
            pSer422PendingCommand->retcode=SER422_DATA;
            pSer422PendingCommand->data1 = rx_buffer[1];         
@@ -1137,7 +1156,8 @@ bool Ser422DriverFreeze( int evmask,LWEVENT_STRUCT *Event,int timeout, _DeviceCo
 bool Ser422DriverFreezeAll(int timeout)
 {
   unsigned long maschera=0;
-  
+  freezeMode = true;
+
   _EVCLR(_EV1_DEVICES_RUN);
   PCB215_CONTEST.Stat.freeze=1;
   PCB190_CONTEST.Stat.freeze=1;
@@ -1158,7 +1178,8 @@ bool Ser422DriverFreezeAll(int timeout)
 bool Ser422DriverSetReadyAll(int timeout)
 {
   unsigned long maschera=0;
-  
+  freezeMode = false;
+
   _EVCLR(_EV1_PCB215_RUN);
   _EVCLR(_EV1_PCB190_RUN);
   _EVCLR(_EV1_PCB249U1_RUN);

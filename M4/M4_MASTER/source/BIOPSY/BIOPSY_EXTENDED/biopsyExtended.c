@@ -65,6 +65,10 @@ void biopsyExtendedLoop(void)
     // Gestione dello stato del sistema secondo la macchina a stati
     while(1){
 
+        if(freezeMode){
+            _time_delay(100);
+            continue;
+        }
 
         if(driverStatus == _BYM_DRIVER_STAT_DISCONNECTED)   BIOPSY_manageDriverDisconnectedStatus();
         else if(driverStatus == _BYM_DRIVER_STAT_CONNECTED) BIOPSY_manageDriverConnectedStatus();
@@ -238,8 +242,7 @@ void BIOPSY_manageDriverActivatedStatus(void){
                 dati[_BP_EXT_MOTION_END] =_BP_EXT_TIMEOUT_COMANDO;
                 activationCommands =_BYM_NO_COMMAND;
                 driverStatus = _BYM_DRIVER_STAT_CONNECTED;
-                debugPrint("BYM ERRORE CARICAMENTO TARGET");
-                debugPrint("BYM CAMBIO STATO TO CONNECTED STATUS");
+                debugPrint("BYM ERRORE CARICAMENTO TARGET X");
                 return;
             }
             _time_delay(50);
@@ -252,8 +255,7 @@ void BIOPSY_manageDriverActivatedStatus(void){
                 dati[_BP_EXT_MOTION_END] =_BP_EXT_TIMEOUT_COMANDO;
                 activationCommands =_BYM_NO_COMMAND;
                 driverStatus = _BYM_DRIVER_STAT_CONNECTED;
-                debugPrint("BYM ERRORE CARICAMENTO TARGET");
-                debugPrint("BYM CAMBIO STATO TO CONNECTED STATUS");
+                debugPrint("BYM ERRORE CARICAMENTO TARGET Y");
                 return;
             }
             _time_delay(50);
@@ -266,8 +268,7 @@ void BIOPSY_manageDriverActivatedStatus(void){
                 dati[_BP_EXT_MOTION_END] =_BP_EXT_TIMEOUT_COMANDO;
                 activationCommands =_BYM_NO_COMMAND;
                 driverStatus = _BYM_DRIVER_STAT_CONNECTED;
-                debugPrint("BYM ERRORE CARICAMENTO TARGET");
-                debugPrint("BYM CAMBIO STATO TO CONNECTED STATUS");
+                debugPrint("BYM ERRORE CARICAMENTO TARGET Z");
                 return;
             }
             _time_delay(50);
@@ -324,8 +325,7 @@ void BIOPSY_manageDriverActivatedStatus(void){
     default:
         activationCommands =_BYM_NO_COMMAND;
         driverStatus = _BYM_DRIVER_STAT_CONNECTED;
-        printf("BYM DRIVER: NESSUN COMANDO DI ATTIVAZIONE\n");
-        debugPrint("BYM CAMBIO STATO TO CONNECTED STATUS");
+        debugPrint("BYM DRIVER: NESSUN COMANDO DI ATTIVAZIONE");
         return;
     }
 
@@ -388,57 +388,4 @@ bool biopsyExtendedMoveXYZ(unsigned short X, unsigned short Y, unsigned short Z)
   debugPrintI3("BYM MOVE XYX, X",X,"Y",Y,"Z",Z);
   return TRUE;
 }
-/*
-
-bool  biopsyStepIncZ(void)
-{
-    if(driverStatus != _BYM_DRIVER_STAT_CONNECTED) return FALSE; // E' già in corso
-    activationCommands = _BYM_MOVE_TO_STEP_INCZ;
-    printf("BYM COMMAND: MOVE STEP INC Z\n");
-    return TRUE;
-}
-
-bool  biopsyStepDecZ(void)
-{  
-    if(driverStatus != _BYM_DRIVER_STAT_CONNECTED) return FALSE; // E' già in corso
-    activationCommands = _BYM_MOVE_TO_STEP_DECZ;
-    printf("BYM COMMAND: MOVE STEP DEC Z\n");
-    return TRUE;
-
-}
-bool  biopsyStepIncX(void)
-{
-    if(driverStatus != _BYM_DRIVER_STAT_CONNECTED) return FALSE; // E' già in corso
-    activationCommands = _BYM_MOVE_TO_STEP_INCX;
-    printf("BYM COMMAND: MOVE STEP INC X\n");
-    return TRUE;
-}
-
-bool  biopsyStepDecX(void)
-{
-    if(driverStatus != _BYM_DRIVER_STAT_CONNECTED) return FALSE; // E' già in corso
-    activationCommands = _BYM_MOVE_TO_STEP_DECX;
-    printf("BYM COMMAND: MOVE STEP DEC X\n");
-    return TRUE;
-
-}
-bool  biopsyStepIncY(void)
-{
-    if(driverStatus != _BYM_DRIVER_STAT_CONNECTED) return FALSE; // E' già in corso
-    activationCommands = _BYM_MOVE_TO_STEP_INCY;
-    printf("BYM COMMAND: MOVE STEP INC Y\n");
-    return TRUE;
-}
-
-bool  biopsyStepDecY(void)
-{
-    if(driverStatus != _BYM_DRIVER_STAT_CONNECTED) return FALSE; // E' già in corso
-    activationCommands = _BYM_MOVE_TO_STEP_DECY;
-    printf("BYM COMMAND: MOVE STEP DEC Y\n");
-    return TRUE;
-
-}
-*/
-
-
 

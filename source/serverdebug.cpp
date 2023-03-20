@@ -2741,9 +2741,7 @@ void serverDebug::handleMoveTrx(QString tag, QByteArray data)
     int angolo;
     unsigned char buffer[4];
 
-    angolo =  getNextFieldAfterTag(data,tag).toInt(); // Espresso in gradi
-    if(angolo>28) angolo=28;
-    else if(angolo<-28) angolo=-28;
+    angolo =  getNextFieldAfterTag(data,tag).toInt(); // Espresso in gradi o centesimi di grado
 
     buffer[0]=TRX_MOVE_ANGLE;
     buffer[2] = (unsigned char) angolo;

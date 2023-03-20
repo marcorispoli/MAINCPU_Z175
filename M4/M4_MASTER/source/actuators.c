@@ -669,11 +669,6 @@ void actuatorsUpdateAngles(void){
     if((generalConfiguration.armExecution.dAngolo<-1700)&&(generalConfiguration.armCfg.direction_memory==MEM_ARM_DIR_CW)) generalConfiguration.armExecution.dAngolo += 3600;
     else if((generalConfiguration.armExecution.dAngolo>1700)&&(generalConfiguration.armCfg.direction_memory==MEM_ARM_DIR_CCW)) generalConfiguration.armExecution.dAngolo -= 3600;
 
-    /*
-    if(generalConfiguration.armCfg.direction_memory== MEM_ARM_DIR_CCW) printf("MEM_ARM_DIR_CCW:%d\n",generalConfiguration.armExecution.dAngolo);
-    else if(generalConfiguration.armCfg.direction_memory== MEM_ARM_DIR_CW) printf("MEM_ARM_DIR_CW:%d\n",generalConfiguration.armExecution.dAngolo);
-    else printf("MEM_ARM_DIR_UNDEFINED:%d\n",generalConfiguration.armExecution.dAngolo);
-    */
 
     // Verifica se deve avvisare il sistema del cambio stato
     short trxDAngolo = generalConfiguration.trxExecution.cAngolo/10;

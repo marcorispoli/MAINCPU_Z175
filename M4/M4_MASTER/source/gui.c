@@ -665,8 +665,7 @@ void mcc_cmd_trx(void)
     case TRX_MOVE_END_N:  actuatorsTrxMove(pTrxProfile->n.end_position); break;
     case TRX_MOVE_END_I:  actuatorsTrxMove(pTrxProfile->i.end_position); break;
     case TRX_MOVE_ANGLE:
-        // Angolo deve essere espresso in centesimi di grado
-        actuatorsTrxMove(100 * (int) angolo);
+        actuatorsTrxMove((int) angolo);
     break;
 
     }
@@ -992,9 +991,13 @@ void mcc_exp_aec_std(void)
     debugPrint("GUI ARRIVATI DATI AEC (2D)");
     pParam = &rxStdAecParam;    
   }else if(mcc_cmd.buffer[13]==_AEC_TOMO)
-  {
-    debugPrint("GUI ARRIVATI DATI AEC (TOMO)");
+  {     
     pParam = &tomoAecParam;
+
+    // Attiva immediatamente il braccio
+    if(pParam->tomo_mode!=_TOMO_MODE_STATIC) actuatorsMoveTomoTrxEnd(pParam->tomo_mode,true);
+    debugPrint("GUI ARRIVATI DATI AEC (TOMO)");
+
   }else if(mcc_cmd.buffer[13]==_AEC_AE)
   {
     debugPrint("GUI ARRIVATI DATI AEC (AE)");

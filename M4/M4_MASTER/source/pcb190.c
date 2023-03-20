@@ -1120,9 +1120,10 @@ bool pcb190UploadTomoExpose(_RxStdSeq_Str* Param, bool isAEC)
 {
   if (isAEC)
   {
-   debugPrint("PCB190 UPLOAD PRE-EXPOSURE DATA FOR TOMO");
+   debugPrint("PCB190 UPLOAD AEC PULSE");
+
    if(Ser422WriteRegister(_REGID(RG190_RXHVTMO),Param->esposizione.TMO, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   if(Ser422WriteRegister(_REGID(RG190_RXHVEXP),Param->esposizione.HV, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
+   if(Ser422WriteRegister(_REGID(RG190_RXHVEXP),Param->esposizione.HV, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;   
    if(Ser422WriteRegister(_REGID(RG190_RXI),Param->esposizione.I, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
    if(Ser422WriteRegister(_REGID(RG190_RXMAS),Param->esposizione.MAS, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
    if(Ser422WriteRegister(_REGID(RG190_AEC),1, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
@@ -1133,7 +1134,7 @@ bool pcb190UploadTomoExpose(_RxStdSeq_Str* Param, bool isAEC)
    return TRUE;
   }
   
-  // Scrive uno per uno tutti i registri
+   debugPrint("PCB190 UPLOAD PRE or MAN-PULSE DATA");
    if(Ser422WriteRegister(_REGID(RG190_RXHVTMO),Param->esposizione.TMO, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
    if(Ser422WriteRegister(_REGID(RG190_RXHVEXP),Param->esposizione.HV, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
    if(Ser422WriteRegister(_REGID(RG190_RXI),Param->esposizione.I, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;

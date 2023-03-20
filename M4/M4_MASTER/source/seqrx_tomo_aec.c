@@ -179,16 +179,17 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
         if(SystemInputs.CPU_XRAY_REQ==0)  _SEQERROR(ERROR_PUSHRX_NO_PREP);
         
         
-        // Comando Attivazione Raggi        
+        // Attesa eventuale busy
         if(waitPcb190Ready(50)==FALSE) _SEQERROR(_SEQ_PCB190_BUSY);
-         _EVCLR(_EV2_WAIT_AEC);
 
-        int rc = pcb190StartRxTomoAec();
-        // if(rc==SER422_BUSY) _SEQERROR(_SEQ_PCB190_BUSY);
+        _EVCLR(_EV2_WAIT_AEC);
+
+        // Comando Attivazione Raggi
+        int rc = pcb190StartRxTomoAec();                
         if(rc==SER422_ILLEGAL_FUNCTION) _SEQERROR(ERROR_PUSHRX_NO_PREP);
 
         aecIsValid =TRUE;
-        
+
         // Ciclo attesa dati AEC Attende dati AEC
         i = 15; // Massima attesa AEC
         while(i)
@@ -211,23 +212,11 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
 
         // Dati AEC giunti
         if(aecExpIsValid==FALSE) _SEQERROR(_SEQ_AEC_NOT_AVAILABLE);
-        
+
         // Ricarica i dati alla PCB190        
         pcb190UploadTomoExpose(Param, TRUE);
-            
-        // Attivazione Tomo con impulso di  EXP WIN
-        if(Param->tomo_mode!=_TOMO_MODE_STATIC) actuatorsMoveTomoTrxEnd(Param->tomo_mode,true);
 
-        /////////////////////////////////////////////////////////////////////////////////////////////
-        if(Param->tomo_mode==_TOMO_MODE_WIDE)
-          debugPrint("RX-3D-AEC ESPOSIZIONE  WIDE");
-        else if(Param->tomo_mode==_TOMO_MODE_NARROW)
-          debugPrint("RX-3D-AEC ESPOSIZIONE  NARROW");
-        else if(Param->tomo_mode==_TOMO_MODE_INTERMEDIATE)
-          debugPrint("RX-3D-AEC ESPOSIZIONE  INTERMEDIATE");
-        else
-          debugPrint("RX-3D-AEC ESPOSIZIONE  BRACCIO FERMO");
-
+        // Dati di esposizione
         debugPrintI4("RX-3D-AEC EXP DATA, IDAC", Param->esposizione.I & 0x0FFF, "VDAC",Param->esposizione.HV & 0x0FFF,"MASDAC", Param->esposizione.MAS, "SMP",Param->tomo_samples );
 
         
