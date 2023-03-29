@@ -78,6 +78,8 @@ biopsyExtendedDevice::biopsyExtendedDevice(int rotview, QWidget *parent) :
     ZHOME_RIGHT= _DEF_EXT_ZHOME_RIGHT;
 
     exitPageCode = _PG_MAIN_DIGITAL;
+    outPosition_ena = false;
+    outPosition = false;
 
 }
 biopsyExtendedDevice::~biopsyExtendedDevice()
@@ -149,6 +151,7 @@ void biopsyExtendedDevice::hideFrames(void){
 
     ui->frameMoveX->hide();
     ui->frameMoveY->hide();
+    ui->frameOutOfY->hide();
     ui->frameMoveZ->hide();
 
 }
@@ -228,6 +231,7 @@ void biopsyExtendedDevice::manageChangeMoveXYZSeq(int sub_seq,int param1, int pa
     }
 }
 
+
 void biopsyExtendedDevice::valueChanged(int index,int opt)
 {
     QString stringa;
@@ -263,7 +267,7 @@ void biopsyExtendedDevice::valueChanged(int index,int opt)
 
 
         if(seq == _REQ_SEQ_HOME) manageChangeHomeSeq(subseq,param1,param2);
-        else if(seq == _REQ_SEQ_XYZ) manageChangeMoveXYZSeq(subseq,param1,param2);
+        else if(seq == _REQ_SEQ_XYZ) manageChangeMoveXYZSeq(subseq,param1,param2);        
         break;
 
     case BIOPSY_USER_CONFIRMATION_DB:
@@ -282,6 +286,7 @@ void biopsyExtendedDevice::timerEvent(QTimerEvent* ev)
 
         if(req_sequence == _REQ_SEQ_HOME) manageHomeSequence();
         else if(req_sequence == _REQ_SEQ_XYZ) manageXYZSequence();
+        else if(req_sequence == _REQ_SEQ_REPOSITIONING) manageRepositioningSequence();
         else  manageRequestErrors(_BIOPSY_MOVING_UNDEFINED_ERROR);
 
     }
@@ -415,6 +420,29 @@ void biopsyExtendedDevice::handleMove(void){
     return;
 
 }
+
+
+void biopsyExtendedDevice::manageRepositioningSequence(void){
+
+    switch(sub_sequence){
+    case _REQ_OUTPOS_INIT:
+        buzzer_delay = 0;
+        hideFrames();
+        ui->frameOutOfY->show();
+        ui->StartupTitleLabel->setText(ApplicationDatabase.getDataS(BIOPSY_ACTIVATION_TITLE_DB));
+        sub_sequence = _REQ_OUTPOS_LOOP;
+        break;
+    default:
+        if(!buzzer_delay){
+            buzzer_delay = 20;
+            setBuzzer();
+        }else buzzer_delay--;
+    }
+
+    if(outPosition) nextStepSequence(100);
+    else GWindowRoot.setNewPage( exitPageCode ,GWindowRoot.curPage,0);
+}
+
 void biopsyExtendedDevice::manageHomeSequence(void){
 
     switch(sub_sequence){
@@ -754,7 +782,7 @@ int biopsyExtendedDevice::requestBiopsyHome(int id, unsigned char lat, int rot_h
     prev_home_lat = req_home_lat;
     req_home_lat = lat;
     req_rot_holder = rot_holder;
-
+    outPosition_ena = false;
 
     // Determina il target X in funzione della lateralità
     if(lat == _BP_EXT_ASSEX_POSITION_LEFT){
@@ -792,6 +820,20 @@ int biopsyExtendedDevice::requestBiopsyHome(int id, unsigned char lat, int rot_h
 
 }
 
+int biopsyExtendedDevice::requestBiopsyOutOfPosition(void){
+
+    // Prepara la sequenza di gestione del movimento
+    ApplicationDatabase.setData(BIOPSY_ACTIVATION_TITLE_DB,QString("OUT OF POSITION!!"),0);
+    req_sequence = _REQ_SEQ_REPOSITIONING;
+    sub_sequence = _REQ_OUTPOS_INIT;
+
+    // Apre la pagina grafica di gestione delle attivazioni
+    GWindowRoot.setNewPage(_PG_BIOPSY_EXTENDED_DEVICE,GWindowRoot.curPage,0);
+    nextStepSequence(1);
+    return 1;
+
+}
+
 int biopsyExtendedDevice::requestBiopsyMoveXYZ(unsigned short X, unsigned short Y,unsigned short Z,int id){
 
     // Non può essere eseguita con una pagina di errore in corso
@@ -799,7 +841,7 @@ int biopsyExtendedDevice::requestBiopsyMoveXYZ(unsigned short X, unsigned short 
 
     // Abilita la visualizzazione del cursore
     ApplicationDatabase.setData(_DB_BIOP_SHOW_SH, (unsigned char) 1);
-
+    outPosition_ena = true;
 
     // Se si trova già in posizione esce subito
     if(isTarget(X,Y,Z)) return 0;
@@ -843,10 +885,11 @@ int biopsyExtendedDevice::calibrateSh(ushort sh,ushort sh_m15, ushort sh_p15, us
 
 void biopsyExtendedDevice::mccStatNotify(unsigned char id_notify,unsigned char cmd, QByteArray data)
 {
-    unsigned char errore;
-    static unsigned char    bp_motion=0;
-    static int              bp_movecommand = 0;
+    unsigned char errore;    
     static int              bCalibratedSh = -10;
+    static unsigned short Y;
+    static bool outOfPosition;
+    static uchar manual = 0;
     bool update_aws = false;
 
     if(id_notify!=1) return;
@@ -862,6 +905,11 @@ void biopsyExtendedDevice::mccStatNotify(unsigned char id_notify,unsigned char c
     // Se il sistema risulta NON connesso non fa altro..
     if(data.at(_BP_EXT_CONNESSIONE)==_BP_EXT_CONNESSIONE_DISCONNECTED)
     {
+
+        outPosition_ena = false;
+        outPosition = false;
+        Y = 0xFFFF;
+        outOfPosition = false;
         pBiopsy->connected = FALSE;
         if(movingCommand > _BIOPSY_MOVING_COMPLETED){
             movingCommand =_BIOPSY_MOVING_COMPLETED;
@@ -872,6 +920,11 @@ void biopsyExtendedDevice::mccStatNotify(unsigned char id_notify,unsigned char c
 
     // Cambio stato da Non connesso a connesso
     if(!pBiopsy->connected){
+
+        outPosition = false;
+        outPosition_ena = false;
+        Y = 0xFFFF;
+        outOfPosition = false;
 
         // Riconoscimento torretta di Biopsia inserita
         pBiopsy->connected = TRUE;
@@ -909,18 +962,21 @@ void biopsyExtendedDevice::mccStatNotify(unsigned char id_notify,unsigned char c
         prev_home_lat = req_home_lat = curLatX;
     }
 
+    if(data.at(_BP_EXT_MAN) != manual){
+        manual = data.at(_BP_EXT_MAN);
 
-
-    // Quando in home forza la condizione di aperto: aperto o cuneo staccato hanno lo stesso valore riconosciuto!!
-    if(isHome) adapterId = _BP_EXT_ADAPTER_OPEN;
-    else{
-        //  Riconoscimento dell'adapter
-        if(adapterId != data.at(_BP_EXT_ADAPTER_ID)){
-            adapterId = data.at(_BP_EXT_ADAPTER_ID);
-            update_aws = true;
-        }
+        if(manual) DEBUG("MANUAL ACTIVATION");
+        else DEBUG("AUTO ACTIVATION");
     }
-   ApplicationDatabase.setData(_DB_BIOP_ADAPTER_ID,(int) data.at(_BP_EXT_ADAPTER_ID),0);
+
+    //  Riconoscimento dell'adapter
+    if(adapterId != data.at(_BP_EXT_ADAPTER_ID)){
+        adapterId = data.at(_BP_EXT_ADAPTER_ID);
+        update_aws = true;
+    }
+
+    if(isHome) ApplicationDatabase.setData(_DB_BIOP_ADAPTER_ID,(int) _BP_EXT_ADAPTER_OPEN,0);
+    else ApplicationDatabase.setData(_DB_BIOP_ADAPTER_ID,(int) adapterId,0);
 
     // Posizione attuale cursore
     curX_dmm = data.at(_BP_EXT_XL) + 256 * data.at(_BP_EXT_XH) ;
@@ -928,6 +984,7 @@ void biopsyExtendedDevice::mccStatNotify(unsigned char id_notify,unsigned char c
     curZ_dmm = data.at(_BP_EXT_ZL) + 256 * data.at(_BP_EXT_ZH) ;
     curSh_raw = data.at(_BP_EXT_SHL) + 256 * data.at(_BP_EXT_SHH) ;
     curSh_dmm = calibrateSh(curSh_raw, pBiopsy->configExt.sh_m150_level, pBiopsy->configExt.sh_150_level, pBiopsy->configExt.sh_zero_level);
+
 
 
     if( (curSh_dmm > bCalibratedSh + 5) || (curSh_dmm < bCalibratedSh - 5)){
@@ -940,34 +997,26 @@ void biopsyExtendedDevice::mccStatNotify(unsigned char id_notify,unsigned char c
     ApplicationDatabase.setData(_DB_BIOP_SH,(int) curSh_dmm,0);
 
 
-    if(bp_motion!=data.at(_BP_EXT_MOTION)){
-        PRINT(QString("BIOPSIA: BP_MOTION=%1").arg((int) data.at(_BP_EXT_MOTION)));
-        bp_motion = data.at(_BP_EXT_MOTION);
-    }
-
-    if(bp_movecommand!=movingCommand){
-        PRINT(QString("BIOPSIA: MOVE CMD=%1").arg((int) movingCommand));
-        bp_movecommand = movingCommand;
-    }
-
-    // ______________________________ Aggiornamento stato di posizionamento in corso _________________________________________________
-    switch(data.at(_BP_EXT_MOTION))
-    {
-
-        case _BP_EXT_MOTION_ON:
-            PRINT(QString("BIOPSIA:CONFERMA ATTIVAZIONE MOVIMENTO"));
-        break;
-
-        case _BP_EXT_MOTION_TERMINATED:
+    if(movingCommand > _BIOPSY_MOVING_COMPLETED) {
+        if(data.at(_BP_EXT_MOTION) == _BP_EXT_MOTION_ON) DEBUG(QString("BIOPSIA:CONFERMA ATTIVAZIONE MOVIMENTO"));
+        else{
+            Y = curY_dmm;
 
             // Valutazione del risultato del movimento
             if(data.at(_BP_EXT_MOTION_END) == _BP_EXT_ERROR_POSITIONINIG)
             {
+                DEBUG(QString("BIOPSIA:ERRORE MOVIMENTO"));
                 movingError = _BIOPSY_MOVING_ERROR_TARGET;
+                outPosition_ena = false;
             }else if(data.at(_BP_EXT_MOTION_END) == _BP_EXT_TIMEOUT_COMANDO)
             {
+                DEBUG(QString("BIOPSIA:TIMEOUT"));
                 movingError = _BIOPSY_MOVING_ERROR_TIMEOUT;
-            }else  movingError = _BIOPSY_MOVING_NO_ERROR;
+                outPosition_ena = false;
+            }else{
+                DEBUG(QString("BIOPSIA:MOVIMENTO OK"));
+                movingError = _BIOPSY_MOVING_NO_ERROR;
+            }
 
             movingCommand =_BIOPSY_MOVING_COMPLETED;
             update_aws = true;
@@ -982,10 +1031,29 @@ void biopsyExtendedDevice::mccStatNotify(unsigned char id_notify,unsigned char c
                     moveXYZ(x1Loop,y1Loop,z1Loop);
                 }
             }
-        break;
+        }
+    }
 
+    // Check Out of position condition
+    if(outPosition_ena){
+        if((Y!=0xFFFF) &&(abs(Y-curY_dmm) > 5)){
+            outPosition = true;
+        }else outPosition = false;
 
-    } // data.at(_DB_MOTION)
+        if(outOfPosition != outPosition){
+            update_aws = true;
+            outOfPosition = outPosition;
+            if(outOfPosition){
+                DEBUG("BIOPSY OUT OF POSIITON");
+                //requestBiopsyOutOfPosition();
+            }   else DEBUG("BIOPSY IN POSIITON");
+        }
+
+    }else{
+        outPosition = false;
+        outOfPosition = outPosition;
+        Y = 0xFFFF;
+    }
 
 
     // Aggiornamento AWS

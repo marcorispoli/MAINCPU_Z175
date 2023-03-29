@@ -227,14 +227,15 @@ typedef enum
 #define _BP_EXT_ZH              11
 #define _BP_EXT_SHL             12
 #define _BP_EXT_SHH             13
+#define _BP_EXT_MAN             14
 
 // Dati per la revisione e checksum
-#define _BP_EXT_CHKH            14
-#define _BP_EXT_CHKL            15
-#define _BP_EXT_REVIS           16
-#define _BP_EXT_MODEL           17
+#define _BP_EXT_CHKH            15
+#define _BP_EXT_CHKL            16
+#define _BP_EXT_REVIS           17
+#define _BP_EXT_MODEL           18
 //______________________________
-#define _BP_EXT_DATA_LEN        18
+#define _BP_EXT_DATA_LEN        19
 
 
 //_____________________________

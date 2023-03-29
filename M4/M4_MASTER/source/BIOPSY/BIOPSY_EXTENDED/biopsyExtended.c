@@ -57,6 +57,7 @@ void biopsyExtendedLoop(void)
     dati[_BP_EXT_ZH] = 0;
     dati[_BP_EXT_SHL] = 0;
     dati[_BP_EXT_SHH] = 0;
+    dati[_BP_EXT_MAN] = 0;
     dati[_BP_EXT_PUSH_SBLOCCO] = _BP_EXT_PUSH_SBLOCCO_DISATTIVO;
     dati[_BP_EXT_ADAPTER_ID] = 0;
     dati[_BP_EXT_CONNESSIONE] = _BP_EXT_CONNESSIONE_DISCONNECTED;
@@ -129,6 +130,7 @@ void BIOPSY_manageDriverDisconnectedStatus(void){
 void BIOPSY_manageDriverConnectedStatus(void){
     static unsigned char slot = 0;
 
+
     static int timer_stat = 2000 /_BYM_CONNECTED_STAT_DELAY;
     _time_delay(_BYM_CONNECTED_STAT_DELAY);
     dati[_BP_EXT_MOTION]=_BP_EXT_NO_MOTION;
@@ -163,6 +165,10 @@ void BIOPSY_manageDriverConnectedStatus(void){
     dati[_BP_EXT_SHL] = (unsigned char) (generalConfiguration.biopsyCfg.SH & 0x00FF);
     dati[_BP_EXT_SHH] = (unsigned char) (generalConfiguration.biopsyCfg.SH >> 8);
 
+    // Movimenti da telecomando
+    if(generalConfiguration.biopsyCfg.extendedConf.statusH & 0x08)  dati[_BP_EXT_MAN] = 1;
+    else dati[_BP_EXT_MAN] = 0;
+
     static unsigned short old_needle = 0;
     switch(slot){
     case 0:
@@ -172,9 +178,9 @@ void BIOPSY_manageDriverConnectedStatus(void){
 
         // Conversione valori NEEDLE -> IDENTIFICATORE
 
-        if((generalConfiguration.biopsyCfg.adapterId >= _ADAPTER_A_LEVEL_L) && (generalConfiguration.biopsyCfg.adapterId <= _ADAPTER_A_LEVEL_H))
-            dati[_BP_EXT_ADAPTER_ID] = _BP_EXT_ADAPTER_A;
-        else if((generalConfiguration.biopsyCfg.adapterId >= _ADAPTER_B_LEVEL_L) && (generalConfiguration.biopsyCfg.adapterId <= _ADAPTER_B_LEVEL_H))
+        if((generalConfiguration.biopsyCfg.adapterId >= _ADAPTER_A_LEVEL_L) && (generalConfiguration.biopsyCfg.adapterId <= _ADAPTER_A_LEVEL_H)){
+            dati[_BP_EXT_ADAPTER_ID] = _BP_EXT_ADAPTER_A;            
+        }else if((generalConfiguration.biopsyCfg.adapterId >= _ADAPTER_B_LEVEL_L) && (generalConfiguration.biopsyCfg.adapterId <= _ADAPTER_B_LEVEL_H))
             dati[_BP_EXT_ADAPTER_ID] = _BP_EXT_ADAPTER_B;
         else if((generalConfiguration.biopsyCfg.adapterId >= _ADAPTER_C_LEVEL_L) && (generalConfiguration.biopsyCfg.adapterId <= _ADAPTER_C_LEVEL_H))
             dati[_BP_EXT_ADAPTER_ID] = _BP_EXT_ADAPTER_C;

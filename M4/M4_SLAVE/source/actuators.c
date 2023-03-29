@@ -424,6 +424,7 @@ void masterCommandExecution(void){
     uint8_t buffer[8];
     unsigned char* pData;
     int i;
+    uint32_t val;
 
     // Verify the command to be executed
     switch((actuatorEnumCommands_t) actuatorCommand.data[0]){
@@ -509,6 +510,16 @@ void masterCommandExecution(void){
     case ACTUATORS_TRX_QUICK_STOP:
         debugPrint("ACTUATORS QUICK STOP COMMAND");
         actuatorTrxQuickStop();
+        break;
+
+    case ACTUATORS_TRX_RESET_BUSY:
+        debugPrint("TRX RESET BUSY REQUEST");
+        val = getTrxPosition(); // Legge l'angolo del Tubo
+        buffer[0]= ACTUATORS_MOVE_TRX;
+        buffer[1]= 0;  // Esito comando
+        buffer[2]= 0;
+        TO_LE16(&buffer[3],val);    // Aggiunge il valore dell'angolo finale
+        sendActuatorFrameToMaster(buffer);
         break;
 
     case ACTUATORS_GET_STATUS:

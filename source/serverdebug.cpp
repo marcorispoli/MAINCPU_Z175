@@ -2587,6 +2587,8 @@ void serverDebug::handleRotazioni(QByteArray data)
         serviceTcp->txData(QByteArray("readLenzeConfig Rilegge Lenze config e download\r\n"));
         serviceTcp->txData(QByteArray("saveLenzeConfig Salva il Lenze config \r\n"));
         serviceTcp->txData(QByteArray("setRotManualMode [ARMS|ARMC|TRXS|TRXC] \r\n"));
+        serviceTcp->txData(QByteArray("resetBusy    reset the busy condition \r\n"));
+        serviceTcp->txData(QByteArray("pollingSlave trigger a can bus polling \r\n"));
         serviceTcp->txData(QByteArray("----------------------------------------------------------------------------------\r\n"));
     }else if(data.contains("setRotManualMode")){
         QList<QByteArray> parametri;
@@ -2726,6 +2728,19 @@ void serverDebug::handleRotazioni(QByteArray data)
     }else if(data.contains("saveLenzeConfig")){
         pConfig->saveLenzeConfig();
         serviceTcp->txData(QByteArray("LENZE config file Stored!\n\r"));
+    }else if(data.contains("resetBusy")){
+        serviceTcp->txData(QByteArray("Busy RESETTING ..."));
+
+        // Impostazione Parametro
+        buffer[0] =(unsigned char) 1;
+        pConsole->pGuiMcc->sendFrame(MCC_TEST,0,buffer, 1);
+
+    }else if(data.contains("pollingSlave")){
+        serviceTcp->txData(QByteArray("POLLING ..."));
+
+        // Impostazione Parametro
+        buffer[0] =(unsigned char) 2;
+        pConsole->pGuiMcc->sendFrame(MCC_TEST,0,buffer, 1);
     }
 }
 
@@ -4111,8 +4126,19 @@ void serverDebug::handleExtendedBiopsy(QByteArray data)
             else if(pBiopsyExtended->curLatX == _BP_EXT_ASSEX_POSITION_RIGHT) lat = "RIGHT";
             else lat = "UNDEF";
 
-            QString stringa = QString("SIGNALS: X:%1, Y:%2, Z:%3, SHR:%4, SH:%5 LAT:%6\r\n").arg(pBiopsyExtended->curX_dmm).arg(pBiopsyExtended->curY_dmm).arg(pBiopsyExtended->curZ_dmm).arg(pBiopsyExtended->curSh_raw).arg(pBiopsyExtended->curSh_dmm).arg(lat);
+            QString stringa = QString("SIGNALS: X:%1, Y:%2, Z:%3, SHR:%4, SH:%5 LAT:%6 ").arg(pBiopsyExtended->curX_dmm).arg(pBiopsyExtended->curY_dmm).arg(pBiopsyExtended->curZ_dmm).arg(pBiopsyExtended->curSh_raw).arg(pBiopsyExtended->curSh_dmm).arg(lat);
+            if(pBiopsyExtended->outPosition) stringa+= " OUT";
+            else stringa += "IN ";
+
+            if(pBiopsyExtended->getAdapterId() == _BP_EXT_ADAPTER_OPEN) stringa += "ADAPTER:ND";
+            else if(pBiopsyExtended->getAdapterId() == _BP_EXT_ADAPTER_A) stringa += "ADAPTER:A";
+            else if(pBiopsyExtended->getAdapterId() == _BP_EXT_ADAPTER_B) stringa += "ADAPTER:B";
+            else if(pBiopsyExtended->getAdapterId()== _BP_EXT_ADAPTER_C) stringa += "ADAPTER:C";
+
+            stringa+=" \r\n";
+
             serviceTcp->txData(stringa.toAscii().data());
+
         }else if(data.contains("getRevision")){
             serviceTcp->txData(QString("current revision: %1\n\r").arg(pBiopsy->revisione).toAscii().data());
             QString hex; hex.setNum((unsigned short) pBiopsy->checksum_h * 256 + (unsigned short)pBiopsy->checksum_l,16);

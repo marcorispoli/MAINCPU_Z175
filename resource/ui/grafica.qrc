@@ -398,5 +398,6 @@
         <file>BiopsyExtended/LampAuto.png</file>
         <file>BiopsyExtended/LampDisabled.png</file>
         <file>BiopsyExtended/LampOn.png</file>
+        <file>BiopsyExtended/BiopsyOutOfY.png</file>
     </qresource>
 </RCC>

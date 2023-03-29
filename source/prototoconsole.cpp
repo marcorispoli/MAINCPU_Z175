@@ -505,6 +505,9 @@ void protoToConsole::setBiopsyExtendedData(){
     // Coordinate
     stringa += QString("X=%1 Y=%2 Z=%3 SH=%4 ").arg(ApplicationDatabase.getDataI(_DB_BIOP_X)).arg(ApplicationDatabase.getDataI(_DB_BIOP_Y)).arg(ApplicationDatabase.getDataI(_DB_BIOP_Z)).arg(ApplicationDatabase.getDataI(_DB_BIOP_SH));
 
+    if(pBiopsyExtended->outPosition) stringa+="OUT=1 ";
+    else stringa+= "OUT=0";
+
 
     cmd.addParam(stringa);
     sendNotificheTcp(cmd.cmdToQByteArray(NOTIFY_SET_BIOPSY_EXTENDED_DATA));

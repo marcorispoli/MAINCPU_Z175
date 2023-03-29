@@ -1507,7 +1507,13 @@ void mcc_manual_rx_shot(void)
 
 void mcc_test(void)
 {   
-    debugPrint("GUI TEST COMMAND");
+
+    if(mcc_cmd.buffer[0]==1){
+        debugPrint("RESET BUSY");
+        actuatorsTrxResetBusy();
+    }else if(mcc_cmd.buffer[0]==2){
+        debugPrint("POLLING");
+    }
     return;
 }
 

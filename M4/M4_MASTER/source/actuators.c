@@ -264,6 +264,12 @@ bool actuatorsArmStop(void ){
     return true;
 }
 
+void actuatorsTrxResetBusy(void){
+    uint8_t buffer[8];
+    // Gli angoli devono essere nel formato decimi di grado!!
+    buffer[0]= ACTUATORS_TRX_RESET_BUSY;
+    CanSendToActuatorsSlave(buffer);
+}
 
 /*
  *  This function requests to move the ARM to a target angle.
@@ -1005,7 +1011,15 @@ void actuatorsRxFromTrx(uint8_t* data){
         buffer[0] = data[1]; // Codice esito proveniente dai drivers..
         buffer[1] = data[2]; // sub codice in caso di errore da fault
         TO_LE16(&buffer[2],generalConfiguration.trxExecution.cAngolo);
-        mccGuiNotify(generalConfiguration.trxExecution.id,MCC_CMD_TRX,buffer,4);
+
+        i = 10;
+        while(i){
+            if(mccGuiNotify(generalConfiguration.trxExecution.id,MCC_CMD_TRX,buffer,4)) break;
+            i--;
+            _time_delay(100);
+            debugPrint("TENTATIVO MCC_CMD_TRX");
+        }
+        if(i==0)  debugPrint("TENTATIVO MCC_CMD_TRX FALLITO!");
 
         break;
 

@@ -562,7 +562,7 @@ bool Collimatore::setFiltro(void)
     PRINT(QString("COLLIMATORE: FILTRO INDEX=%1, POS=%2").arg(data[0]).arg(data[1]));
 
     if((data[0] == filterIndexExecuted) && (data[1] == filterPosExecuted) ){
-        DEBUG("COLLIMATORE: FILTO GIA IMPOSTATO");
+        DEBUG("COLLIMATORE: FILTRO GIA IMPOSTATO");
         return true;
     }
 

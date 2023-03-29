@@ -4864,7 +4864,7 @@ void console::handleGetBiopsyZ(protoConsole* answer)
 
 /* 
     Restituisce i seguenti parametri funzionali della Biopsia:
-    -> "OK [CONNECTED/DISCONNED] [X_L / X_R / X_C / X_N] [AD_A / AD_B / AD_C / AD_ND] [X,Y,Z,SH]"
+    -> "OK [CONNECTED/DISCONNED] [X_L / X_R / X_C / X_N] [AD_A / AD_B / AD_C / AD_ND] [X,Y,Z,SH] [OUT=1/0]"
 
  */
 void console::handleGetBiopsyExtendedData(protoConsole* frame, protoConsole* answer)
@@ -4892,6 +4892,11 @@ void console::handleGetBiopsyExtendedData(protoConsole* frame, protoConsole* ans
 
     // Coordinate
     stringa += QString("X=%1 Y=%2 Z=%3 SH=%4 ").arg(ApplicationDatabase.getDataI(_DB_BIOP_X)).arg(ApplicationDatabase.getDataI(_DB_BIOP_Y)).arg(ApplicationDatabase.getDataI(_DB_BIOP_Z)).arg(ApplicationDatabase.getDataI(_DB_BIOP_SH));
+
+    // Stato di Out of position dopo posizionamento
+    if(pBiopsyExtended->outPosition) stringa+="OUT=1 ";
+    else stringa+= "OUT=0";
+
     emit consoleTxHandler(answer->answToQByteArray(stringa));
 
     return;

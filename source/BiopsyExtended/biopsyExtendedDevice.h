@@ -89,6 +89,10 @@ public:
     // Comandi in corso
     int movingCommand;  // Codice comando in esecuzione
 
+    bool outPosition;
+    bool outPosition_ena; // Enable out of position check
+
+
     #define _BIOPSY_MOVING_NO_COMMAND       0
     #define _BIOPSY_MOVING_COMPLETED        1
     #define _BIOPSY_MOVING_XYZ              2
@@ -129,6 +133,7 @@ public:
     #define _REQ_SEQ_NONE           0
     #define _REQ_SEQ_HOME           1
     #define _REQ_SEQ_XYZ            2
+    #define _REQ_SEQ_REPOSITIONING  3
 
     enum{
         _REQ_SUBSEQ_HOME_INIT  = 0,
@@ -151,6 +156,8 @@ public:
 
 
 
+    #define _REQ_OUTPOS_INIT                        0
+    #define _REQ_OUTPOS_LOOP                        1
 
     #define _REQ_SUBSEQ_XYZ_INIT                    0
     #define _REQ_SUBSEQ_XYZ_EXE_X                   1
@@ -230,8 +237,11 @@ private:
 
     bool isHome;
 
+    int requestBiopsyOutOfPosition(void);
     void manageHomeSequence(void);
     void manageXYZSequence(void);
+    void manageRepositioningSequence(void);
+
     void manageRequestErrors(int error);
     void nextStepSequence(int tmo);
     void manageChangeHomeSeq(int sub_seq,int param1, int param2);
