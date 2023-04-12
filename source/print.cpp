@@ -145,7 +145,8 @@ void infoClass::serviceRxConsoleHandler(QByteArray data)
 {
     QTextCodec *codec = QTextCodec::codecForName(UNICODE_TYPE);
     QString stringa = codec->toUnicode(data);
-    stringa = QString("%1:").arg(QDateTime::currentMSecsSinceEpoch()-orig) +  "AWS>" + stringa + "\r\n";
+    float time = (float) (QDateTime::currentMSecsSinceEpoch()-orig)/1000;
+    stringa = QString("%1:").arg(QString::number(time,'f',2)) +  "AWS>" + stringa + "\r\n";
     serviceTcp->txData(stringa.toAscii());
     return;
 }
@@ -157,7 +158,8 @@ void infoClass::serviceTxAsyncHandler(QByteArray data)
 
     QTextCodec *codec = QTextCodec::codecForName(UNICODE_TYPE);
     QString stringa = codec->toUnicode(data);
-    stringa = QString("%1:").arg(QDateTime::currentMSecsSinceEpoch()-orig) + "ASYNC AWS>" + stringa + "\r\n";
+    float time = (float) (QDateTime::currentMSecsSinceEpoch()-orig)/1000;
+    stringa = QString("%1:").arg(QString::number(time,'f',2)) +   "ASYNC AWS>" + stringa + "\r\n";
 
     serviceTcp->txData(stringa.toAscii());
      return;
@@ -166,28 +168,36 @@ void infoClass::serviceTxAsyncHandler(QByteArray data)
 
 void infoClass::serviceErrorTxHandler(int codice, QString msg)
 {
-    QString stringa = QString("%1:").arg(QDateTime::currentMSecsSinceEpoch()-orig) + "ERROR AWS>" + QString("%1:").arg(codice) + msg + "\r\n";
+    QString stringa;
+    float time = (float) (QDateTime::currentMSecsSinceEpoch()-orig)/1000;
+    stringa = QString("%1:").arg(QString::number(time,'f',2)) +   "ERROR AWS>" + QString("%1:").arg(codice) + msg + "\r\n";
     serviceTcp->txData(stringa.toAscii());
     return;
 }
 
 void infoClass::serviceLogHandler(QString data)
 {
-    QString stringa = QString("%1:").arg(QDateTime::currentMSecsSinceEpoch()-orig) + "LOG: "+ data + "\r\n";
+    QString stringa;
+    float time = (float) (QDateTime::currentMSecsSinceEpoch()-orig)/1000;
+    stringa = QString("%1:").arg(QString::number(time,'f',2)) +  "LOG: "+ data + "\r\n";
     serviceTcp->txData(stringa.toAscii());
     return;
 }
 
 void infoClass::serviceDebugHandler(QString data)
 {
-    QString stringa = QString("%1:").arg(QDateTime::currentMSecsSinceEpoch()-orig) + "DBG: "+ data + "\r\n";
+    QString stringa;
+    float time = (float) (QDateTime::currentMSecsSinceEpoch()-orig)/1000;
+    stringa = QString("%1:").arg(QString::number(time,'f',2)) +   "DBG: "+ data + "\r\n";
     serviceTcp->txData(stringa.toAscii());
     return;
 }
 
 void infoClass::servicePrintHandler(QString data)
 {
-    QString stringa = QString("%1:").arg(QDateTime::currentMSecsSinceEpoch()-orig) + "PRINT: "+ data + "\r\n";
+    QString stringa;
+    float time = (float) (QDateTime::currentMSecsSinceEpoch()-orig)/1000;
+    stringa = QString("%1:").arg(QString::number(time,'f',2)) +   "PRINT: "+ data + "\r\n";
     serviceTcp->txData(stringa.toAscii());
     return;
 }
@@ -195,18 +205,26 @@ void infoClass::servicePrintHandler(QString data)
 
 void infoClass::serviceQtHandler(QString data)
 {
-    QString stringa = QString("%1:").arg(QDateTime::currentMSecsSinceEpoch()-orig) + "QT: "+ data + "\r\n";
+    QString stringa;
+    float time = (float) (QDateTime::currentMSecsSinceEpoch()-orig)/1000;
+    stringa = QString("%1:").arg(QString::number(time,'f',2)) +  "QT: "+ data + "\r\n";
     serviceTcp->txData(stringa.toAscii());
     return;
 }
 
 void infoClass::serviceM4Handler(QString data)
 {
-    QString stringa = QString("%1:").arg(QDateTime::currentMSecsSinceEpoch()-orig) + "M4: "+ data + "\r\n";
+    QString stringa;
+    float time = (float) (QDateTime::currentMSecsSinceEpoch()-orig)/1000;
+    stringa = QString("%1:").arg(QString::number(time,'f',2)) +  "M4: "+ data + "\r\n";
     serviceTcp->txData(stringa.toAscii());
     return;
 }
 
+
+void infoClass::resetTimestamp(void){
+    orig = QDateTime::currentMSecsSinceEpoch();
+}
 
 void mccPrintCom::mccRxHandler(_MccFrame_Str mccframe)
 {

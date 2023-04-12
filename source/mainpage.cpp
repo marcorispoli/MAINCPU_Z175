@@ -178,7 +178,7 @@ void MainPage::childStatusPage(bool stat,int opt)
         return;
     }
 
-
+    pInfo->resetTimestamp(); // Reset timestamp for debug messages
     disableButtons(2000); // Disabilita i pulsanti in ingresso
 
     // Assegna la password da utilizzare per il pannello di service

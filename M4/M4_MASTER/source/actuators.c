@@ -1130,7 +1130,9 @@ void actuatorsRxFromTrx(uint8_t* data){
     case ACTUATORS_TRX_POLLING_STATUS:
         // Messaggio in polling per resettare eventuali situazioni rimaste appese
         if(data[1]==ACUATORS_TRX_POLLING_IDLE){
+            debugPrint("ACTUATORS TRX POLLING");
             if(generalConfiguration.trxExecution.run){
+                debugPrint("ACTUATORS TRX RESET ACTIVATION");
                 generalConfiguration.trxExecution.run=false;
                 generalConfiguration.trxExecution.completed = true;
                 generalConfiguration.trxExecution.success=false;

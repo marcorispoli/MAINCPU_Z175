@@ -27,6 +27,8 @@ signals:
 public:
     bool connected;
     void activateConnections(void);
+    void resetTimestamp(void);
+
 #ifdef __PRINT
     #define PRINT(x)    pInfo->emit_printTxHandler(x) // Messaggi attivi solo se compilati
 #else

@@ -1129,6 +1129,8 @@ void pcb215VerifyComprData(void)
   // e aggiorna il dispositivo
   if(updateLimitPos)
   {
+      uint8_t limit_source = 0;
+
       if(generalConfiguration.biopsyCfg.biopsyConnected==TRUE)
       {
         // Ricalcolo del limiti sulla base della configurazione ricevuta
@@ -1142,25 +1144,33 @@ void pcb215VerifyComprData(void)
 
         if(padLimit2 < padLimitPosition){
             padLimitPosition = padLimit2;
-        }
-
-
+            limit_source = 1;
+        }else limit_source = 2;
 
       }
       else if(IS_VALID_PAD)
       {
         // Calcola la nuova posizione limite della nacchera
-        if(CONFIG.protezionePaziente)
+        if(CONFIG.protezionePaziente){
           padLimitPosition = CALIBRATION.maxProtection - PAD.offset ;
-        else
+          limit_source = 3;
+        }else{
           padLimitPosition = CALIBRATION.maxPosition - PAD.offset;     
-      }else padLimitPosition = CALIBRATION.maxPosition ;        
+          limit_source = 4;
+        }
+      }else{
+          padLimitPosition = CALIBRATION.maxPosition ;
+          limit_source = 4;
+      }
       
       // Limite fisico escursione carrello
-      if(padLimitPosition > CALIBRATION.maxMechPosition) padLimitPosition = CALIBRATION.maxMechPosition;  
+      if(padLimitPosition > CALIBRATION.maxMechPosition){
+          padLimitPosition = CALIBRATION.maxMechPosition;
+          limit_source = 5;
+      }
             
       Ser422WriteRegister(_REGID(POSITION_LIMIT), padLimitPosition,4,&CONTEST);
-      debugPrintI("PCB215 NUOVA POSIZIONE LIMITE NACCHERA",(int) padLimitPosition);
+      debugPrintI2("PCB215 NUOVA POSIZIONE LIMITE NACCHERA - POS:",(int) padLimitPosition, "SOURCE:", (int) limit_source);
   }
   
 

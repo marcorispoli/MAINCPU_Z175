@@ -86,7 +86,7 @@ release's documentation if necessary:
 |:---|:---:|:---:|:---:|
 |DBTController|1.7|1.9|X|
 |m4_master.bin|1.6|1.8|X|
-|m4_slave.bin|1.4|1.4||
+|m4_slave.bin|1.4|1.5|X|
 |mcc_ko|2.2|2.2||
 ||||
 

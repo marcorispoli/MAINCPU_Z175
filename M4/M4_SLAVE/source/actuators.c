@@ -202,10 +202,9 @@ void manageTrxEvents(void){
     uint32_t val;
     unsigned char buffer[8];
 
-
     switch(event_type){
     case TRX_IDLE:
-        buffer[0]= ACTUATORS_TRX_IDLE;
+        buffer[0]= ACTUATORS_TRX_IDLE;        
         sendActuatorFrameToMaster(buffer);
         break;
 
@@ -232,7 +231,7 @@ void manageTrxEvents(void){
         buffer[0]= ACTUATORS_MOVE_TRX;
         buffer[1]= event_code;  // Esito comando
         buffer[2]= event_data;
-        TO_LE16(&buffer[3],val);    // Aggiunge il valore dell'angolo finale
+        TO_LE16(&buffer[3],val);    // Aggiunge il valore dell'angolo finale        
         sendActuatorFrameToMaster(buffer);
         break;
 

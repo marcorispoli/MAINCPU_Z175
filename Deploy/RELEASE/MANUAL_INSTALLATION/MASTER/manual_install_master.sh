@@ -1,7 +1,7 @@
 ##############################################################
 # Definizione del Package di riferimento
 ##############################################################
-PKGCODE=ID10
+PKGCODE=ID11
 
 # Definizione delle directory
 HOME=/home/user
@@ -26,8 +26,14 @@ mv /PACKAGE_$PKGCODE.tar $HOME/
 # Estrazione contenuto in home/user  
 echo PACKAGE EXTRACTING ..
 cd $HOME
-tar -xf PACKAGE_$PKGCODE.tar firmwares.cnf
-cp firmwares.cnf $CONFIG/
+tar -xf PACKAGE_$PKGCODE.tar 
+tar -xf SWPackage.tar 
+
+cp ./CONFIG/firmwares.cnf $CONFIG/
+cp ./BIN/DBTController /
+cp ./BIN/m4_master.bin /
+sync
+chmod 777 /DBTController
 
 ##############################################################
 # Questa sezione è dedicata all'hotfix che non preveda
@@ -47,9 +53,6 @@ mv /PACKAGE_$PKGCODE.tar $HOME/
 sync
 
 echo INSTALLATION COMPLETED. 
-
-
-
 
 
 
