@@ -52,8 +52,6 @@ void Config::activateSlaveConnections(){
     QObject::connect(this,SIGNAL(awsTxHandler(QByteArray)), awsTcp,SLOT(txData(QByteArray)),Qt::UniqueConnection);
     awsTcp->Start(QHostAddress(_CONSOLE_IP),_AWS_OUT_PORT);
 
-
-
     // Apertura server di comunicazione con il configuratore Master
     // secondo il protocollo della console (testuale)
     configSlaveSocketTcp = new TcpIpServer();
@@ -2966,7 +2964,10 @@ void Config::syncToSlave(void){
 // _____________________________________________________________________________________________
 // FUNZIONI DI CONFIGURAZIONE DRIVER
 
+
 void Config::updateAllDrivers(void){
+    timerReboot = startTimer(60000);
+
     singleConfigUpdate = false;
     sendMccConfigCommand(CONFIG_GENERAL);
     return ;
@@ -3047,6 +3048,7 @@ void Config::updateTrxDriver(void){
 void Config::configNotifySlot(unsigned char id, unsigned char mcccode, QByteArray buffer)
 {
 
+
     switch(mcccode){
     case CONFIG_GENERAL:
          sendMccConfigCommand(CONFIG_PCB269_0);
@@ -3073,7 +3075,7 @@ void Config::configNotifySlot(unsigned char id, unsigned char mcccode, QByteArra
         sendMccConfigCommand(CONFIG_PCB249U1_1);
         break;
 
-    case CONFIG_PCB249U1_1: // ___________________ BLOCCO AGGIORNAMENTO PCB249 U1
+    case CONFIG_PCB249U1_1:
         sendMccConfigCommand(CONFIG_PCB249U1_2);
         break;
 
@@ -3158,8 +3160,11 @@ void Config::configNotifySlot(unsigned char id, unsigned char mcccode, QByteArra
         break;
 
     case CONFIG_COMPLETED:
+        if(timerReboot) killTimer(timerReboot);
+        timerReboot = 0;
         emit configUpdatedSgn();
         break;
+
     }
 
 }
@@ -3301,9 +3306,12 @@ void Config::awsConnectionHandler(bool stat)
 
 // Funzione per comandare lo spegnimento del PC
 void Config::awsPowerOff(void){
-    PRINT("COMANDO PC AWS:");
-    if(awsConnected==false) return;
-    PRINT("POWER OFF");
+    if(awsConnected==false){
+        DEBUG("LOW LEVEL POWER OFF NOT POSSIBLE: SERVER DISCONNECTED");
+        return;
+    }
+
+    DEBUG("LOW LEVEL COMMAND POWER OFF");
     protoConsole cmd(1,UNICODE_FORMAT);
     emit awsTxHandler(cmd.cmdToQByteArray(QString("SetPowerOff")));
 

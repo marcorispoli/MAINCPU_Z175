@@ -56,7 +56,8 @@ mccCom::mccCom(unsigned char core, unsigned char node, unsigned char port,bool m
         mccThObj->moveToThread(Thread);
 
         // Effettua la connect tra threads differenti per poter comunicare l'evento di ricezione
-        connect(mccThObj,SIGNAL(mccRxSgn(_MccFrame_Str)),this,SLOT(mccRxHandler(_MccFrame_Str)),Qt::BlockingQueuedConnection);
+        //connect(mccThObj,SIGNAL(mccRxSgn(_MccFrame_Str)),this,SLOT(mccRxHandler(_MccFrame_Str)),Qt::BlockingQueuedConnection);
+        connect(mccThObj,SIGNAL(mccRxSgn(_MccFrame_Str)),this,SLOT(mccRxHandler(_MccFrame_Str)),Qt::QueuedConnection);
         connect(this,SIGNAL(restartMcc(void)),mccThObj,SLOT(restartMcc(void)),Qt::QueuedConnection);
 
         //connect(mccThObj,SIGNAL(mccRxSgn(_MccFrame_Str)),this,SLOT(mccRxHandler(_MccFrame_Str)),Qt::QueuedConnection);

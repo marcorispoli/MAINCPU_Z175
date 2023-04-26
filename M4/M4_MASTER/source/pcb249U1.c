@@ -954,14 +954,14 @@ bool config_pcb249U1(bool setmem, unsigned char blocco, unsigned char* buffer, u
     generalConfiguration.colliCfg.dynamicArray.tomoFront=buffer[0];
     generalConfiguration.colliCfg.dynamicArray.tomoBack=buffer[1];
 
-    // Allarme temperatura cuffia disabilitato nel device per non andare in conflitto con la gestione del tubo ad Aria
-
-    //generalConfiguration.colliCfg.tempcuffia_on = ((unsigned char)  ((float)buffer[2] * 0.51 + 139));
-    //generalConfiguration.colliCfg.tempcuffia_off = ((unsigned char)  ((float)buffer[3] * 0.51 + 139));
-
     // Stampa il contenuto della collimazione dinamica
     colliArrayPrint();
-    setColliArray(); // Aggiornamento periferica..
+
+    // Aggiornamento periferica..
+    if(!setColliArray()) {
+        printf("Configurazione Periferica PCB249 fallita!\n");
+        return false;
+    }
     break;
     
   }
@@ -1115,12 +1115,12 @@ bool setColliArray(void){
   }
 
 
-  debugPrint("PCB249U1 PCB249U1 AGGIORNATA");
+  printf("PCB249U1 PCB249U1 AGGIORNATA\n");
   pcb249U1SetWriteMode01();
   return true;
   
 fallito:
-  debugPrint("PCB249U1 AGGIORNAMENTO FALLITO");
+  printf("PCB249U1 AGGIORNAMENTO FALLITO\n");
   pcb249U1SetWriteMode01();
   return false;
 }
