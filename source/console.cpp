@@ -316,8 +316,8 @@ void console::consoleRxHandler(QByteArray rxbuffer)
         return;
     }else if(comando==SET_TUBE)
     {
-        // Per i movimenti manuali il comando non deve avere effetti ulteriori
-        if(!pConfig->sys.armMotor) {
+        // Se il Tubo non è configurato deve sempre dare risposta immediata
+        if(!pConfig->sys.trxMotor) {
             emit consoleTxHandler( answ.answToQByteArray(_IMMEDIATO));
             return;
         }
