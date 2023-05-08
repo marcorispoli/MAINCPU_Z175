@@ -2328,6 +2328,7 @@ void Config::configSlaveRxHandler(QByteArray frame)
         // Reboot della macchina
         command = QString("reboot -f");
         system(command.toStdString().c_str());
+
     }else if(comando==SLAVE_EXECUTE_UPDATE_GUI){
 
         QString command = QString("/monta.sh");
@@ -2340,6 +2341,20 @@ void Config::configSlaveRxHandler(QByteArray frame)
         // Reboot della macchina
         command = QString("reboot -f");
         system(command.toStdString().c_str());
+
+    }else if(comando==SLAVE_EXECUTE_UPDATE_M4){
+
+        QString command = QString("/monta.sh");
+        system(command.toStdString().c_str());
+        command = QString("cp /mnt/target/M4_SLAVE/m4_slave.bin /");
+        system(command.toStdString().c_str());
+        command = QString("sync");
+        system(command.toStdString().c_str());
+
+        // Reboot della macchina
+        command = QString("reboot -f");
+        system(command.toStdString().c_str());
+
     }else if(comando==SLAVE_EXECUTE_SHELL){
         QByteArray comando = "";
         for(int i=0; i<protocollo.parametri.size(); i++){
@@ -2891,6 +2906,25 @@ bool Config::executeUpdateGui(){
     timerReboot = startTimer(2000);
     return true;
 }
+
+bool Config::executeUpdateM4(){
+
+    // Invia comando di reboot allo slave
+    protoConsole frame(1,false);
+    emit configMasterTx( frame.cmdToQByteArray(SLAVE_EXECUTE_UPDATE_M4));
+
+    QString command = QString("/monta.sh");
+    system(command.toStdString().c_str());
+    command = QString("cp /mnt/target/M4_MASTER/m4_master.bin /");
+    system(command.toStdString().c_str());
+    command = QString("sync");
+    system(command.toStdString().c_str());
+
+    // Attiva il timer per il eboot locale
+    timerReboot = startTimer(2000);
+    return true;
+}
+
 QByteArray Config::executeShell(QByteArray data){
 
     QString command = QString("(") + QString(data) + QString(")") + QString(" > ppp");

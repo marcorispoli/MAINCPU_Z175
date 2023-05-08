@@ -802,6 +802,8 @@ void serverDebug::handleDebug(QByteArray data)
         serviceTcp->txData(QByteArray("----------------------------------------------------------------------------------\r\n"));
         serviceTcp->txData(QByteArray("updateTS                                   Aggiorna M4+DBT\r\n"));
         serviceTcp->txData(QByteArray("updateGUI                                  Aggiorna solo DBT \r\n"));
+        serviceTcp->txData(QByteArray("updateM4                                   Aggiorna solo M4 \r\n"));
+
         serviceTcp->txData(QByteArray("setCompressorNotify: <frame-gui-notify>    Simula ricezione Gui notify per compressore\r\n"));
         serviceTcp->txData(QByteArray("setActuatorEnableNotify: <frame-actuator-notify>      Simula ricezione actuator enable notify \r\n"));
         serviceTcp->txData(QByteArray("setAutoAlarm: classe, codice               Simula attivazione allarme automatico\r\n"));
@@ -852,6 +854,10 @@ void serverDebug::handleDebug(QByteArray data)
         }
     }else if(data.contains("updateGUI")){
         if(pConfig->executeUpdateGui()==true){
+          serviceTcp->txData(QByteArray("AGGIORNAMENTO GUI EFFETTUATO: SYSTEM REBOOT ...\n\r"));
+        }
+    }else if(data.contains("updateM4")){
+        if(pConfig->executeUpdateM4()==true){
           serviceTcp->txData(QByteArray("AGGIORNAMENTO GUI EFFETTUATO: SYSTEM REBOOT ...\n\r"));
         }
     }else if(data.contains("setDatabaseI")){

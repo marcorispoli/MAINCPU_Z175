@@ -99,6 +99,7 @@ public:
 
     #define SLAVE_EXECUTE_UPDATE_IDE "SetUpdateIde"
     #define SLAVE_EXECUTE_UPDATE_GUI "SetUpdateGui"
+    #define SLAVE_EXECUTE_UPDATE_M4  "SetUpdateM4"
     #define SLAVE_EXECUTE_SHELL      "SetShellCommand"
     #define SLAVE_TOOLS_DATA         "SlaveToolsData"
     #define SYNC_TO_SLAVE            "SyncToSlave"
@@ -368,6 +369,7 @@ public:
     // Effettua l'update generale quando ci sia il computer attaccato alla rete
     bool executeUpdateIde();
     bool executeUpdateGui();
+    bool executeUpdateM4();
 
 
     QByteArray executeShell(QByteArray comando);
