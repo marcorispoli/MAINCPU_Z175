@@ -69,7 +69,8 @@ typedef enum
   LOADER_WRITE_BLK,
   LOADER_WRITE_CONFIG,
   LOADER_WRITE_COMPLETED,
-  LOADER_READ_CONFIG
+  LOADER_READ_CONFIG,
+  LOADER_ACTIVATION_TEST
 }_MccLoaderNotify_Code;
 //_____________________________________________________________________________
 

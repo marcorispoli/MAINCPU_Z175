@@ -87,6 +87,7 @@ Data Ultima Modifica:6/09/2014
   
   ext _LoaderStruct Loader; 
   ext bool loaderActivation(unsigned char address, unsigned char uC);
+  ext void loaderConnectionTest(unsigned char address, unsigned char uC);
   ext bool loaderChipErase(void);
   ext bool loaderLoadSegment(_addrStr* blk);
   ext bool loaderWriteConfig(unsigned char* data);

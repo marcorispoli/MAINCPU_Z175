@@ -67,7 +67,7 @@ public slots:
     void readConfigNotify(unsigned char id,unsigned char cmd,QByteArray data);
     bool startDownloadHexFile(_itemDownload item);
     void manualFirmwareUpload(unsigned char target, unsigned char uC, QString file, QString tag);
-
+    void manualFirmwareTest(unsigned char target, unsigned char uC);
 
     // Funzioni di interfaccia per l'aggiornamento del sistema
     void firmwareUpdate(void);

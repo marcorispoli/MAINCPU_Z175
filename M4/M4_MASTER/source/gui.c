@@ -65,6 +65,7 @@ void gui_interface_task(uint32_t initial_data)
   void loader_write_block(int id,unsigned char* data, int len);
   void loader_write_config(int id,unsigned char* data, int len);
   void loader_read_config(int id,unsigned char* data, int len);
+  void loader_connection_test(int id,unsigned char* data, int len);
 
   void manageMccLoader(void){
     // Accetta solo comandi di tipo Loader
@@ -85,6 +86,9 @@ void gui_interface_task(uint32_t initial_data)
         break;
       case LOADER_READ_CONFIG:
         loader_read_config(mcc_cmd.id,&mcc_cmd.buffer[1],mcc_cmd.len-1);
+        break;
+      case LOADER_ACTIVATION_TEST:  // Test connessione loader, 100 messaggi a 19200 uscita
+        loader_connection_test(mcc_cmd.id,&mcc_cmd.buffer[1],mcc_cmd.len-1);
         break;
     }
 
@@ -117,6 +121,14 @@ void loader_activation(int id,unsigned char* data, int len)
   mccLoaderNotify(id,LOADER_ACTIVATION,buffer,1);
   return;
 }
+
+void loader_connection_test(int id,unsigned char* data, int len)
+{
+    loaderConnectionTest(data[1], data[2]);
+}
+
+
+
 
 /* 
     COMANDA LA CANCELLAZIONE DELLA FLASH DEL TARGET REMOTO

@@ -4064,14 +4064,14 @@ END GROUP
                 0x3f01c534                __fini_array_end = .
                 0x3f01c534                . = ALIGN (0x4)
                 0x3f01c534                __zero_table_start__ = .
-                0x3f01c534        0x4 LONG 0x3f8004e0 _bss_start
+                0x3f01c534        0x4 LONG 0x3f8004d8 _bss_start
                 0x3f01c538        0x4 LONG 0x858 (_bss_end - _bss_start)
                 0x3f01c53c                __zero_table_end__ = .
                 0x3f01c53c                . = ALIGN (0x4)
                 0x3f01c53c                __copy_table_start__ = .
                 0x3f01c53c        0x4 LONG 0x3f01c550 LOADADDR (.data)
                 0x3f01c540        0x4 LONG 0x3f800000 _data_start
-                0x3f01c544        0x4 LONG 0x4e0 (_data_end - _data_start)
+                0x3f01c544        0x4 LONG 0x4d8 (_data_end - _data_start)
                 0x3f01c548                __copy_table_end__ = .
 
 .vfp11_veneer   0x3f01c548        0x0
@@ -4097,226 +4097,221 @@ END GROUP
 .rel.dyn        0x3f01c550        0x0
  .rel.iplt      0x00000000        0x0 ./gcc_arm/ram_release/obj/actuators.o
 
-.data           0x3f800000      0x4e0 load address 0x3f01c550
+.data           0x3f800000      0x4d8 load address 0x3f01c550
                 0x3f800000                _data_start = .
  *(.vectors_ram)
  *(.data*)
- .data.memCtrl.13590
-                0x3f800000        0x2 ./gcc_arm/ram_release/obj/arm.o
- *fill*         0x3f800002        0x2 
- .data.pollingCount.13550
-                0x3f800004        0x4 ./gcc_arm/ram_release/obj/arm.o
- .data.memCtrl.13571
-                0x3f800008        0x2 ./gcc_arm/ram_release/obj/arm.o
- *fill*         0x3f80000a        0x2 
+ .data.pollingCount.13551
+                0x3f800000        0x4 ./gcc_arm/ram_release/obj/arm.o
+ .data.memCtrl.13572
+                0x3f800004        0x2 ./gcc_arm/ram_release/obj/arm.o
+ .data.memCtrl.13591
+                0x3f800006        0x2 ./gcc_arm/ram_release/obj/arm.o
  .data.lenzeVBUS
-                0x3f80000c        0x4 ./gcc_arm/ram_release/obj/lenze.o
- .data.memCtrl.13627
-                0x3f800010        0x2 ./gcc_arm/ram_release/obj/trx.o
- *fill*         0x3f800012        0x2 
- .data.pollingCount.13579
-                0x3f800014        0x4 ./gcc_arm/ram_release/obj/trx.o
- .data.memCtrl.13621
-                0x3f800018        0x2 ./gcc_arm/ram_release/obj/trx.o
- .data.memCtrl.13616
-                0x3f80001a        0x2 ./gcc_arm/ram_release/obj/trx.o
- .data.memCtrl.13632
-                0x3f80001c        0x2 ./gcc_arm/ram_release/obj/trx.o
- *fill*         0x3f80001e        0x2 
+                0x3f800008        0x4 ./gcc_arm/ram_release/obj/lenze.o
+ .data.memCtrl.13628
+                0x3f80000c        0x2 ./gcc_arm/ram_release/obj/trx.o
+ .data.memCtrl.13622
+                0x3f80000e        0x2 ./gcc_arm/ram_release/obj/trx.o
+ .data.pollingCount.13580
+                0x3f800010        0x4 ./gcc_arm/ram_release/obj/trx.o
+ .data.memCtrl.13633
+                0x3f800014        0x2 ./gcc_arm/ram_release/obj/trx.o
+ .data.memCtrl.13617
+                0x3f800016        0x2 ./gcc_arm/ram_release/obj/trx.o
  .data.trxCiA402funcPtr
-                0x3f800020       0x24 ./gcc_arm/ram_release/obj/trx.o
-                0x3f800020                trxCiA402funcPtr
+                0x3f800018       0x24 ./gcc_arm/ram_release/obj/trx.o
+                0x3f800018                trxCiA402funcPtr
  .data.pcr_reg_arr
-                0x3f800044       0x14 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(lwgpio_vgpio.o)
-                0x3f800044                pcr_reg_arr
+                0x3f80003c       0x14 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(lwgpio_vgpio.o)
+                0x3f80003c                pcr_reg_arr
  .data._mqx_kernel_data
-                0x3f800058        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mqx.o)
-                0x3f800058                _mqx_kernel_data
- *fill*         0x3f80005c        0x4 
+                0x3f800050        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mqx.o)
+                0x3f800050                _mqx_kernel_data
+ *fill*         0x3f800054        0x4 
  .data.impure_data
-                0x3f800060      0x428 /opt/arm-2017/arm-none-eabi/lib/armv7e-m/fpu/libc.a(lib_a-impure.o)
+                0x3f800058      0x428 /opt/arm-2017/arm-none-eabi/lib/armv7e-m/fpu/libc.a(lib_a-impure.o)
  .data._impure_ptr
-                0x3f800488        0x4 /opt/arm-2017/arm-none-eabi/lib/armv7e-m/fpu/libc.a(lib_a-impure.o)
-                0x3f800488                _impure_ptr
+                0x3f800480        0x4 /opt/arm-2017/arm-none-eabi/lib/armv7e-m/fpu/libc.a(lib_a-impure.o)
+                0x3f800480                _impure_ptr
  .data._bsp_ksai_init
-                0x3f80048c       0x18 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_sai.o)
-                0x3f80048c                _bsp_ksai_init
+                0x3f800484       0x18 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_sai.o)
+                0x3f800484                _bsp_ksai_init
  .data._bsp_audio_data_init
-                0x3f8004a4        0x5 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_sai.o)
-                0x3f8004a4                _bsp_audio_data_init
- *fill*         0x3f8004a9        0x3 
+                0x3f80049c        0x5 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_sai.o)
+                0x3f80049c                _bsp_audio_data_init
+ *fill*         0x3f8004a1        0x3 
  .data.edma_devif
-                0x3f8004ac       0x2c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(edma.o)
-                0x3f8004ac                edma_devif
+                0x3f8004a4       0x2c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(edma.o)
+                0x3f8004a4                edma_devif
  .data.__ctype_ptr__
-                0x3f8004d8        0x4 /opt/arm-2017/arm-none-eabi/lib/armv7e-m/fpu/libc.a(lib_a-ctype_.o)
-                0x3f8004d8                __ctype_ptr__
-                0x3f8004e0                . = ALIGN (0x8)
- *fill*         0x3f8004dc        0x4 
-                0x3f8004e0                _data_end = .
+                0x3f8004d0        0x4 /opt/arm-2017/arm-none-eabi/lib/armv7e-m/fpu/libc.a(lib_a-ctype_.o)
+                0x3f8004d0                __ctype_ptr__
+                0x3f8004d8                . = ALIGN (0x8)
+ *fill*         0x3f8004d4        0x4 
+                0x3f8004d8                _data_end = .
 
-.igot.plt       0x3f8004e0        0x0 load address 0x3f01ca30
+.igot.plt       0x3f8004d8        0x0 load address 0x3f01ca28
  .igot.plt      0x00000000        0x0 ./gcc_arm/ram_release/obj/actuators.o
 
-.bss            0x3f8004e0      0x858
-                0x3f8004e0                _bss_start = .
+.bss            0x3f8004d8      0x858
+                0x3f8004d8                _bss_start = .
  *(.bss*)
  .bss.actuators_event_timeout
-                0x3f8004e0        0x4 ./gcc_arm/ram_release/obj/actuators.o
- .bss.pTrxStat  0x3f8004e4        0x4 ./gcc_arm/ram_release/obj/actuators.o
+                0x3f8004d8        0x4 ./gcc_arm/ram_release/obj/actuators.o
+ .bss.pTrxStat  0x3f8004dc        0x4 ./gcc_arm/ram_release/obj/actuators.o
  .bss.pLenzeStat
-                0x3f8004e8        0x4 ./gcc_arm/ram_release/obj/actuators.o
- .bss.pArmStat  0x3f8004ec        0x4 ./gcc_arm/ram_release/obj/actuators.o
- .bss.test_on   0x3f8004f0        0x1 ./gcc_arm/ram_release/obj/actuators.o
- *fill*         0x3f8004f1        0x1 
+                0x3f8004e0        0x4 ./gcc_arm/ram_release/obj/actuators.o
+ .bss.pArmStat  0x3f8004e4        0x4 ./gcc_arm/ram_release/obj/actuators.o
+ .bss.test_on   0x3f8004e8        0x1 ./gcc_arm/ram_release/obj/actuators.o
+ *fill*         0x3f8004e9        0x1 
  .bss.test_trxpos
-                0x3f8004f2        0x4 ./gcc_arm/ram_release/obj/actuators.o
- .bss.memMccbuffer.13500
-                0x3f8004f6       0x10 ./gcc_arm/ram_release/obj/actuators.o
- *fill*         0x3f800506        0x2 
+                0x3f8004ea        0x4 ./gcc_arm/ram_release/obj/actuators.o
+ .bss.memMccbuffer.13501
+                0x3f8004ee       0x10 ./gcc_arm/ram_release/obj/actuators.o
+ *fill*         0x3f8004fe        0x2 
+ .bss.positioningData
+                0x3f800500        0xc ./gcc_arm/ram_release/obj/arm.o
  .bss.rotena_timout
-                0x3f800508        0x4 ./gcc_arm/ram_release/obj/arm.o
- .bss.positioningData
-                0x3f80050c        0xc ./gcc_arm/ram_release/obj/arm.o
+                0x3f80050c        0x4 ./gcc_arm/ram_release/obj/arm.o
  .bss.blocco_input_ostacolo
-                0x3f800518        0x4 ./gcc_arm/ram_release/obj/arm.o
+                0x3f800510        0x4 ./gcc_arm/ram_release/obj/arm.o
  .bss.driver_stat
-                0x3f80051c       0x78 ./gcc_arm/ram_release/obj/arm.o
+                0x3f800514       0x78 ./gcc_arm/ram_release/obj/arm.o
  .bss.printEnable
-                0x3f800594        0x1 ./gcc_arm/ram_release/obj/common.o
-                0x3f800594                printEnable
+                0x3f80058c        0x1 ./gcc_arm/ram_release/obj/common.o
+                0x3f80058c                printEnable
  .bss.debugPrintEnable
-                0x3f800595        0x1 ./gcc_arm/ram_release/obj/common.o
-                0x3f800595                debugPrintEnable
- *fill*         0x3f800596        0x2 
+                0x3f80058d        0x1 ./gcc_arm/ram_release/obj/common.o
+                0x3f80058d                debugPrintEnable
+ *fill*         0x3f80058e        0x2 
  .bss.faultSig_mutex
-                0x3f800598       0x30 ./gcc_arm/ram_release/obj/fault.o
- .bss.position1.13497
-                0x3f8005c8        0x4 ./gcc_arm/ram_release/obj/lenze.o
- .bss.switch_on.13477
-                0x3f8005cc        0x1 ./gcc_arm/ram_release/obj/lenze.o
- *fill*         0x3f8005cd        0x3 
+                0x3f800590       0x30 ./gcc_arm/ram_release/obj/fault.o
+ .bss.position1.13498
+                0x3f8005c0        0x4 ./gcc_arm/ram_release/obj/lenze.o
+ .bss.switch_on.13478
+                0x3f8005c4        0x1 ./gcc_arm/ram_release/obj/lenze.o
+ *fill*         0x3f8005c5        0x3 
  .bss.driver_stat
-                0x3f8005d0       0x64 ./gcc_arm/ram_release/obj/lenze.o
- .bss.time_counter.13496
-                0x3f800634        0x1 ./gcc_arm/ram_release/obj/lenze.o
- .bss.manual_mode.13499
-                0x3f800635        0x1 ./gcc_arm/ram_release/obj/lenze.o
- *fill*         0x3f800636        0x2 
- .bss.position2.13498
-                0x3f800638        0x4 ./gcc_arm/ram_release/obj/lenze.o
- .bss.error.13495
-                0x3f80063c        0x2 ./gcc_arm/ram_release/obj/lenze.o
- *fill*         0x3f80063e        0x2 
+                0x3f8005c8       0x64 ./gcc_arm/ram_release/obj/lenze.o
+ .bss.position2.13499
+                0x3f80062c        0x4 ./gcc_arm/ram_release/obj/lenze.o
+ .bss.time_counter.13497
+                0x3f800630        0x1 ./gcc_arm/ram_release/obj/lenze.o
+ .bss.manual_mode.13500
+                0x3f800631        0x1 ./gcc_arm/ram_release/obj/lenze.o
+ .bss.error.13496
+                0x3f800632        0x2 ./gcc_arm/ram_release/obj/lenze.o
  .bss.pcb240_cmd_queue
-                0x3f800640        0x4 ./gcc_arm/ram_release/obj/ser240.o
-                0x3f800640                pcb240_cmd_queue
+                0x3f800634        0x4 ./gcc_arm/ram_release/obj/ser240.o
+                0x3f800634                pcb240_cmd_queue
  .bss.isTimeout
-                0x3f800644        0x1 ./gcc_arm/ram_release/obj/ser240.o
- *fill*         0x3f800645        0x3 
+                0x3f800638        0x1 ./gcc_arm/ram_release/obj/ser240.o
+ *fill*         0x3f800639        0x3 
  .bss.pcb240TimeoutCount
-                0x3f800648        0x4 ./gcc_arm/ram_release/obj/ser240.o
+                0x3f80063c        0x4 ./gcc_arm/ram_release/obj/ser240.o
  .bss.PCB240_ID
-                0x3f80064c        0x1 ./gcc_arm/ram_release/obj/ser240.o
-                0x3f80064c                PCB240_ID
- *fill*         0x3f80064d        0x1 
+                0x3f800640        0x1 ./gcc_arm/ram_release/obj/ser240.o
+                0x3f800640                PCB240_ID
+ *fill*         0x3f800641        0x1 
  .bss.positioningData
-                0x3f80064e        0x4 ./gcc_arm/ram_release/obj/trx.o
- *fill*         0x3f800652        0x2 
+                0x3f800642        0x4 ./gcc_arm/ram_release/obj/trx.o
+ *fill*         0x3f800646        0x2 
  .bss.blocco_input_ostacolo
-                0x3f800654        0x4 ./gcc_arm/ram_release/obj/trx.o
+                0x3f800648        0x4 ./gcc_arm/ram_release/obj/trx.o
  .bss.driver_stat
-                0x3f800658       0x78 ./gcc_arm/ram_release/obj/trx.o
- .bss.error.13560
-                0x3f8006d0        0x4 ./gcc_arm/ram_release/obj/trx.o
+                0x3f80064c       0x78 ./gcc_arm/ram_release/obj/trx.o
+ .bss.error.13561
+                0x3f8006c4        0x4 ./gcc_arm/ram_release/obj/trx.o
  .bss.err_int_flag
-                0x3f8006d4        0x1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_driver.o)
- *fill*         0x3f8006d5        0x3 
+                0x3f8006c8        0x1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_driver.o)
+ *fill*         0x3f8006c9        0x3 
  .bss.ms_per_tick.9429
-                0x3f8006d8        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mstiq.o)
+                0x3f8006cc        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mstiq.o)
  .bss.heuristic.9430
-                0x3f8006dc        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mstiq.o)
+                0x3f8006d0        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mstiq.o)
  .bss.cpu_to_cpu_isr_vector
-                0x3f8006e0        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_mqx.o)
- .bss.pll4sem   0x3f8006e4       0x1c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(bsp_cm.o)
+                0x3f8006d4        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_mqx.o)
+ .bss.pll4sem   0x3f8006d8       0x1c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(bsp_cm.o)
  .bss.Pll4ClockInHz
-                0x3f800700        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(bsp_cm.o)
+                0x3f8006f4        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(bsp_cm.o)
  .bss.ClockConfigurationID
-                0x3f800704        0x1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(bsp_cm.o)
- *fill*         0x3f800705        0x3 
+                0x3f8006f8        0x1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(bsp_cm.o)
+ *fill*         0x3f8006f9        0x3 
  .bss.devif_list
-                0x3f800708        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(dma.o)
+                0x3f8006fc        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(dma.o)
  .bss.devif_list_count
-                0x3f80070c        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(dma.o)
+                0x3f800700        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(dma.o)
  .bss._core_mutex_component_ptr
-                0x3f800710        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(core_mutex.o)
+                0x3f800704        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(core_mutex.o)
  .bss.edma_channel_context
-                0x3f800714      0x100 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(edma.o)
+                0x3f800708      0x100 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(edma.o)
  *(COMMON)
- COMMON         0x3f800814       0x68 ./gcc_arm/ram_release/obj/actuators.o
-                0x3f800814                actuatorCommand
-                0x3f80084c                can_mutex
- COMMON         0x3f80087c       0x16 ./gcc_arm/ram_release/obj/arm.o
-                0x3f80087c                armConfig
- *fill*         0x3f800892        0x2 
- COMMON         0x3f800894       0x14 ./gcc_arm/ram_release/obj/fault.o
-                0x3f800894                faultStat
- COMMON         0x3f8008a8       0x18 ./gcc_arm/ram_release/obj/lenze.o
-                0x3f8008a8                lenzeConfig
- COMMON         0x3f8008c0      0x138 ./gcc_arm/ram_release/obj/main.o
-                0x3f8008c0                mcc_len
-                0x3f8008c4                SystemInputs
-                0x3f8008cb                isPowerdown
-                0x3f8008cc                Ev0
-                0x3f8008f0                output_mutex
-                0x3f800920                input_mutex
-                0x3f800950                SystemOutputs
-                0x3f800953                mcc_cmd
-                0x3f8009ed                generalConfiguration
- COMMON         0x3f8009f8       0x3d ./gcc_arm/ram_release/obj/ser240.o
-                0x3f8009f8                pPCB240PendingCommand
-                0x3f8009fc                pcb240_stat_mutex
-                0x3f800a2c                revPCB240
-                0x3f800a30                pPCB240NextCommand
-                0x3f800a34                PCB240_Stat
- *fill*         0x3f800a35        0x3 
- COMMON         0x3f800a38       0xf0 ./gcc_arm/ram_release/obj/slave_can.o
-                0x3f800a38                txmb_to_trx
-                0x3f800a50                txmb_to_arm
-                0x3f800a68                txmb_inputs_to_master
-                0x3f800a80                rxmb_from_lenze
-                0x3f800a98                txmb_actuator_to_master
-                0x3f800ab0                rxmb_from_trx
-                0x3f800ac8                rxmb_outputs_from_master
-                0x3f800ae0                rxmb_from_arm
-                0x3f800af8                txmb_to_lenze
-                0x3f800b10                rxmb_actuator_from_master
- COMMON         0x3f800b28       0x44 ./gcc_arm/ram_release/obj/trx.o
-                0x3f800b28                trxConfig
- COMMON         0x3f800b6c       0x39 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_driver.o)
-                0x3f800b6c                rx_mb_idx
-                0x3f800b70                int_mb
-                0x3f800b71                locInstance
-                0x3f800b74                error_register
-                0x3f800b7c                locData
-                0x3f800b80                event
-                0x3f800ba4                int_fifo
- *fill*         0x3f800ba5        0x3 
- COMMON         0x3f800ba8        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mqx.o)
-                0x3f800ba8                _mqx_system_stack
- COMMON         0x3f800bac        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_common.o)
-                0x3f800bac                bookeeping_data
- COMMON         0x3f800bb0      0x148 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_mqx.o)
-                0x3f800bb0                cm_ptr
-                0x3f800bb4                lwevent_buffer_queued
-                0x3f800cd4                lwevent_buffer_freed
- COMMON         0x3f800cf8       0x40 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_bsp.o)
-                0x3f800cf8                systimer
-                0x3f800d38                . = ALIGN (0x8)
-                0x3f800d38                _bss_end = .
+ COMMON         0x3f800808       0x68 ./gcc_arm/ram_release/obj/actuators.o
+                0x3f800808                actuatorCommand
+                0x3f800840                can_mutex
+ COMMON         0x3f800870       0x16 ./gcc_arm/ram_release/obj/arm.o
+                0x3f800870                armConfig
+ *fill*         0x3f800886        0x2 
+ COMMON         0x3f800888       0x14 ./gcc_arm/ram_release/obj/fault.o
+                0x3f800888                faultStat
+ COMMON         0x3f80089c       0x18 ./gcc_arm/ram_release/obj/lenze.o
+                0x3f80089c                lenzeConfig
+ COMMON         0x3f8008b4      0x138 ./gcc_arm/ram_release/obj/main.o
+                0x3f8008b4                mcc_len
+                0x3f8008b8                SystemInputs
+                0x3f8008bf                isPowerdown
+                0x3f8008c0                Ev0
+                0x3f8008e4                output_mutex
+                0x3f800914                input_mutex
+                0x3f800944                SystemOutputs
+                0x3f800947                mcc_cmd
+                0x3f8009e1                generalConfiguration
+ COMMON         0x3f8009ec       0x3d ./gcc_arm/ram_release/obj/ser240.o
+                0x3f8009ec                pPCB240PendingCommand
+                0x3f8009f0                pcb240_stat_mutex
+                0x3f800a20                revPCB240
+                0x3f800a24                pPCB240NextCommand
+                0x3f800a28                PCB240_Stat
+ *fill*         0x3f800a29        0x3 
+ COMMON         0x3f800a2c       0xf0 ./gcc_arm/ram_release/obj/slave_can.o
+                0x3f800a2c                txmb_to_trx
+                0x3f800a44                txmb_to_arm
+                0x3f800a5c                txmb_inputs_to_master
+                0x3f800a74                rxmb_from_lenze
+                0x3f800a8c                txmb_actuator_to_master
+                0x3f800aa4                rxmb_from_trx
+                0x3f800abc                rxmb_outputs_from_master
+                0x3f800ad4                rxmb_from_arm
+                0x3f800aec                txmb_to_lenze
+                0x3f800b04                rxmb_actuator_from_master
+ COMMON         0x3f800b1c       0x44 ./gcc_arm/ram_release/obj/trx.o
+                0x3f800b1c                trxConfig
+ COMMON         0x3f800b60       0x39 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_driver.o)
+                0x3f800b60                rx_mb_idx
+                0x3f800b64                int_mb
+                0x3f800b65                locInstance
+                0x3f800b68                error_register
+                0x3f800b70                locData
+                0x3f800b74                event
+                0x3f800b98                int_fifo
+ *fill*         0x3f800b99        0x3 
+ COMMON         0x3f800b9c        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mqx.o)
+                0x3f800b9c                _mqx_system_stack
+ COMMON         0x3f800ba0        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_common.o)
+                0x3f800ba0                bookeeping_data
+ COMMON         0x3f800ba4      0x148 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_mqx.o)
+                0x3f800ba4                cm_ptr
+                0x3f800ba8                lwevent_buffer_queued
+                0x3f800cc8                lwevent_buffer_freed
+ *fill*         0x3f800cec        0x4 
+ COMMON         0x3f800cf0       0x40 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_bsp.o)
+                0x3f800cf0                systimer
+                0x3f800d30                . = ALIGN (0x8)
+                0x3f800d30                _bss_end = .
 
-.kernel_data    0x3f800d40        0x0
-                0x3f800d40                __KERNEL_DATA_START = ALIGN (0x10)
+.kernel_data    0x3f800d30        0x0
+                0x3f800d30                __KERNEL_DATA_START = ALIGN (0x10)
 OUTPUT(gcc_arm/ram_release/m4_slave.elf elf32-littlearm)
 
 .debug_info     0x00000000    0x55116

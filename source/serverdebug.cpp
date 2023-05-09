@@ -2139,6 +2139,53 @@ void serverDebug:: handleLoaderUpload(QByteArray data)
     return;
 }
 
+void serverDebug:: handleLoaderTestConnection(QByteArray data)
+{
+    unsigned char target;
+    unsigned char uC;
+    QList<QByteArray> parametri;
+
+    parametri = getNextFieldsAfterTag(data, QString("TEST"));
+    if(parametri.size()!=1)
+    {
+        serviceTcp->txData(QByteArray("wrong parameters\n\r"));
+        return;
+    }
+
+    // Controllo indirizzo
+    if(parametri[0]=="PCB249U1") {
+        target = 0x1E;
+        uC = 1;
+    }else if(parametri[0]=="PCB249U2") {
+        target = 0x1E;
+        uC = 2;
+    }else if(parametri[0]=="PCB240") {
+        target = 0;
+        uC = 1;
+    }else if(parametri[0]=="PCB244") {
+        target = 0x1D;
+        uC = 1;
+    }else if(parametri[0]=="PCB244A") {
+        target = 0x1A;
+        uC = 1;
+    }else if(parametri[0]=="PCB190") {
+        target = 0x1C;
+        uC = 1;
+    }else if(parametri[0]=="PCB269") {
+        target = 0x1B;
+        uC = 1;
+    }else{
+        serviceTcp->txData(QByteArray("invalid target\n\r"));
+        return;
+    }
+
+
+    pLoader->manualFirmwareTest(target,uC);
+    return;
+}
+
+
+
 /* Calcola il CRC di un file per il download
  * il file deve essere contenuto nella directory /home/user
  */
@@ -3665,7 +3712,8 @@ void serverDebug::handleLoader(QByteArray data)
 {
     if(data.contains("?"))
     {
-        serviceTcp->txData(QByteArray("loader: ------------   Comandi diretti ai drivers ------------------------------\r\n"));        
+        serviceTcp->txData(QByteArray("loader: ------------   Comandi diretti ai drivers ------------------------------\r\n"));
+        serviceTcp->txData(QByteArray("TEST <Target>  Test connection to 19200 \r\n"));
         serviceTcp->txData(QByteArray("UPLOAD <Target>  Carica il firmware relativo al target \r\n"));
         serviceTcp->txData(QByteArray("setFormat <target,revision>  Formatta il file hex con la revisione dichiarata\r\n"));
         serviceTcp->txData(QByteArray("CONFIG <Target>, <uC>              Richiede la Config Area di un target\r\n"));
@@ -3679,6 +3727,7 @@ void serverDebug::handleLoader(QByteArray data)
     else if(data.contains("getCRC")) handleGetCRC(data);
     else if(data.contains("setCRC")) handleSetCRC(data);
     else if(data.contains("setRemoteCRC")) handleSetRemoteCRC(data);
+    else if(data.contains("TEST")) handleLoaderTestConnection(data);
 
 
 }

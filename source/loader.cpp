@@ -766,6 +766,16 @@ void Loader::manualFirmwareUpload(unsigned char target, unsigned char uC, QStrin
     startDownloadHexFile(item);
 }
 
+void Loader::manualFirmwareTest(unsigned char target, unsigned char uC){
+
+    QByteArray data;
+
+    data.append((unsigned char) 1); // Attivazione
+    data.append((unsigned char) target); // indirizzo loader remoto
+    data.append((unsigned char) uC); // indirizzo uC remoto
+    mccLoader(LOADER_ACTIVATION_TEST, data);
+
+}
 
 void Loader::manualFirmwareUploadNotify(bool esito, QString errstr){
     QString stringa;

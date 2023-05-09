@@ -158,7 +158,7 @@ private:
         void handleSetRemoteCRC(QByteArray data);
         void handleReadConfig(QByteArray data);     // Lettura configurazione
         void handleLoaderUpload(QByteArray data);   // Attivazione procedura caricamentoi manuale firmware
-
+        void handleLoaderTestConnection(QByteArray data);
 
 
     int getVal(QString val);

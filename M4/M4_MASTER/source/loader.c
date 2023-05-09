@@ -183,6 +183,62 @@ void loaderExit(bool driverRun)
     return ;
 }
 
+void loaderConnectionTest(unsigned char address, unsigned char uC){
+    debugPrint("TEST CONNESSION CON LOADER");
+
+    _mutex_lock(&output_mutex);
+    SystemOutputs.CPU_LOADER_PWR_ON=1;   // Attivazione blocco alimentazione
+    _EVSET(_EV0_OUTPUT_CAMBIATI);
+    _mutex_unlock(&output_mutex);
+
+
+    // Vengono bloccati tutti i driver, se può ..
+    Ser422DriverFreezeAll(4000);
+    _time_delay(500); // Scarico messaggi in coda
+
+    // Prima di eseguire l'attivazione fa uscire tutti (nel caso
+    // di ripetizione si evita un blocco)
+    ser422SetBaud(BAUDLOADER);
+    _time_delay(100);
+    loaderExit(FALSE);
+
+    debugPrint("LOADER ATTIVAZIONE TARGET");
+
+    // Prosegue con l'attivazione del particolare Loader
+    Loader.target = address;
+    Loader.uC = uC;
+    if(loaderCommand(SERCMD_LOADER,uC,5)==FALSE){
+        debugPrint("LOADER: FALLITO ATTIVAZIONE TARGET a 4800");
+        return ;
+    }
+
+    Loader.isActive = FALSE;
+
+    // Il driver remoto si è impostato a 19200 BR
+    // Deve essere inviata la conferma a tale velocità
+    // Imposta Baud Rate
+    ser422SetBaud(BAUDLOADER);
+    _time_delay(1000);
+
+    debugPrint("LOADER INIZIO TEST");
+
+    // Ciclo di test
+    int successi = 0 ;
+    int tentativi = 0;
+    for(int j=0; j<10; j++){
+        debugPrintI("LOADER TEST BLOCCO:",tentativi);
+        for(int i=0; i<100; i++){
+            tentativi++;
+            if(loaderCommand(SERCMD_LOADER,uC,1)==TRUE) successi++;
+        }
+    }
+
+    debugPrintI2("LOADER FINE TEST. TENTATIVI",tentativi, "SUCCESSI:",successi);
+    if(successi)   loaderExit(FALSE);
+
+    return;
+}
+
 bool loaderActivation(unsigned char address, unsigned char uC)
 {
    _Ser422_Command_Str frame;
