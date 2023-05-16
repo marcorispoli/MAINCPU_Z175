@@ -259,7 +259,7 @@ void manageMccConfig(){
      // Configurazione iniziale di tutto il sistema: questa configurazione definisce la struttura hardware
      // della macchina e viene ricevuto all'inizio della fase di startup.
      case CONFIG_GANTRY:
-        printf("CONFIG GANTRY\n");
+        debugPrintForce("CONFIG GANTRY\n");
         memcpy(&generalConfiguration.gantryCfg,&mcc_cmd.buffer[2],sizeof(generalConfiguration.gantryCfg));
         generalConfiguration.gantryConfigurationReceived = true;
         mainPrintHardwareConfig();
@@ -304,7 +304,8 @@ void manageMccConfig(){
 
      case CONFIG_GENERAL:      
 
-      printf("CONFIG GENERAL\n");
+      debugPrintForce("CONFIG GENERAL\n");
+
       if(mcc_cmd.buffer[2]==1) {
         generalConfiguration.demoMode = 1;
         printf(" ----------------  DRIVERS IN DEMO MODE --------------------- \n");
@@ -330,87 +331,102 @@ void manageMccConfig(){
 
      break;
      case CONFIG_PCB190:
-        printf("CONFIG 190\n");
+        debugPrintForce("CONFIG 190\n");
+
+
         if(config_pcb190(true, mcc_cmd.buffer[1], &mcc_cmd.buffer[2], mcc_cmd.len-2)==true) data[0]=1;
         else data[0]= 0;
         size = 1;
       break;
      case CONFIG_PCB269_0:
-        printf("CONFIG 269-0\n");
+        debugPrintForce("CONFIG 269-0\n");
+
         if(config_pcb215(true, mcc_cmd.buffer[1], &mcc_cmd.buffer[2], mcc_cmd.len-2)==true) data[0]=1;
         else data[0]= 0;
         size = 1;
       break;
     case CONFIG_PCB269_1:
-       printf("CONFIG 269-1\n");
+       debugPrintForce("CONFIG 269-1\n");
+
        if(config_pcb215(true, mcc_cmd.buffer[1], &mcc_cmd.buffer[2], mcc_cmd.len-2)==true) data[0]=1;
        else data[0]= 0;
        size = 1;
      break;
      case CONFIG_TRX:
-        printf("CONFIG TRX\n");
+        debugPrintForce("CONFIG TRX\n");
+
         if(config_trx(true, mcc_cmd.buffer[1], &mcc_cmd.buffer[2], mcc_cmd.len-2)==true) data[0]=1;
         else data[0]= 0;
         size = 1;
       break;
     case CONFIG_ARM:
-        printf("CONFIG ARM\n");
+        debugPrintForce("CONFIG ARM\n");
+
        if(config_arm(true, mcc_cmd.buffer[1], &mcc_cmd.buffer[2], mcc_cmd.len-2)==true) data[0]=1;
        else data[0]= 0;
        size = 1;
      break;
     case CONFIG_LENZE:
-       printf("CONFIG LENZE\n");
+       debugPrintForce("CONFIG LENZE\n");
+
        if(config_lenze(true, mcc_cmd.buffer[1], &mcc_cmd.buffer[2], mcc_cmd.len-2)==true) data[0]=1;
        else data[0]= 0;
        size = 1;
      break;
 
     case CONFIG_PCB249U1_1:
-        printf("CONFIG 249-U1-1\n");
+        debugPrintForce("CONFIG 249-U1-1\n");
+
         if(config_pcb249U1(true, 0, &mcc_cmd.buffer[2], mcc_cmd.len-2)==true) data[0]=1;
         else data[0]= 0;
         size = 1;
       break;
      case CONFIG_PCB249U1_2:
-        printf("CONFIG 249-U1-2\n");
+        debugPrintForce("CONFIG 249-U1-2\n");
+
         if(config_pcb249U1(true, 1, &mcc_cmd.buffer[2], mcc_cmd.len-2)==true) data[0]=1;
         else data[0]= 0;
         size = 1;
       break;
      case CONFIG_PCB249U1_3:
-        printf("CONFIG 249-U1-3\n");
+        debugPrintForce("CONFIG 249-U1-3\n");
+
         if(config_pcb249U1(true, 2, &mcc_cmd.buffer[2], mcc_cmd.len-2)==true) data[0]=1;
         else data[0]= 0;
         size = 1;
       break;
      case CONFIG_PCB249U1_4:
-        printf("CONFIG 249-U1-4\n");
+        debugPrintForce("CONFIG 249-U1-4\n");
+
         if(config_pcb249U1(true, 3, &mcc_cmd.buffer[2], mcc_cmd.len-2)==true) data[0]=1;
         else data[0]= 0;
         size = 1;
       break;
      case CONFIG_PCB249U1_5:
-        printf("CONFIG 249-U1-5\n");
+        debugPrintForce("CONFIG 249-U1-5\n");
+
         if(config_pcb249U1(true, 4, &mcc_cmd.buffer[2], mcc_cmd.len-2)==true) data[0]=1;
         else data[0]= 0;
         size = 1;
       break;
      case CONFIG_PCB249U1_6:
-        printf("CONFIG 249-U1-6\n");
+        debugPrintForce("CONFIG 249-U1-6\n");
+
         if(config_pcb249U1(true, 5, &mcc_cmd.buffer[2], mcc_cmd.len-2)==true) data[0]=1;
         else data[0]= 0;
         size = 1;
       break;
      case CONFIG_PCB249U1_7:
-        printf("CONFIG 249-U1-7\n");
+        debugPrintForce("CONFIG 249-U1-7\n");
+
         if(config_pcb249U1(true, 6, &mcc_cmd.buffer[2], mcc_cmd.len-2)==true) data[0]=1;
         else data[0]= 0;
         size = 1;
       break;
       
      case CONFIG_PCB249U2:  
-       printf("CONFIG 249-U2\n");
+       debugPrintForce("CONFIG 249-U2\n");
+
        if(config_pcb249U2(true, mcc_cmd.buffer[1], &mcc_cmd.buffer[2], mcc_cmd.len-2)==true){
          data[0]=1; // Configurazione OK. 
        }else{
@@ -420,14 +436,16 @@ void manageMccConfig(){
        
       break;
      case CONFIG_PCB244:
-        printf("CONFIG 244\n");
+        debugPrintForce("CONFIG 244\n");
+
         if(config_pcb244(true, mcc_cmd.buffer[1], &mcc_cmd.buffer[2], mcc_cmd.len-2)==true) data[0]=1;
         else data[0]= 0;
         size = 1;
 
       break;
      case CONFIG_BIOPSY:  
-         printf("CONFIG BIOP\n");
+         debugPrintForce("CONFIG BIOP\n");
+
          if(config_biopsy(true, mcc_cmd.buffer[1], &mcc_cmd.buffer[2], mcc_cmd.len-2)==true) data[0]=1;
         else data[0]= 0;
         size = 1;
@@ -436,7 +454,8 @@ void manageMccConfig(){
     case  CONFIG_COMPLETED:
 
         // Questo sblocca la fase di startup attivando tutti i polling
-        printf("CONFIGURAZIONE DEVICES COMPLETATA");
+        debugPrintForce("CONFIGURAZIONE DEVICES COMPLETATA");
+
         generalConfiguration.deviceConfigOk = TRUE; // La configurazione è arrivata
         _EVSET(_EV1_DEV_CONFIG_OK);
 
@@ -451,6 +470,7 @@ void manageMccConfig(){
 
     default:
         printf("FEEDBACK:%d\n",mcc_cmd.buffer[0] );
+        debugPrintI("FEEDBACK:",mcc_cmd.buffer[0] );
         return;
         break;
 

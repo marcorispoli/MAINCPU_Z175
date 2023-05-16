@@ -92,9 +92,9 @@ void pcb249U2_driver(uint32_t taskRegisters)
     
     // Attende la ricezione della configurazione se necessario
    _EVSET(_EV2_PCB249U2_STARTUP_OK);
-   printf("PCB249U2: ATTENDE CONFIGURAZIONE..\n");
+   debugPrintForce("PCB249U2: ATTENDE CONFIGURAZIONE..\n");
    _EVWAIT_ANY(_EV1_DEV_CONFIG_OK);
-   printf("PCB249U2: CONFIGURAZIONE OK. INIZIO LAVORO\n");
+   debugPrintForce("PCB249U2: CONFIGURAZIONE OK. INIZIO LAVORO\n");
 
    
     // il registro RG249U2_PR_CALIBRATED se == 1 significa che è stata già calibrata

@@ -254,9 +254,9 @@ void pcb215_driver(uint32_t taskRegisters)
    
    // Attende la ricezione della configurazione se necessario
    _EVSET(_EV2_PCB215_STARTUP_OK);
-   printf("PCB215: ATTENDE CONFIGURAZIONE..\n");
+   debugPrintForce("PCB215: ATTENDE CONFIGURAZIONE..\n");
    _EVWAIT_ANY(_EV1_DEV_CONFIG_OK);
-   printf("PCB215: CONFIGURAZIONE OK. INIZIO LAVORO\n");
+   debugPrintForce("PCB215: CONFIGURAZIONE OK. INIZIO LAVORO\n");
 
    // Verifica se c'è un pedale di compressione attivo. Nel caso va in errore
    // e rimane in errore fino a che i pedali non si sbloccano per almeno 10 secondi

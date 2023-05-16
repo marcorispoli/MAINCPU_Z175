@@ -246,10 +246,10 @@ void pcb249U1_driver(uint32_t taskRegisters)
    
    // Attende la ricezione della configurazione se necessario
    _EVSET(_EV2_PCB249U1_STARTUP_OK);
-   printf("PCB249U1: ATTENDE CONFIGURAZIONE..\n");
+   debugPrintForce("PCB249U1: ATTENDE CONFIGURAZIONE..\n");
 
    _EVWAIT_ANY(_EV1_DEV_CONFIG_OK);
-   printf("PCB249U1: CONFIGURAZIONE OK. INIZIO LAVORO\n");
+   debugPrintForce("PCB249U1: CONFIGURAZIONE OK. INIZIO LAVORO\n");
 
 
 

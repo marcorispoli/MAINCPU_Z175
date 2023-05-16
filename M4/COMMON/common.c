@@ -101,6 +101,23 @@ void debugPrint(const char* buffer){
     mccDebugPrint(lbuf, i);
 }
 
+void debugPrintForce(const char* buffer){
+    int i,j;
+    char lbuf[MAX_PRINT_DEBUG+4];
+
+    if(!debugPrintEnable){
+        printf("%s\n",buffer);
+        return;
+    }
+
+    lbuf[0]='\0';
+    for(i=0; i<MAX_PRINT_DEBUG; i++){
+        if(buffer[i]=='\0') break;
+        lbuf[i] = buffer[i];
+    }
+    lbuf[i++]='\0';
+    mccDebugPrint(lbuf, i);
+}
 
 
 void debugPrintIBuffer(char* destination, int* index, char* tag, int val){
