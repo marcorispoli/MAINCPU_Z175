@@ -409,6 +409,7 @@ ext int nearest(float v);
 ext float absF(float f);
 ext int absI(int i);
 ext void debugPrint(const char* buffer);
+ext void debugPrintForce(const char* buffer);
 ext void debugPrintEna(bool stat);
 ext void printEna(bool stat);
 

@@ -582,7 +582,7 @@ bool config_lenze(bool setmem, unsigned char blocco, unsigned char* buffer, unsi
 
 
 void actuatorsRxFromActuators(uint8_t* data){
-
+    unsigned char buffer[4];
 
     switch(data[0]){
 
@@ -632,6 +632,10 @@ void actuatorsRxFromActuators(uint8_t* data){
             actuatorStartConfirmed = true;
         break;
 
+    case ACTUATORS_INTERCOMM_TEST:
+        _time_delay(50);
+        mccServiceNotify(1,SRV_TEST_INTERPROCESS,buffer,0);
+        break;
     }
 }
 
@@ -1230,6 +1234,14 @@ void actuatorsRxFromLenze(uint8_t* data){
         break;
 
     }
+}
+
+void actuatorsIntercommTest(void){
+    uint8_t buffer[8];
+    debugPrint("INTERPROCESS TEST STEP..");
+    buffer[0]= ACTUATORS_INTERCOMM_TEST;
+    CanSendToActuatorsSlave(buffer);
+    return;
 }
 
 // ______________________________________________________________________________________________

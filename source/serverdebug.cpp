@@ -3149,10 +3149,13 @@ void serverDebug::handleDrivers(QByteArray data)
         serviceTcp->txData(QByteArray("write16 <target,addr,val>    Scrive indirizzo 16 bit\r\n"));
         serviceTcp->txData(QByteArray("command <target,b1,b2>       Scrive frame di comando\r\n"));
         serviceTcp->txData(QByteArray("special <target,b1,b2>       Scrive frame speciale\r\n"));
-        serviceTcp->txData(QByteArray("commTest target              Communication test with target device\r\n"));
         serviceTcp->txData(QByteArray("----------------------------------------------------\r\n"));
         serviceTcp->txData(QByteArray("register <tag>               Legge un registro predefinito\r\n"));
         serviceTcp->txData(QByteArray("reglist  <filtro>            Lista dei registri pre definiti\r\n"));
+        serviceTcp->txData(QByteArray("----------------------------------------------------\r\n"));
+        serviceTcp->txData(QByteArray("serCommTest <target>         Communication test with target device\r\n"));
+        serviceTcp->txData(QByteArray("loaderCommTest <target>      Communication test with loader target device\r\n"));
+        serviceTcp->txData(QByteArray("intercommTest  <cycles>      Internal Communication test \r\n"));
 
     }
     else if(data.contains("freeze")) handleDriverFreeze(TRUE);
@@ -3165,17 +3168,56 @@ void serverDebug::handleDrivers(QByteArray data)
     else if(data.contains("special")) handleDriverSpecial(data);
     else if(data.contains("register")) handleDriversReadReg(data);
     else if(data.contains("reglist")) handleDriversTagList(data);
-    else if(data.contains("commTest")) handleDriversCommTest(data);
+    else if(data.contains("serCommTest")) handleDriversCommTest(data);
+    else if(data.contains("loaderCommTest")) handleLoaderCommTest(data);
+    else if(data.contains("intercommTest")) handleIntercommTest(data);
+}
+
+
+void serverDebug::handleIntercommTest(QByteArray data)
+{
+    static int cicli=0;
+    QByteArray buffer;
+    QList<QByteArray> parametri;
+
+    if(data.size()==0){
+        if(cicli==0){
+            serviceTcp->txData(QByteArray("INTERCOMM TEST COMPLETED\n\r"));
+            disconnect(pConsole,SIGNAL(mccServiceNotify(unsigned char,unsigned char,QByteArray)),this,SLOT(handleDriverSendNotify(unsigned char,unsigned char,QByteArray)));
+        }
+        else if(mccService(1,SRV_TEST_INTERPROCESS,buffer)== FALSE){
+            serviceTcp->txData("INTERCOMM TEST FAILED");
+            disconnect(pConsole,SIGNAL(mccServiceNotify(unsigned char,unsigned char,QByteArray)),this,SLOT(handleDriverSendNotify(unsigned char,unsigned char,QByteArray)));
+        }else  cicli--;
+        return;
+    }
+
+    parametri = getNextFieldsAfterTag(data, QString("intercommTest"));
+    if(parametri.size()!=1)
+    {
+        serviceTcp->txData(QByteArray("wrong parametrs\n\r"));
+        return;
+    }
+
+    cicli  = parametri[0].toInt();
+    if(mccService(1,SRV_TEST_INTERPROCESS,buffer)== FALSE) serviceTcp->txData("INTERCOMM TEST FAILED");
+    else{
+        serviceTcp->txData(QByteArray("INTERCOMM TEST STARTED\n\r"));
+        connect(pConsole,SIGNAL(mccServiceNotify(unsigned char,unsigned char,QByteArray)),this,SLOT(handleDriverSendNotify(unsigned char,unsigned char,QByteArray)),Qt::UniqueConnection);
+    }
 
 }
 
+void serverDebug::handleLoaderCommTest(QByteArray data)
+{
+}
 void serverDebug::handleDriversCommTest(QByteArray data)
 {
     QByteArray buffer;
     unsigned char target;
     QList<QByteArray> parametri;
 
-    parametri = getNextFieldsAfterTag(data, QString("commTest"));
+    parametri = getNextFieldsAfterTag(data, QString("serCommTest"));
     if(parametri.size()!=1)
     {
         serviceTcp->txData(QByteArray("wrong parametrs\n\r"));
@@ -3687,17 +3729,25 @@ void serverDebug::handleDriverSpecial(QByteArray data){
 
 void serverDebug::handleDriverSendNotify(unsigned char id,unsigned char cmd, QByteArray data)
 {
-    disconnect(pConsole,SIGNAL(mccServiceNotify(unsigned char,unsigned char,QByteArray)),this,SLOT(handleDriverSendNotify(unsigned char,unsigned char,QByteArray)));
+
+
+    if(cmd == SRV_TEST_INTERPROCESS){
+        QByteArray buffer;
+        handleIntercommTest(buffer);
+        return;
+    }
 
     if(cmd == SRV_TEST_422){
         if(data.size()!=4) return;
         int tentativi = data.at(0) + data.at(1) * 256;
         int successi = data.at(2) + data.at(3) * 256;
         serviceTcp->txData(QString("TEST SERIAL RESULT: ATTEMPT:%1 SUCCESS:%2\n\r").arg(tentativi).arg(successi).toAscii());
+        disconnect(pConsole,SIGNAL(mccServiceNotify(unsigned char,unsigned char,QByteArray)),this,SLOT(handleDriverSendNotify(unsigned char,unsigned char,QByteArray)));
         return;
     }
 
     if(cmd!=SRV_SERIAL_SEND) return;
+    disconnect(pConsole,SIGNAL(mccServiceNotify(unsigned char,unsigned char,QByteArray)),this,SLOT(handleDriverSendNotify(unsigned char,unsigned char,QByteArray)));
 
     if(frameCompleted){
         disconnect(pConsole,SIGNAL(mccServiceNotify(unsigned char,unsigned char,QByteArray)),this,SLOT(handleDriverSendNotify(unsigned char,unsigned char,QByteArray)));

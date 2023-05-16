@@ -624,6 +624,13 @@ void masterCommandExecution(void){
 
         break;
 
+     case ACTUATORS_INTERCOMM_TEST:
+        buffer[0] = SRV_TEST_INTERPROCESS;
+        mccGuiNotify(1,MCC_SERVICE_NOTIFY,buffer,1);
+
+        //buffer[0] = ACTUATORS_INTERCOMM_TEST;
+        //sendActuatorFrameToMaster(buffer);
+        break;
 
     default:
         break;
@@ -632,6 +639,12 @@ void masterCommandExecution(void){
     // Unlock the command
     actuatorCommand.busy=false;
     return;
+}
+
+void actuatorIntercommTest(void){
+    unsigned char buffer[8];
+    buffer[0] = ACTUATORS_INTERCOMM_TEST;
+    sendActuatorFrameToMaster(buffer);
 }
 
 uint32_t getU32val(unsigned char* buf){

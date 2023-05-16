@@ -86,6 +86,6 @@ typedef struct master_commands{
 } actuatorCommands_t;
 
 ext actuatorCommands_t actuatorCommand;
-
+ext void actuatorIntercommTest(void);
 
 #endif

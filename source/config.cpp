@@ -2791,6 +2791,13 @@ void Config::slaveNotifySlot(unsigned char id,unsigned char mcc_code,QByteArray 
 
 
 
+    }else if(mcc_code==MCC_SERVICE_NOTIFY){
+
+        if(data.at(0)==SRV_TEST_INTERPROCESS) {
+            unsigned char buffer[1];
+            buffer[0] = SRV_TEST_INTERPROCESS;
+            pSlaveMcc->sendFrame(MCC_SERVICE_NOTIFY,1,buffer,1);
+        }
     }
 
 

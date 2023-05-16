@@ -384,6 +384,9 @@ void main_task(uint32_t initial_data)
               }
           }
           break;
+      case MCC_SERVICE_NOTIFY:
+          actuatorIntercommTest();
+          break;
       default:
         printf("MCC NON DECODIFICATO:%d\n", mcc_cmd.cmd);
         break;
