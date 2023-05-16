@@ -1300,7 +1300,7 @@ float pcb190ConvertKvRead(unsigned char val){
 
 void enterFreezeMode(void){
     // Entra in Freeze
-     printf("PB190 ENTRA IN FREEZE\n");
+     debugPrint("PB190 ENTRA IN FREEZE\n");
     _EVCLR(_EV1_PCB190_RUN);
     _EVSET(_EV1_PCB190_FREEZED); // Notifica l'avvenuto Blocco
     _EVWAIT_ANY(_MOR2(_EV1_DEVICES_RUN,_EV1_PCB190_RUN)); // Attende lo sblocco

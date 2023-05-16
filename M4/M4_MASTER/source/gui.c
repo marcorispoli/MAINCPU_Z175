@@ -1594,6 +1594,7 @@ void srv_rodaggio_tubo(int id, unsigned char* data,int len)
 void srv_freeze_mode(int id,unsigned char* data, int len);
 void srv_send(int id,unsigned char* data, int len);
 void srv_rodaggio_tubo(int id, unsigned char* data,int len);
+void srv_test_serial(int id,unsigned char* data,int len);
 void mcc_service_commands(int id,int subcmd,unsigned char* data,int len)
 {
 
@@ -1606,6 +1607,9 @@ void mcc_service_commands(int id,int subcmd,unsigned char* data,int len)
     case SRV_SERIAL_SEND:
         srv_send(id,data,len);
     break;
+    case SRV_TEST_422:
+        srv_test_serial(id,data,len);
+      break;
     case SRV_RODAGGIO_TUBO:
         srv_rodaggio_tubo(id,data,len);
     break;
@@ -1673,6 +1677,10 @@ void mcc_service_commands(int id,int subcmd,unsigned char* data,int len)
       case  SRV_RESET_PCB244:
           pcb244ResetBoard();
       break;
+      case  SRV_FREEZE_DEVICE:
+          srv_freeze_mode(id,data,len);
+      break;
+
 
   }
 }
@@ -1691,7 +1699,7 @@ void srv_freeze_mode(int id,unsigned char* data, int len)
   if(data[0])
   {
     // Disabilita tutti i drivers ed attende che tutti i driver siano fermi
-    if(Ser422DriverFreezeAll(4000)==FALSE) risultato=FALSE;
+    if(Ser422DriverFreezeAll(5000)==FALSE) risultato=FALSE;
     else risultato=TRUE;
   }else
   {
@@ -1718,6 +1726,41 @@ void srv_send(int id,unsigned char* data, int len)
   Ser422SendRaw(data[0], data[1], data[2], buffer, 10);
 
   mccServiceNotify(id,SRV_SERIAL_SEND,buffer,3);
+  return;
+}
+
+void srv_test_serial(int id,unsigned char* data, int len)
+{
+  unsigned char buffer[4];
+
+
+  unsigned char cmd;
+
+  // Controllo indirizzo
+  if(data[0] == 0x11) cmd = 15;  //269
+  else  cmd = 2;
+
+  int successi=0;
+  int tentativi=0;
+  for(int i=0; i<10; i++){
+      debugPrintI("TEST SERIALE, BLOCCO:",i);
+      for(int j=0; j<100; j++){
+        buffer[0]=0; buffer[1]=0; buffer[2]=0; buffer[3]=0;
+        tentativi++;
+        Ser422SendRaw(data[0], cmd, 0, buffer, 1);
+        if(buffer[0]==data[0]) successi++;
+        _time_delay(50);
+    }
+  }
+  debugPrintI2("FINE TEST SERIALE, TENTATIVI:",tentativi," SUCCESSI:", successi);
+
+  buffer[0] = tentativi & 0xFF;
+  buffer[1] = (tentativi >> 8) & 0xFF;
+  buffer[2] = successi & 0xFF;
+  buffer[3] = (successi >> 8) & 0xFF;
+
+  mccServiceNotify(id,SRV_TEST_422,buffer,4);
+
   return;
 }
 

@@ -981,7 +981,7 @@ void pcb249U1SetTubeTemperatureThresholds(unsigned char alarm_on, unsigned char 
 
 void enterFreezeMode(void){
     // Entra in Freeze
-    printf("PB249U1 ENTRA IN FREEZE\n");
+    debugPrint("PB249U1 ENTRA IN FREEZE\n");
     _EVCLR(_EV1_PCB249U1_RUN);
     _EVSET(_EV1_PCB249U1_FREEZED); // Notifica l'avvenuto Blocco
     _EVWAIT_ANY(_MOR2(_EV1_DEVICES_RUN,_EV1_PCB249U1_RUN)); // Attende lo sblocco

@@ -1168,7 +1168,7 @@ bool Ser422DriverFreezeAll(int timeout)
   maschera|=_EVMASK(_EV1_PCB215_FREEZED);
   maschera|=_EVMASK(_EV1_PCB190_FREEZED);
   maschera|=_EVMASK(_EV1_PCB249U1_FREEZED);
-  maschera|=_EVMASK(_EV1_PCB249U2_FREEZED);  
+
 
 
   if(timeout) return msEventWaitAll(maschera,&_EVSTR(_EV1_PCB215_FREEZED),timeout);

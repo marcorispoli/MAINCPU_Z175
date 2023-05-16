@@ -341,7 +341,7 @@ bool config_pcb244(bool setmem, unsigned char blocco, unsigned char* buffer, uns
 
 void enterFreezeMode(void){
   // Entra in Freeze
-  printf("PB244 ENTRA IN FREEZE\n");
+  debugPrint("PB244 ENTRA IN FREEZE\n");
   _EVCLR(_EV1_PCB244_RUN);
   _EVSET(_EV1_PCB244_FREEZED); // Notifica l'avvenuto Blocco
   _EVWAIT_ANY(_MOR2(_EV1_DEVICES_RUN,_EV1_PCB244_RUN)); // Attende lo sblocco

@@ -3143,12 +3143,13 @@ void serverDebug::handleDrivers(QByteArray data)
         serviceTcp->txData(QByteArray("------------ Comandi diretti ai drivers ------------\r\n"));
         serviceTcp->txData(QByteArray("freeze                       Blocca ciclo automatico\r\n"));
         serviceTcp->txData(QByteArray("run                          Attiva ciclo automatico\r\n"));
-        serviceTcp->txData(QByteArray("read8 <target,addr>           Legge indirizzo 8 bit\r\n"));
+        serviceTcp->txData(QByteArray("read8 <target,addr>          Legge indirizzo 8 bit\r\n"));
         serviceTcp->txData(QByteArray("read16 <target,addr>         Legge indirizzo 16 bit\r\n"));
-        serviceTcp->txData(QByteArray("write8 <target,addr,val>      Scrive indirizzo 8 bit\r\n"));
+        serviceTcp->txData(QByteArray("write8 <target,addr,val>     Scrive indirizzo 8 bit\r\n"));
         serviceTcp->txData(QByteArray("write16 <target,addr,val>    Scrive indirizzo 16 bit\r\n"));
         serviceTcp->txData(QByteArray("command <target,b1,b2>       Scrive frame di comando\r\n"));
         serviceTcp->txData(QByteArray("special <target,b1,b2>       Scrive frame speciale\r\n"));
+        serviceTcp->txData(QByteArray("commTest target              Communication test with target device\r\n"));
         serviceTcp->txData(QByteArray("----------------------------------------------------\r\n"));
         serviceTcp->txData(QByteArray("register <tag>               Legge un registro predefinito\r\n"));
         serviceTcp->txData(QByteArray("reglist  <filtro>            Lista dei registri pre definiti\r\n"));
@@ -3164,9 +3165,49 @@ void serverDebug::handleDrivers(QByteArray data)
     else if(data.contains("special")) handleDriverSpecial(data);
     else if(data.contains("register")) handleDriversReadReg(data);
     else if(data.contains("reglist")) handleDriversTagList(data);
+    else if(data.contains("commTest")) handleDriversCommTest(data);
 
 }
 
+void serverDebug::handleDriversCommTest(QByteArray data)
+{
+    QByteArray buffer;
+    unsigned char target;
+    QList<QByteArray> parametri;
+
+    parametri = getNextFieldsAfterTag(data, QString("commTest"));
+    if(parametri.size()!=1)
+    {
+        serviceTcp->txData(QByteArray("wrong parametrs\n\r"));
+        return;
+    }
+
+    // Controllo indirizzo
+    if(parametri[0]=="PCB269") target = 0x11;
+    else if(parametri[0]=="PCB204") target = 0x0B;
+    else if(parametri[0]=="PCB190") target = 0x13;
+    else if(parametri[0]=="PCB249U1") target = 0x16;
+    else if(parametri[0]=="PCB249U2") target = 0x15;
+    else if(parametri[0]=="PCB244") target = 0x14;
+    else if(parametri[0]=="PCB244A") target = 0x17;
+    else{
+        serviceTcp->txData(QByteArray("invalid target\n\r"));
+        return;
+    }
+
+    // Costruisce il buffer
+    buffer.append(target);
+
+    if(mccService(1,SRV_TEST_422,buffer)== FALSE) serviceTcp->txData("MCC FALLITO");
+    else{
+        serviceTcp->txData(QByteArray("Test attivato\n\r"));
+        connect(pConsole,SIGNAL(mccServiceNotify(unsigned char,unsigned char,QByteArray)),this,SLOT(handleDriverSendNotify(unsigned char,unsigned char,QByteArray)),Qt::UniqueConnection);
+    }
+    //else
+
+    return;
+
+}
 
 void serverDebug::handleDriversTagList(QByteArray data)
 {
@@ -3646,6 +3687,15 @@ void serverDebug::handleDriverSpecial(QByteArray data){
 
 void serverDebug::handleDriverSendNotify(unsigned char id,unsigned char cmd, QByteArray data)
 {
+    disconnect(pConsole,SIGNAL(mccServiceNotify(unsigned char,unsigned char,QByteArray)),this,SLOT(handleDriverSendNotify(unsigned char,unsigned char,QByteArray)));
+
+    if(cmd == SRV_TEST_422){
+        if(data.size()!=4) return;
+        int tentativi = data.at(0) + data.at(1) * 256;
+        int successi = data.at(2) + data.at(3) * 256;
+        serviceTcp->txData(QString("TEST SERIAL RESULT: ATTEMPT:%1 SUCCESS:%2\n\r").arg(tentativi).arg(successi).toAscii());
+        return;
+    }
 
     if(cmd!=SRV_SERIAL_SEND) return;
 
@@ -3704,7 +3754,7 @@ void serverDebug::handleDriverSendNotify(unsigned char id,unsigned char cmd, QBy
         }
     }
 
-    disconnect(pConsole,SIGNAL(mccServiceNotify(unsigned char,unsigned char,QByteArray)),this,SLOT(handleDriverSendNotify(unsigned char,unsigned char,QByteArray)));
+
     serviceTcp->txData(QByteArray(cmdGroup).append(">"));
 }
 

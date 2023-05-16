@@ -347,7 +347,9 @@ typedef enum
     SRV_STOP_POTTER_2D_GRID,      // Stop Griglia 2D
     SRV_RESET_PCB244,             // Reset scheda PCB244
     SRV_RESET_FAULT_PCB244,        // Reset Fault PCB244
-    SRV_TEST_LS_STARTER            // RIchiesta attivazione test starter bassa velocità
+    SRV_TEST_LS_STARTER,            // RIchiesta attivazione test starter bassa velocità
+    SRV_TEST_422                   // RIchiesta attivazione test RS422
+
 
 }_MccServiceNotify_Code;
 

@@ -75,7 +75,7 @@ public slots:
         void handleDriverSpecial(QByteArray data);
         void handleDriverFreezeNotify(unsigned char,unsigned char,QByteArray);
         void handleDriverSendNotify(unsigned char id,unsigned char cmd, QByteArray data);
-
+        void handleDriversCommTest(QByteArray data);
 
     void notificheConnectionHandler(bool stat);    // Handler cambio stato connessione
 
