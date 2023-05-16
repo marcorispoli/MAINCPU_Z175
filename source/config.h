@@ -36,6 +36,7 @@ class Config : public QObject
     Q_OBJECT
 public:
 
+    void intercommTest(void);
     void masterUpdateDatabase(void); // Effettua un aggiornamento del database sullo slave laddove necessario
 
     explicit Config(bool master, QObject *parent = 0);
@@ -90,6 +91,8 @@ public:
 
 
     // Comandi su protocollo MASTER/SLAVE
+    #define EXECUTE_INTERCOMM_TEST "ExecuteIntercommTest" // Both Master/Slave
+
     #define SET_PCB215_CALIB_DATA   "SetpPcb215CalibData"
     #define MASTER_EXIT_PROGRAM     "SetMasterExitProgram"
     #define MAIN_ACTIVATE_WARNING_BIOP_ADAPTER "SetWarningBiopAdapter"

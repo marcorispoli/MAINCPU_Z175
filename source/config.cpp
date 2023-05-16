@@ -2120,6 +2120,10 @@ void Config::configMasterRxHandler(QByteArray frame)
 
         // Impostazione database dipendente da Master
         masterUpdateDatabase();
+
+    }else if(comando==EXECUTE_INTERCOMM_TEST){
+        QByteArray buffer;
+        pDebug-> handleIntercommTest(buffer);
     }
 
     return;
@@ -2378,7 +2382,12 @@ void Config::configSlaveRxHandler(QByteArray frame)
     }else if(comando==SLAVE_RESTART_MCC){
         DEBUG("RESTART MCC");
         pConfig->pSlaveMcc->setRestart();
+    }else if(comando==EXECUTE_INTERCOMM_TEST){
+        intercommTest();
     }
+
+
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3682,6 +3691,17 @@ void Config::getRestorePoint(void){
         command = QString("sync");
         system(command.toStdString().c_str());
     }
+
+}
+
+void Config::intercommTest(void){
+    QString command;
+    protoConsole frame(1,false);
+
+    if(isMaster)
+        emit configMasterTx( frame.cmdToQByteArray(EXECUTE_INTERCOMM_TEST));
+    else
+        emit configSlaveTx( frame.cmdToQByteArray(EXECUTE_INTERCOMM_TEST));
 
 }
 

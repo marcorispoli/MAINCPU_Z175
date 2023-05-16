@@ -3210,6 +3210,47 @@ void serverDebug::handleIntercommTest(QByteArray data)
 
 void serverDebug::handleLoaderCommTest(QByteArray data)
 {
+    unsigned char target;
+    unsigned char uC;
+    QList<QByteArray> parametri;
+
+    parametri = getNextFieldsAfterTag(data, QString("loaderCommTest"));
+    if(parametri.size()!=1)
+    {
+        serviceTcp->txData(QByteArray("wrong parameters\n\r"));
+        return;
+    }
+
+    // Controllo indirizzo
+    if(parametri[0]=="PCB249U1") {
+        target = 0x1E;
+        uC = 1;
+    }else if(parametri[0]=="PCB249U2") {
+        target = 0x1E;
+        uC = 2;
+    }else if(parametri[0]=="PCB240") {
+        target = 0;
+        uC = 1;
+    }else if(parametri[0]=="PCB244") {
+        target = 0x1D;
+        uC = 1;
+    }else if(parametri[0]=="PCB244A") {
+        target = 0x1A;
+        uC = 1;
+    }else if(parametri[0]=="PCB190") {
+        target = 0x1C;
+        uC = 1;
+    }else if(parametri[0]=="PCB269") {
+        target = 0x1B;
+        uC = 1;
+    }else{
+        serviceTcp->txData(QByteArray("invalid target\n\r"));
+        return;
+    }
+
+
+    pLoader->manualFirmwareTest(target,uC);
+    return;
 }
 void serverDebug::handleDriversCommTest(QByteArray data)
 {
@@ -3732,8 +3773,7 @@ void serverDebug::handleDriverSendNotify(unsigned char id,unsigned char cmd, QBy
 
 
     if(cmd == SRV_TEST_INTERPROCESS){
-        QByteArray buffer;
-        handleIntercommTest(buffer);
+        pConfig->intercommTest();
         return;
     }
 

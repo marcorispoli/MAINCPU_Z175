@@ -44,6 +44,7 @@ void gui_interface_task(uint32_t initial_data)
   while(1){
     if(mccRxFrame(&ep, &mcc_cmd)){
       if(mcc_cmd.cmd == MCC_PRINT) mccPrint();
+      else if(mcc_cmd.cmd == MCC_SERVICE) mcc_service_commands(mcc_cmd.id,mcc_cmd.buffer[0],&mcc_cmd.buffer[1],mcc_cmd.len-1);
       else if((mcc_cmd.cmd == MCC_LOADER) || (generalConfiguration.loaderOn)) manageMccLoader();
       else if(mcc_cmd.cmd == MCC_CONFIG) manageMccConfig();
       else if(generalConfiguration.deviceConfigured){
