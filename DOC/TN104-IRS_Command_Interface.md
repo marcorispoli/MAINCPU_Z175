@@ -21,7 +21,7 @@
 
  <br/>
 
-<center><font size =4">REV: 2.0</font></center>
+<center><font size =4">REV: 1.0</font></center>
  <br/>
  <br/>
 <br/>
@@ -34,8 +34,8 @@
 **REVISION HISTORY**
 |Rev |Date|Change Description|Prepared By|Verified By|Approved By| 
 |:---:| :----: | :----: |:---|:---|:---| 
-|1.0|16/01/2023|Applicable to<br> Z175/ID09| M. Rispoli<br>.|L.Nastasi<br>.|G.B.Peretta<br>.|
-|2.0|20/02/2023|Applicable to<br> Z175/ID11| M. Rispoli<br>.|L.Nastasi<br>.|G.B.Peretta<br>.|
+|0.0|16/01/2023|Applicable to<br> Z175/ID09| M. Rispoli<br>.|L.Nastasi<br>.|G.B.Peretta<br>.|
+|1.0|20/02/2023|Applicable to<br> Z175/ID11| M. Rispoli<br>.|L.Nastasi<br>.|G.B.Peretta<br>.|
 ||||||| 
 
 
