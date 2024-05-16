@@ -37,6 +37,12 @@ biopsyExtendedDevice::biopsyExtendedDevice(int rotview, QWidget *parent) :
     connect(ui->buttonConfirmScrollLeftDown,SIGNAL(released()),this,SLOT(onConfirmButton()),Qt::UniqueConnection);
     connect(ui->buttonConfirmScrollRightDown,SIGNAL(released()),this,SLOT(onConfirmButton()),Qt::UniqueConnection);
 
+    // Pulsanti di conferma per lo scroll X
+    connect(ui->buttonConfirmScrollXToCenter,SIGNAL(released()),this,SLOT(onConfirmButton()),Qt::UniqueConnection);
+    connect(ui->buttonConfirmScrollXToLeft,SIGNAL(released()),this,SLOT(onConfirmButton()),Qt::UniqueConnection);
+    connect(ui->buttonConfirmScrollXToRight,SIGNAL(released()),this,SLOT(onConfirmButton()),Qt::UniqueConnection);
+
+
     ui->frameMoveScrollCenter->setGeometry(0,0,800,480);
     ui->frameMoveScrollLeft->setGeometry(0,0,800,480);
     ui->frameMoveScrollRight->setGeometry(0,0,800,480);
@@ -80,6 +86,7 @@ biopsyExtendedDevice::biopsyExtendedDevice(int rotview, QWidget *parent) :
     exitPageCode = _PG_MAIN_DIGITAL;
     outPosition_ena = false;
     outPosition = false;
+    isYUpright = false;
 
 }
 biopsyExtendedDevice::~biopsyExtendedDevice()
@@ -305,6 +312,11 @@ void biopsyExtendedDevice::nextStepSequence(int tmo){
     event_req_sequence = startTimer(tmo);
 }
 
+/**
+ * @brief biopsyExtendedDevice::handleXScroll
+ * Questa procedura guida l'operatore a muovere X-Scroll alla posizione corretta.
+ * La posizione viene controllata dall'hardware ma richiede comunque una conferma dell'operatore
+ */
 void biopsyExtendedDevice::handleXScroll(void){
     static bool init = true;
 
@@ -314,13 +326,15 @@ void biopsyExtendedDevice::handleXScroll(void){
         buzzer_delay = 0;
         user_timeout = _DEF_TIMEOUT_USER_FEEDBACK;
         init = false;
+        user_confirmation = false;
     }
 
-    // Attende che l'utente scrolli l'asse X nella corretta posizione
-    if(req_home_lat != curLatX){
+    // Attende che l'utente confermi e che vi sia effettivo riscontro hadware
+    if((!user_confirmation) || (req_home_lat != curLatX)){
         user_timeout--;
         if(!user_timeout){
             manageRequestErrors(_BIOPSY_MOVING_ERROR_TIMEOUT);
+            user_confirmation = false;
             init = true;
             return;
         }
@@ -333,8 +347,10 @@ void biopsyExtendedDevice::handleXScroll(void){
         return;
     }
 
+
     // Assignes the exit sequence
     sub_sequence = next_seq;
+    user_confirmation = false;
     init = true;
     nextStepSequence(1);
 }
@@ -353,12 +369,18 @@ void biopsyExtendedDevice::handleYScroll(void){
         user_confirmation = false;
     }
 
-    // Attende che l'utente confermi
-    if(!user_confirmation){
+    // Attende che l'utente confermi e che l'hardware confermi la corretta posizione dell'Y
+    if(
+       (!user_confirmation) ||
+       ((seq_param2 == _PARAM_UP) && (!isYUpright)) ||
+       ((seq_param2 == _PARAM_DOWN) && (isYUpright))
+       )
+    {
         user_timeout--;
         if(!user_timeout){
             manageRequestErrors(_BIOPSY_MOVING_ERROR_TIMEOUT);
             init = true;
+            user_confirmation = false;
             return;
         }
 
@@ -369,7 +391,7 @@ void biopsyExtendedDevice::handleYScroll(void){
         event_req_sequence = startTimer(100);
         return;
     }
-
+    user_confirmation = false;
     sub_sequence = next_seq;
     init = true;
     nextStepSequence(1);
@@ -443,7 +465,184 @@ void biopsyExtendedDevice::manageRepositioningSequence(void){
     else GWindowRoot.setNewPage( exitPageCode ,GWindowRoot.curPage,0);
 }
 
+/**
+ * @brief biopsyExtendedDevice::manageHomeSequence
+ * Questa procedura guiderà l'operatore a posizionare correttamente
+ * la torretta in una delle posizioni di Home.
+ *
+ * La procedura può iniziare solo se:
+ * - non c'è un movimento già in corso;
+ * - l'asse X è riconosciuto in una delleposizione di blocco attese.
+ *
+ * Workflow:
+ *
+ * 1) In questo Step iniziale si portano i cursori nella posizione X corretta.
+ *    Alla fine dello step l'orientamento Y non è necessariamente quello atteso.
+ *
+ * 2) In questo step si controlla se X-Scroll è nella posizione attesa.
+ *    Una volta che X-Scroll è stata ben posizionata (o lo fosse già)
+ *    si controlla il corretto orientamento di Y (UP centrale, DOWN laterale)
+ *
+ *
+ * (3) Si muove Muove Y al target
+ * (4) Si muove Z al target
+ *
+ *
+ */
 void biopsyExtendedDevice::manageHomeSequence(void){
+    switch(sub_sequence){
+
+    // Macro sequence gestite qui
+    case _REQ_SUBSEQ_HOME_X_SCROLL: handleXScroll();break;
+    case _REQ_SUBSEQ_HOME_Y_SCROLL: handleYScroll();break;
+    case _REQ_SUBSEQ_HOME_X_MOVE:   handleMove();break;
+    case _REQ_SUBSEQ_HOME_Y_MOVE:   handleMove();break;
+    case _REQ_SUBSEQ_HOME_Z_MOVE:   handleMove();break;
+
+    // Inizio sequenza
+    case _REQ_SUBSEQ_HOME_INIT:
+
+        // Azzera il flag di conferma Utente
+        user_confirmation = false;
+
+        // Test movimento precedente ancora in corso
+        if(movingCommand > _BIOPSY_MOVING_COMPLETED) {
+            manageRequestErrors(_BIOPSY_MOVING_ERROR_BUSY);
+            return;
+        }
+
+        // Test Scroll X in posizione attesa
+        if(curLatX == _BP_EXT_ASSEX_POSITION_ND){
+            manageRequestErrors(_BIOPSY_MOVING_UNDEFINED_X_TRASLATION);
+            return;
+        }
+
+
+
+        // Y e Z invariati
+        move_Y = curY_dmm;
+        move_Z = curZ_dmm;
+
+
+        if(isYUpright){ // A testa in Su va sicuramente al target, qualsiasi esso sia
+            move_X = req_X;
+            sub_sequence = _REQ_SUBSEQ_HOME_X_MOVE;
+            next_seq = _REQ_SUBSEQ_HOME_TEST_SCROLL_X;
+            nextStepSequence(1);
+            break;
+
+        }else if(testUpsidePosition(_DEF_EXT_XHOME_RIGHT)){ // Prova a vedere se può andare a destra
+            move_X = _DEF_EXT_XHOME_RIGHT;
+        }else if(testUpsidePosition(_DEF_EXT_XHOME_LEFT)){// Prova a vedere se può andare a sinistra
+            move_X = _DEF_EXT_XHOME_LEFT;
+        }else{
+            manageRequestErrors(_BIOPSY_MOVING_UNDEFINED_CORNER_POSITION); // NOn esiste posizione sicura
+            return;
+        }
+
+        if(move_X == req_X) {
+            sub_sequence =_REQ_SUBSEQ_HOME_TEST_SCROLL_X;
+        }else{
+            // Se non sarà il target, dovo aver richiesto di girare in su ritornerà qui.
+            sub_sequence =_REQ_SUBSEQ_HOME_Y_SCROLL;
+            seq_param2 = _PARAM_UP;
+            next_seq = _REQ_SUBSEQ_HOME_INIT;
+
+        }
+        nextStepSequence(1);
+        break;
+
+
+    // In questa fase i cursori arrivano nella posizione X corretta, non necessariamente con
+    // Ribaltamento corretto. Ma questo non impedirà di traslare l'asse X in posizione.
+    case _REQ_SUBSEQ_HOME_TEST_SCROLL_X:
+
+        // Si trova nella giusta posizione: verifica l'orientamento Y
+        if(req_home_lat == curLatX)
+        {
+            // Al centro Y deve essere ribaltato in alto: se corretto va a muovere Y
+            if(curLatX == _BP_EXT_ASSEX_POSITION_CENTER){
+                if(!isYUpright){
+                    sub_sequence =_REQ_SUBSEQ_HOME_Y_SCROLL;
+                    seq_param2 = _PARAM_UP;
+                    next_seq = _REQ_SUBSEQ_HOME_EXE_Y; // Va a muovere Y alla fine
+                    nextStepSequence(1);
+                    break;
+                }
+
+                sub_sequence = _REQ_SUBSEQ_HOME_EXE_Y;
+                nextStepSequence(1);
+                break;
+            }
+
+            // Ai bordi invece Y deve essere basso: va richiesto per forza, non essendoci un riconoscimento
+            // assoluto dell'effettiva stretta della ghiera. Semplicemente il cursore potrebbe esser molle,,
+            sub_sequence =_REQ_SUBSEQ_HOME_Y_SCROLL;
+            seq_param2 = _PARAM_DOWN;
+            next_seq = _REQ_SUBSEQ_HOME_EXE_Y; // Va a muovere Y alla fine del ribaltamento i basso
+            nextStepSequence(1);
+            break;
+        }
+
+        // Richiede di spostare X alla giusta posizione
+        sub_sequence = _REQ_SUBSEQ_HOME_X_SCROLL;
+        if(req_home_lat == _BP_EXT_ASSEX_POSITION_CENTER) seq_param1 = _PARAM_CENTER;
+        else if(req_home_lat == _BP_EXT_ASSEX_POSITION_LEFT) seq_param1 = _PARAM_LEFT;
+        else seq_param1 = _PARAM_RIGHT;
+        next_seq = _REQ_SUBSEQ_HOME_TEST_SCROLL_X; // Torna qui per verificare
+        nextStepSequence(1);
+    break;
+
+    // Attivazione Home Y
+    case _REQ_SUBSEQ_HOME_EXE_Y:
+        move_X = curX_dmm;
+        move_Y = req_Y;
+        move_Z = curZ_dmm;
+        if(req_Y < curY_dmm) seq_param1 = _PARAM_IN;
+        else seq_param1 = _PARAM_OUT;
+        sub_sequence = _REQ_SUBSEQ_HOME_Y_MOVE;
+
+        next_seq = _REQ_SUBSEQ_HOME_EXE_Z;
+        nextStepSequence(1);
+    break;
+
+    // Movimento asse Z verso posizione di parcheggio
+    case _REQ_SUBSEQ_HOME_EXE_Z:
+        move_X = curX_dmm;
+        move_Y = curY_dmm;
+        move_Z = req_Z;
+
+        if(req_Z < curZ_dmm) seq_param1 = _PARAM_UP;
+        else seq_param1 = _PARAM_DOWN;
+        sub_sequence = _REQ_SUBSEQ_HOME_Z_MOVE;
+        next_seq = _REQ_SUBSEQ_HOME_COMPLETED;
+        nextStepSequence(1);
+    break;
+
+    case _REQ_SUBSEQ_HOME_COMPLETED:
+        isHome = true;
+
+        // Notifica di fine movimento
+        movingError = _BIOPSY_MOVING_NO_ERROR;
+        if(pBiopsy->activationId) pToConsole->endCommandAck(pBiopsy->activationId, _BIOPSY_MOVING_NO_ERROR);
+        pBiopsy->activationId = 0;
+        GWindowRoot.setNewPage( exitPageCode ,GWindowRoot.curPage,0);
+        break;
+
+    // _________________________________________________
+    defaut:
+        // Case anomalo: si chiude il comando come se fosse tutto ok
+        if(pBiopsy->activationId) pToConsole->endCommandAck(pBiopsy->activationId, _BIOPSY_MOVING_NO_ERROR);
+        pBiopsy->activationId = 0;
+        GWindowRoot.setNewPage(exitPageCode ,GWindowRoot.curPage,0);
+        break;
+    }
+}
+
+
+
+
+void biopsyExtendedDevice::manageHomeSequence_old(void){
 
     switch(sub_sequence){
 
@@ -457,15 +656,15 @@ void biopsyExtendedDevice::manageHomeSequence(void){
     case _REQ_SUBSEQ_HOME_INIT:
 
         user_confirmation = false;
-        // Assegna la fase in corso
+
+        // Test movimento precedente ancora in corso
         if(movingCommand > _BIOPSY_MOVING_COMPLETED) {
             manageRequestErrors(_BIOPSY_MOVING_ERROR_BUSY);
             return;
         }
 
-
         // Va direttamente a muovere Y se il cursore sta al centro insieme all'asse X
-        if((curLatX == _BP_EXT_ASSEX_POSITION_CENTER) && (testYisUp())){
+        if((curLatX == _BP_EXT_ASSEX_POSITION_CENTER) && (isYUpright)){
             sub_sequence = _REQ_SUBSEQ_HOME_EXE_Y;
             nextStepSequence(1);
             break;
@@ -607,7 +806,21 @@ void biopsyExtendedDevice::manageHomeSequence(void){
     return ;
 }
 
-
+/**
+ * @brief biopsyExtendedDevice::manageXYZSequence
+ *
+ * Questo comando permette di muoversi verso il target di puntamento.
+ *
+ * Il comando non prevede che l'operatore debba muovere l'asse X o Y
+ * poichè tali operazioni sono effettuate con il posizionamento in Home.
+ * Pertanto la procedura non prevede richeste all'operatore.
+ *
+ * Tuttavia la procedura controlla se c'è rischio di impatto
+ * e se ciò dovesse esserci, restituisce errore già alla partenza
+ * (testUpsidePosition())
+ *
+ *
+ */
 void biopsyExtendedDevice::manageXYZSequence(void){
     switch(sub_sequence){
 
@@ -616,19 +829,18 @@ void biopsyExtendedDevice::manageXYZSequence(void){
         user_confirmation = false;
         isHome = false;
 
-        // Assegna la fase in corso
+        // Testa se un movimento risulta in corso
         if(movingCommand > _BIOPSY_MOVING_COMPLETED) {
             manageRequestErrors(_BIOPSY_MOVING_ERROR_BUSY);
             return;
         }
 
         // Verifica se ci può essere rischio di impatto
-        /*if(testUpsidePosition(req_X)){
-
+        if(testUpsidePosition(req_X)){
             manageRequestErrors(_BIOPSY_MOVING_UNDEFINED_ERROR);
             return;
-        } else sub_sequence = _REQ_SUBSEQ_XYZ_EXE_X;
-        */
+        }
+
         sub_sequence = _REQ_SUBSEQ_XYZ_EXE_Z;
         nextStepSequence(1);
         break;
@@ -908,6 +1120,7 @@ void biopsyExtendedDevice::mccStatNotify(unsigned char id_notify,unsigned char c
 
         outPosition_ena = false;
         outPosition = false;
+        isYUpright = false;
         Y = 0xFFFF;
         outOfPosition = false;
         pBiopsy->connected = FALSE;
@@ -933,6 +1146,7 @@ void biopsyExtendedDevice::mccStatNotify(unsigned char id_notify,unsigned char c
         pBiopsy->revisione=data[_BP_EXT_REVIS];
 
         prev_home_lat = req_home_lat = _BP_EXT_ASSEX_POSITION_ND;
+        isYUpright = false;
 
         movingCommand =_BIOPSY_MOVING_NO_COMMAND;
         movingError = _BIOPSY_MOVING_NO_ERROR;
@@ -956,6 +1170,10 @@ void biopsyExtendedDevice::mccStatNotify(unsigned char id_notify,unsigned char c
     curLatX = data.at(_BP_EXT_ASSEX_POSITION);
     ApplicationDatabase.setData(_DB_BIOP_LAT_X,(int) data.at(_BP_EXT_ASSEX_POSITION),0);
     if(curLatX != _BP_EXT_ASSEX_POSITION_ND) last_xscroll_detected = curLatX;
+
+    // Ribaltamento asse Y:
+    if(data[_BP_EXT_ASSEY_POSITION] == 1) isYUpright = true;
+    else isYUpright = false;
 
     // Inizializzazione del flag di comando Home precedente
     if(req_home_lat == _BP_EXT_ASSEX_POSITION_ND){
@@ -1062,12 +1280,28 @@ void biopsyExtendedDevice::mccStatNotify(unsigned char id_notify,unsigned char c
 
 
 
-// Restituisce TRUE se la destinazione attraversa l'area di possibile impatto
+/**
+ * @brief biopsyExtendedDevice::testUpsidePosition
+ * Verifica se data la posizione degli assi X e Y e la posizione corrente del cursore X
+ * il target x richiesto causa un impatto con il blocco centrale della torretta
+ *
+ * @param X: è la coordinata di destinazione
+ * @return true: possibile impatto in queste condizioni
+ */
 bool biopsyExtendedDevice::testUpsidePosition(unsigned short X){
+
+    // Se l'asse Y risulta in posizione Upright non ci sono mai rischi di impatto
+    if(pBiopsyExtended->isYUpright) return false;
+
+    // Se l'asse X non è definito allora e sempre possibile
+    if(curLatX == _BP_EXT_ASSEX_POSITION_ND) return true;
+
+    // Se il cursore attraversa l'area centrale allora c'è rischio di impatto
 
     int xh,xl;
     xh = 2580;
     xl = 0;
+
     if(curLatX == _BP_EXT_ASSEX_POSITION_RIGHT){
         xh = 2580;
         xl = 1460;

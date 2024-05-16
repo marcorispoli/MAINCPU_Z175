@@ -218,25 +218,26 @@ typedef enum
 #define _BP_EXT_PUSH_SBLOCCO    3 // Stato del pulsante di sblocco
 #define _BP_EXT_ADAPTER_ID      4 // Codice holder riconosciuto
 #define _BP_EXT_ASSEX_POSITION  5 // Dislocamento asse-X
+#define _BP_EXT_ASSEY_POSITION  6 // Dislocamento asse-Y (1 = Upright)
 
 // Posizione torretta in dmm
-#define _BP_EXT_XL              6
-#define _BP_EXT_XH              7
-#define _BP_EXT_YL              8
-#define _BP_EXT_YH              9
-#define _BP_EXT_ZL              10
-#define _BP_EXT_ZH              11
-#define _BP_EXT_SHL             12
-#define _BP_EXT_SHH             13
-#define _BP_EXT_MAN             14
+#define _BP_EXT_XL              7
+#define _BP_EXT_XH              8
+#define _BP_EXT_YL              9
+#define _BP_EXT_YH              10
+#define _BP_EXT_ZL              11
+#define _BP_EXT_ZH              12
+#define _BP_EXT_SHL             13
+#define _BP_EXT_SHH             14
+#define _BP_EXT_MAN             15
 
 // Dati per la revisione e checksum
-#define _BP_EXT_CHKH            15
-#define _BP_EXT_CHKL            16
-#define _BP_EXT_REVIS           17
-#define _BP_EXT_MODEL           18
+#define _BP_EXT_CHKH            16
+#define _BP_EXT_CHKL            17
+#define _BP_EXT_REVIS           18
+#define _BP_EXT_MODEL           19
 //______________________________
-#define _BP_EXT_DATA_LEN        19
+#define _BP_EXT_DATA_LEN        20
 
 
 //_____________________________

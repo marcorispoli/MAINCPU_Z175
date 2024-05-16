@@ -109,7 +109,10 @@ public:
     #define _BIOPSY_MOVING_ERROR_TARGET     1
     #define _BIOPSY_MOVING_ERROR_TIMEOUT    2
     #define _BIOPSY_MOVING_ERROR_BUSY       3
-    #define _BIOPSY_MOVING_UNDEFINED_ERROR  4 // Il codice sequenza non corrisponde. E' un problema software
+    #define _BIOPSY_MOVING_UNDEFINED_X_TRASLATION       4
+    #define _BIOPSY_MOVING_UNDEFINED_CORNER_POSITION       5
+    #define _BIOPSY_MOVING_UNDEFINED_ERROR  6 // Il codice sequenza non corrisponde. E' un problema software
+
 
 
     // Posizione corrente della torretta
@@ -119,7 +122,7 @@ public:
     unsigned short curSh_raw;   // cursor dac level
     int curSh_dmm;   // (0.1mm) Posizione corrente Sh
     unsigned char  curLatX;     // Posizione dislocazione asse X
-
+    bool isYUpright;            // Posizione Y è Upright
 
 
 
@@ -238,7 +241,9 @@ private:
     bool isHome;
 
     int requestBiopsyOutOfPosition(void);
+    void manageHomeSequence_old(void);
     void manageHomeSequence(void);
+
     void manageXYZSequence(void);
     void manageRepositioningSequence(void);
 
@@ -255,14 +260,7 @@ private:
     bool testUpsidePosition(unsigned short X);
     bool isTarget(unsigned short X, unsigned short Y, unsigned short Z);
 
-    // Test if the Y block is turned Up based on the current X posiiton scenaro
-    bool testYisUp(void){
-        if( (curLatX == _BP_EXT_ASSEX_POSITION_CENTER) && (curX_dmm < 2263)  && (curX_dmm > 317)) return true;
-        else if((curLatX == _BP_EXT_ASSEX_POSITION_LEFT) && (curX_dmm < 980)) return true;
-        else if((curLatX == _BP_EXT_ASSEX_POSITION_RIGHT) && (curX_dmm > 1600)) return true;
 
-        return false;
-    }
 
     void handleXScroll(void);
     void handleYScroll(void);
