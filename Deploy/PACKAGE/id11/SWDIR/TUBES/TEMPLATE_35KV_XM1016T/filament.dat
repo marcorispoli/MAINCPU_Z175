@@ -1,4 +1,0 @@
-<ILIM,4.5>  //  Corrente limite (A)
-<IMAX,4>  //  Corrente max impostabile (A)
-<IWARM,2.02>  //  Corrente riscaldamento (A)
-<IDAC,1300>  //  DAC calibrato corrente di riscaldamento

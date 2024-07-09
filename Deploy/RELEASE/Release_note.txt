@@ -1,14 +1,3 @@
-DA FARE:
- - Armonizzare la collimazione Manuale con l'AWS
-
-FATTO
-- Biopsia approccio Laterale
-- Gestione combinata Biopsie
-- Modificato firmware PCB249U2 da 2.1 a 2.2
-- Modificato comandi di impostazione Specchio in Home per gestire meglio eventuali fault durante raggi
-- Modificata soglia di controllo mAsmetro
-- Integrato tubo ad Aria
-- Aggiunta ridirezione di tutte le printf sui socket @10010
-
-- Collimazione filtro: corretto uscita da pagina collimazione in filtro auto
+ID12
+Patch per includere nuovo FW190_3.5.hex
 
