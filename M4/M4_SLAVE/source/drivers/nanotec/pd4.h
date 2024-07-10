@@ -234,6 +234,9 @@ bool caricamentoNanojProgram(bool forceFlash, const char* DEVICE, const unsigned
 // Motor Drive Parameter Set
 #define OD_3210_01  0x3210, 0x01 ,CANOPEN_SDO_TX_4BYTE  // Position Loop, Proportional Gain (closed Loop)
 #define OD_3210_02  0x3210, 0x02 ,CANOPEN_SDO_TX_4BYTE  // Position Loop, Integral Gain (closed Loop)
+#define OD_3210_05  0x3210, 0x05 ,CANOPEN_SDO_TX_4BYTE  // Current Loop, Proportional Gain (closed Loop)
+#define OD_3210_06  0x3210, 0x06 ,CANOPEN_SDO_TX_4BYTE  // Current Loop, Integral Gain (closed Loop)
+
 
 // Analogue Inputs Control
 #define OD_3221_00  0x3221, 0x00 ,CANOPEN_SDO_TX_4BYTE  // Analogue Inputs Control: 0 , Voltage, 1, Current
