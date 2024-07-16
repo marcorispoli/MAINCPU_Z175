@@ -32,6 +32,8 @@ tar -xf SWPackage.tar
 cp ./CONFIG/firmwares.cnf $CONFIG/
 cp ./BIN/DBTController /
 cp ./BIN/m4_master.bin /
+cp -r ./TUBES/* $CONFIG/Tubes/
+
 sync
 chmod 777 /DBTController
 
