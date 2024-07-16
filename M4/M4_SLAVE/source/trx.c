@@ -94,7 +94,7 @@ static void _positionTriggerSettingLoop(_PD4_Status_t* pStat);
 
 
 
-#define PARAM_ID 2
+#define PARAM_ID 3 // 2
 static const _canopen_ObjectDictionary_t generalMotorProfile[]={
 
     // Hardware configuration
@@ -136,8 +136,10 @@ static const _canopen_ObjectDictionary_t generalMotorProfile[]={
     {OD_320B_04,1}, 	// Position
 
     // Motor Drive Parameter Set
-    {OD_3210_01,50000 }, // Position Loop, Proportional Gain (closed Loop)
-    {OD_3210_02,10 },	 // Position Loop, Integral Gain (closed Loop)
+    {OD_3210_01,10000 }, // 50000 Position Loop, Proportional Gain (closed Loop)
+    {OD_3210_02,1 },	 // 10 Position Loop, Integral Gain (closed Loop)
+    {OD_3210_05,210000 }, // 420000 Position Loop, Proportional Gain (closed Loop)
+    {OD_3210_06,6000 }, // 12000 Position Loop, Integral Gain (closed Loop)
 
     // Analogue Inputs Control
     {OD_3221_00,0},     // 0 , Voltage, 1, Current
