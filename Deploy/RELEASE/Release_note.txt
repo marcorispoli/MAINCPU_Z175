@@ -1,3 +1,4 @@
 ID12
 Patch per includere nuovo FW190_3.5.hex
+Pathch in m4_slave per includere la variazione del pid su trx
 

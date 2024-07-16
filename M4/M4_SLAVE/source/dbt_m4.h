@@ -1,9 +1,9 @@
 #ifndef _DBT_M4_H
 #define _DBT_M4_H
 
-#define REVISIONE "1.5.0"
+#define REVISIONE "1.6.0"
 #define REVMAJ 1
-#define REVMIN 5
+#define REVMIN 6
 #define REV_BETA 0
 
 #define M4_SLAVE
@@ -27,6 +27,9 @@
     -25/02/2021  modificato in arm.c la gestione del reset fault da disabilitazione
                  per evitare il problema dell'allarme spurio durante la compressione
 
+    __________________________________________________________________________
+    REV 1.6.0
+    -16/07/2024  Modificato pid TRX per ridurre il rumore sulla pendolazione
 
 _____________________________________________________________________________*/
 
