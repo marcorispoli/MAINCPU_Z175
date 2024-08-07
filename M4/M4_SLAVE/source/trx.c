@@ -69,6 +69,9 @@ static _PD4_Status_t driver_stat;
 static _trx_positioning_data_t positioningData;
 static int  blocco_input_ostacolo;
 
+// Acceptance Target Windows
+static int target_window_p;
+static int target_window_m;
 
 static bool trxUploadActivationContext(unsigned char index, short target);
 static bool readTrxPosition(void);
@@ -818,6 +821,7 @@ bool _initZeroSetting(_PD4_Status_t* pStat){
 
 bool _initPositionSetting(_PD4_Status_t* pStat){
 
+
     pStat->positionOk = false;
 
     // reset di un eventuale richiesta inevasa di stop
@@ -929,11 +933,13 @@ bool _initPositionTriggerSetting(_PD4_Status_t* pStat){
 
 void _positionSettingLoop(_PD4_Status_t* pStat){
     static uint16_t memCtrl=0xFFFF;
+    static int target_tmo = 0;
 
     if(pStat->statChanged){
         debugPrintI("TRX POSITION SETTING MODE STARTED: Timeout value",pStat->activation_timeout);
         // Set the BIT4 of Control Word to start the sequence
-        Pd4CiA402SetControlOD(POSITION_SETTING_START,CANOPEN_TRX_CONTEXT,pStat);        
+        Pd4CiA402SetControlOD(POSITION_SETTING_START,CANOPEN_TRX_CONTEXT,pStat);
+        target_tmo = 0;
     }
 
     // Lettura posizione corrente
@@ -945,6 +951,27 @@ void _positionSettingLoop(_PD4_Status_t* pStat){
 
     // Controlli di sicurezza. Se fallisce la funzione effettua già il switch di modo
     if(trxSafetyDuringMotion(TRX_MOVE_TO_POSITION)==false) return;
+
+    // Verifica se la posizione target è entro una finestra di accettazione di +/- 5 centesimi di grado per 1s
+    if((odencoder.val < target_window_p) &&  (odencoder.val > target_window_m)){
+        target_tmo++; // 50ms unit
+        if(target_tmo > 20) {
+            debugPrint("TRX POSITIONING COMPLETED SET BY MANUAL TARGET");
+            pStat->positionOk = true;
+            pStat->event_type = TRX_MOVE_TO_POSITION;
+            pStat->event_code = TRX_NO_ERRORS;
+            pStat->event_data = pStat->dAngolo;
+            _EVSET(_EV0_TRX_EVENT);
+
+            // Reset OMS bit of the control word
+            Pd4CiA402SetControlOD(PD4_RESET_OMS,CANOPEN_TRX_CONTEXT,pStat);
+
+            // Change status to Switched On status
+            CiA402_OperationEnabled_To_SwitchedOn(0,0,CANOPEN_TRX_CONTEXT,pStat);
+            return ;
+        }
+    }else target_tmo = 0;
+
 
     if((pStat->statusword!=memCtrl)||(odencoder.val == pStat->position_target)){
         memCtrl = pStat->statusword;
@@ -1418,6 +1445,9 @@ bool trxUploadActivationContext(unsigned char index, short target){
 
     // Caricamento del target di posizione
     driver_stat.position_target = cGRAD_TO_POS(target);
+    target_window_p = cGRAD_TO_POS(target + 5);
+    target_window_m = cGRAD_TO_POS(target - 5);
+
     _canopen_ObjectDictionary_t odtarget={OD_607A_00,driver_stat.position_target};
     if(canopenWriteSDO(&odtarget, CANOPEN_TRX_CONTEXT)==false) return false;
 
