@@ -437,7 +437,8 @@ void Generatore::setTubeRevision(QString tube){
 
 // APERTURA DI DATI DI CONFIGURAZIONE DEL TUBO
 // tubeDir è la directory contenente i dati del tubo, comprensivo di "/"
-bool Generatore::openTube(QString tubeDir)
+bool Generatore::system: reboot
+                         openTube(QString tubeDir)
 {
     QString tubeConfFile;
     int i;
@@ -773,6 +774,7 @@ void Generatore::readTubeFilamentFile(QString tubeDir){
     // Se il file non si dovesse aprire (perchè??) allora  parte con i valori di default
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) return;
 
+
     while(1)
     {
 
@@ -785,17 +787,21 @@ void Generatore::readTubeFilamentFile(QString tubeDir){
         // Sblocco/Blocco compressore
         if(dati.at(0)=="ILIM"){              // Ilimit in (A)
             Ilimit = dati.at(1).toFloat();
+
         }else if(dati.at(0)=="IMAX"){       // Max selectable in (A)
             Imax = dati.at(1).toFloat();
+
         }else if(dati.at(0)=="IWARM"){      // Warming Up in (A)
             Iwarm = dati.at(1).toFloat();
+
         }else if(dati.at(0)=="IDAC"){       // Warming Up in DAC
             Idac = (unsigned short) dati.at(1).toLong();
+
         }
     }
     file.close();
 
-    if((Ilimit!=0) && (Imax!=0) && (Ilimit<=5) && (Idac!=0) && (Iwarm!=0)){
+    if((Ilimit!=0) && (Imax!=0) && (Ilimit<=10) && (Idac!=0) && (Iwarm!=0)){
             genCnf.filData.IFILwarm = Iwarm; // Corrente nominale di riscaldamento
             genCnf.filData.IFILdac = Idac;  // Taratura corrente di riscaldamento
             genCnf.filData.IFILlimit = Ilimit; // Valore assoluto corrente di filamento
@@ -806,6 +812,7 @@ void Generatore::readTubeFilamentFile(QString tubeDir){
     genCnf.pcb190.IFIL_DAC_WARM = genCnf.filData.IFILdac;
     genCnf.pcb190.IFIL_LIMIT = genCnf.filData.IFILlimit * 20.838; // 0.4086 * I * 255/5
     genCnf.pcb190.IFIL_MAX_SET = (unsigned short) (genCnf.filData.IFILmax * (float) genCnf.filData.IFILdac / genCnf.filData.IFILwarm);
+
 
     // Aggiunta configurazione dello starter    
     genCnf.pcb190.starter_off_after_exposure = pConfig->userCnf.starter_off_after_exposure;

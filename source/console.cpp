@@ -4633,14 +4633,24 @@ bool console::handleSetIaRxData(protoConsole* frame, protoConsole* answer)
     iACalibData.validated = FALSE;
 
     // Solo in calibrazione KV è consentito
-    if(xSequence.workingMode!=_EXPOSURE_MODE_CALIB_MODE_IA) return FALSE;
+    if(xSequence.workingMode!=_EXPOSURE_MODE_CALIB_MODE_IA){
+        DEBUG("xSequence.workingMode!=_EXPOSURE_MODE_CALIB_MODE_IA");
+        return FALSE;
+    }
 
     // Imposta l'anodo usato per la sequenza e il fuoco grande
-    if(!pGeneratore->isValidAnode(frame->parametri[0])) return FALSE;
+    if(!pGeneratore->isValidAnode(frame->parametri[0])){
+        DEBUG("Not Valid Anode");
+        return FALSE;
+    }
     iACalibData.anodo = frame->parametri[0];
 
     // Imposta il fuoco da utilizzare
-    if((frame->parametri[1]!="P") && (frame->parametri[1]!="G")) return FALSE;
+    if((frame->parametri[1]!="P") && (frame->parametri[1]!="G"))
+    {
+        DEBUG("Not P or G");
+        return FALSE;
+    }
     iACalibData.fuoco = frame->parametri[1];
 
     // Seleziona subito il fuoco per riscaldarlo
@@ -4654,28 +4664,53 @@ bool console::handleSetIaRxData(protoConsole* frame, protoConsole* answer)
         pGeneratore->setFuoco(Generatore::FUOCO_LARGE);
         pGeneratore->setFuoco(iACalibData.anodo);
     }
-    if(pGeneratore->updateFuoco()==FALSE) return FALSE;
+    if(pGeneratore->updateFuoco()==FALSE){
+        DEBUG("NotUpdateFuoco");
+        return FALSE;
+    }
 
     // Valore nominale tensione: verifica che sia calibrato e disponibile
-    if(pGeneratore->isValidKv(frame->parametri[2].toInt())==FALSE) return FALSE;
+    if(pGeneratore->isValidKv(frame->parametri[2].toInt())==FALSE)
+    {
+        DEBUG("Not Valid kV");
+        return FALSE;
+    }
     iACalibData.Vnom = frame->parametri[2].toInt();
 
     // Valore analogico corrente anodica: verifica che il valore massimo non ecceda quello previsto.
+
     int idac = frame->parametri[3].toInt();
-    if(idac > pGeneratore->genCnf.pcb190.IFIL_MAX_SET) return false;
-    if(idac < pGeneratore->genCnf.filData.IFILdac) return false;
+    QString valstr = QString(" IDAC = %1 MAX = %2").arg(idac).arg(pGeneratore->genCnf.pcb190.IFIL_MAX_SET);
+
+    if(idac > pGeneratore->genCnf.pcb190.IFIL_MAX_SET)
+    {
+        DEBUG("IFIL_MAX_SET:" + valstr);
+        return false;
+    }
+
+    if(idac < pGeneratore->genCnf.filData.IFILdac){
+        DEBUG("<IFILdac");
+        return false;
+    }
     iACalibData.Idac = idac;
 
     // Valore atteso corrente anodica
     iACalibData.Inom = frame->parametri[4].toInt();
-    if((iACalibData.Inom==0) ||(iACalibData.Inom>200)) return FALSE;
+    if((iACalibData.Inom==0) ||(iACalibData.Inom>200))
+    {
+        DEBUG("Inom>200");
+        return FALSE;
+    }
 
     // Valore mAs da utilizzare durante la sequenza
     iACalibData.mAs  = frame->parametri[5].toInt();
 
     // Modifica per la Tomo: occorrono almeno 20mAs
     if(iACalibData.mAs<20) iACalibData.mAs=20;
-    if((iACalibData.mAs==0) ||(iACalibData.mAs>100)) return FALSE;
+    if((iACalibData.mAs==0) ||(iACalibData.mAs>100)){
+        DEBUG("mAs>100");
+        return FALSE;
+    }
 
     // Dati validati e caricati in memoria
     iACalibData.validated = TRUE;

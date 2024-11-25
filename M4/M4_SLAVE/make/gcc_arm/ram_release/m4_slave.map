@@ -2396,15 +2396,14 @@ END GROUP
                 0x3f006c14      0x470 ./gcc_arm/ram_release/obj/trx.o
                 0x3f006c14                funcCiA402_SwitchedOn
  .text.CiA402_Trx_Stat
-                0x3f007084      0x2dc ./gcc_arm/ram_release/obj/trx.o
+                0x3f007084      0x2e0 ./gcc_arm/ram_release/obj/trx.o
                 0x3f007084                CiA402_Trx_Stat
  .text.trxGetStatus
-                0x3f007360        0x8 ./gcc_arm/ram_release/obj/trx.o
-                0x3f007360                trxGetStatus
+                0x3f007364        0x8 ./gcc_arm/ram_release/obj/trx.o
+                0x3f007364                trxGetStatus
  .text.trxUpdateConfiguration
-                0x3f007368      0x13c ./gcc_arm/ram_release/obj/trx.o
-                0x3f007368                trxUpdateConfiguration
- *fill*         0x3f0074a4        0x4 
+                0x3f00736c      0x13c ./gcc_arm/ram_release/obj/trx.o
+                0x3f00736c                trxUpdateConfiguration
  .text.trxGetNanojSamples
                 0x3f0074a8       0x90 ./gcc_arm/ram_release/obj/trx.o
                 0x3f0074a8                trxGetNanojSamples

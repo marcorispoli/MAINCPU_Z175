@@ -1,7 +1,7 @@
 ##############################################################
 # Definizione del Package di riferimento
 ##############################################################
-PKGCODE=ID12
+PKGCODE=ID13
 
 # Definizione delle directory
 HOME=/home/user
@@ -23,19 +23,19 @@ rm -f $HOME/*
 rm -r $HOME/*
 mv /PACKAGE_$PKGCODE.tar $HOME/
 
+
 # Estrazione contenuto in home/user  
 echo PACKAGE EXTRACTING ..
 cd $HOME
 tar -xf PACKAGE_$PKGCODE.tar 
 tar -xf SWPackage.tar 
 
-cp ./CONFIG/firmwares.cnf $CONFIG/
 cp ./BIN/DBTController /
-cp ./BIN/m4_master.bin /
-cp -r ./TUBES/* $CONFIG/Tubes/
-
+cp ./BIN/m4_slave.bin /
 sync
 chmod 777 /DBTController
+
+
 
 ##############################################################
 # Questa sezione è dedicata all'hotfix che non preveda
@@ -46,7 +46,6 @@ chmod 777 /DBTController
 
 ##############################################################
 # Pulitura home directory
-echo CLEANING UP HOME DIRECTORY ...
 mv $HOME/PACKAGE_$PKGCODE.tar /
 rm -f $HOME/*
 rm -r $HOME/*

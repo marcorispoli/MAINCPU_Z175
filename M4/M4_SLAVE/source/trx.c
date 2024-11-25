@@ -97,7 +97,7 @@ static void _positionTriggerSettingLoop(_PD4_Status_t* pStat);
 
 
 
-#define PARAM_ID 3 // 2
+#define PARAM_ID 4
 static const _canopen_ObjectDictionary_t generalMotorProfile[]={
 
     // Hardware configuration
