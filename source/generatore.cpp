@@ -437,8 +437,7 @@ void Generatore::setTubeRevision(QString tube){
 
 // APERTURA DI DATI DI CONFIGURAZIONE DEL TUBO
 // tubeDir è la directory contenente i dati del tubo, comprensivo di "/"
-bool Generatore::system: reboot
-                         openTube(QString tubeDir)
+bool Generatore::openTube(QString tubeDir)
 {
     QString tubeConfFile;
     int i;
