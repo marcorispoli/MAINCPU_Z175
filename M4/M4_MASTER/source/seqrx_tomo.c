@@ -93,10 +93,10 @@ void tomo_rx_task(uint32_t taskRegisters)
     {
       if(generalConfiguration.filterTomoEna!=0){
           Ser422ReadRegister(_REGID(RG249U2_POS_TARGET),4,&PCB249U2_CONTEST);
-          tomoCurrentFilterPosition = _DEVREGL(RG249U2_POS_TARGET,PCB249U2_CONTEST);           
+          tomoCurrentFilterPosition = _DEVREGL(RG249U2_POS_TARGET,PCB249U2_CONTEST);
       }
       
-      debugPrintI("RX-3D ANGOLO BRACCIO PER COLLIMAZIONE TOMO",generalConfiguration.armExecution.dAngolo/10);
+      debugPrintI2("POS FILTRO:", tomoCurrentFilterPosition, "ANGOLO BRACCIO:",generalConfiguration.armExecution.dAngolo/10);
 
       // Si deve esprimere l'angolo in 0.025 °/unit per compatibilità con collimatore
       short angolo = generalConfiguration.armExecution.dAngolo * 4;
@@ -149,19 +149,36 @@ void tomo_rx_task(uint32_t taskRegisters)
 
 
         // Impostazione iniziale filtro
+        int angolo = 0;
         if((generalConfiguration.filterTomoEna!=0)&&(Param->tomo_mode!=_TOMO_MODE_STATIC) && (generalConfiguration.gantryCfg.autoFilter)){
           Ser422ReadRegister(_REGID(RG249U1_GONIO_REL),4,&PCB249U1_CONTEST);
-          int angolo = (int) _DEVREGL(RG249U1_GONIO_REL,PCB249U1_CONTEST);
+          angolo = (int) _DEVREGL(RG249U1_GONIO_REL,PCB249U1_CONTEST);
           if(angolo&0x80) angolo = -1 * (angolo&0x7F); 
-          tomoFilterTarget = getTomoDeltaFilter(angolo) +  tomoCurrentFilterPosition;        
+
+
+          tomoFilterTarget = getTomoDeltaFilter(angolo) +  tomoCurrentFilterPosition;
           int i=100;
-          debugPrintI("RX-3D SET FILTER IN INITIAL RAW POSITION",tomoFilterTarget);
           while(--i){
-              if( pcb249U2SetFiltroRaw(tomoFilterTarget)) break;
-              _time_delay(50);
+              pcb249WaitBusy(20);
+              pcb249U2SetFiltroRaw(tomoFilterTarget);
+              pcb249WaitBusy(20);
+              Ser422ReadRegister(_REGID(RG249U2_POS_RAW),4,&PCB249U2_CONTEST);
+              if(
+                  (_DEVREGL(RG249U2_POS_RAW,PCB249U2_CONTEST)>tomoFilterTarget+1) ||
+                  (_DEVREGL(RG249U2_POS_RAW,PCB249U2_CONTEST)<tomoFilterTarget-1)
+                ){
+                  debugPrintI2("RAW FILTER ERROR! CURRENT:", _DEVREGL(RG249U2_POS_RAW,PCB249U2_CONTEST), "RICHIESTO:", tomoFilterTarget);
+                  _time_delay(100);
+              }else break;
           }
+
           if(i==0) debugPrint("RX-3D INITIAL FILTER POSITIONING FAILED!\n");
         }
+
+        // Lettura angolo reale finale
+        _time_delay(100);
+        Ser422ReadRegister(_REGID(RG249U2_POS_RAW),4,&PCB249U2_CONTEST);
+        debugPrintI4("POSFILTRO:", _DEVREGL(RG249U2_POS_RAW,PCB249U2_CONTEST), "INIT FILTRO", tomoCurrentFilterPosition, "ANGOLO TUBO:", angolo, "FILTRO TARGET:",tomoFilterTarget);
 
         // Attende i segnali e verifica l'uscita con pulsante raggi
         if(SystemInputs.CPU_XRAY_ENA_ACK==0)

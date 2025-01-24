@@ -83,7 +83,8 @@ Data di Creazione: 01/11/2014
   #define RG249U2_FILTER_CURPOS    11,_pFILTER+0 ,_BNK01,_8BIT ,_RD, _VL, (unsigned short)0 // Posizione corrente
   #define RG249U2_FILTER_STAT      12,_pFILTER+1 ,_BNK01,_8BIT ,_RD, _VL, (unsigned short)0 // Flag di target movimento filtro
   #define RG249U2_POS_TARGET       13,_pFILTER+2 ,_BNK01,_8BIT ,_RD, _VL, (unsigned short)0 // Target corrente filtro
-  #define PCB249U2_NREGISTERS      14
+  #define RG249U2_POS_RAW          14,_pFILTER+5 ,_BNK01,_8BIT ,_RD, _VL, (unsigned short)0 // Posizione aggiornata filtro run time
+  #define PCB249U2_NREGISTERS      15
 
 
   //////////////////////////////////////////////////////////////////////////////
@@ -119,7 +120,8 @@ volatile _DeviceRegItem_Str  PCB249U2_Registers[]=
 
     _REGDEF(RG249U2_FILTER_CURPOS),
     _REGDEF(RG249U2_FILTER_STAT),
-    _REGDEF(RG249U2_POS_TARGET)
+    _REGDEF(RG249U2_POS_TARGET),
+    _REGDEF(RG249U2_POS_RAW)
 
   }; 
   #else
