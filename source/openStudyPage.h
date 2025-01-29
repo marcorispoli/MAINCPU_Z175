@@ -151,7 +151,7 @@ private:
     unsigned char enableSblocco;
 
     // Gestione della collimazione manuale
-    bool manualColliMode;
+    bool manualColliMode;    
     int manualPad;
     int manualColliTimer;
 
@@ -159,6 +159,11 @@ private:
     void toggleManualPad(bool increment);
     QGraphicsPixmapItem* manualListPix;
     GPush* pulsanteManualColli;
+
+    void updateAECMode(int mode);
+    GPush* pulsanteAecMode;
+    int AECMode;
+
     GPush* pulsanteToggleColliDec;
     GPush* pulsanteToggleColliInc;
 
