@@ -79,7 +79,8 @@ HEADERS += \
     source/BiopsyStandard/biopsyStandardPage.h \
     source/BiopsyStandard/biopsyStandardDevice.h \
     source/biopsymodule.h\
-    source/diagnostic.h
+    source/diagnostic.h\
+    source/RoiSelectionPage.h
 
 SOURCES += \
     source/main.cpp \
@@ -136,7 +137,8 @@ SOURCES += \
     source/BiopsyStandard/biopsyStandardPage.cpp \
     source/BiopsyStandard/biopsyStandardDevice.cpp \
     source/biopsymodule.cpp\
-    source/diagnostic.cpp
+    source/diagnostic.cpp\
+    source/RoiSelectionPage.cpp
 
 
 FORMS += \

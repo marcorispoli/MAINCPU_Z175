@@ -339,6 +339,7 @@ int main(int argc, char *argv[])
     paginaAcr= new PageACR(true,"","",TRUE,800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_ACR,GWindow::setPointPath(LEFT_ARROW_FRAME),(int) _PG_OPEN_STUDY_DIGITAL,(int)_PG_ACR);
     paginaAllarmi = new PageAlarms(QString(_PG_ALARM_BACKGROUND),TRUE,800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_ALARM,GWindow::setPointPath(LEFT_ARROW_FRAME),(int)_PG_ALARM,(int)_PG_ALARM);
     paginaImmagine= new ImagePage(QString(""),800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_XRAY_IMG,GWindow::setPointPath(LEFT_ARROW_FRAME),(int) _PG_XRAY_IMG,(int)_PG_XRAY_IMG);
+    paginaRoi= new RoiSelectionPage(false,QString(""),QString(""),TRUE,800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_PROJECTIONS,GWindow::setPointPath(LEFT_ARROW_FRAME),(int)_PG_OPEN_STUDY_DIGITAL,(int)_PG_ROI_SELECTION_PAGE);
     pStartupPage= new StartupPage(rotView);
 
     // CREAZIONE DI TUTTI I PANNELLI DI SERVIZIO

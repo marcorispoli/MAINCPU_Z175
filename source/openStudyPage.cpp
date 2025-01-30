@@ -805,6 +805,13 @@ void OpenStudyPage::buttonActivationNotify(int id, bool status,int opt)
         return;
     }
 
+    if(pbutton == pulsanteAecMode){
+        setPage(_PG_ROI_SELECTION_PAGE,GWindowRoot.curPage,DBase::_DB_NO_ECHO);
+        return;
+    }
+
+
+
     // Segnale ricevuto da entrambe le finestre
     if(pbutton == pulsanteSelezioneProiezioni){
         if(isMaster){

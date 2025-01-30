@@ -402,4 +402,10 @@
         <file>BiopsyExtended/LampOn.png</file>
         <file>BiopsyExtended/BiopsyOutOfY.png</file>
     </qresource>
+    <qresource prefix="/paginaRoi">
+        <file>paginaRoi/backgroundC.png</file>
+        <file>paginaRoi/backgroundY.png</file>
+        <file>paginaRoi/RoiSelected.png</file>
+        <file>paginaRoi/RoiSelection.png</file>
+    </qresource>
 </RCC>

@@ -24,6 +24,7 @@ ext PageLanguages*   pagina_language;
 ext PageACR*         paginaAcr;
 ext PageAlarms*      paginaAllarmi;
 ext ImagePage*       paginaImmagine;
+ext RoiSelectionPage*       paginaRoi;
 
 ext mccMasterCom*    pMasterRxMcc;  // Comunicazione da Master M4 Core
 ext mccSlaveCom*     pSlaveRxMcc;  // Comunicazione da Master M4 Core
