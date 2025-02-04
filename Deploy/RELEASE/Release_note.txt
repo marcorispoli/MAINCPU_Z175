@@ -1,7 +1,9 @@
 --------------- ID14
 
 DBTController: -> 1.10
+m4_master: 1.8 -> 1.9:
 	Patch per risolvere il problema dello Starter (parametro attesa speed ok timeout allungato )
+
 Modificato FW249U1 ->3.2: 
 	aggiunto 40us sul comando di selezione canale analogico.
 Modificato FW249U2 ->2.3: 
