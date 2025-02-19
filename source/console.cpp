@@ -2330,7 +2330,7 @@ void console::RxAESequence(void)
 
 void console::RxTomoColliCalibModeSequence(void)
 {
-    unsigned char data[19];
+    unsigned char data[30];
     QByteArray ret;
 
 
@@ -2397,7 +2397,28 @@ void console::RxTomoColliCalibModeSequence(void)
     if(pConfig->userCnf.deadman) data[18]=1;
     else data[18]=0;
 
-    if(pGuiMcc->sendFrame(MCC_CMD_RAGGI_TOMO,1,data,19)==FALSE)
+
+    // Aggiunti due nuovi parametri per la collimazione dinamica
+    if(xSequence.isTomoN)
+    {
+        data[19] = pConfig->trxConfig.tomo.n.first_gonio;
+        data[20] = (unsigned char) (pConfig->trxConfig.tomo.n.speed & 0x00FF);
+        data[21] = (unsigned char) (pConfig->trxConfig.tomo.n.speed >> 8);
+
+    }else if(xSequence.isTomoI)
+    {
+        data[19] = pConfig->trxConfig.tomo.i.first_gonio;
+        data[20] = (unsigned char) (pConfig->trxConfig.tomo.i.speed & 0x00FF);
+        data[21] = (unsigned char) (pConfig->trxConfig.tomo.i.speed >> 8);
+    }else
+    {
+        data[19] = pConfig->trxConfig.tomo.w.first_gonio;
+        data[20] = (unsigned char) (pConfig->trxConfig.tomo.w.speed & 0x00FF);
+        data[21] = (unsigned char) (pConfig->trxConfig.tomo.w.speed >> 8);
+
+    }
+
+    if(pGuiMcc->sendFrame(MCC_CMD_RAGGI_TOMO,1,data,22)==FALSE)
     {
         ret.clear();
         ret.append(1);
@@ -2661,7 +2682,7 @@ void console::RxIaCalibModeSequence(void)
 void console::Rx3DSequence(void)
 {
 
-    unsigned char data[19];
+    unsigned char data[30];
     QByteArray ret;
 
 
@@ -2803,10 +2824,29 @@ void console::Rx3DSequence(void)
     if(pConfig->userCnf.deadman) data[18]=1;
     else data[18]=0;
 
+    // Aggiunti due nuovi parametri per la collimazione dinamica
+    if(xSequence.isTomoN)
+    {
+        data[19] = pConfig->trxConfig.tomo.n.first_gonio;
+        data[20] = (unsigned char) (pConfig->trxConfig.tomo.n.speed & 0x00FF);
+        data[21] = (unsigned char) (pConfig->trxConfig.tomo.n.speed >> 8);
+
+    }else if(xSequence.isTomoI)
+    {
+        data[19] = pConfig->trxConfig.tomo.i.first_gonio;
+        data[20] = (unsigned char) (pConfig->trxConfig.tomo.i.speed & 0x00FF);
+        data[21] = (unsigned char) (pConfig->trxConfig.tomo.i.speed >> 8);
+    }else
+    {
+        data[19] = pConfig->trxConfig.tomo.w.first_gonio;
+        data[20] = (unsigned char) (pConfig->trxConfig.tomo.w.speed & 0x00FF);
+        data[21] = (unsigned char) (pConfig->trxConfig.tomo.w.speed >> 8);
+
+    }
 
     if(xSequence.isAEC)
     {
-        if(pGuiMcc->sendFrame(MCC_CMD_RAGGI_AEC_TOMO,1,data,19)==FALSE)
+        if(pGuiMcc->sendFrame(MCC_CMD_RAGGI_AEC_TOMO,1,data,22)==FALSE)
         {
             PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_RAGGI, ERROR_MCC_COMMAND,TRUE); // Self resetting
             ret.clear();
@@ -2818,7 +2858,7 @@ void console::Rx3DSequence(void)
     }
     else
     {
-        if(pGuiMcc->sendFrame(MCC_CMD_RAGGI_TOMO,1,data,19)==FALSE)
+        if(pGuiMcc->sendFrame(MCC_CMD_RAGGI_TOMO,1,data,22)==FALSE)
         {            
             ret.clear();
             ret.append(1);
@@ -5165,7 +5205,7 @@ void console::RxShot2DSequence(bool useDetector)
 void console:: RxShot3DSequence(void)
 {
 
-    unsigned char data[19];
+    unsigned char data[30];
     QByteArray ret;
 
     data[0] =  (unsigned char) (pGeneratore->selectedVdac&0x00FF);
@@ -5227,10 +5267,29 @@ void console:: RxShot3DSequence(void)
     // No Deadmen
     data[18]=0;
 
+    // Aggiunti due nuovi parametri per la collimazione dinamica
+    if(xSequence.isTomoN)
+    {
+        data[19] = pConfig->trxConfig.tomo.n.first_gonio;
+        data[20] = (unsigned char) (pConfig->trxConfig.tomo.n.speed & 0x00FF);
+        data[21] = (unsigned char) (pConfig->trxConfig.tomo.n.speed >> 8);
+
+    }else if(xSequence.isTomoI)
+    {
+        data[19] = pConfig->trxConfig.tomo.i.first_gonio;
+        data[20] = (unsigned char) (pConfig->trxConfig.tomo.i.speed & 0x00FF);
+        data[21] = (unsigned char) (pConfig->trxConfig.tomo.i.speed >> 8);
+    }else
+    {
+        data[19] = pConfig->trxConfig.tomo.w.first_gonio;
+        data[20] = (unsigned char) (pConfig->trxConfig.tomo.w.speed & 0x00FF);
+        data[21] = (unsigned char) (pConfig->trxConfig.tomo.w.speed >> 8);
+
+    }
 
     if(xSequence.isAEC)
     {
-        if(pGuiMcc->sendFrame(MCC_CMD_RAGGI_AEC_TOMO,1,data,19)==FALSE)
+        if(pGuiMcc->sendFrame(MCC_CMD_RAGGI_AEC_TOMO,1,data,22)==FALSE)
         {
             PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_RAGGI, ERROR_MCC_COMMAND,TRUE); // Self resetting
             ret.clear();
@@ -5242,7 +5301,7 @@ void console:: RxShot3DSequence(void)
     }
     else
     {
-        if(pGuiMcc->sendFrame(MCC_CMD_RAGGI_TOMO,1,data,19)==FALSE)
+        if(pGuiMcc->sendFrame(MCC_CMD_RAGGI_TOMO,1,data,22)==FALSE)
         {
             ret.clear();
             ret.append(1);

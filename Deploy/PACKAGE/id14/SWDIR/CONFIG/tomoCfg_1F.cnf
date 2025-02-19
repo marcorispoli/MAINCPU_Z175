@@ -6,6 +6,7 @@
 <SMP_W,19>
 <PRESMP_W,1>
 <SKSMP_W,0>
+<GONIO_W,18>
 
 <HOME_I,1300>  
 <END_I,-1300>   
@@ -15,6 +16,7 @@
 <SMP_I,13>
 <PRESMP_I,1>
 <SKSMP_I,0>
+<GONIO_I,12>
 
 <HOME_N,825>  
 <END_N,-825>   
@@ -24,4 +26,5 @@
 <SMP_N,11>
 <PRESMP_N,1>
 <SKSMP_N,0>
+<GONIO_N,8>
 

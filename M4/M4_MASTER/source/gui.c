@@ -1137,6 +1137,9 @@ void mcc_raggi_tomo(void)
     if(mcc_cmd.buffer[18]==1)  tomoParam.tomo_deadman = true;      // Modalità deadman
     else tomoParam.tomo_deadman = false;
     
+    // Aggiunti per gestire la nuova collimazione dinamica
+    tomoParam.first_gonio = mcc_cmd.buffer[19];       // Primo angolo valido
+    tomoParam.tomo_speed = (unsigned short) mcc_cmd.buffer[20] + (unsigned short) mcc_cmd.buffer[21] * 256;
 
     // Partenza sequenza
     _EVCLR(_SEQEV_RX_TOMO_TERMINATED);
@@ -1201,6 +1204,10 @@ void mcc_raggi_aec_tomo(void)
     if(mcc_cmd.buffer[18]==1)  tomoAecParam.tomo_deadman = true;      // Modalità deadman
     else tomoAecParam.tomo_deadman = false;
     
+    // Aggiunti per gestire la nuova collimazione dinamica
+    tomoParam.first_gonio = mcc_cmd.buffer[19];       // Primo angolo valido
+    tomoParam.tomo_speed = (unsigned short) mcc_cmd.buffer[20] + (unsigned short) mcc_cmd.buffer[21] * 256;
+
     // Partenza sequenza
     _EVCLR(_SEQEV_RX_TOMO_AEC_TERMINATED);
     _EVSET(_SEQEV_RX_TOMO_AEC_START);
