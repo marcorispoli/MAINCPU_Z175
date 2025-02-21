@@ -103,6 +103,21 @@ void tomo_rx_task(uint32_t taskRegisters)
       if(Ser422WriteRegister(_REGID(RG249U1_GONIO16_ARM),angolo,10,&PCB249U1_CONTEST) != _SER422_NO_ERROR)
           _SEQERROR(_SEQ_WRITE_REGISTER);
       
+      // Impostazioni per collimazione dinamica
+      if(Ser422WriteRegister(_REGID(RG249U1_TSKIP),tomoParam.tomo_pre_pulses,10,&PCB249U1_CONTEST) != _SER422_NO_ERROR)
+          _SEQERROR(_SEQ_WRITE_REGISTER);
+
+      float delay =  90090 / tomoParam.tomo_speed;
+      unsigned short udel = (unsigned short) delay;
+
+      if(Ser422WriteRegister(_REGID(RG249U1_TTIME),udel,10,&PCB249U1_CONTEST) != _SER422_NO_ERROR)
+          _SEQERROR(_SEQ_WRITE_REGISTER);
+
+      if(Ser422WriteRegister(_REGID(RG249U1_TGONIO),tomoParam.first_gonio,10,&PCB249U1_CONTEST) != _SER422_NO_ERROR)
+          _SEQERROR(_SEQ_WRITE_REGISTER);
+
+      debugPrintI3("COLLI DINAMICA: SKIP=", tomoParam.tomo_pre_pulses, "DELAY:",udel, "GONIO:",tomoParam.first_gonio);
+
       // Impostazione collimatori ..
       if(pcb249U1SetColliCmd(3)==FALSE) _SEQERROR(_SEQ_ERR_COLLI_TOMO); // Imposta la modalità tomo
       if(pcb249U2ColliCmd(generalConfiguration.colliCfg.dynamicArray.tomoBack, generalConfiguration.colliCfg.dynamicArray.tomoFront)==FALSE) _SEQERROR(_SEQ_ERR_COLLI_TOMO);

@@ -104,7 +104,12 @@ Data di Creazione: 01/11/2014
   #define RG249U1_LEFT_SENS        22,0x45         ,_BNK23,_8BIT ,_RD, _VL, (unsigned short)0 // APosizione effettiva lama sinistra
   #define RG249U1_TRAP_SENS        23,0x46         ,_BNK23,_8BIT ,_RD, _VL, (unsigned short)0 // APosizione effettiva lama trapezio
 
-  #define PCB249U1_NREGISTERS      24
+  // Aggiunto indirizzi per nuova collimazione dinamica
+  #define RG249U1_TSKIP            24,_PSYS+13    ,_BNK01,_8BIT ,_RW, _NVL,(unsigned short)0
+  #define RG249U1_TTIME            25,_PSYS+14    ,_BNK01,_16BIT ,_RW, _NVL,(unsigned short)0
+  #define RG249U1_TGONIO           26,_PSYS+16    ,_BNK01,_8BIT ,_RW, _NVL,(unsigned short)0
+
+  #define PCB249U1_NREGISTERS      27
 
 
   //////////////////////////////////////////////////////////////////////////////
@@ -156,11 +161,15 @@ volatile _DeviceRegItem_Str  PCB249U1_Registers[]=
 
     _REGDEF(RG249U1_RIGHT_SENS ),
     _REGDEF(RG249U1_LEFT_SENS ),
-    _REGDEF(RG249U1_TRAP_SENS )
+    _REGDEF(RG249U1_TRAP_SENS ),
 
+    _REGDEF(RG249U1_TSKIP ),
+    _REGDEF(RG249U1_TTIME ),
+    _REGDEF(RG249U1_TGONIO )
   }; 
+
   #else
-  extern volatile const _DeviceRegItem_Str  PCB249U1_Registers[PCB249U1_NREGISTERS]; 
+    extern volatile const _DeviceRegItem_Str  PCB249U1_Registers[PCB249U1_NREGISTERS];
   #endif
  
   #if MAX_NLIST < PCB249U1_NREGISTERS     

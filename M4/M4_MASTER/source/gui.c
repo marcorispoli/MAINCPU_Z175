@@ -1205,8 +1205,8 @@ void mcc_raggi_aec_tomo(void)
     else tomoAecParam.tomo_deadman = false;
     
     // Aggiunti per gestire la nuova collimazione dinamica
-    tomoParam.first_gonio = mcc_cmd.buffer[19];       // Primo angolo valido
-    tomoParam.tomo_speed = (unsigned short) mcc_cmd.buffer[20] + (unsigned short) mcc_cmd.buffer[21] * 256;
+    tomoAecParam.first_gonio = mcc_cmd.buffer[19];       // Primo angolo valido
+    tomoAecParam.tomo_speed = (unsigned short) mcc_cmd.buffer[20] + (unsigned short) mcc_cmd.buffer[21] * 256;
 
     // Partenza sequenza
     _EVCLR(_SEQEV_RX_TOMO_AEC_TERMINATED);

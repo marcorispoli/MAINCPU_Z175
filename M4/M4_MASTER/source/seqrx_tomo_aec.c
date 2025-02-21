@@ -62,6 +62,10 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
     if(pcb249U2MirrorHome()==FALSE)_SEQERROR(ERROR_MIRROR_LAMP);
     if(wait2DLeftRightTrapCompletion(100)==false) _SEQERROR(ERROR_INVALID_COLLI);
 
+    // Apre le lame del collimatore per l'AEC
+    pcb249U1SetColli(0,0,50);
+    _time_delay(100);
+    if(wait2DLeftRightTrapCompletion(100)==false) _SEQERROR(ERROR_INVALID_COLLI);
 
     // Manda subito in FREEZE i drivers per non intralciare le operazioni
     // Non viene per� atteso che effettivamente i drivers si fermino
@@ -95,6 +99,22 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
     if(actuatorsMoveTomoTrxHome(Param->tomo_mode)==false) _SEQERROR(_SEQ_ERR_INTERMEDIATE_HOME);
 
 
+    // Impostazioni per collimazione dinamica
+    if(Ser422WriteRegister(_REGID(RG249U1_TSKIP),tomoAecParam.tomo_pre_pulses,10,&PCB249U1_CONTEST) != _SER422_NO_ERROR)
+        _SEQERROR(_SEQ_WRITE_REGISTER);
+
+    float delay =  90090 / tomoAecParam.tomo_speed;
+    unsigned short udel = (unsigned short) delay;
+
+    if(Ser422WriteRegister(_REGID(RG249U1_TTIME),udel,10,&PCB249U1_CONTEST) != _SER422_NO_ERROR)
+        _SEQERROR(_SEQ_WRITE_REGISTER);
+
+    if(Ser422WriteRegister(_REGID(RG249U1_TGONIO),tomoAecParam.first_gonio,10,&PCB249U1_CONTEST) != _SER422_NO_ERROR)
+        _SEQERROR(_SEQ_WRITE_REGISTER);
+
+
+    debugPrintI3("COLLI DINAMICA: SKIP=", tomoAecParam.tomo_pre_pulses, "DELAY:",udel, "GONIO:",tomoAecParam.first_gonio);
+
     // Impostazione collimazione Dinamica solo se non in calibrazione e se abilitata dal comando setColli
     // Questi comandi sono compatibili con il modo FREEZE
     pcb249U1ResetFaults();
@@ -113,7 +133,6 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
           _SEQERROR(_SEQ_WRITE_REGISTER);
 
       // Impostazione collimatori ..
-      if(pcb249U1SetColliCmd(3)==FALSE) _SEQERROR(_SEQ_ERR_COLLI_TOMO); // Imposta la modalit� tomo
       if(pcb249U2ColliCmd(generalConfiguration.colliCfg.dynamicArray.tomoBack, generalConfiguration.colliCfg.dynamicArray.tomoFront)==FALSE) _SEQERROR(_SEQ_ERR_COLLI_TOMO);
 
     }
@@ -208,6 +227,11 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
           pcb190GetPostRxRegisters();
           debugPrint("RX-3D-AEC ERRORE SEQUENZA RAGGI DURANTE ATTESA AEC");
           _SEQERROR(_DEVREGL(RG190_FAULTS,PCB190_CONTEST));      
+        }
+
+        // Imposta il collimatore dinamico
+        if(Param->tomo_mode!=_TOMO_MODE_STATIC){
+            if(pcb249U1SetColliCmd(3)==FALSE) _SEQERROR(_SEQ_ERR_COLLI_TOMO); // Imposta la modalit� tomo
         }
 
         // Dati AEC giunti
