@@ -69,6 +69,8 @@ typedef struct
   unsigned short tomo_mode;         // Modalità Narrow/Wide
   unsigned short tomo_skip;         // Impulsi da saltare
   bool tomo_deadman;                // Funzione dead man attiva
+  unsigned short tomo_speed;        // Velocita braccio 0.01°/s
+  unsigned char  first_gonio;       // Primo angolo valido
 
   // Sezione riservata per sequenze analogiche
   unsigned char analog_sequence;    // Codice sequenza in corso

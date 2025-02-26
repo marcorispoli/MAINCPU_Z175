@@ -243,6 +243,14 @@ void pcb249U1_driver(uint32_t taskRegisters)
          break;
       }
    }
+
+   // Verifica la modalita di collimazione dinamica rilevata
+   if(_TEST_BIT(PCB249U1_EW_MODE)){
+       printf("PCB249U1: RILEVATO COLLIMAZIONE DINAMICA IN MODALITA' EW\n");
+   }else{
+       printf("PCB249U1: RILEVATO COLLIMAZIONE DINAMICA IN MODALITA' GONIO\n");
+   }
+
    
    // Attende la ricezione della configurazione se necessario
    _EVSET(_EV2_PCB249U1_STARTUP_OK);
@@ -1062,7 +1070,15 @@ bool setColliArray(void){
   int ii;
   unsigned char dato;
 
-    
+  // Verifica la modalita di collimazione dinamica rilevata
+  if(_TEST_BIT(PCB249U1_EW_MODE)){
+      printf("PCB249U1: Aggiornamento collimazione dinamica in modalita EW\n");
+      debugPrint("PCB249U1: Aggiornamento collimazione dinamica in modalita EW\n");
+  }else{
+      printf("PCB249U1: Aggiornamento collimazione dinamica in modalita GONIO\n");
+      debugPrint("PCB249U1: Aggiornamento collimazione dinamica in modalita GONIO\n");
+  }
+
   // ----------- Array lama L -------------------------------------------------------
   if(N_ARRAY_L > 0xFF) {
     if(!pcb249U1SetWriteMode23()) goto fallito;        
@@ -1115,12 +1131,12 @@ bool setColliArray(void){
   }
 
 
-  printf("PCB249U1 PCB249U1 AGGIORNATA\n");
+  debugPrint("PCB249U1: collimazione dinamica aggiornata\n");
   pcb249U1SetWriteMode01();
   return true;
   
 fallito:
-  printf("PCB249U1 AGGIORNAMENTO FALLITO\n");
+  debugPrint("PCB249U1: aggiornamento fallito\n");
   pcb249U1SetWriteMode01();
   return false;
 }
