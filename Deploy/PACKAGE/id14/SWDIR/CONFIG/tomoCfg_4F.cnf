@@ -5,7 +5,8 @@
 <DEC_W,900>   
 <SMP_W,24>   
 <PRESMP_W,1>   
-<SKSMP_W,0>   
+<SKSMP_W,0>
+<GONIO_W,25>   
 
 <HOME_I,1500>  
 <END_I,-1500>   
@@ -15,6 +16,7 @@
 <SMP_I,13>   
 <PRESMP_I,3>   
 <SKSMP_I,0>   
+<GONIO_I,12> 
 
 <HOME_N,975>  
 <END_N,-975>   
@@ -23,4 +25,5 @@
 <DEC_N,800>   
 <SMP_N,11>   
 <PRESMP_N,3>   
-<SKSMP_N,0>   
+<SKSMP_N,0> 
+<GONIO_N,8>  
