@@ -116,6 +116,12 @@ OpenStudyPage::OpenStudyPage(bool local, QString bgl, QString bgs , bool showLog
 
     pulsanteManualColli = new GPush((GWindow*) this, QPixmap("://paginaOpenStudy/paginaOpenStudy/AutoColliSym.png"),QPixmap("://paginaOpenStudy/paginaOpenStudy/AutoColliSym.png"),setPointPath(8,242,104,318,104,318,162,242,162),242,104,0,0);
     pulsanteManualColli->setEnable(true);
+
+    pulsanteAecMode = new GPush((GWindow*) this, QPixmap("://paginaOpenStudy/paginaOpenStudy/AutoAEC.png"),QPixmap("://paginaOpenStudy/paginaOpenStudy/AutoAEC.png"),setPointPath(8,485,104,560,104,560,162,485,162),476,104,0,0);
+    pulsanteAecMode->setEnable(true);
+    updateAECMode(0);
+
+
     manualListPix = this->addPixmap(QPixmap("://paginaOpenStudy/paginaOpenStudy/manualListFieldY.png"));
     manualListPix->setPos(28,106);
     manualListPix->hide();
@@ -245,7 +251,7 @@ OpenStudyPage::OpenStudyPage(bool local, QString bgl, QString bgs , bool showLog
     timerId = startTimer(1000);
     disableTimedButtons = false; // Abilitazione pulsanti
     isOpen = false;
-    manualColliMode = false;
+    manualColliMode = false;    
     manualColliTimer = 0;
 
 
@@ -316,13 +322,17 @@ void OpenStudyPage::setCloseStudy(void){
             manualColliMode=false;
             updateManualCollimationStatus();
         }
+
+
+        // Reset della selezione manuale delle ROI AEC
+        updateAECMode(0);
     }
 }
 
 void OpenStudyPage::openStudyEvent(void){
 
-
     manualColliMode = false;
+    updateAECMode(0);
     manualPad = PAD_ENUM_SIZE; // Corrisponde al Custom
     manualListPix->hide();
     pulsanteToggleColliDec->setEnable(false);
@@ -412,7 +422,10 @@ void OpenStudyPage::openStudyEvent(void){
     // Aggiorna lo stato del collimatore
     PRINT("openStudyEvent: UPDATE COLLI");
     pCollimatore->updateColli();
+
+
 }
+
 
 void OpenStudyPage::setProiezione(QString name){
     if(name==""){
@@ -653,6 +666,7 @@ void OpenStudyPage::valueChanged(int index,int opt)
         if(ApplicationDatabase.getDataU(index)) setXrayOn(true);
         else{
             setXrayOn(false);
+            updateAECMode(0);
 
             // Reset della collimazione manuale e ripristino di quella automatica
             if(manualColliMode){
@@ -794,6 +808,23 @@ void OpenStudyPage::buttonActivationNotify(int id, bool status,int opt)
         return;
     }
 
+    // Pulsante di apertura della pagina di selezione delle roi
+    if(pbutton == pulsanteAecMode){        
+        if(isMaster){
+
+            // Verifica se il paddle corrente è abilitato alla selezione
+            if(pCompressore->getPaddleRoi() == 0) return;
+
+            // Imposta il massimo numero di roi selezionabili, prima di aprire la pagina
+            paginaRoi->max_selectable_roi =  pCompressore->getPaddleRoi();
+
+            setPage(_PG_ROI_SELECTION_PAGE,GWindowRoot.curPage,0);
+            return;
+        }
+    }
+
+
+
     // Segnale ricevuto da entrambe le finestre
     if(pbutton == pulsanteSelezioneProiezioni){
         if(isMaster){
@@ -851,6 +882,17 @@ void OpenStudyPage::buttonActivationNotify(int id, bool status,int opt)
 }
 
 
+
+void OpenStudyPage::updateAECMode(int mode){
+
+    if(AECMode == mode) return;
+    AECMode = mode;
+
+
+    if(AECMode == 0) pulsanteAecMode->setPix("://paginaOpenStudy/paginaOpenStudy/AutoAEC.png","://paginaOpenStudy/paginaOpenStudy/AutoAEC.png");
+    else pulsanteAecMode->setPix("://paginaOpenStudy/paginaOpenStudy/ManualAEC.png","://paginaOpenStudy/paginaOpenStudy/ManualAEC.png");
+
+}
 
 void OpenStudyPage::updateManualCollimationStatus(void){
 

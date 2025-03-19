@@ -579,6 +579,38 @@ void Compressor::padChanged(void)
     PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_PAD,0);
 }
 
+int Compressor::getPaddleRoi(void){
+
+    // Nessun paddle valido
+    if(comprPad >= PAD_ENUM_SIZE) return 0;
+
+    switch(comprPad){
+
+    // Questi pad non ammettono la selezione delle roi
+    case PAD_9x21:
+    case PAD_D75_MAG:
+    case PAD_BIOP_2D:
+    case PAD_BIOP_3D:
+    case PAD_9x9_MAG:
+        return 0;
+        break;
+
+    // Paddle a piena selezione
+    case PAD_24x30:
+    case PAD_18x24:
+    case PAD_18x24_LEFT:
+    case PAD_18x24_RIGHT:
+    case PAD_PROSTHESIS:
+    case PAD_TOMO_24x30:
+        return 7;
+        break;
+
+    // Paddle a selezione ridotta
+    case PAD_10x24:
+        return 3;
+    }
+}
+
 QString Compressor::getPadName(void)
 {       
     if(comprPad >= PAD_ENUM_SIZE) return QString(QApplication::translate("COMPRESSORE","NON RICONOSCIUTO", 0, QApplication::UnicodeUTF8));

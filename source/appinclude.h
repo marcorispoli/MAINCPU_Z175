@@ -7,6 +7,7 @@
 #include "openStudyPage.h"
 #include "projectionPage.h"
 #include "pagelanguages.h"
+#include "RoiSelectionPage.h"
 #include "pageacr.h"
 #include "pagealarms.h"
 #include "ImagePage.h"

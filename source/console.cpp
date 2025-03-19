@@ -853,6 +853,9 @@ void console::consoleRxHandler(QByteArray rxbuffer)
 
     }else if(comando==GET_GANTRY_TYPE){
         emit consoleTxHandler( answ.cmdToQByteArray(QString("OK DMD")));
+    }else if(comando==GET_AEC){
+        answ.addParam(QString("%1").arg(paginaOpenStudyDigital->AECMode));
+        emit consoleTxHandler(answ.cmdToQByteArray("OK"));
     }else{
         emit consoleTxHandler( answ.cmdToQByteArray(QString("NA")));
     }

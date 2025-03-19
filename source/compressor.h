@@ -57,9 +57,9 @@ public:
     bool isValidPad(Pad_Enum code)   {return (code<PAD_ENUM_SIZE);} // TRUE se il carrello Ã¨ sotto compressione
     QString getPadName(void);                           // Restituisce il nome simboloico associato al Pad
     QString getPadName(Pad_Enum code);           // Restituisce il nome simbolico associato al Pad
-    QString getPadTag(Pad_Enum code);            // Restituisce il TAG associato al codice numerico PAD
-
+    QString getPadTag(Pad_Enum code);            // Restituisce il TAG associato al codice numerico PAD    
     int getPadCodeFromTag(QString tag);          // Restituisce il codice numerico assocciato al Tag stringa
+    int getPaddleRoi(void);                      // Restituisce il numero di Roi selezionabili dal paddle corrente.
 
     comprStat_Enum comprStat; // ModalitÃ  d'uso del compressore
     unsigned char  comprFlags0;   // Flags interni compressore

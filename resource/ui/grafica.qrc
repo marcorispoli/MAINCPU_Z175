@@ -237,6 +237,8 @@
         <file>paginaOpenStudy/ManualColliSym.png</file>
         <file>paginaOpenStudy/manualListFieldC.png</file>
         <file>paginaOpenStudy/manualListFieldY.png</file>
+        <file>paginaOpenStudy/AutoAEC.png</file>
+        <file>paginaOpenStudy/ManualAEC.png</file>
     </qresource>
     <qresource prefix="/paginaProiezioni">
         <file>paginaProiezioni/RSIOT.png</file>
@@ -399,5 +401,11 @@
         <file>BiopsyExtended/LampDisabled.png</file>
         <file>BiopsyExtended/LampOn.png</file>
         <file>BiopsyExtended/BiopsyOutOfY.png</file>
+    </qresource>
+    <qresource prefix="/paginaRoi">
+        <file>paginaRoi/backgroundC.png</file>
+        <file>paginaRoi/backgroundY.png</file>
+        <file>paginaRoi/RoiSelected.png</file>
+        <file>paginaRoi/RoiSelection.png</file>
     </qresource>
 </RCC>

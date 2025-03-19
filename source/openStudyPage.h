@@ -35,7 +35,9 @@ private:
 
 public:
     void setOpenStudy(void);
-    void setCloseStudy(void);
+    void setCloseStudy(void);    
+    void updateAECMode(int mode);
+    int AECMode;
 
     bool disableTimedButtons; //  Disabilitazione a tempo dei bottoni per evitare rimbalzi
     int timerDisableButton;
@@ -151,7 +153,7 @@ private:
     unsigned char enableSblocco;
 
     // Gestione della collimazione manuale
-    bool manualColliMode;
+    bool manualColliMode;    
     int manualPad;
     int manualColliTimer;
 
@@ -159,6 +161,11 @@ private:
     void toggleManualPad(bool increment);
     QGraphicsPixmapItem* manualListPix;
     GPush* pulsanteManualColli;
+
+
+    GPush* pulsanteAecMode;    
+
+
     GPush* pulsanteToggleColliDec;
     GPush* pulsanteToggleColliInc;
 
