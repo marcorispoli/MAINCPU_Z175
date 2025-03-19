@@ -117,10 +117,19 @@ OpenStudyPage::OpenStudyPage(bool local, QString bgl, QString bgs , bool showLog
     pulsanteManualColli = new GPush((GWindow*) this, QPixmap("://paginaOpenStudy/paginaOpenStudy/AutoColliSym.png"),QPixmap("://paginaOpenStudy/paginaOpenStudy/AutoColliSym.png"),setPointPath(8,242,104,318,104,318,162,242,162),242,104,0,0);
     pulsanteManualColli->setEnable(true);
 
-    pulsanteAecMode = new GPush((GWindow*) this, QPixmap("://paginaOpenStudy/paginaOpenStudy/AutoAEC.png"),QPixmap("://paginaOpenStudy/paginaOpenStudy/AutoAEC.png"),setPointPath(8,485,104,560,104,560,162,485,162),476,104,0,0);
+    // Roi AEC mode selection fields ____________________________________________________________________________
+    // Attenzione la pixmap e la Glabel devono essere dichiarate prima
+    // per non sovrapporsi davanti al pulsante per la gesture!
+    pulsanteAecPix = this->addPixmap(QPixmap("://paginaOpenStudy/paginaOpenStudy/AutoAEC.png"));
+    pulsanteAecPix->setPos(485,104);
+    pulsanteAecPix->show();
+    font.setPointSize(23);
+    font.setStretch(30);
+    currentSelectedRoi = new GLabel(this,QRectF(485,161,75,24),font,QColor(_W_TEXT),QString(""),Qt::AlignCenter);
+    pulsanteAecMode = new GPush((GWindow*) this, setPointPath(8,485,104,560,104,560,162,485,162),476,104,0,0,false);
     pulsanteAecMode->setEnable(true);
-    updateAECMode(0);
-
+    AECMode = 0;
+    // ____________________________________________________________________________________________________________
 
     manualListPix = this->addPixmap(QPixmap("://paginaOpenStudy/paginaOpenStudy/manualListFieldY.png"));
     manualListPix->setPos(28,106);
@@ -308,6 +317,10 @@ void OpenStudyPage::setCloseStudy(void){
     disconnect(pagina_language,SIGNAL(changeLanguageSgn()), this,SLOT(languageChanged()));
 
     isOpen = false;
+
+    // Reset della selezione manuale delle ROI AEC
+    updateAECMode(0);
+
     if(isMaster){
         pConfig->selectMainPage();
 
@@ -324,8 +337,7 @@ void OpenStudyPage::setCloseStudy(void){
         }
 
 
-        // Reset della selezione manuale delle ROI AEC
-        updateAECMode(0);
+
     }
 }
 
@@ -596,6 +608,12 @@ void OpenStudyPage::valueChanged(int index,int opt)
 
     switch(index)
     {
+
+    // Se cambia il codice del paddle, la selezione delle Roiviene resettata
+    case _DB_COMPRESSOR_PAD_CODE:
+        updateAECMode(0);
+        break;
+
     case _DB_PROIEZIONI:
         if(isCurrentPage()) paginaProjections->setProiezioni(); // REfresh delle proiezioni
         break;
@@ -815,6 +833,9 @@ void OpenStudyPage::buttonActivationNotify(int id, bool status,int opt)
             // Verifica se il paddle corrente è abilitato alla selezione
             if(pCompressore->getPaddleRoi() == 0) return;
 
+            // Verifica se ci sia compressione in corso
+            if(!pCompressore->isCompressed()) return;
+
             // Imposta il massimo numero di roi selezionabili, prima di aprire la pagina
             paginaRoi->max_selectable_roi =  pCompressore->getPaddleRoi();
 
@@ -889,9 +910,13 @@ void OpenStudyPage::updateAECMode(int mode){
     AECMode = mode;
 
 
-    if(AECMode == 0) pulsanteAecMode->setPix("://paginaOpenStudy/paginaOpenStudy/AutoAEC.png","://paginaOpenStudy/paginaOpenStudy/AutoAEC.png");
-    else pulsanteAecMode->setPix("://paginaOpenStudy/paginaOpenStudy/ManualAEC.png","://paginaOpenStudy/paginaOpenStudy/ManualAEC.png");
+    if(AECMode == 0) pulsanteAecPix->setPixmap(QPixmap("://paginaOpenStudy/paginaOpenStudy/AutoAEC.png"));
+    else pulsanteAecPix->setPixmap(QPixmap("://paginaOpenStudy/paginaOpenStudy/ManualAEC.png"));
+    pulsanteAecPix->show();
 
+    if(AECMode==0) currentSelectedRoi->labelText ="";
+    else currentSelectedRoi->labelText = QString("(%1)").arg((int) AECMode);
+    currentSelectedRoi->update();
 }
 
 void OpenStudyPage::updateManualCollimationStatus(void){
@@ -1014,6 +1039,9 @@ void OpenStudyPage::setCompressione(void)
         compressioneValue->labelColor=studyColor;
         compressioneValue->labelText="---";
         compressioneValue->update();
+
+        // Azzera le roi selezionate
+        updateAECMode(0);
     }else{
 
         compressioneLabel->labelColor = QColor(_GREEN_COMPRESSIONE);;

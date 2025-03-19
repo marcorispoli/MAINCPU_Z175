@@ -353,7 +353,7 @@ void RoiSelectionPage::buttonActivationNotify(int id, bool status,int opt)
 
     if(pbutton==OkButton)
     {
-        if(isMaster) paginaOpenStudyDigital->updateAECMode(selectedRoi);
+        paginaOpenStudyDigital->updateAECMode(selectedRoi);
         prevPageHandler();              
         return;
     }
@@ -361,7 +361,7 @@ void RoiSelectionPage::buttonActivationNotify(int id, bool status,int opt)
     if(pbutton==CancButton)
     {
         selectedRoi = 0;
-        if(isMaster) paginaOpenStudyDigital->updateAECMode(selectedRoi);
+        paginaOpenStudyDigital->updateAECMode(selectedRoi);
         prevPageHandler();
         return;
     }
@@ -402,9 +402,6 @@ void RoiSelectionPage::buttonActivationNotify(int id, bool status,int opt)
         selectedRoi = 7;
         updateSelectedButtons();
     }
-
-    // Updates the parent page
-    if(isMaster) paginaOpenStudyDigital->updateAECMode(selectedRoi);
 
     // Disabilita i bottoni del pannello principale per evitare sovrapposizioni    
     disableButtons(500);

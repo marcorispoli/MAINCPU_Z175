@@ -164,7 +164,8 @@ private:
 
 
     GPush* pulsanteAecMode;    
-
+    QGraphicsPixmapItem* pulsanteAecPix;
+    GLabel* currentSelectedRoi;
 
     GPush* pulsanteToggleColliDec;
     GPush* pulsanteToggleColliInc;
