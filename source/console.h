@@ -11,6 +11,8 @@
 //
 ///////////////////////////////////////////////////////////////////
 
+#define GET_AEC         "GetAEC"    // Nuovo comando per ricevere il valore corrente di AEC
+
 // Nuova Interfaccia per Biopsia Standard e ad Approccio laterale
 #define SET_BIOPSY_DATA     "SetBiopsyData"
 // #define SET_BIOPSY_HOME     "SetBiopsyHome"

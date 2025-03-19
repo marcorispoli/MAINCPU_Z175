@@ -422,7 +422,10 @@ void OpenStudyPage::openStudyEvent(void){
     // Aggiorna lo stato del collimatore
     PRINT("openStudyEvent: UPDATE COLLI");
     pCollimatore->updateColli();
+
+
 }
+
 
 void OpenStudyPage::setProiezione(QString name){
     if(name==""){
@@ -805,9 +808,19 @@ void OpenStudyPage::buttonActivationNotify(int id, bool status,int opt)
         return;
     }
 
-    if(pbutton == pulsanteAecMode){
-        setPage(_PG_ROI_SELECTION_PAGE,GWindowRoot.curPage,DBase::_DB_NO_ECHO);
-        return;
+    // Pulsante di apertura della pagina di selezione delle roi
+    if(pbutton == pulsanteAecMode){        
+        if(isMaster){
+
+            // Verifica se il paddle corrente è abilitato alla selezione
+            if(pCompressore->getPaddleRoi() == 0) return;
+
+            // Imposta il massimo numero di roi selezionabili, prima di aprire la pagina
+            paginaRoi->max_selectable_roi =  pCompressore->getPaddleRoi();
+
+            setPage(_PG_ROI_SELECTION_PAGE,GWindowRoot.curPage,0);
+            return;
+        }
     }
 
 
