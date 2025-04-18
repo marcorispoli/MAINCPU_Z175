@@ -606,8 +606,12 @@ int Compressor::getPaddleRoi(void){
 
     // Paddle a selezione ridotta
     case PAD_PROSTHESIS:
+        return 4;
+        break;
+
     case PAD_10x24:
         return 3;
+        break;
     }
 }
 
