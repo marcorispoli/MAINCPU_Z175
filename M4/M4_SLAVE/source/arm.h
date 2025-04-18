@@ -135,6 +135,7 @@ ext void armUpdateConfiguration(void);
 
 bool armResetModule(void);                      // Causes the software module reset
 _PD4_Status_t* armGetStatus(void);
+
 ext armConfig_Str armConfig;        // configurazione trx
 ext uint32_t getArmInputs(void);
 ext uint32_t getArmVbus(void);

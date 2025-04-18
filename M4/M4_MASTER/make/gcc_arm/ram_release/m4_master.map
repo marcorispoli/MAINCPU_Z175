@@ -438,7 +438,7 @@ int_fifo            0x1               /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gc
 u1colli_result      0x1               ./gcc_arm/ram_release/obj/pcb249U1.o
 pending_arm_cmd_id  0x1               ./gcc_arm/ram_release/obj/actuators.o
 generalConfiguration
-                    0x2ec             ./gcc_arm/ram_release/obj/main.o
+                    0x2f0             ./gcc_arm/ram_release/obj/main.o
 
 Discarded input sections
 
@@ -2290,537 +2290,538 @@ END GROUP
                 0x3f000cd4       0x88 ./gcc_arm/ram_release/obj/actuators.o
                 0x3f000cd4                config_trx
  .text.config_arm
-                0x3f000d5c       0xa0 ./gcc_arm/ram_release/obj/actuators.o
+                0x3f000d5c       0x9c ./gcc_arm/ram_release/obj/actuators.o
                 0x3f000d5c                config_arm
  .text.config_lenze
-                0x3f000dfc       0x98 ./gcc_arm/ram_release/obj/actuators.o
-                0x3f000dfc                config_lenze
+                0x3f000df8       0x98 ./gcc_arm/ram_release/obj/actuators.o
+                0x3f000df8                config_lenze
  .text.actuatorsRxFromActuators
-                0x3f000e94       0xb4 ./gcc_arm/ram_release/obj/actuators.o
-                0x3f000e94                actuatorsRxFromActuators
+                0x3f000e90       0xb4 ./gcc_arm/ram_release/obj/actuators.o
+                0x3f000e90                actuatorsRxFromActuators
  .text.actuatorsGetStatus
-                0x3f000f48       0x16 ./gcc_arm/ram_release/obj/actuators.o
-                0x3f000f48                actuatorsGetStatus
- *fill*         0x3f000f5e        0x2 
+                0x3f000f44       0x16 ./gcc_arm/ram_release/obj/actuators.o
+                0x3f000f44                actuatorsGetStatus
+ *fill*         0x3f000f5a        0x2 
  .text.actuatorsUpdateAngles
-                0x3f000f60      0x138 ./gcc_arm/ram_release/obj/actuators.o
-                0x3f000f60                actuatorsUpdateAngles
+                0x3f000f5c      0x138 ./gcc_arm/ram_release/obj/actuators.o
+                0x3f000f5c                actuatorsUpdateAngles
  .text.actuatorsManageEnables
-                0x3f001098      0x128 ./gcc_arm/ram_release/obj/actuators.o
-                0x3f001098                actuatorsManageEnables
+                0x3f001094      0x128 ./gcc_arm/ram_release/obj/actuators.o
+                0x3f001094                actuatorsManageEnables
  .text.actuatorsRxFromArm
-                0x3f0011c0      0x264 ./gcc_arm/ram_release/obj/actuators.o
-                0x3f0011c0                actuatorsRxFromArm
+                0x3f0011bc      0x264 ./gcc_arm/ram_release/obj/actuators.o
+                0x3f0011bc                actuatorsRxFromArm
  .text.actuatorsRxFromTrx
-                0x3f001424      0x3a0 ./gcc_arm/ram_release/obj/actuators.o
-                0x3f001424                actuatorsRxFromTrx
+                0x3f001420      0x3a0 ./gcc_arm/ram_release/obj/actuators.o
+                0x3f001420                actuatorsRxFromTrx
  .text.actuatorsRxFromLenze
-                0x3f0017c4       0xe0 ./gcc_arm/ram_release/obj/actuators.o
-                0x3f0017c4                actuatorsRxFromLenze
+                0x3f0017c0       0xe0 ./gcc_arm/ram_release/obj/actuators.o
+                0x3f0017c0                actuatorsRxFromLenze
  .text.BIOPSY_manageActivationLoop
-                0x3f0018a4       0xc0 ./gcc_arm/ram_release/obj/biopsyExtended.o
+                0x3f0018a0       0xc0 ./gcc_arm/ram_release/obj/biopsyExtended.o
  .text.biopsyExtendedLoop
-                0x3f001964      0x450 ./gcc_arm/ram_release/obj/biopsyExtended.o
-                0x3f001964                biopsyExtendedLoop
+                0x3f001960      0x450 ./gcc_arm/ram_release/obj/biopsyExtended.o
+                0x3f001960                biopsyExtendedLoop
  .text.biopsyExtendedMoveXYZ
-                0x3f001db4       0x58 ./gcc_arm/ram_release/obj/biopsyExtended.o
-                0x3f001db4                biopsyExtendedMoveXYZ
+                0x3f001db0       0x58 ./gcc_arm/ram_release/obj/biopsyExtended.o
+                0x3f001db0                biopsyExtendedMoveXYZ
  .text.BiopsyExtendedIsPresent
-                0x3f001e0c       0x24 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
-                0x3f001e0c                BiopsyExtendedIsPresent
+                0x3f001e08       0x24 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
+                0x3f001e08                BiopsyExtendedIsPresent
  .text.BiopsyDriverGetStat
-                0x3f001e30       0x34 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
-                0x3f001e30                BiopsyDriverGetStat
+                0x3f001e2c       0x34 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
+                0x3f001e2c                BiopsyDriverGetStat
  .text.BiopsyDriverSetPowerLed
-                0x3f001e64       0x24 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
-                0x3f001e64                BiopsyDriverSetPowerLed
+                0x3f001e60       0x24 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
+                0x3f001e60                BiopsyDriverSetPowerLed
  .text.BiopsyDriverGetRevision
-                0x3f001e88       0x2a ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
-                0x3f001e88                BiopsyDriverGetRevision
+                0x3f001e84       0x2a ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
+                0x3f001e84                BiopsyDriverGetRevision
  .text.BiopsyDriverGetChecksum
-                0x3f001eb2       0x36 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
-                0x3f001eb2                BiopsyDriverGetChecksum
+                0x3f001eae       0x36 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
+                0x3f001eae                BiopsyDriverGetChecksum
  .text.BiopsyDriverGetNeedle
-                0x3f001ee8       0x32 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
-                0x3f001ee8                BiopsyDriverGetNeedle
+                0x3f001ee4       0x32 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
+                0x3f001ee4                BiopsyDriverGetNeedle
  .text.BiopsyDriverGetX
-                0x3f001f1a       0x34 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
-                0x3f001f1a                BiopsyDriverGetX
+                0x3f001f16       0x34 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
+                0x3f001f16                BiopsyDriverGetX
  .text.BiopsyDriverGetY
-                0x3f001f4e       0x34 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
-                0x3f001f4e                BiopsyDriverGetY
+                0x3f001f4a       0x34 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
+                0x3f001f4a                BiopsyDriverGetY
  .text.BiopsyDriverGetZ
-                0x3f001f82       0x34 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
-                0x3f001f82                BiopsyDriverGetZ
+                0x3f001f7e       0x34 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
+                0x3f001f7e                BiopsyDriverGetZ
  .text.BiopsyDriverGetSH
-                0x3f001fb6       0x34 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
-                0x3f001fb6                BiopsyDriverGetSH
+                0x3f001fb2       0x34 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
+                0x3f001fb2                BiopsyDriverGetSH
  .text.BiopsyDriverSetTGX
-                0x3f001fea       0x26 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
-                0x3f001fea                BiopsyDriverSetTGX
+                0x3f001fe6       0x26 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
+                0x3f001fe6                BiopsyDriverSetTGX
  .text.BiopsyDriverSetTGY
-                0x3f002010       0x26 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
-                0x3f002010                BiopsyDriverSetTGY
+                0x3f00200c       0x26 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
+                0x3f00200c                BiopsyDriverSetTGY
  .text.BiopsyDriverSetTGZ
-                0x3f002036       0x26 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
-                0x3f002036                BiopsyDriverSetTGZ
+                0x3f002032       0x26 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
+                0x3f002032                BiopsyDriverSetTGZ
  .text.BiopsyDriverMoveXYZ
-                0x3f00205c       0x36 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
-                0x3f00205c                BiopsyDriverMoveXYZ
+                0x3f002058       0x36 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
+                0x3f002058                BiopsyDriverMoveXYZ
  .text.BiopsyDriverMoveHOME
-                0x3f002092       0x36 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
-                0x3f002092                BiopsyDriverMoveHOME
+                0x3f00208e       0x36 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
+                0x3f00208e                BiopsyDriverMoveHOME
  .text.BiopsyDriverMoveDecZ
-                0x3f0020c8       0x36 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
-                0x3f0020c8                BiopsyDriverMoveDecZ
+                0x3f0020c4       0x36 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
+                0x3f0020c4                BiopsyDriverMoveDecZ
  .text.BiopsyDriverMoveIncZ
-                0x3f0020fe       0x36 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
-                0x3f0020fe                BiopsyDriverMoveIncZ
+                0x3f0020fa       0x36 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
+                0x3f0020fa                BiopsyDriverMoveIncZ
  .text.BiopsyDriverMoveDecX
-                0x3f002134       0x36 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
-                0x3f002134                BiopsyDriverMoveDecX
+                0x3f002130       0x36 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
+                0x3f002130                BiopsyDriverMoveDecX
  .text.BiopsyDriverMoveIncX
-                0x3f00216a       0x36 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
-                0x3f00216a                BiopsyDriverMoveIncX
+                0x3f002166       0x36 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
+                0x3f002166                BiopsyDriverMoveIncX
  .text.BiopsyDriverMoveDecY
-                0x3f0021a0       0x36 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
-                0x3f0021a0                BiopsyDriverMoveDecY
+                0x3f00219c       0x36 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
+                0x3f00219c                BiopsyDriverMoveDecY
  .text.BiopsyDriverMoveIncY
-                0x3f0021d6       0x36 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
-                0x3f0021d6                BiopsyDriverMoveIncY
+                0x3f0021d2       0x36 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
+                0x3f0021d2                BiopsyDriverMoveIncY
  .text.BiopsyDriverSetStepVal
-                0x3f00220c       0x32 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
-                0x3f00220c                BiopsyDriverSetStepVal
+                0x3f002208       0x32 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
+                0x3f002208                BiopsyDriverSetStepVal
  .text.BiopsyDriverSetBuzzer
-                0x3f00223e       0x18 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
-                0x3f00223e                BiopsyDriverSetBuzzer
- *fill*         0x3f002256        0x2 
+                0x3f00223a       0x18 ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
+                0x3f00223a                BiopsyDriverSetBuzzer
+ *fill*         0x3f002252        0x2 
  .text.biopsyGetZ
-                0x3f002258       0x38 ./gcc_arm/ram_release/obj/biopsyStandard.o
- .text.moveX    0x3f002290       0x60 ./gcc_arm/ram_release/obj/biopsyStandard.o
- .text.moveY    0x3f0022f0       0x60 ./gcc_arm/ram_release/obj/biopsyStandard.o
- .text.moveZ    0x3f002350       0x60 ./gcc_arm/ram_release/obj/biopsyStandard.o
+                0x3f002254       0x38 ./gcc_arm/ram_release/obj/biopsyStandard.o
+ .text.moveX    0x3f00228c       0x60 ./gcc_arm/ram_release/obj/biopsyStandard.o
+ .text.moveY    0x3f0022ec       0x60 ./gcc_arm/ram_release/obj/biopsyStandard.o
+ .text.moveZ    0x3f00234c       0x60 ./gcc_arm/ram_release/obj/biopsyStandard.o
  .text.biopsyStandardLoop
-                0x3f0023b0      0x5c8 ./gcc_arm/ram_release/obj/biopsyStandard.o
-                0x3f0023b0                biopsyStandardLoop
+                0x3f0023ac      0x5c8 ./gcc_arm/ram_release/obj/biopsyStandard.o
+                0x3f0023ac                biopsyStandardLoop
  .text.biopsyStandardIsPresent
-                0x3f002978       0x24 ./gcc_arm/ram_release/obj/biopsyStandard.o
-                0x3f002978                biopsyStandardIsPresent
+                0x3f002974       0x24 ./gcc_arm/ram_release/obj/biopsyStandard.o
+                0x3f002974                biopsyStandardIsPresent
  .text.biopsyStandardSetXYZ
-                0x3f00299c       0xb8 ./gcc_arm/ram_release/obj/biopsyStandard.o
-                0x3f00299c                biopsyStandardSetXYZ
+                0x3f002998       0xb8 ./gcc_arm/ram_release/obj/biopsyStandard.o
+                0x3f002998                biopsyStandardSetXYZ
  .text.biopsyStandardSetZLimit
-                0x3f002a54       0x40 ./gcc_arm/ram_release/obj/biopsyStandard.o
-                0x3f002a54                biopsyStandardSetZLimit
+                0x3f002a50       0x40 ./gcc_arm/ram_release/obj/biopsyStandard.o
+                0x3f002a50                biopsyStandardSetZLimit
  .text.biopsyStandardSetZLesione
-                0x3f002a94       0x40 ./gcc_arm/ram_release/obj/biopsyStandard.o
-                0x3f002a94                biopsyStandardSetZLesione
+                0x3f002a90       0x40 ./gcc_arm/ram_release/obj/biopsyStandard.o
+                0x3f002a90                biopsyStandardSetZLesione
  .text.biopsyStandardSetLago
-                0x3f002ad4       0x40 ./gcc_arm/ram_release/obj/biopsyStandard.o
-                0x3f002ad4                biopsyStandardSetLago
+                0x3f002ad0       0x40 ./gcc_arm/ram_release/obj/biopsyStandard.o
+                0x3f002ad0                biopsyStandardSetLago
  .text.biopsyStandardStepZ
-                0x3f002b14       0x20 ./gcc_arm/ram_release/obj/biopsyStandard.o
-                0x3f002b14                biopsyStandardStepZ
+                0x3f002b10       0x20 ./gcc_arm/ram_release/obj/biopsyStandard.o
+                0x3f002b10                biopsyStandardStepZ
  .text.biopsyUpdateConfig
-                0x3f002b34       0xcc ./gcc_arm/ram_release/obj/biopsy_startup.o
+                0x3f002b30       0xcc ./gcc_arm/ram_release/obj/biopsy_startup.o
  .text.BIOPSY_driver
-                0x3f002c00       0xac ./gcc_arm/ram_release/obj/biopsy_startup.o
-                0x3f002c00                BIOPSY_driver
+                0x3f002bfc       0xac ./gcc_arm/ram_release/obj/biopsy_startup.o
+                0x3f002bfc                BIOPSY_driver
  .text.config_biopsy
-                0x3f002cac       0x48 ./gcc_arm/ram_release/obj/biopsy_startup.o
-                0x3f002cac                config_biopsy
+                0x3f002ca8       0x48 ./gcc_arm/ram_release/obj/biopsy_startup.o
+                0x3f002ca8                config_biopsy
  .text.msEventWaitAll
-                0x3f002cf4       0x30 ./gcc_arm/ram_release/obj/common.o
-                0x3f002cf4                msEventWaitAll
+                0x3f002cf0       0x30 ./gcc_arm/ram_release/obj/common.o
+                0x3f002cf0                msEventWaitAll
  .text.msEventWaitAny
-                0x3f002d24       0x30 ./gcc_arm/ram_release/obj/common.o
-                0x3f002d24                msEventWaitAny
+                0x3f002d20       0x30 ./gcc_arm/ram_release/obj/common.o
+                0x3f002d20                msEventWaitAny
  .text.setOutputs
-                0x3f002d54       0x5c ./gcc_arm/ram_release/obj/common.o
-                0x3f002d54                setOutputs
- .text.nearest  0x3f002db0       0x22 ./gcc_arm/ram_release/obj/common.o
-                0x3f002db0                nearest
- *fill*         0x3f002dd2        0x2 
+                0x3f002d50       0x5c ./gcc_arm/ram_release/obj/common.o
+                0x3f002d50                setOutputs
+ .text.nearest  0x3f002dac       0x22 ./gcc_arm/ram_release/obj/common.o
+                0x3f002dac                nearest
+ *fill*         0x3f002dce        0x2 
  .text.debugPrintEna
-                0x3f002dd4       0x18 ./gcc_arm/ram_release/obj/common.o
-                0x3f002dd4                debugPrintEna
+                0x3f002dd0       0x18 ./gcc_arm/ram_release/obj/common.o
+                0x3f002dd0                debugPrintEna
  .text.printEna
-                0x3f002dec        0xc ./gcc_arm/ram_release/obj/common.o
-                0x3f002dec                printEna
+                0x3f002de8        0xc ./gcc_arm/ram_release/obj/common.o
+                0x3f002de8                printEna
  .text.debugPrint
-                0x3f002df8       0x54 ./gcc_arm/ram_release/obj/common.o
-                0x3f002df8                debugPrint
+                0x3f002df4       0x54 ./gcc_arm/ram_release/obj/common.o
+                0x3f002df4                debugPrint
  .text.debugPrintIBuffer
-                0x3f002e4c       0x60 ./gcc_arm/ram_release/obj/common.o
-                0x3f002e4c                debugPrintIBuffer
+                0x3f002e48       0x60 ./gcc_arm/ram_release/obj/common.o
+                0x3f002e48                debugPrintIBuffer
  .text.debugPrintXBuffer
-                0x3f002eac       0x74 ./gcc_arm/ram_release/obj/common.o
-                0x3f002eac                debugPrintXBuffer
+                0x3f002ea8       0x74 ./gcc_arm/ram_release/obj/common.o
+                0x3f002ea8                debugPrintXBuffer
  .text.debugPrintI
-                0x3f002f20       0x50 ./gcc_arm/ram_release/obj/common.o
-                0x3f002f20                debugPrintI
+                0x3f002f1c       0x50 ./gcc_arm/ram_release/obj/common.o
+                0x3f002f1c                debugPrintI
  .text.debugPrintI2
-                0x3f002f70       0x78 ./gcc_arm/ram_release/obj/common.o
-                0x3f002f70                debugPrintI2
+                0x3f002f6c       0x78 ./gcc_arm/ram_release/obj/common.o
+                0x3f002f6c                debugPrintI2
  .text.debugPrintI3
-                0x3f002fe8       0xa4 ./gcc_arm/ram_release/obj/common.o
-                0x3f002fe8                debugPrintI3
+                0x3f002fe4       0xa4 ./gcc_arm/ram_release/obj/common.o
+                0x3f002fe4                debugPrintI3
  .text.debugPrintI4
-                0x3f00308c       0xd4 ./gcc_arm/ram_release/obj/common.o
-                0x3f00308c                debugPrintI4
+                0x3f003088       0xd4 ./gcc_arm/ram_release/obj/common.o
+                0x3f003088                debugPrintI4
  .text.debugPrintX
-                0x3f003160       0x50 ./gcc_arm/ram_release/obj/common.o
-                0x3f003160                debugPrintX
+                0x3f00315c       0x50 ./gcc_arm/ram_release/obj/common.o
+                0x3f00315c                debugPrintX
  .text.debugPrintX3
-                0x3f0031b0       0xa4 ./gcc_arm/ram_release/obj/common.o
-                0x3f0031b0                debugPrintX3
+                0x3f0031ac       0xa4 ./gcc_arm/ram_release/obj/common.o
+                0x3f0031ac                debugPrintX3
  .text.debugPrintX4
-                0x3f003254       0xd4 ./gcc_arm/ram_release/obj/common.o
-                0x3f003254                debugPrintX4
+                0x3f003250       0xd4 ./gcc_arm/ram_release/obj/common.o
+                0x3f003250                debugPrintX4
  .text.debugPrintF
-                0x3f003328       0xb0 ./gcc_arm/ram_release/obj/common.o
-                0x3f003328                debugPrintF
+                0x3f003324       0xb0 ./gcc_arm/ram_release/obj/common.o
+                0x3f003324                debugPrintF
  .text.loader_activation
-                0x3f0033d8       0x3c ./gcc_arm/ram_release/obj/gui.o
-                0x3f0033d8                loader_activation
+                0x3f0033d4       0x3c ./gcc_arm/ram_release/obj/gui.o
+                0x3f0033d4                loader_activation
  .text.loader_chip_erase
-                0x3f003414       0x38 ./gcc_arm/ram_release/obj/gui.o
-                0x3f003414                loader_chip_erase
+                0x3f003410       0x38 ./gcc_arm/ram_release/obj/gui.o
+                0x3f003410                loader_chip_erase
  .text.loader_write_block
-                0x3f00344c       0x9c ./gcc_arm/ram_release/obj/gui.o
-                0x3f00344c                loader_write_block
+                0x3f003448       0x9c ./gcc_arm/ram_release/obj/gui.o
+                0x3f003448                loader_write_block
  .text.loader_write_config
-                0x3f0034e8       0x3c ./gcc_arm/ram_release/obj/gui.o
-                0x3f0034e8                loader_write_config
+                0x3f0034e4       0x3c ./gcc_arm/ram_release/obj/gui.o
+                0x3f0034e4                loader_write_config
  .text.loader_read_config
-                0x3f003524       0x98 ./gcc_arm/ram_release/obj/gui.o
-                0x3f003524                loader_read_config
+                0x3f003520       0x98 ./gcc_arm/ram_release/obj/gui.o
+                0x3f003520                loader_read_config
  .text.manageMccLoader
-                0x3f0035bc       0x60 ./gcc_arm/ram_release/obj/gui.o
-                0x3f0035bc                manageMccLoader
+                0x3f0035b8       0x60 ./gcc_arm/ram_release/obj/gui.o
+                0x3f0035b8                manageMccLoader
  .text.manageMccConfig
-                0x3f00361c      0x410 ./gcc_arm/ram_release/obj/gui.o
-                0x3f00361c                manageMccConfig
+                0x3f003618      0x410 ./gcc_arm/ram_release/obj/gui.o
+                0x3f003618                manageMccConfig
  .text.mcc_cmd_trx
-                0x3f003a2c      0x118 ./gcc_arm/ram_release/obj/gui.o
-                0x3f003a2c                mcc_cmd_trx
+                0x3f003a28      0x118 ./gcc_arm/ram_release/obj/gui.o
+                0x3f003a28                mcc_cmd_trx
  .text.mcc_cmd_arm
-                0x3f003b44       0xb4 ./gcc_arm/ram_release/obj/gui.o
-                0x3f003b44                mcc_cmd_arm
+                0x3f003b40       0xb4 ./gcc_arm/ram_release/obj/gui.o
+                0x3f003b40                mcc_cmd_arm
  .text.mcc_raggi_std
-                0x3f003bf8       0xe8 ./gcc_arm/ram_release/obj/gui.o
-                0x3f003bf8                mcc_raggi_std
+                0x3f003bf4       0xe8 ./gcc_arm/ram_release/obj/gui.o
+                0x3f003bf4                mcc_raggi_std
  .text.mcc_raggi_aec_std
-                0x3f003ce0       0xf4 ./gcc_arm/ram_release/obj/gui.o
-                0x3f003ce0                mcc_raggi_aec_std
+                0x3f003cdc       0xf4 ./gcc_arm/ram_release/obj/gui.o
+                0x3f003cdc                mcc_raggi_aec_std
  .text.mcc_raggi_bassa_energia
-                0x3f003dd4       0xd0 ./gcc_arm/ram_release/obj/gui.o
-                0x3f003dd4                mcc_raggi_bassa_energia
+                0x3f003dd0       0xd0 ./gcc_arm/ram_release/obj/gui.o
+                0x3f003dd0                mcc_raggi_bassa_energia
  .text.mcc_raggi_alta_energia
-                0x3f003ea4       0xc0 ./gcc_arm/ram_release/obj/gui.o
-                0x3f003ea4                mcc_raggi_alta_energia
+                0x3f003ea0       0xc0 ./gcc_arm/ram_release/obj/gui.o
+                0x3f003ea0                mcc_raggi_alta_energia
  .text.mcc_exp_aec_std
-                0x3f003f64       0xfc ./gcc_arm/ram_release/obj/gui.o
-                0x3f003f64                mcc_exp_aec_std
+                0x3f003f60       0xfc ./gcc_arm/ram_release/obj/gui.o
+                0x3f003f60                mcc_exp_aec_std
  .text.mcc_raggi_tomo
-                0x3f004060      0x100 ./gcc_arm/ram_release/obj/gui.o
-                0x3f004060                mcc_raggi_tomo
+                0x3f00405c      0x100 ./gcc_arm/ram_release/obj/gui.o
+                0x3f00405c                mcc_raggi_tomo
  .text.mcc_raggi_aec_tomo
-                0x3f004160       0xfc ./gcc_arm/ram_release/obj/gui.o
-                0x3f004160                mcc_raggi_aec_tomo
+                0x3f00415c       0xfc ./gcc_arm/ram_release/obj/gui.o
+                0x3f00415c                mcc_raggi_aec_tomo
  .text.mccSetRotationToolConfig
-                0x3f00425c        0xc ./gcc_arm/ram_release/obj/gui.o
-                0x3f00425c                mccSetRotationToolConfig
+                0x3f004258        0xc ./gcc_arm/ram_release/obj/gui.o
+                0x3f004258                mccSetRotationToolConfig
  .text.mccGetGonio
-                0x3f004268       0x48 ./gcc_arm/ram_release/obj/gui.o
-                0x3f004268                mccGetGonio
+                0x3f004264       0x48 ./gcc_arm/ram_release/obj/gui.o
+                0x3f004264                mccGetGonio
  .text.mcc_set_mirror
-                0x3f0042b0       0x8c ./gcc_arm/ram_release/obj/gui.o
-                0x3f0042b0                mcc_set_mirror
+                0x3f0042ac       0x8c ./gcc_arm/ram_release/obj/gui.o
+                0x3f0042ac                mcc_set_mirror
  .text.mcc_set_lamp
-                0x3f00433c       0xc0 ./gcc_arm/ram_release/obj/gui.o
-                0x3f00433c                mcc_set_lamp
+                0x3f004338       0xc0 ./gcc_arm/ram_release/obj/gui.o
+                0x3f004338                mcc_set_lamp
  .text.mccSetFuoco
-                0x3f0043fc       0x5c ./gcc_arm/ram_release/obj/gui.o
-                0x3f0043fc                mccSetFuoco
+                0x3f0043f8       0x5c ./gcc_arm/ram_release/obj/gui.o
+                0x3f0043f8                mccSetFuoco
  .text.mccSetFiltro
-                0x3f004458       0x28 ./gcc_arm/ram_release/obj/gui.o
-                0x3f004458                mccSetFiltro
+                0x3f004454       0x28 ./gcc_arm/ram_release/obj/gui.o
+                0x3f004454                mccSetFiltro
  .text.mccSetCalibFiltro
-                0x3f004480       0x2c ./gcc_arm/ram_release/obj/gui.o
-                0x3f004480                mccSetCalibFiltro
+                0x3f00447c       0x2c ./gcc_arm/ram_release/obj/gui.o
+                0x3f00447c                mccSetCalibFiltro
  .text.mccSetColli
-                0x3f0044ac       0x8c ./gcc_arm/ram_release/obj/gui.o
-                0x3f0044ac                mccSetColli
+                0x3f0044a8       0x8c ./gcc_arm/ram_release/obj/gui.o
+                0x3f0044a8                mccSetColli
  .text.mcc_manual_rx_shot
-                0x3f004538       0xfc ./gcc_arm/ram_release/obj/gui.o
-                0x3f004538                mcc_manual_rx_shot
+                0x3f004534       0xfc ./gcc_arm/ram_release/obj/gui.o
+                0x3f004534                mcc_manual_rx_shot
  .text.mcc_test
-                0x3f004634       0x34 ./gcc_arm/ram_release/obj/gui.o
-                0x3f004634                mcc_test
+                0x3f004630       0x34 ./gcc_arm/ram_release/obj/gui.o
+                0x3f004630                mcc_test
  .text.mcc_set_starter
-                0x3f004668       0x40 ./gcc_arm/ram_release/obj/gui.o
-                0x3f004668                mcc_set_starter
+                0x3f004664       0x40 ./gcc_arm/ram_release/obj/gui.o
+                0x3f004664                mcc_set_starter
  .text.srv_send
-                0x3f0046a8       0x38 ./gcc_arm/ram_release/obj/gui.o
-                0x3f0046a8                srv_send
+                0x3f0046a4       0x38 ./gcc_arm/ram_release/obj/gui.o
+                0x3f0046a4                srv_send
  .text.mcc_service_commands
-                0x3f0046e0       0xf4 ./gcc_arm/ram_release/obj/gui.o
-                0x3f0046e0                mcc_service_commands
+                0x3f0046dc       0xf4 ./gcc_arm/ram_release/obj/gui.o
+                0x3f0046dc                mcc_service_commands
  .text.mcc_pcb215_calibration
-                0x3f0047d4       0xdc ./gcc_arm/ram_release/obj/gui.o
-                0x3f0047d4                mcc_pcb215_calibration
+                0x3f0047d0       0xdc ./gcc_arm/ram_release/obj/gui.o
+                0x3f0047d0                mcc_pcb215_calibration
  .text.mccBiopsyCmd
-                0x3f0048b0       0x64 ./gcc_arm/ram_release/obj/gui.o
-                0x3f0048b0                mccBiopsyCmd
+                0x3f0048ac       0x64 ./gcc_arm/ram_release/obj/gui.o
+                0x3f0048ac                mccBiopsyCmd
  .text.mcc_pcb215_get_trolley
-                0x3f004914       0x28 ./gcc_arm/ram_release/obj/gui.o
-                0x3f004914                mcc_pcb215_get_trolley
+                0x3f004910       0x28 ./gcc_arm/ram_release/obj/gui.o
+                0x3f004910                mcc_pcb215_get_trolley
  .text.mcc_canopen
-                0x3f00493c       0x30 ./gcc_arm/ram_release/obj/gui.o
-                0x3f00493c                mcc_canopen
+                0x3f004938       0x30 ./gcc_arm/ram_release/obj/gui.o
+                0x3f004938                mcc_canopen
  .text.mcc_calib_zero
-                0x3f00496c       0xd4 ./gcc_arm/ram_release/obj/gui.o
-                0x3f00496c                mcc_calib_zero
+                0x3f004968       0xd4 ./gcc_arm/ram_release/obj/gui.o
+                0x3f004968                mcc_calib_zero
  .text.mccResetGonio
-                0x3f004a40       0x68 ./gcc_arm/ram_release/obj/gui.o
-                0x3f004a40                mccResetGonio
+                0x3f004a3c       0x68 ./gcc_arm/ram_release/obj/gui.o
+                0x3f004a3c                mccResetGonio
  .text.mcc_parking_mode
-                0x3f004aa8      0x170 ./gcc_arm/ram_release/obj/gui.o
-                0x3f004aa8                mcc_parking_mode
+                0x3f004aa4      0x170 ./gcc_arm/ram_release/obj/gui.o
+                0x3f004aa4                mcc_parking_mode
  .text.mcc_unparking_mode
-                0x3f004c18       0xbc ./gcc_arm/ram_release/obj/gui.o
-                0x3f004c18                mcc_unparking_mode
+                0x3f004c14       0xbc ./gcc_arm/ram_release/obj/gui.o
+                0x3f004c14                mcc_unparking_mode
  .text.mccBiopsyStdXYZ
-                0x3f004cd4       0x9c ./gcc_arm/ram_release/obj/gui.o
-                0x3f004cd4                mccBiopsyStdXYZ
+                0x3f004cd0       0x9c ./gcc_arm/ram_release/obj/gui.o
+                0x3f004cd0                mccBiopsyStdXYZ
  .text.digitalManageMccOperativo
-                0x3f004d70      0x280 ./gcc_arm/ram_release/obj/gui.o
-                0x3f004d70                digitalManageMccOperativo
+                0x3f004d6c      0x280 ./gcc_arm/ram_release/obj/gui.o
+                0x3f004d6c                digitalManageMccOperativo
  .text.mccPrint
-                0x3f004ff0       0x5c ./gcc_arm/ram_release/obj/gui.o
-                0x3f004ff0                mccPrint
+                0x3f004fec       0x5c ./gcc_arm/ram_release/obj/gui.o
+                0x3f004fec                mccPrint
  .text.gui_interface_task
-                0x3f00504c       0x74 ./gcc_arm/ram_release/obj/gui.o
-                0x3f00504c                gui_interface_task
+                0x3f005048       0x74 ./gcc_arm/ram_release/obj/gui.o
+                0x3f005048                gui_interface_task
  .text.loaderCommand
-                0x3f0050c0       0x54 ./gcc_arm/ram_release/obj/loader.o
-                0x3f0050c0                loaderCommand
+                0x3f0050bc       0x54 ./gcc_arm/ram_release/obj/loader.o
+                0x3f0050bc                loaderCommand
  .text.loaderRead
-                0x3f005114       0xa0 ./gcc_arm/ram_release/obj/loader.o
-                0x3f005114                loaderRead
+                0x3f005110       0xa0 ./gcc_arm/ram_release/obj/loader.o
+                0x3f005110                loaderRead
  .text.loaderWrite
-                0x3f0051b4       0x90 ./gcc_arm/ram_release/obj/loader.o
-                0x3f0051b4                loaderWrite
+                0x3f0051b0       0x90 ./gcc_arm/ram_release/obj/loader.o
+                0x3f0051b0                loaderWrite
  .text.loaderWriteBlk
-                0x3f005244       0xcc ./gcc_arm/ram_release/obj/loader.o
-                0x3f005244                loaderWriteBlk
+                0x3f005240       0xcc ./gcc_arm/ram_release/obj/loader.o
+                0x3f005240                loaderWriteBlk
  .text.loaderExit
-                0x3f005310       0x42 ./gcc_arm/ram_release/obj/loader.o
-                0x3f005310                loaderExit
- *fill*         0x3f005352        0x2 
+                0x3f00530c       0x42 ./gcc_arm/ram_release/obj/loader.o
+                0x3f00530c                loaderExit
+ *fill*         0x3f00534e        0x2 
  .text.loaderActivation
-                0x3f005354      0x1f0 ./gcc_arm/ram_release/obj/loader.o
-                0x3f005354                loaderActivation
+                0x3f005350      0x1f0 ./gcc_arm/ram_release/obj/loader.o
+                0x3f005350                loaderActivation
  .text.loaderChipErase
-                0x3f005544       0x34 ./gcc_arm/ram_release/obj/loader.o
-                0x3f005544                loaderChipErase
+                0x3f005540       0x34 ./gcc_arm/ram_release/obj/loader.o
+                0x3f005540                loaderChipErase
  .text.loaderLoadSegment
-                0x3f005578       0xf0 ./gcc_arm/ram_release/obj/loader.o
-                0x3f005578                loaderLoadSegment
+                0x3f005574       0xf0 ./gcc_arm/ram_release/obj/loader.o
+                0x3f005574                loaderLoadSegment
  .text.loaderWriteConfig
-                0x3f005668       0xf6 ./gcc_arm/ram_release/obj/loader.o
-                0x3f005668                loaderWriteConfig
- *fill*         0x3f00575e        0x2 
+                0x3f005664       0xf6 ./gcc_arm/ram_release/obj/loader.o
+                0x3f005664                loaderWriteConfig
+ *fill*         0x3f00575a        0x2 
  .text.startupDigitalGantry
-                0x3f005760      0x114 ./gcc_arm/ram_release/obj/main.o
-                0x3f005760                startupDigitalGantry
+                0x3f00575c      0x114 ./gcc_arm/ram_release/obj/main.o
+                0x3f00575c                startupDigitalGantry
  .text.main_task
-                0x3f005874      0x218 ./gcc_arm/ram_release/obj/main.o
-                0x3f005874                main_task
+                0x3f005870      0x218 ./gcc_arm/ram_release/obj/main.o
+                0x3f005870                main_task
  .text.mainPrintHardwareConfig
-                0x3f005a8c      0x108 ./gcc_arm/ram_release/obj/main.o
-                0x3f005a8c                mainPrintHardwareConfig
+                0x3f005a88      0x108 ./gcc_arm/ram_release/obj/main.o
+                0x3f005a88                mainPrintHardwareConfig
  .text.canOpenMasterInit
-                0x3f005b94      0x1d4 ./gcc_arm/ram_release/obj/master_can.o
-                0x3f005b94                canOpenMasterInit
+                0x3f005b90      0x1d4 ./gcc_arm/ram_release/obj/master_can.o
+                0x3f005b90                canOpenMasterInit
  .text.Can_RxErrors_Task
-                0x3f005d68       0xf4 ./gcc_arm/ram_release/obj/master_can.o
-                0x3f005d68                Can_RxErrors_Task
+                0x3f005d64       0xf4 ./gcc_arm/ram_release/obj/master_can.o
+                0x3f005d64                Can_RxErrors_Task
  .text.CanSendToActuatorsSlave
-                0x3f005e5c       0x2c ./gcc_arm/ram_release/obj/master_can.o
-                0x3f005e5c                CanSendToActuatorsSlave
+                0x3f005e58       0x2c ./gcc_arm/ram_release/obj/master_can.o
+                0x3f005e58                CanSendToActuatorsSlave
  .text.Can_Tx_Task
-                0x3f005e88       0x9c ./gcc_arm/ram_release/obj/master_can.o
-                0x3f005e88                Can_Tx_Task
+                0x3f005e84       0x9c ./gcc_arm/ram_release/obj/master_can.o
+                0x3f005e84                Can_Tx_Task
  .text.Can_Rx_Task
-                0x3f005f24      0x160 ./gcc_arm/ram_release/obj/master_can.o
-                0x3f005f24                Can_Rx_Task
+                0x3f005f20      0x160 ./gcc_arm/ram_release/obj/master_can.o
+                0x3f005f20                Can_Rx_Task
  .text.Can_RxActuators_Task
-                0x3f006084       0x60 ./gcc_arm/ram_release/obj/master_can.o
-                0x3f006084                Can_RxActuators_Task
+                0x3f006080       0x60 ./gcc_arm/ram_release/obj/master_can.o
+                0x3f006080                Can_RxActuators_Task
  .text.mccOpenPort
-                0x3f0060e4       0x12 ./gcc_arm/ram_release/obj/mccClass.o
-                0x3f0060e4                mccOpenPort
+                0x3f0060e0       0x12 ./gcc_arm/ram_release/obj/mccClass.o
+                0x3f0060e0                mccOpenPort
  .text.mccSetChecksum
-                0x3f0060f6       0x1e ./gcc_arm/ram_release/obj/mccClass.o
-                0x3f0060f6                mccSetChecksum
+                0x3f0060f2       0x1e ./gcc_arm/ram_release/obj/mccClass.o
+                0x3f0060f2                mccSetChecksum
  .text.mccSendBuffer
-                0x3f006114       0x8c ./gcc_arm/ram_release/obj/mccClass.o
-                0x3f006114                mccSendBuffer
+                0x3f006110       0x8c ./gcc_arm/ram_release/obj/mccClass.o
+                0x3f006110                mccSendBuffer
  .text.mccLibNotify
-                0x3f0061a0       0x5c ./gcc_arm/ram_release/obj/mccClass.o
+                0x3f00619c       0x5c ./gcc_arm/ram_release/obj/mccClass.o
  .text.mccIsFrameCorrect
-                0x3f0061fc       0x28 ./gcc_arm/ram_release/obj/mccClass.o
-                0x3f0061fc                mccIsFrameCorrect
+                0x3f0061f8       0x28 ./gcc_arm/ram_release/obj/mccClass.o
+                0x3f0061f8                mccIsFrameCorrect
  .text.mccRxFrame
-                0x3f006224       0x32 ./gcc_arm/ram_release/obj/mccClass.o
-                0x3f006224                mccRxFrame
+                0x3f006220       0x32 ./gcc_arm/ram_release/obj/mccClass.o
+                0x3f006220                mccRxFrame
  .text.mccDebugPrint
-                0x3f006256       0x3e ./gcc_arm/ram_release/obj/mccClass.o
-                0x3f006256                mccDebugPrint
+                0x3f006252       0x3e ./gcc_arm/ram_release/obj/mccClass.o
+                0x3f006252                mccDebugPrint
  .text.mccGuiNotify
-                0x3f006294       0x1a ./gcc_arm/ram_release/obj/mccClass.o
-                0x3f006294                mccGuiNotify
+                0x3f006290       0x1a ./gcc_arm/ram_release/obj/mccClass.o
+                0x3f006290                mccGuiNotify
  .text.mccServiceNotify
-                0x3f0062ae       0x1a ./gcc_arm/ram_release/obj/mccClass.o
-                0x3f0062ae                mccServiceNotify
+                0x3f0062aa       0x1a ./gcc_arm/ram_release/obj/mccClass.o
+                0x3f0062aa                mccServiceNotify
  .text.mccLoaderNotify
-                0x3f0062c8       0x1a ./gcc_arm/ram_release/obj/mccClass.o
-                0x3f0062c8                mccLoaderNotify
+                0x3f0062c4       0x1a ./gcc_arm/ram_release/obj/mccClass.o
+                0x3f0062c4                mccLoaderNotify
  .text.mccPCB215Notify
-                0x3f0062e2       0x1a ./gcc_arm/ram_release/obj/mccClass.o
-                0x3f0062e2                mccPCB215Notify
+                0x3f0062de       0x1a ./gcc_arm/ram_release/obj/mccClass.o
+                0x3f0062de                mccPCB215Notify
  .text.mccPCB249U1Notify
-                0x3f0062fc       0x1a ./gcc_arm/ram_release/obj/mccClass.o
-                0x3f0062fc                mccPCB249U1Notify
+                0x3f0062f8       0x1a ./gcc_arm/ram_release/obj/mccClass.o
+                0x3f0062f8                mccPCB249U1Notify
  .text.mccPCB190Notify
-                0x3f006316       0x1a ./gcc_arm/ram_release/obj/mccClass.o
-                0x3f006316                mccPCB190Notify
+                0x3f006312       0x1a ./gcc_arm/ram_release/obj/mccClass.o
+                0x3f006312                mccPCB190Notify
  .text.mccBiopsyStandardNotify
-                0x3f006330       0x1a ./gcc_arm/ram_release/obj/mccClass.o
-                0x3f006330                mccBiopsyStandardNotify
+                0x3f00632c       0x1a ./gcc_arm/ram_release/obj/mccClass.o
+                0x3f00632c                mccBiopsyStandardNotify
  .text.mccBiopsyExtendedNotify
-                0x3f00634a       0x1a ./gcc_arm/ram_release/obj/mccClass.o
-                0x3f00634a                mccBiopsyExtendedNotify
+                0x3f006346       0x1a ./gcc_arm/ram_release/obj/mccClass.o
+                0x3f006346                mccBiopsyExtendedNotify
  .text.mccConfigNotify
-                0x3f006364       0x1a ./gcc_arm/ram_release/obj/mccClass.o
-                0x3f006364                mccConfigNotify
- *fill*         0x3f00637e        0x2 
+                0x3f006360       0x1a ./gcc_arm/ram_release/obj/mccClass.o
+                0x3f006360                mccConfigNotify
+ *fill*         0x3f00637a        0x2 
  .text.GetFwRevision
-                0x3f006380       0x60 ./gcc_arm/ram_release/obj/pcb190.o
+                0x3f00637c       0x60 ./gcc_arm/ram_release/obj/pcb190.o
  .text.pcb190DriverCommunicationError
-                0x3f0063e0       0x84 ./gcc_arm/ram_release/obj/pcb190.o
+                0x3f0063dc       0x84 ./gcc_arm/ram_release/obj/pcb190.o
  .text.pcb190StartRxStd
-                0x3f006464       0x4c ./gcc_arm/ram_release/obj/pcb190.o
-                0x3f006464                pcb190StartRxStd
+                0x3f006460       0x4c ./gcc_arm/ram_release/obj/pcb190.o
+                0x3f006460                pcb190StartRxStd
  .text.pcb190StartRxAecStd
-                0x3f0064b0       0x58 ./gcc_arm/ram_release/obj/pcb190.o
-                0x3f0064b0                pcb190StartRxAecStd
+                0x3f0064ac       0x58 ./gcc_arm/ram_release/obj/pcb190.o
+                0x3f0064ac                pcb190StartRxAecStd
  .text.pcb190StartRxTomoAec
-                0x3f006508       0x58 ./gcc_arm/ram_release/obj/pcb190.o
-                0x3f006508                pcb190StartRxTomoAec
+                0x3f006504       0x58 ./gcc_arm/ram_release/obj/pcb190.o
+                0x3f006504                pcb190StartRxTomoAec
  .text.pcb190StartRxTomo
-                0x3f006560       0x58 ./gcc_arm/ram_release/obj/pcb190.o
-                0x3f006560                pcb190StartRxTomo
+                0x3f00655c       0x58 ./gcc_arm/ram_release/obj/pcb190.o
+                0x3f00655c                pcb190StartRxTomo
  .text.pcb190ResetFault
-                0x3f0065b8       0x4c ./gcc_arm/ram_release/obj/pcb190.o
-                0x3f0065b8                pcb190ResetFault
+                0x3f0065b4       0x4c ./gcc_arm/ram_release/obj/pcb190.o
+                0x3f0065b4                pcb190ResetFault
  .text.pcb190SetFuoco
-                0x3f006604       0x74 ./gcc_arm/ram_release/obj/pcb190.o
-                0x3f006604                pcb190SetFuoco
+                0x3f006600       0x74 ./gcc_arm/ram_release/obj/pcb190.o
+                0x3f006600                pcb190SetFuoco
  .text.pcb190StarterHcommand
-                0x3f006678       0x4c ./gcc_arm/ram_release/obj/pcb190.o
-                0x3f006678                pcb190StarterHcommand
+                0x3f006674       0x4c ./gcc_arm/ram_release/obj/pcb190.o
+                0x3f006674                pcb190StarterHcommand
  .text.pcb190StarterH
-                0x3f0066c4       0x70 ./gcc_arm/ram_release/obj/pcb190.o
-                0x3f0066c4                pcb190StarterH
+                0x3f0066c0       0x70 ./gcc_arm/ram_release/obj/pcb190.o
+                0x3f0066c0                pcb190StarterH
  .text.pcb190StarterLcommand
-                0x3f006734       0x48 ./gcc_arm/ram_release/obj/pcb190.o
-                0x3f006734                pcb190StarterLcommand
+                0x3f006730       0x48 ./gcc_arm/ram_release/obj/pcb190.o
+                0x3f006730                pcb190StarterLcommand
  .text.pcb190StarterL
-                0x3f00677c       0x74 ./gcc_arm/ram_release/obj/pcb190.o
-                0x3f00677c                pcb190StarterL
+                0x3f006778       0x74 ./gcc_arm/ram_release/obj/pcb190.o
+                0x3f006778                pcb190StarterL
  .text.pcb190StopStarter
-                0x3f0067f0       0x78 ./gcc_arm/ram_release/obj/pcb190.o
-                0x3f0067f0                pcb190StopStarter
+                0x3f0067ec       0x78 ./gcc_arm/ram_release/obj/pcb190.o
+                0x3f0067ec                pcb190StopStarter
  .text.pcb190OffStarter
-                0x3f006868       0x74 ./gcc_arm/ram_release/obj/pcb190.o
-                0x3f006868                pcb190OffStarter
+                0x3f006864       0x74 ./gcc_arm/ram_release/obj/pcb190.o
+                0x3f006864                pcb190OffStarter
  .text.waitPcb190Ready
-                0x3f0068dc       0x40 ./gcc_arm/ram_release/obj/pcb190.o
-                0x3f0068dc                waitPcb190Ready
+                0x3f0068d8       0x40 ./gcc_arm/ram_release/obj/pcb190.o
+                0x3f0068d8                waitPcb190Ready
  .text.pcb190GetPostRxRegisters
-                0x3f00691c       0x48 ./gcc_arm/ram_release/obj/pcb190.o
-                0x3f00691c                pcb190GetPostRxRegisters
+                0x3f006918       0x48 ./gcc_arm/ram_release/obj/pcb190.o
+                0x3f006918                pcb190GetPostRxRegisters
  .text.pcb190UpdateRegisters
-                0x3f006964      0x2b4 ./gcc_arm/ram_release/obj/pcb190.o
-                0x3f006964                pcb190UpdateRegisters
+                0x3f006960      0x2b4 ./gcc_arm/ram_release/obj/pcb190.o
+                0x3f006960                pcb190UpdateRegisters
  .text.pcb190UploadExpose
-                0x3f006c18      0x198 ./gcc_arm/ram_release/obj/pcb190.o
-                0x3f006c18                pcb190UploadExpose
+                0x3f006c14      0x198 ./gcc_arm/ram_release/obj/pcb190.o
+                0x3f006c14                pcb190UploadExpose
  .text.pcb190UploadTomoExpose
-                0x3f006db0      0x19c ./gcc_arm/ram_release/obj/pcb190.o
-                0x3f006db0                pcb190UploadTomoExpose
+                0x3f006dac      0x19c ./gcc_arm/ram_release/obj/pcb190.o
+                0x3f006dac                pcb190UploadTomoExpose
  .text.pcb190ConfigLSStarter
-                0x3f006f4c       0xfc ./gcc_arm/ram_release/obj/pcb190.o
-                0x3f006f4c                pcb190ConfigLSStarter
+                0x3f006f48       0xfc ./gcc_arm/ram_release/obj/pcb190.o
+                0x3f006f48                pcb190ConfigLSStarter
  .text.pcb190DisableLSStarterDiagnostic
-                0x3f007048       0xb0 ./gcc_arm/ram_release/obj/pcb190.o
-                0x3f007048                pcb190DisableLSStarterDiagnostic
+                0x3f007044       0xb0 ./gcc_arm/ram_release/obj/pcb190.o
+                0x3f007044                pcb190DisableLSStarterDiagnostic
  .text.pcb190_driver
-                0x3f0070f8      0x2e0 ./gcc_arm/ram_release/obj/pcb190.o
-                0x3f0070f8                pcb190_driver
+                0x3f0070f4      0x2e0 ./gcc_arm/ram_release/obj/pcb190.o
+                0x3f0070f4                pcb190_driver
  .text.pcb190PrintParametri
-                0x3f0073d8      0x288 ./gcc_arm/ram_release/obj/pcb190.o
-                0x3f0073d8                pcb190PrintParametri
+                0x3f0073d4      0x288 ./gcc_arm/ram_release/obj/pcb190.o
+                0x3f0073d4                pcb190PrintParametri
  .text.config_pcb190
-                0x3f007660       0xa4 ./gcc_arm/ram_release/obj/pcb190.o
-                0x3f007660                config_pcb190
+                0x3f00765c       0xa4 ./gcc_arm/ram_release/obj/pcb190.o
+                0x3f00765c                config_pcb190
  .text.pcb190ConvertKvRead
-                0x3f007704       0x3c ./gcc_arm/ram_release/obj/pcb190.o
-                0x3f007704                pcb190ConvertKvRead
+                0x3f007700       0x3c ./gcc_arm/ram_release/obj/pcb190.o
+                0x3f007700                pcb190ConvertKvRead
  .text.pcb190TestLSStarter
-                0x3f007740       0x18 ./gcc_arm/ram_release/obj/pcb190.o
-                0x3f007740                pcb190TestLSStarter
+                0x3f00773c       0x18 ./gcc_arm/ram_release/obj/pcb190.o
+                0x3f00773c                pcb190TestLSStarter
  .text.GetFwRevision
-                0x3f007758       0x60 ./gcc_arm/ram_release/obj/pcb215.o
+                0x3f007754       0x60 ./gcc_arm/ram_release/obj/pcb215.o
  .text.pcb215ResetFault
-                0x3f0077b8       0x4c ./gcc_arm/ram_release/obj/pcb215.o
+                0x3f0077b4       0x4c ./gcc_arm/ram_release/obj/pcb215.o
  .text.classifyPad
-                0x3f007804      0x104 ./gcc_arm/ram_release/obj/pcb215.o
+                0x3f007800      0x104 ./gcc_arm/ram_release/obj/pcb215.o
  .text.pcb215DriverCommunicationError
-                0x3f007908       0x9c ./gcc_arm/ram_release/obj/pcb215.o
+                0x3f007904       0x9c ./gcc_arm/ram_release/obj/pcb215.o
  .text.pcb215SetSblocco
-                0x3f0079a4       0x9c ./gcc_arm/ram_release/obj/pcb215.o
-                0x3f0079a4                pcb215SetSblocco
+                0x3f0079a0       0x9c ./gcc_arm/ram_release/obj/pcb215.o
+                0x3f0079a0                pcb215SetSblocco
  .text.pcb215SetXRaySblocco
-                0x3f007a40       0x34 ./gcc_arm/ram_release/obj/pcb215.o
-                0x3f007a40                pcb215SetXRaySblocco
+                0x3f007a3c       0x34 ./gcc_arm/ram_release/obj/pcb215.o
+                0x3f007a3c                pcb215SetXRaySblocco
  .text.pcb215MovePadUpward
-                0x3f007a74       0x9c ./gcc_arm/ram_release/obj/pcb215.o
-                0x3f007a74                pcb215MovePadUpward
+                0x3f007a70       0x9c ./gcc_arm/ram_release/obj/pcb215.o
+                0x3f007a70                pcb215MovePadUpward
  .text.pcb215MovePadDownward
-                0x3f007b10       0xe0 ./gcc_arm/ram_release/obj/pcb215.o
-                0x3f007b10                pcb215MovePadDownward
+                0x3f007b0c       0xe0 ./gcc_arm/ram_release/obj/pcb215.o
+                0x3f007b0c                pcb215MovePadDownward
  .text.pcb215SetIdle
-                0x3f007bf0       0xac ./gcc_arm/ram_release/obj/pcb215.o
-                0x3f007bf0                pcb215SetIdle
+                0x3f007bec       0xac ./gcc_arm/ram_release/obj/pcb215.o
+                0x3f007bec                pcb215SetIdle
  .text.pcb215ConfigNacchera
-                0x3f007c9c       0x60 ./gcc_arm/ram_release/obj/pcb215.o
-                0x3f007c9c                pcb215ConfigNacchera
+                0x3f007c98       0x60 ./gcc_arm/ram_release/obj/pcb215.o
+                0x3f007c98                pcb215ConfigNacchera
  .text.pcb215ConfigForza
-                0x3f007cfc       0x7c ./gcc_arm/ram_release/obj/pcb215.o
-                0x3f007cfc                pcb215ConfigForza
+                0x3f007cf8       0x7c ./gcc_arm/ram_release/obj/pcb215.o
+                0x3f007cf8                pcb215ConfigForza
  .text.pcb215ActivateCalibMode
-                0x3f007d78       0x28 ./gcc_arm/ram_release/obj/pcb215.o
-                0x3f007d78                pcb215ActivateCalibMode
+                0x3f007d74       0x28 ./gcc_arm/ram_release/obj/pcb215.o
+                0x3f007d74                pcb215ActivateCalibMode
  .text.pcb215ForceUpdateData
-                0x3f007da0       0x14 ./gcc_arm/ram_release/obj/pcb215.o
-                0x3f007da0                pcb215ForceUpdateData
+                0x3f007d9c       0x14 ./gcc_arm/ram_release/obj/pcb215.o
+                0x3f007d9c                pcb215ForceUpdateData
  .text.pcb215PrintConfig
-                0x3f007db4      0x11c ./gcc_arm/ram_release/obj/pcb215.o
-                0x3f007db4                pcb215PrintConfig
+                0x3f007db0      0x11c ./gcc_arm/ram_release/obj/pcb215.o
+                0x3f007db0                pcb215PrintConfig
+ *fill*         0x3f007ecc        0x4 
  .text.pcb215_driver
                 0x3f007ed0      0xc20 ./gcc_arm/ram_release/obj/pcb215.o
                 0x3f007ed0                pcb215_driver
@@ -4730,21 +4731,21 @@ END GROUP
                 0x3f800000                _data_start = .
  *(.vectors_ram)
  *(.data*)
- .data.arm_dir.13981
+ .data.arm.13981
                 0x3f800000        0x2 ./gcc_arm/ram_release/obj/actuators.o
- .data.arm.13980
+ .data.trx.13980
                 0x3f800002        0x2 ./gcc_arm/ram_release/obj/actuators.o
- .data.trx.13979
+ .data.arm_dir.13982
                 0x3f800004        0x2 ./gcc_arm/ram_release/obj/actuators.o
  *fill*         0x3f800006        0x2 
- .data.timer_stat.13870
+ .data.timer_stat.13871
                 0x3f800008        0x4 ./gcc_arm/ram_release/obj/biopsyExtended.o
- .data.valore.13879
+ .data.maxZ.13874
                 0x3f80000c        0x1 ./gcc_arm/ram_release/obj/biopsyStandard.o
  *fill*         0x3f80000d        0x1 
- .data.needleZ.13872
+ .data.needleZ.13873
                 0x3f80000e        0x2 ./gcc_arm/ram_release/obj/biopsyStandard.o
- .data.maxZ.13873
+ .data.valore.13880
                 0x3f800010        0x1 ./gcc_arm/ram_release/obj/biopsyStandard.o
  .data.ep       0x3f800011        0xc ./gcc_arm/ram_release/obj/gui.o
                 0x3f800011                ep
@@ -4753,59 +4754,61 @@ END GROUP
  .data.PCB190_Registers
                 0x3f80001e      0x238 ./gcc_arm/ram_release/obj/pcb190.o
                 0x3f80001e                PCB190_Registers
- .data.backup_tara.13985
+ .data.backup_tara.13986
                 0x3f800256        0x1 ./gcc_arm/ram_release/obj/pcb215.o
- .data.backup_soglia_compressione.13986
+ .data.thickH.13975
                 0x3f800257        0x1 ./gcc_arm/ram_release/obj/pcb215.o
- .data.thickH.13974
-                0x3f800258        0x1 ./gcc_arm/ram_release/obj/pcb215.o
- .data.strenght.13972
-                0x3f800259        0x1 ./gcc_arm/ram_release/obj/pcb215.o
  .data.padLevel
-                0x3f80025a        0x1 ./gcc_arm/ram_release/obj/pcb215.o
+                0x3f800258        0x1 ./gcc_arm/ram_release/obj/pcb215.o
  .data.verifyComprDataInit
+                0x3f800259        0x1 ./gcc_arm/ram_release/obj/pcb215.o
+ .data.padDetected.14009
+                0x3f80025a        0x1 ./gcc_arm/ram_release/obj/pcb215.o
+ .data.backup_soglia_compressione.13987
                 0x3f80025b        0x1 ./gcc_arm/ram_release/obj/pcb215.o
+ .data.strenght.13973
+                0x3f80025c        0x1 ./gcc_arm/ram_release/obj/pcb215.o
+ *fill*         0x3f80025d        0x3 
+ .data.angolo_braccio.13985
+                0x3f800260        0x4 ./gcc_arm/ram_release/obj/pcb215.o
+ .data.pad.13978
+                0x3f800264        0x1 ./gcc_arm/ram_release/obj/pcb215.o
+ *fill*         0x3f800265        0x1 
  .data.PCB215_Registers
-                0x3f80025c       0xe0 ./gcc_arm/ram_release/obj/pcb215.o
-                0x3f80025c                PCB215_Registers
- .data.padDetected.14008
-                0x3f80033c        0x1 ./gcc_arm/ram_release/obj/pcb215.o
- *fill*         0x3f80033d        0x3 
- .data.angolo_braccio.13984
-                0x3f800340        0x4 ./gcc_arm/ram_release/obj/pcb215.o
- .data.pad.13977
-                0x3f800344        0x1 ./gcc_arm/ram_release/obj/pcb215.o
- *fill*         0x3f800345        0x3 
- .data.count.13962
+                0x3f800266       0xe0 ./gcc_arm/ram_release/obj/pcb215.o
+                0x3f800266                PCB215_Registers
+ *fill*         0x3f800346        0x2 
+ .data.count.13963
                 0x3f800348        0x4 ./gcc_arm/ram_release/obj/pcb215.o
  .data.verifyClassPadInit
                 0x3f80034c        0x1 ./gcc_arm/ram_release/obj/pcb215.o
- .data.thickL.13973
+ .data.count.13972
                 0x3f80034d        0x1 ./gcc_arm/ram_release/obj/pcb215.o
- .data.count.13971
+ .data.thickL.13974
                 0x3f80034e        0x1 ./gcc_arm/ram_release/obj/pcb215.o
  *fill*         0x3f80034f        0x1 
  .data.PCB244_Registers
                 0x3f800350       0x28 ./gcc_arm/ram_release/obj/pcb244.o
                 0x3f800350                PCB244_Registers
- .data.accessorio.13911
-                0x3f800378        0x1 ./gcc_arm/ram_release/obj/pcb249U1.o
+ .data.polling_timer.13929
+                0x3f800378        0x4 ./gcc_arm/ram_release/obj/pcb249U1.o
+ .data.accessorio.13912
+                0x3f80037c        0x1 ./gcc_arm/ram_release/obj/pcb249U1.o
  .data.verifyUpdateRegisters
-                0x3f800379        0x1 ./gcc_arm/ram_release/obj/pcb249U1.o
+                0x3f80037d        0x1 ./gcc_arm/ram_release/obj/pcb249U1.o
  .data.PCB249U1_Registers
-                0x3f80037a       0xc0 ./gcc_arm/ram_release/obj/pcb249U1.o
-                0x3f80037a                PCB249U1_Registers
- *fill*         0x3f80043a        0x2 
- .data.back_temperatura.13926
-                0x3f80043c        0x4 ./gcc_arm/ram_release/obj/pcb249U1.o
- .data.update.13927
-                0x3f800440        0x1 ./gcc_arm/ram_release/obj/pcb249U1.o
- *fill*         0x3f800441        0x3 
- .data.polling_timer.13928
-                0x3f800444        0x4 ./gcc_arm/ram_release/obj/pcb249U1.o
+                0x3f80037e       0xc0 ./gcc_arm/ram_release/obj/pcb249U1.o
+                0x3f80037e                PCB249U1_Registers
+ *fill*         0x3f80043e        0x2 
+ .data.back_temperatura.13927
+                0x3f800440        0x4 ./gcc_arm/ram_release/obj/pcb249U1.o
+ .data.update.13928
+                0x3f800444        0x1 ./gcc_arm/ram_release/obj/pcb249U1.o
+ *fill*         0x3f800445        0x1 
  .data.PCB249U2_Registers
-                0x3f800448       0x78 ./gcc_arm/ram_release/obj/pcb249U2.o
-                0x3f800448                PCB249U2_Registers
+                0x3f800446       0x78 ./gcc_arm/ram_release/obj/pcb249U2.o
+                0x3f800446                PCB249U2_Registers
+ *fill*         0x3f8004be        0x2 
  .data._mqx_kernel_data
                 0x3f8004c0        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mqx.o)
                 0x3f8004c0                _mqx_kernel_data
@@ -4844,195 +4847,195 @@ END GROUP
 .bss            0x3f800960     0x1738
                 0x3f800960                _bss_start = .
  *(.bss*)
- .bss.actuatorStartConfirmed
+ .bss.lift_drop.13988
                 0x3f800960        0x1 ./gcc_arm/ram_release/obj/actuators.o
- .bss.lift_drop.13987
+ .bss.actuatorStartConfirmed
                 0x3f800961        0x1 ./gcc_arm/ram_release/obj/actuators.o
- .bss.old_needle.13871
-                0x3f800962        0x2 ./gcc_arm/ram_release/obj/biopsyExtended.o
+ .bss.slot.13870
+                0x3f800962        0x1 ./gcc_arm/ram_release/obj/biopsyExtended.o
  .bss.driverStatus
-                0x3f800964        0x1 ./gcc_arm/ram_release/obj/biopsyExtended.o
+                0x3f800963        0x1 ./gcc_arm/ram_release/obj/biopsyExtended.o
  .bss.activationCommands
-                0x3f800965        0x1 ./gcc_arm/ram_release/obj/biopsyExtended.o
- .bss.slot.13869
-                0x3f800966        0x1 ./gcc_arm/ram_release/obj/biopsyExtended.o
- *fill*         0x3f800967        0x1 
- .bss.targetY   0x3f800968        0x2 ./gcc_arm/ram_release/obj/biopsyExtended.o
- .bss.targetZ   0x3f80096a        0x2 ./gcc_arm/ram_release/obj/biopsyExtended.o
+                0x3f800964        0x1 ./gcc_arm/ram_release/obj/biopsyExtended.o
+ *fill*         0x3f800965        0x1 
+ .bss.targetY   0x3f800966        0x2 ./gcc_arm/ram_release/obj/biopsyExtended.o
+ .bss.targetZ   0x3f800968        0x2 ./gcc_arm/ram_release/obj/biopsyExtended.o
+ .bss.old_needle.13872
+                0x3f80096a        0x2 ./gcc_arm/ram_release/obj/biopsyExtended.o
  .bss.targetX   0x3f80096c        0x2 ./gcc_arm/ram_release/obj/biopsyExtended.o
  .bss.chg_dati  0x3f80096e       0x13 ./gcc_arm/ram_release/obj/biopsyExtended.o
  .bss.dati      0x3f800981       0x13 ./gcc_arm/ram_release/obj/biopsyExtended.o
- .bss.adapterId.13871
-                0x3f800994        0x1 ./gcc_arm/ram_release/obj/biopsyStandard.o
- *fill*         0x3f800995        0x3 
  .bss.biopsy_standard_mutex
-                0x3f800998       0x30 ./gcc_arm/ram_release/obj/biopsyStandard.o
+                0x3f800994       0x30 ./gcc_arm/ram_release/obj/biopsyStandard.o
+ .bss.adapterId.13872
+                0x3f8009c4        0x1 ./gcc_arm/ram_release/obj/biopsyStandard.o
+ *fill*         0x3f8009c5        0x1 
+ .bss.timeout.13870
+                0x3f8009c6        0x2 ./gcc_arm/ram_release/obj/biopsyStandard.o
  .bss.verifyBiopsyDataInit
                 0x3f8009c8        0x1 ./gcc_arm/ram_release/obj/biopsyStandard.o
  *fill*         0x3f8009c9        0x1 
- .bss.timeout.13869
-                0x3f8009ca        0x2 ./gcc_arm/ram_release/obj/biopsyStandard.o
  .bss.driverDelay
-                0x3f8009cc        0x2 ./gcc_arm/ram_release/obj/biopsyStandard.o
+                0x3f8009ca        0x2 ./gcc_arm/ram_release/obj/biopsyStandard.o
  .bss.biopTestPosition
-                0x3f8009ce        0x1 ./gcc_arm/ram_release/obj/biopsyStandard.o
- .bss.sbloccoReq.13870
-                0x3f8009cf        0x1 ./gcc_arm/ram_release/obj/biopsyStandard.o
+                0x3f8009cc        0x1 ./gcc_arm/ram_release/obj/biopsyStandard.o
+ .bss.sbloccoReq.13871
+                0x3f8009cd        0x1 ./gcc_arm/ram_release/obj/biopsyStandard.o
  .bss.printEnable
-                0x3f8009d0        0x1 ./gcc_arm/ram_release/obj/common.o
-                0x3f8009d0                printEnable
+                0x3f8009ce        0x1 ./gcc_arm/ram_release/obj/common.o
+                0x3f8009ce                printEnable
  .bss.debugPrintEnable
-                0x3f8009d1        0x1 ./gcc_arm/ram_release/obj/common.o
-                0x3f8009d1                debugPrintEnable
- .bss.curAddress.13925
+                0x3f8009cf        0x1 ./gcc_arm/ram_release/obj/common.o
+                0x3f8009cf                debugPrintEnable
+ .bss.curAddress.13926
+                0x3f8009d0        0x2 ./gcc_arm/ram_release/obj/loader.o
+ .bss.baseAddress.13927
                 0x3f8009d2        0x2 ./gcc_arm/ram_release/obj/loader.o
- .bss.baseAddress.13926
-                0x3f8009d4        0x2 ./gcc_arm/ram_release/obj/loader.o
- .bss.buffer.13854
-                0x3f8009d6        0xe ./gcc_arm/ram_release/obj/master_can.o
- .bss.update.13964
-                0x3f8009e4        0x1 ./gcc_arm/ram_release/obj/pcb190.o
- .bss.data.13961
-                0x3f8009e5       0x10 ./gcc_arm/ram_release/obj/pcb190.o
- .bss.seq_v.13963
-                0x3f8009f5        0x1 ./gcc_arm/ram_release/obj/pcb190.o
- *fill*         0x3f8009f6        0x2 
+ .bss.buffer.13855
+                0x3f8009d4        0xe ./gcc_arm/ram_release/obj/master_can.o
+ .bss.update.13965
+                0x3f8009e2        0x1 ./gcc_arm/ram_release/obj/pcb190.o
+ .bss.data.13962
+                0x3f8009e3       0x10 ./gcc_arm/ram_release/obj/pcb190.o
+ *fill*         0x3f8009f3        0x1 
  .bss.ls_starter_test
-                0x3f8009f8        0x4 ./gcc_arm/ram_release/obj/pcb190.o
- .bss.timer_luce_centratore.13951
+                0x3f8009f4        0x4 ./gcc_arm/ram_release/obj/pcb190.o
+ .bss.seq_v.13964
+                0x3f8009f8        0x1 ./gcc_arm/ram_release/obj/pcb190.o
+ .bss.modo_zero.13984
+                0x3f8009f9        0x1 ./gcc_arm/ram_release/obj/pcb215.o
+ *fill*         0x3f8009fa        0x2 
+ .bss.timer_luce_centratore.13952
                 0x3f8009fc        0x4 ./gcc_arm/ram_release/obj/pcb215.o
- .bss.flags0.13975
-                0x3f800a00        0x1 ./gcc_arm/ram_release/obj/pcb215.o
- *fill*         0x3f800a01        0x1 
- .bss.biopsyZ.13987
-                0x3f800a02        0x2 ./gcc_arm/ram_release/obj/pcb215.o
- .bss.spessore_cnt.13980
-                0x3f800a04        0x4 ./gcc_arm/ram_release/obj/pcb215.o
+ .bss.timer_fault_pedals.13950
+                0x3f800a00        0x4 ./gcc_arm/ram_release/obj/pcb215.o
+ .bss.flags0.13976
+                0x3f800a04        0x1 ./gcc_arm/ram_release/obj/pcb215.o
+ *fill*         0x3f800a05        0x1 
+ .bss.biopsyZ.13988
+                0x3f800a06        0x2 ./gcc_arm/ram_release/obj/pcb215.o
+ .bss.spessore_cnt.13981
+                0x3f800a08        0x4 ./gcc_arm/ram_release/obj/pcb215.o
  .bss.executeConfig
-                0x3f800a08        0x1 ./gcc_arm/ram_release/obj/pcb215.o
- .bss.alternate.13947
-                0x3f800a09        0x1 ./gcc_arm/ram_release/obj/pcb215.o
- .bss.flags1.13976
-                0x3f800a0a        0x1 ./gcc_arm/ram_release/obj/pcb215.o
- .bss.protezionePaziente.13978
-                0x3f800a0b        0x1 ./gcc_arm/ram_release/obj/pcb215.o
- .bss.timer_fault_pedals.13949
-                0x3f800a0c        0x4 ./gcc_arm/ram_release/obj/pcb215.o
- .bss.target_compressione.13982
-                0x3f800a10        0x1 ./gcc_arm/ram_release/obj/pcb215.o
- .bss.luce_centratore.13950
-                0x3f800a11        0x1 ./gcc_arm/ram_release/obj/pcb215.o
+                0x3f800a0c        0x1 ./gcc_arm/ram_release/obj/pcb215.o
+ .bss.alternate.13948
+                0x3f800a0d        0x1 ./gcc_arm/ram_release/obj/pcb215.o
+ .bss.flags1.13977
+                0x3f800a0e        0x1 ./gcc_arm/ram_release/obj/pcb215.o
+ .bss.protezionePaziente.13979
+                0x3f800a0f        0x1 ./gcc_arm/ram_release/obj/pcb215.o
+ .bss.spessore.13982
+                0x3f800a10        0x4 ./gcc_arm/ram_release/obj/pcb215.o
+ .bss.target_compressione.13983
+                0x3f800a14        0x1 ./gcc_arm/ram_release/obj/pcb215.o
+ .bss.luce_centratore.13951
+                0x3f800a15        0x1 ./gcc_arm/ram_release/obj/pcb215.o
  .bss.executeCalibConfig
-                0x3f800a12        0x1 ./gcc_arm/ram_release/obj/pcb215.o
- *fill*         0x3f800a13        0x1 
- .bss.spessore.13981
-                0x3f800a14        0x4 ./gcc_arm/ram_release/obj/pcb215.o
- .bss.mean_spessore.13979
+                0x3f800a16        0x1 ./gcc_arm/ram_release/obj/pcb215.o
+ *fill*         0x3f800a17        0x1 
+ .bss.mean_spessore.13980
                 0x3f800a18        0x4 ./gcc_arm/ram_release/obj/pcb215.o
- .bss.fault_pedals.13948
+ .bss.fault_pedals.13949
                 0x3f800a1c        0x1 ./gcc_arm/ram_release/obj/pcb215.o
- .bss.modo_zero.13983
-                0x3f800a1d        0x1 ./gcc_arm/ram_release/obj/pcb215.o
- .bss.right     0x3f800a1e        0x1 ./gcc_arm/ram_release/obj/pcb249U1.o
- .bss.trap      0x3f800a1f        0x1 ./gcc_arm/ram_release/obj/pcb249U1.o
- .bss.left      0x3f800a20        0x1 ./gcc_arm/ram_release/obj/pcb249U1.o
- *fill*         0x3f800a21        0x3 
- .bss.temp_timer.13929
-                0x3f800a24        0x4 ./gcc_arm/ram_release/obj/pcb249U1.o
- .bss.front     0x3f800a28        0x1 ./gcc_arm/ram_release/obj/pcb249U2.o
- .bss.back      0x3f800a29        0x1 ./gcc_arm/ram_release/obj/pcb249U2.o
+ .bss.right     0x3f800a1d        0x1 ./gcc_arm/ram_release/obj/pcb249U1.o
+ .bss.trap      0x3f800a1e        0x1 ./gcc_arm/ram_release/obj/pcb249U1.o
+ .bss.left      0x3f800a1f        0x1 ./gcc_arm/ram_release/obj/pcb249U1.o
+ .bss.temp_timer.13930
+                0x3f800a20        0x4 ./gcc_arm/ram_release/obj/pcb249U1.o
+ .bss.front     0x3f800a24        0x1 ./gcc_arm/ram_release/obj/pcb249U2.o
+ .bss.back      0x3f800a25        0x1 ./gcc_arm/ram_release/obj/pcb249U2.o
  .bss.target_filtro
-                0x3f800a2a        0x1 ./gcc_arm/ram_release/obj/pcb249U2.o
+                0x3f800a26        0x1 ./gcc_arm/ram_release/obj/pcb249U2.o
  .bss.comando_filtro
-                0x3f800a2b        0x1 ./gcc_arm/ram_release/obj/pcb249U2.o
+                0x3f800a27        0x1 ./gcc_arm/ram_release/obj/pcb249U2.o
  .bss.posizioneFiltro
-                0x3f800a2c        0x1 ./gcc_arm/ram_release/obj/pcb249U2.o
+                0x3f800a28        0x1 ./gcc_arm/ram_release/obj/pcb249U2.o
  .bss.rxAeIsRunning
-                0x3f800a2d        0x1 ./gcc_arm/ram_release/obj/seqrx_ae.o
-                0x3f800a2d                rxAeIsRunning
+                0x3f800a29        0x1 ./gcc_arm/ram_release/obj/seqrx_ae.o
+                0x3f800a29                rxAeIsRunning
  .bss.stdAeSeqResult
-                0x3f800a2e        0x1 ./gcc_arm/ram_release/obj/seqrx_ae.o
-                0x3f800a2e                stdAeSeqResult
+                0x3f800a2a        0x1 ./gcc_arm/ram_release/obj/seqrx_ae.o
+                0x3f800a2a                stdAeSeqResult
  .bss.rxStdSeqResult
-                0x3f800a2f        0x1 ./gcc_arm/ram_release/obj/seqrx_std.o
-                0x3f800a2f                rxStdSeqResult
+                0x3f800a2b        0x1 ./gcc_arm/ram_release/obj/seqrx_std.o
+                0x3f800a2b                rxStdSeqResult
  .bss.rxStdIsRunning
-                0x3f800a30        0x1 ./gcc_arm/ram_release/obj/seqrx_std.o
-                0x3f800a30                rxStdIsRunning
+                0x3f800a2c        0x1 ./gcc_arm/ram_release/obj/seqrx_std.o
+                0x3f800a2c                rxStdIsRunning
  .bss.rxStdAecIsRunning
-                0x3f800a31        0x1 ./gcc_arm/ram_release/obj/seqrx_std_aec.o
-                0x3f800a31                rxStdAecIsRunning
+                0x3f800a2d        0x1 ./gcc_arm/ram_release/obj/seqrx_std_aec.o
+                0x3f800a2d                rxStdAecIsRunning
  .bss.stdAecSeqResult
-                0x3f800a32        0x1 ./gcc_arm/ram_release/obj/seqrx_std_aec.o
-                0x3f800a32                stdAecSeqResult
+                0x3f800a2e        0x1 ./gcc_arm/ram_release/obj/seqrx_std_aec.o
+                0x3f800a2e                stdAecSeqResult
  .bss.tomoIsRunning
-                0x3f800a33        0x1 ./gcc_arm/ram_release/obj/seqrx_tomo.o
-                0x3f800a33                tomoIsRunning
+                0x3f800a2f        0x1 ./gcc_arm/ram_release/obj/seqrx_tomo.o
+                0x3f800a2f                tomoIsRunning
  .bss.tomoSeqResult
-                0x3f800a34        0x1 ./gcc_arm/ram_release/obj/seqrx_tomo.o
-                0x3f800a34                tomoSeqResult
+                0x3f800a30        0x1 ./gcc_arm/ram_release/obj/seqrx_tomo.o
+                0x3f800a30                tomoSeqResult
  .bss.tomoAecIsRunning
-                0x3f800a35        0x1 ./gcc_arm/ram_release/obj/seqrx_tomo_aec.o
-                0x3f800a35                tomoAecIsRunning
+                0x3f800a31        0x1 ./gcc_arm/ram_release/obj/seqrx_tomo_aec.o
+                0x3f800a31                tomoAecIsRunning
  .bss.tomoAecSeqResult
-                0x3f800a36        0x1 ./gcc_arm/ram_release/obj/seqrx_tomo_aec.o
-                0x3f800a36                tomoAecSeqResult
- *fill*         0x3f800a37        0x1 
+                0x3f800a32        0x1 ./gcc_arm/ram_release/obj/seqrx_tomo_aec.o
+                0x3f800a32                tomoAecSeqResult
+ *fill*         0x3f800a33        0x1 
  .bss.ser422_cmd_queue
-                0x3f800a38        0x4 ./gcc_arm/ram_release/obj/ser422.o
-                0x3f800a38                ser422_cmd_queue
+                0x3f800a34        0x4 ./gcc_arm/ram_release/obj/ser422.o
+                0x3f800a34                ser422_cmd_queue
  .bss.rs485_dev
-                0x3f800a3c        0x4 ./gcc_arm/ram_release/obj/ser422.o
-                0x3f800a3c                rs485_dev
+                0x3f800a38        0x4 ./gcc_arm/ram_release/obj/ser422.o
+                0x3f800a38                rs485_dev
  .bss.ser422_answ_queue
-                0x3f800a40        0x4 ./gcc_arm/ram_release/obj/ser422.o
-                0x3f800a40                ser422_answ_queue
+                0x3f800a3c        0x4 ./gcc_arm/ram_release/obj/ser422.o
+                0x3f800a3c                ser422_answ_queue
  .bss.ser422_send_queue
-                0x3f800a44        0x4 ./gcc_arm/ram_release/obj/ser422.o
-                0x3f800a44                ser422_send_queue
+                0x3f800a40        0x4 ./gcc_arm/ram_release/obj/ser422.o
+                0x3f800a40                ser422_send_queue
  .bss.ms_per_tick.9429
-                0x3f800a48        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mstiq.o)
+                0x3f800a44        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mstiq.o)
  .bss.heuristic.9430
-                0x3f800a4c        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mstiq.o)
- .bss.pll4sem   0x3f800a50       0x1c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(bsp_cm.o)
+                0x3f800a48        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mstiq.o)
+ .bss.pll4sem   0x3f800a4c       0x1c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(bsp_cm.o)
  .bss.Pll4ClockInHz
-                0x3f800a6c        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(bsp_cm.o)
+                0x3f800a68        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(bsp_cm.o)
  .bss.ClockConfigurationID
-                0x3f800a70        0x1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(bsp_cm.o)
- *fill*         0x3f800a71        0x3 
+                0x3f800a6c        0x1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(bsp_cm.o)
+ *fill*         0x3f800a6d        0x3 
  .bss.devif_list
-                0x3f800a74        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(dma.o)
+                0x3f800a70        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(dma.o)
  .bss.devif_list_count
-                0x3f800a78        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(dma.o)
+                0x3f800a74        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(dma.o)
  .bss.err_int_flag
-                0x3f800a7c        0x1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_driver.o)
- *fill*         0x3f800a7d        0x3 
+                0x3f800a78        0x1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_driver.o)
+ *fill*         0x3f800a79        0x3 
  .bss._core_mutex_component_ptr
-                0x3f800a80        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(core_mutex.o)
+                0x3f800a7c        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(core_mutex.o)
  .bss.edma_channel_context
-                0x3f800a84      0x100 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(edma.o)
+                0x3f800a80      0x100 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(edma.o)
  .bss.cpu_to_cpu_isr_vector
-                0x3f800b84        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_mqx.o)
+                0x3f800b80        0x4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_mqx.o)
  *(COMMON)
- COMMON         0x3f800b88      0x192 ./gcc_arm/ram_release/obj/gui.o
-                0x3f800b88                mcc_len
-                0x3f800b8c                listaRegistri
-                0x3f800c80                mcc_cmd
- COMMON         0x3f800d1a       0x14 ./gcc_arm/ram_release/obj/loader.o
-                0x3f800d1a                Loader
- *fill*         0x3f800d2e        0x2 
- COMMON         0x3f800d30      0x3ec ./gcc_arm/ram_release/obj/main.o
-                0x3f800d30                Ev1
-                0x3f800d54                SystemInputs
-                0x3f800d5c                SeqEventi
-                0x3f800d80                Ev0
-                0x3f800da4                output_mutex
-                0x3f800dd4                input_mutex
-                0x3f800e04                mcc_count
-                0x3f800e08                SystemOutputs
-                0x3f800e0b                systemMode
-                0x3f800e0c                Ev2
-                0x3f800e30                generalConfiguration
+ COMMON         0x3f800b84      0x192 ./gcc_arm/ram_release/obj/gui.o
+                0x3f800b84                mcc_len
+                0x3f800b88                listaRegistri
+                0x3f800c7c                mcc_cmd
+ COMMON         0x3f800d16       0x14 ./gcc_arm/ram_release/obj/loader.o
+                0x3f800d16                Loader
+ *fill*         0x3f800d2a        0x2 
+ COMMON         0x3f800d2c      0x3f0 ./gcc_arm/ram_release/obj/main.o
+                0x3f800d2c                Ev1
+                0x3f800d50                SystemInputs
+                0x3f800d58                SeqEventi
+                0x3f800d7c                Ev0
+                0x3f800da0                output_mutex
+                0x3f800dd0                input_mutex
+                0x3f800e00                mcc_count
+                0x3f800e04                SystemOutputs
+                0x3f800e07                systemMode
+                0x3f800e08                Ev2
+                0x3f800e2c                generalConfiguration
  COMMON         0x3f80111c       0x60 ./gcc_arm/ram_release/obj/master_can.o
                 0x3f80111c                rxmb_from_actuators_slave
                 0x3f801134                txmb_to_actuators_slave
@@ -5125,134 +5128,134 @@ END GROUP
                 0x3f8020a0                __KERNEL_DATA_START = ALIGN (0x10)
 OUTPUT(gcc_arm/ram_release/m4_master.elf elf32-littlearm)
 
-.debug_info     0x00000000    0x6e227
- .debug_info    0x00000000     0x23fa ./gcc_arm/ram_release/obj/actuators.o
- .debug_info    0x000023fa     0x14f4 ./gcc_arm/ram_release/obj/biopsyExtended.o
- .debug_info    0x000038ee      0xaee ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
- .debug_info    0x000043dc     0x1cc9 ./gcc_arm/ram_release/obj/biopsyStandard.o
- .debug_info    0x000060a5     0x1359 ./gcc_arm/ram_release/obj/biopsy_startup.o
- .debug_info    0x000073fe      0xc4e ./gcc_arm/ram_release/obj/canopen.o
- .debug_info    0x0000804c      0xe0f ./gcc_arm/ram_release/obj/common.o
- .debug_info    0x00008e5b     0x2d84 ./gcc_arm/ram_release/obj/gui.o
- .debug_info    0x0000bbdf      0xaed ./gcc_arm/ram_release/obj/loader.o
- .debug_info    0x0000c6cc     0x1ad6 ./gcc_arm/ram_release/obj/main.o
- .debug_info    0x0000e1a2     0x1f23 ./gcc_arm/ram_release/obj/master_can.o
- .debug_info    0x000100c5      0xbe5 ./gcc_arm/ram_release/obj/mccClass.o
- .debug_info    0x00010caa     0x2152 ./gcc_arm/ram_release/obj/pcb190.o
- .debug_info    0x00012dfc     0x23ef ./gcc_arm/ram_release/obj/pcb215.o
- .debug_info    0x000151eb     0x1c46 ./gcc_arm/ram_release/obj/pcb244.o
- .debug_info    0x00016e31     0x215a ./gcc_arm/ram_release/obj/pcb249U1.o
- .debug_info    0x00018f8b     0x20d1 ./gcc_arm/ram_release/obj/pcb249U2.o
- .debug_info    0x0001b05c     0x1fec ./gcc_arm/ram_release/obj/seqrx_ae.o
- .debug_info    0x0001d048     0x1f8c ./gcc_arm/ram_release/obj/seqrx_std.o
- .debug_info    0x0001efd4     0x1fff ./gcc_arm/ram_release/obj/seqrx_std_aec.o
- .debug_info    0x00020fd3     0x20dc ./gcc_arm/ram_release/obj/seqrx_tomo.o
- .debug_info    0x000230af     0x20e6 ./gcc_arm/ram_release/obj/seqrx_tomo_aec.o
- .debug_info    0x00025195      0xa27 ./gcc_arm/ram_release/obj/sequences.o
- .debug_info    0x00025bbc     0x149b ./gcc_arm/ram_release/obj/ser422.o
- .debug_info    0x00027057      0x382 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_pntf.o)
- .debug_info    0x000273d9     0x2886 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(task.o)
- .debug_info    0x00029c5f      0x519 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(stack_de.o)
- .debug_info    0x0002a178     0x1637 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(lwevent.o)
- .debug_info    0x0002b7af      0xfc4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_ghand.o)
- .debug_info    0x0002c773     0x135f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(sched.o)
- .debug_info    0x0002dad2      0x357 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fflsh.o)
- .debug_info    0x0002de29      0x830 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_dopr.o)
- .debug_info    0x0002e659       0xbb /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(dispatch.o)
- .debug_info    0x0002e714     0x132c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(taskq.o)
- .debug_info    0x0002fa40     0x1747 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mqx.o)
- .debug_info    0x00031187     0x15d3 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(lwsem.o)
- .debug_info    0x0003275a      0x43f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(queue.o)
- .debug_info    0x00032b99     0x11ac /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(sc_irdyq.o)
- .debug_info    0x00033d45      0x395 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_ioctl.o)
- .debug_info    0x000340da     0x2587 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mem.o)
- .debug_info    0x00036661     0x2498 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(time.o)
- .debug_info    0x00038af9     0x104a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tinm.o)
- .debug_info    0x00039b43       0xb7 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(boot.o)
- .debug_info    0x00039bfa      0x384 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_read.o)
- .debug_info    0x00039f7e      0x139 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mat3.o)
- .debug_info    0x0003a0b7     0x1250 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fopen.o)
- .debug_info    0x0003b307     0x14ec /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(int.o)
- .debug_info    0x0003c7f3     0x10c7 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tisu.o)
- .debug_info    0x0003d8ba      0x1d0 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mat1.o)
- .debug_info    0x0003da8a      0x363 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fputc.o)
- .debug_info    0x0003dded      0x81e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(stack_bu.o)
- .debug_info    0x0003e60b      0x366 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_write.o)
- .debug_info    0x0003e971      0x381 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(comp.o)
- .debug_info    0x0003ecf2     0x1044 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_usti.o)
- .debug_info    0x0003fd36     0x17af /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mutex.o)
- .debug_info    0x000414e5      0x380 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fseek.o)
- .debug_info    0x00041865      0x43e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_spr.o)
- .debug_info    0x00041ca3     0x1002 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(inittask.o)
- .debug_info    0x00042ca5     0x115b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tims.o)
- .debug_info    0x00043e00      0xfc3 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(idletask.o)
- .debug_info    0x00044dc3      0x617 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fp.o)
- .debug_info    0x000453da     0x106d /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mstiq.o)
- .debug_info    0x00046447      0x24c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mat2.o)
- .debug_info    0x00046693     0x1044 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_msti.o)
- .debug_info    0x000476d7     0x1050 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tiad.o)
- .debug_info    0x00048727      0x293 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(mqx_main.o)
- .debug_info    0x000489ba     0x1c8a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_hw.o)
- .debug_info    0x0004a644     0x1cfe /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_bsp.o)
- .debug_info    0x0004c342       0xcf /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_core_mutex.o)
- .debug_info    0x0004c411      0x798 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(hwtimer_systick.o)
- .debug_info    0x0004cba9      0x459 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_dma.o)
- .debug_info    0x0004d002      0x363 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_sai.o)
- .debug_info    0x0004d365     0x10f2 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(bsp_cm.o)
- .debug_info    0x0004e457      0x4f9 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_sci.o)
- .debug_info    0x0004e950      0x2a6 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(mqx_init.o)
- .debug_info    0x0004ebf6       0xfd /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_esdhc.o)
- .debug_info    0x0004ecf3      0xb7a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi.o)
- .debug_info    0x0004f86d      0x807 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(core_mutex_sema4.o)
- .debug_info    0x00050074     0x1005 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(lwgpio_vgpio.o)
- .debug_info    0x00051079     0x1841 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_gpio.o)
- .debug_info    0x000528ba      0x99a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(dma.o)
- .debug_info    0x00053254      0x464 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_spi.o)
- .debug_info    0x000536b8      0x9ca /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(hwtimer_vybrid_m4.o)
- .debug_info    0x00054082     0x1c77 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sai_dma_ksai.o)
- .debug_info    0x00055cf9      0x10b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(vectors.o)
- .debug_info    0x00055e04     0x12fa /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_driver.o)
- .debug_info    0x000570fe      0xfb2 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(io_sinit.o)
- .debug_info    0x000580b0     0x1187 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_int_kuart.o)
- .debug_info    0x00059237      0x34f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(core_mutex.o)
- .debug_info    0x00059586      0xecb /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_pol_kuart.o)
- .debug_info    0x0005a451      0x164 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_i2c.o)
- .debug_info    0x0005a5b5     0x11fd /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(esdhc.o)
- .debug_info    0x0005b7b2      0x755 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(hwtimer.o)
- .debug_info    0x0005bf07      0x8eb /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_pol_qi2c.o)
- .debug_info    0x0005c7f2      0x86e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_int_qi2c.o)
- .debug_info    0x0005d060      0x887 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sai_int.o)
- .debug_info    0x0005d8e7     0x164f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(edma.o)
- .debug_info    0x0005ef36      0x759 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_int.o)
- .debug_info    0x0005f68f      0x764 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_pol.o)
- .debug_info    0x0005fdf3      0xea5 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi_dspi_dma.o)
- .debug_info    0x00060c98      0x74a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(edma_vybrid_m4.o)
- .debug_info    0x000613e2      0x625 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(esdhc_vf65gs10_m4.o)
- .debug_info    0x00061a07      0x8fc /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_pol.o)
- .debug_info    0x00062303      0x297 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sema4_vybrid.o)
- .debug_info    0x0006259a      0x66b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi_vybrid_m4.o)
- .debug_info    0x00062c05      0x3d3 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sai_vf65gs10.o)
- .debug_info    0x00062fd8      0xb07 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_int.o)
- .debug_info    0x00063adf     0x1a04 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_hal.o)
- .debug_info    0x000654e3      0x3d2 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi_dspi_common.o)
- .debug_info    0x000658b5      0x475 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_vybrid.o)
- .debug_info    0x00065d2a      0xb29 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_int.o)
- .debug_info    0x00066853      0x569 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_qi2c_vybrid_m4.o)
- .debug_info    0x00066dbc      0xa0e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_api.o)
- .debug_info    0x000677ca      0x4fd /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_common.o)
- .debug_info    0x00067cc7      0x508 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_mqx.o)
- .debug_info    0x000681cf     0x120d /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_vf600.o)
- .debug_info    0x000693dc     0x129b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_instx.o)
- .debug_info    0x0006a677       0xe4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_iinit.o)
- .debug_info    0x0006a75b      0xa20 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(cortex.o)
- .debug_info    0x0006b17b      0x168 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mem_copy.o)
- .debug_info    0x0006b2e3      0x373 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(int_vtab.o)
- .debug_info    0x0006b656      0x384 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_inst.o)
- .debug_info    0x0006b9da      0x425 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(nvic.o)
- .debug_info    0x0006bdff      0x3bd /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(cache.o)
- .debug_info    0x0006c1bc      0xfd2 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_init.o)
- .debug_info    0x0006d18e       0xe8 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(irouter_vybrid.o)
- .debug_info    0x0006d276      0xfb1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(int_inst.o)
+.debug_info     0x00000000    0x6e31d
+ .debug_info    0x00000000     0x2409 ./gcc_arm/ram_release/obj/actuators.o
+ .debug_info    0x00002409     0x1502 ./gcc_arm/ram_release/obj/biopsyExtended.o
+ .debug_info    0x0000390b      0xaee ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
+ .debug_info    0x000043f9     0x1cd7 ./gcc_arm/ram_release/obj/biopsyStandard.o
+ .debug_info    0x000060d0     0x1367 ./gcc_arm/ram_release/obj/biopsy_startup.o
+ .debug_info    0x00007437      0xc4e ./gcc_arm/ram_release/obj/canopen.o
+ .debug_info    0x00008085      0xe0f ./gcc_arm/ram_release/obj/common.o
+ .debug_info    0x00008e94     0x2d92 ./gcc_arm/ram_release/obj/gui.o
+ .debug_info    0x0000bc26      0xaed ./gcc_arm/ram_release/obj/loader.o
+ .debug_info    0x0000c713     0x1ae5 ./gcc_arm/ram_release/obj/main.o
+ .debug_info    0x0000e1f8     0x1f32 ./gcc_arm/ram_release/obj/master_can.o
+ .debug_info    0x0001012a      0xbe5 ./gcc_arm/ram_release/obj/mccClass.o
+ .debug_info    0x00010d0f     0x2160 ./gcc_arm/ram_release/obj/pcb190.o
+ .debug_info    0x00012e6f     0x23fd ./gcc_arm/ram_release/obj/pcb215.o
+ .debug_info    0x0001526c     0x1c54 ./gcc_arm/ram_release/obj/pcb244.o
+ .debug_info    0x00016ec0     0x2168 ./gcc_arm/ram_release/obj/pcb249U1.o
+ .debug_info    0x00019028     0x20df ./gcc_arm/ram_release/obj/pcb249U2.o
+ .debug_info    0x0001b107     0x1ffb ./gcc_arm/ram_release/obj/seqrx_ae.o
+ .debug_info    0x0001d102     0x1f9b ./gcc_arm/ram_release/obj/seqrx_std.o
+ .debug_info    0x0001f09d     0x200e ./gcc_arm/ram_release/obj/seqrx_std_aec.o
+ .debug_info    0x000210ab     0x20eb ./gcc_arm/ram_release/obj/seqrx_tomo.o
+ .debug_info    0x00023196     0x20f5 ./gcc_arm/ram_release/obj/seqrx_tomo_aec.o
+ .debug_info    0x0002528b      0xa27 ./gcc_arm/ram_release/obj/sequences.o
+ .debug_info    0x00025cb2     0x149b ./gcc_arm/ram_release/obj/ser422.o
+ .debug_info    0x0002714d      0x382 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_pntf.o)
+ .debug_info    0x000274cf     0x2886 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(task.o)
+ .debug_info    0x00029d55      0x519 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(stack_de.o)
+ .debug_info    0x0002a26e     0x1637 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(lwevent.o)
+ .debug_info    0x0002b8a5      0xfc4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_ghand.o)
+ .debug_info    0x0002c869     0x135f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(sched.o)
+ .debug_info    0x0002dbc8      0x357 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fflsh.o)
+ .debug_info    0x0002df1f      0x830 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_dopr.o)
+ .debug_info    0x0002e74f       0xbb /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(dispatch.o)
+ .debug_info    0x0002e80a     0x132c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(taskq.o)
+ .debug_info    0x0002fb36     0x1747 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mqx.o)
+ .debug_info    0x0003127d     0x15d3 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(lwsem.o)
+ .debug_info    0x00032850      0x43f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(queue.o)
+ .debug_info    0x00032c8f     0x11ac /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(sc_irdyq.o)
+ .debug_info    0x00033e3b      0x395 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_ioctl.o)
+ .debug_info    0x000341d0     0x2587 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mem.o)
+ .debug_info    0x00036757     0x2498 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(time.o)
+ .debug_info    0x00038bef     0x104a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tinm.o)
+ .debug_info    0x00039c39       0xb7 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(boot.o)
+ .debug_info    0x00039cf0      0x384 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_read.o)
+ .debug_info    0x0003a074      0x139 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mat3.o)
+ .debug_info    0x0003a1ad     0x1250 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fopen.o)
+ .debug_info    0x0003b3fd     0x14ec /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(int.o)
+ .debug_info    0x0003c8e9     0x10c7 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tisu.o)
+ .debug_info    0x0003d9b0      0x1d0 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mat1.o)
+ .debug_info    0x0003db80      0x363 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fputc.o)
+ .debug_info    0x0003dee3      0x81e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(stack_bu.o)
+ .debug_info    0x0003e701      0x366 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_write.o)
+ .debug_info    0x0003ea67      0x381 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(comp.o)
+ .debug_info    0x0003ede8     0x1044 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_usti.o)
+ .debug_info    0x0003fe2c     0x17af /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mutex.o)
+ .debug_info    0x000415db      0x380 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fseek.o)
+ .debug_info    0x0004195b      0x43e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_spr.o)
+ .debug_info    0x00041d99     0x1002 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(inittask.o)
+ .debug_info    0x00042d9b     0x115b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tims.o)
+ .debug_info    0x00043ef6      0xfc3 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(idletask.o)
+ .debug_info    0x00044eb9      0x617 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fp.o)
+ .debug_info    0x000454d0     0x106d /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mstiq.o)
+ .debug_info    0x0004653d      0x24c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mat2.o)
+ .debug_info    0x00046789     0x1044 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_msti.o)
+ .debug_info    0x000477cd     0x1050 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tiad.o)
+ .debug_info    0x0004881d      0x293 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(mqx_main.o)
+ .debug_info    0x00048ab0     0x1c8a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_hw.o)
+ .debug_info    0x0004a73a     0x1cfe /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_bsp.o)
+ .debug_info    0x0004c438       0xcf /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_core_mutex.o)
+ .debug_info    0x0004c507      0x798 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(hwtimer_systick.o)
+ .debug_info    0x0004cc9f      0x459 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_dma.o)
+ .debug_info    0x0004d0f8      0x363 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_sai.o)
+ .debug_info    0x0004d45b     0x10f2 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(bsp_cm.o)
+ .debug_info    0x0004e54d      0x4f9 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_sci.o)
+ .debug_info    0x0004ea46      0x2a6 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(mqx_init.o)
+ .debug_info    0x0004ecec       0xfd /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_esdhc.o)
+ .debug_info    0x0004ede9      0xb7a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi.o)
+ .debug_info    0x0004f963      0x807 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(core_mutex_sema4.o)
+ .debug_info    0x0005016a     0x1005 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(lwgpio_vgpio.o)
+ .debug_info    0x0005116f     0x1841 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_gpio.o)
+ .debug_info    0x000529b0      0x99a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(dma.o)
+ .debug_info    0x0005334a      0x464 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_spi.o)
+ .debug_info    0x000537ae      0x9ca /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(hwtimer_vybrid_m4.o)
+ .debug_info    0x00054178     0x1c77 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sai_dma_ksai.o)
+ .debug_info    0x00055def      0x10b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(vectors.o)
+ .debug_info    0x00055efa     0x12fa /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_driver.o)
+ .debug_info    0x000571f4      0xfb2 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(io_sinit.o)
+ .debug_info    0x000581a6     0x1187 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_int_kuart.o)
+ .debug_info    0x0005932d      0x34f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(core_mutex.o)
+ .debug_info    0x0005967c      0xecb /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_pol_kuart.o)
+ .debug_info    0x0005a547      0x164 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_i2c.o)
+ .debug_info    0x0005a6ab     0x11fd /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(esdhc.o)
+ .debug_info    0x0005b8a8      0x755 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(hwtimer.o)
+ .debug_info    0x0005bffd      0x8eb /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_pol_qi2c.o)
+ .debug_info    0x0005c8e8      0x86e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_int_qi2c.o)
+ .debug_info    0x0005d156      0x887 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sai_int.o)
+ .debug_info    0x0005d9dd     0x164f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(edma.o)
+ .debug_info    0x0005f02c      0x759 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_int.o)
+ .debug_info    0x0005f785      0x764 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_pol.o)
+ .debug_info    0x0005fee9      0xea5 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi_dspi_dma.o)
+ .debug_info    0x00060d8e      0x74a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(edma_vybrid_m4.o)
+ .debug_info    0x000614d8      0x625 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(esdhc_vf65gs10_m4.o)
+ .debug_info    0x00061afd      0x8fc /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_pol.o)
+ .debug_info    0x000623f9      0x297 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sema4_vybrid.o)
+ .debug_info    0x00062690      0x66b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi_vybrid_m4.o)
+ .debug_info    0x00062cfb      0x3d3 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sai_vf65gs10.o)
+ .debug_info    0x000630ce      0xb07 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_int.o)
+ .debug_info    0x00063bd5     0x1a04 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_hal.o)
+ .debug_info    0x000655d9      0x3d2 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi_dspi_common.o)
+ .debug_info    0x000659ab      0x475 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_vybrid.o)
+ .debug_info    0x00065e20      0xb29 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_int.o)
+ .debug_info    0x00066949      0x569 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_qi2c_vybrid_m4.o)
+ .debug_info    0x00066eb2      0xa0e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_api.o)
+ .debug_info    0x000678c0      0x4fd /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_common.o)
+ .debug_info    0x00067dbd      0x508 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_mqx.o)
+ .debug_info    0x000682c5     0x120d /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_vf600.o)
+ .debug_info    0x000694d2     0x129b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_instx.o)
+ .debug_info    0x0006a76d       0xe4 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_iinit.o)
+ .debug_info    0x0006a851      0xa20 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(cortex.o)
+ .debug_info    0x0006b271      0x168 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mem_copy.o)
+ .debug_info    0x0006b3d9      0x373 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(int_vtab.o)
+ .debug_info    0x0006b74c      0x384 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_inst.o)
+ .debug_info    0x0006bad0      0x425 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(nvic.o)
+ .debug_info    0x0006bef5      0x3bd /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(cache.o)
+ .debug_info    0x0006c2b2      0xfd2 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_init.o)
+ .debug_info    0x0006d284       0xe8 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(irouter_vybrid.o)
+ .debug_info    0x0006d36c      0xfb1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(int_inst.o)
 
 .debug_abbrev   0x00000000     0xca69
  .debug_abbrev  0x00000000      0x2d0 ./gcc_arm/ram_release/obj/actuators.o
@@ -5883,256 +5886,256 @@ OUTPUT(gcc_arm/ram_release/m4_master.elf elf32-littlearm)
  .debug_line    0x00015c1b       0xfa /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(irouter_vybrid.o)
  .debug_line    0x00015d15      0x12f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(int_inst.o)
 
-.debug_str      0x00000000    0x12af4
- .debug_str     0x00000000     0x2049 ./gcc_arm/ram_release/obj/actuators.o
-                               0x21b8 (size before relaxing)
- .debug_str     0x00002049      0x19b ./gcc_arm/ram_release/obj/biopsyExtended.o
-                               0x1159 (size before relaxing)
- .debug_str     0x000021e4      0x2aa ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
+.debug_str      0x00000000    0x12b0a
+ .debug_str     0x00000000     0x205f ./gcc_arm/ram_release/obj/actuators.o
+                               0x21ce (size before relaxing)
+ .debug_str     0x0000205f      0x19b ./gcc_arm/ram_release/obj/biopsyExtended.o
+                               0x116f (size before relaxing)
+ .debug_str     0x000021fa      0x2aa ./gcc_arm/ram_release/obj/biopsyExtended_driver.o
                                 0x691 (size before relaxing)
- .debug_str     0x0000248e      0x329 ./gcc_arm/ram_release/obj/biopsyStandard.o
-                               0x138c (size before relaxing)
- .debug_str     0x000027b7       0x82 ./gcc_arm/ram_release/obj/biopsy_startup.o
-                               0x1050 (size before relaxing)
- .debug_str     0x00002839      0x911 ./gcc_arm/ram_release/obj/canopen.o
+ .debug_str     0x000024a4      0x329 ./gcc_arm/ram_release/obj/biopsyStandard.o
+                               0x13a2 (size before relaxing)
+ .debug_str     0x000027cd       0x82 ./gcc_arm/ram_release/obj/biopsy_startup.o
+                               0x1066 (size before relaxing)
+ .debug_str     0x0000284f      0x911 ./gcc_arm/ram_release/obj/canopen.o
                                 0xd38 (size before relaxing)
- .debug_str     0x0000314a      0x177 ./gcc_arm/ram_release/obj/common.o
+ .debug_str     0x00003160      0x177 ./gcc_arm/ram_release/obj/common.o
                                 0x74e (size before relaxing)
- .debug_str     0x000032c1      0x80c ./gcc_arm/ram_release/obj/gui.o
-                               0x2585 (size before relaxing)
- .debug_str     0x00003acd      0x311 ./gcc_arm/ram_release/obj/loader.o
+ .debug_str     0x000032d7      0x80c ./gcc_arm/ram_release/obj/gui.o
+                               0x259b (size before relaxing)
+ .debug_str     0x00003ae3      0x311 ./gcc_arm/ram_release/obj/loader.o
                                 0x915 (size before relaxing)
- .debug_str     0x00003dde      0x141 ./gcc_arm/ram_release/obj/main.o
-                               0x14f4 (size before relaxing)
- .debug_str     0x00003f1f      0x32b ./gcc_arm/ram_release/obj/master_can.o
-                               0x1d7f (size before relaxing)
- .debug_str     0x0000424a      0x161 ./gcc_arm/ram_release/obj/mccClass.o
+ .debug_str     0x00003df4      0x141 ./gcc_arm/ram_release/obj/main.o
+                               0x150a (size before relaxing)
+ .debug_str     0x00003f35      0x32b ./gcc_arm/ram_release/obj/master_can.o
+                               0x1d95 (size before relaxing)
+ .debug_str     0x00004260      0x161 ./gcc_arm/ram_release/obj/mccClass.o
                                 0xa37 (size before relaxing)
- .debug_str     0x000043ab      0x38a ./gcc_arm/ram_release/obj/pcb190.o
-                               0x1995 (size before relaxing)
- .debug_str     0x00004735      0x3b5 ./gcc_arm/ram_release/obj/pcb215.o
-                               0x1a1e (size before relaxing)
- .debug_str     0x00004aea      0x12c ./gcc_arm/ram_release/obj/pcb244.o
-                               0x19de (size before relaxing)
- .debug_str     0x00004c16      0x352 ./gcc_arm/ram_release/obj/pcb249U1.o
-                               0x1c54 (size before relaxing)
- .debug_str     0x00004f68      0x300 ./gcc_arm/ram_release/obj/pcb249U2.o
-                               0x1c1b (size before relaxing)
- .debug_str     0x00005268       0x86 ./gcc_arm/ram_release/obj/seqrx_ae.o
-                               0x1c90 (size before relaxing)
- .debug_str     0x000052ee       0x62 ./gcc_arm/ram_release/obj/seqrx_std.o
-                               0x1c61 (size before relaxing)
- .debug_str     0x00005350       0x6f ./gcc_arm/ram_release/obj/seqrx_std_aec.o
-                               0x1c9f (size before relaxing)
- .debug_str     0x000053bf       0xa0 ./gcc_arm/ram_release/obj/seqrx_tomo.o
-                               0x1cda (size before relaxing)
- .debug_str     0x0000545f       0xa5 ./gcc_arm/ram_release/obj/seqrx_tomo_aec.o
-                               0x1d0c (size before relaxing)
- .debug_str     0x00005504       0xa5 ./gcc_arm/ram_release/obj/sequences.o
+ .debug_str     0x000043c1      0x38a ./gcc_arm/ram_release/obj/pcb190.o
+                               0x19ab (size before relaxing)
+ .debug_str     0x0000474b      0x3b5 ./gcc_arm/ram_release/obj/pcb215.o
+                               0x1a34 (size before relaxing)
+ .debug_str     0x00004b00      0x12c ./gcc_arm/ram_release/obj/pcb244.o
+                               0x19f4 (size before relaxing)
+ .debug_str     0x00004c2c      0x352 ./gcc_arm/ram_release/obj/pcb249U1.o
+                               0x1c6a (size before relaxing)
+ .debug_str     0x00004f7e      0x300 ./gcc_arm/ram_release/obj/pcb249U2.o
+                               0x1c31 (size before relaxing)
+ .debug_str     0x0000527e       0x86 ./gcc_arm/ram_release/obj/seqrx_ae.o
+                               0x1ca6 (size before relaxing)
+ .debug_str     0x00005304       0x62 ./gcc_arm/ram_release/obj/seqrx_std.o
+                               0x1c77 (size before relaxing)
+ .debug_str     0x00005366       0x6f ./gcc_arm/ram_release/obj/seqrx_std_aec.o
+                               0x1cb5 (size before relaxing)
+ .debug_str     0x000053d5       0xa0 ./gcc_arm/ram_release/obj/seqrx_tomo.o
+                               0x1cf0 (size before relaxing)
+ .debug_str     0x00005475       0xa5 ./gcc_arm/ram_release/obj/seqrx_tomo_aec.o
+                               0x1d22 (size before relaxing)
+ .debug_str     0x0000551a       0xa5 ./gcc_arm/ram_release/obj/sequences.o
                                 0xbc2 (size before relaxing)
- .debug_str     0x000055a9      0x4ff ./gcc_arm/ram_release/obj/ser422.o
+ .debug_str     0x000055bf      0x4ff ./gcc_arm/ram_release/obj/ser422.o
                                 0xe15 (size before relaxing)
- .debug_str     0x00005aa8       0xb2 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_pntf.o)
+ .debug_str     0x00005abe       0xb2 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_pntf.o)
                                 0x3f0 (size before relaxing)
- .debug_str     0x00005b5a     0x1350 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(task.o)
+ .debug_str     0x00005b70     0x1350 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(task.o)
                                0x1844 (size before relaxing)
- .debug_str     0x00006eaa       0x5f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(stack_de.o)
+ .debug_str     0x00006ec0       0x5f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(stack_de.o)
                                 0x5e3 (size before relaxing)
- .debug_str     0x00006f09      0x22e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(lwevent.o)
+ .debug_str     0x00006f1f      0x22e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(lwevent.o)
                                0x11ee (size before relaxing)
- .debug_str     0x00007137       0x56 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_ghand.o)
+ .debug_str     0x0000714d       0x56 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_ghand.o)
                                 0xf84 (size before relaxing)
- .debug_str     0x0000718d      0x18a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(sched.o)
+ .debug_str     0x000071a3      0x18a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(sched.o)
                                0x114a (size before relaxing)
- .debug_str     0x00007317       0x66 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fflsh.o)
+ .debug_str     0x0000732d       0x66 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fflsh.o)
                                 0x3e2 (size before relaxing)
- .debug_str     0x0000737d      0x1c1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_dopr.o)
+ .debug_str     0x00007393      0x1c1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_dopr.o)
                                 0x5b3 (size before relaxing)
- .debug_str     0x0000753e       0xdc /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(taskq.o)
+ .debug_str     0x00007554       0xdc /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(taskq.o)
                                0x10b9 (size before relaxing)
- .debug_str     0x0000761a      0x2ed /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mqx.o)
+ .debug_str     0x00007630      0x2ed /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mqx.o)
                                0x12cf (size before relaxing)
- .debug_str     0x00007907      0x182 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(lwsem.o)
+ .debug_str     0x0000791d      0x182 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(lwsem.o)
                                0x1172 (size before relaxing)
- .debug_str     0x00007a89       0xe3 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(queue.o)
+ .debug_str     0x00007a9f       0xe3 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(queue.o)
                                 0x35c (size before relaxing)
- .debug_str     0x00007b6c       0xfa /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(sc_irdyq.o)
+ .debug_str     0x00007b82       0xfa /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(sc_irdyq.o)
                                0x1072 (size before relaxing)
- .debug_str     0x00007c66       0x4f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_ioctl.o)
+ .debug_str     0x00007c7c       0x4f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_ioctl.o)
                                 0x408 (size before relaxing)
- .debug_str     0x00007cb5      0x61b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mem.o)
+ .debug_str     0x00007ccb      0x61b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mem.o)
                                0x1644 (size before relaxing)
- .debug_str     0x000082d0      0x63f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(time.o)
+ .debug_str     0x000082e6      0x63f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(time.o)
                                0x16fe (size before relaxing)
- .debug_str     0x0000890f       0x5b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tinm.o)
+ .debug_str     0x00008925       0x5b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tinm.o)
                                 0xfce (size before relaxing)
- .debug_str     0x0000896a       0x45 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_read.o)
+ .debug_str     0x00008980       0x45 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_read.o)
                                 0x3ed (size before relaxing)
- .debug_str     0x000089af       0x6f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mat3.o)
+ .debug_str     0x000089c5       0x6f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mat3.o)
                                 0x258 (size before relaxing)
- .debug_str     0x00008a1e       0x70 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fopen.o)
+ .debug_str     0x00008a34       0x70 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fopen.o)
                                0x1122 (size before relaxing)
- .debug_str     0x00008a8e      0x250 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(int.o)
+ .debug_str     0x00008aa4      0x250 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(int.o)
                                0x1219 (size before relaxing)
- .debug_str     0x00008cde       0x8a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tisu.o)
+ .debug_str     0x00008cf4       0x8a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tisu.o)
                                 0xfea (size before relaxing)
- .debug_str     0x00008d68       0x93 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mat1.o)
+ .debug_str     0x00008d7e       0x93 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mat1.o)
                                 0x29f (size before relaxing)
- .debug_str     0x00008dfb       0x47 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fputc.o)
+ .debug_str     0x00008e11       0x47 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fputc.o)
                                 0x3e1 (size before relaxing)
- .debug_str     0x00008e42       0xd6 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(stack_bu.o)
+ .debug_str     0x00008e58       0xd6 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(stack_bu.o)
                                 0x79a (size before relaxing)
- .debug_str     0x00008f18       0x47 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_write.o)
+ .debug_str     0x00008f2e       0x47 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_write.o)
                                 0x3ea (size before relaxing)
- .debug_str     0x00008f5f      0x169 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(comp.o)
+ .debug_str     0x00008f75      0x169 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(comp.o)
                                 0x37b (size before relaxing)
- .debug_str     0x000090c8       0x5a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_usti.o)
+ .debug_str     0x000090de       0x5a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_usti.o)
                                 0xfc4 (size before relaxing)
- .debug_str     0x00009122      0x2f7 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mutex.o)
+ .debug_str     0x00009138      0x2f7 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mutex.o)
                                0x1367 (size before relaxing)
- .debug_str     0x00009419       0x54 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fseek.o)
+ .debug_str     0x0000942f       0x54 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fseek.o)
                                 0x401 (size before relaxing)
- .debug_str     0x0000946d       0x6f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_spr.o)
+ .debug_str     0x00009483       0x6f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_spr.o)
                                 0x435 (size before relaxing)
- .debug_str     0x000094dc       0x5e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(inittask.o)
+ .debug_str     0x000094f2       0x5e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(inittask.o)
                                 0xfbb (size before relaxing)
- .debug_str     0x0000953a       0x8c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tims.o)
+ .debug_str     0x00009550       0x8c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tims.o)
                                0x1044 (size before relaxing)
- .debug_str     0x000095c6       0x4f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(idletask.o)
+ .debug_str     0x000095dc       0x4f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(idletask.o)
                                 0xf87 (size before relaxing)
- .debug_str     0x00009615      0x120 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fp.o)
+ .debug_str     0x0000962b      0x120 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_fp.o)
                                 0x348 (size before relaxing)
- .debug_str     0x00009735       0x7c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mstiq.o)
+ .debug_str     0x0000974b       0x7c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mstiq.o)
                                 0xfeb (size before relaxing)
- .debug_str     0x000097b1       0x7b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mat2.o)
+ .debug_str     0x000097c7       0x7b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_mat2.o)
                                 0x2c8 (size before relaxing)
- .debug_str     0x0000982c       0x5a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_msti.o)
+ .debug_str     0x00009842       0x5a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_msti.o)
                                 0xfc4 (size before relaxing)
- .debug_str     0x00009886       0x5b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tiad.o)
+ .debug_str     0x0000989c       0x5b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_tiad.o)
                                 0xfbb (size before relaxing)
- .debug_str     0x000098e1       0xa1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(mqx_main.o)
+ .debug_str     0x000098f7       0xa1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(mqx_main.o)
                                 0x430 (size before relaxing)
- .debug_str     0x00009982     0x1296 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_hw.o)
+ .debug_str     0x00009998     0x1296 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_hw.o)
                                0x14e5 (size before relaxing)
- .debug_str     0x0000ac18      0x9cd /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_bsp.o)
+ .debug_str     0x0000ac2e      0x9cd /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_bsp.o)
                                0x19ea (size before relaxing)
- .debug_str     0x0000b5e5       0x53 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_core_mutex.o)
+ .debug_str     0x0000b5fb       0x53 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_core_mutex.o)
                                 0x280 (size before relaxing)
- .debug_str     0x0000b638      0x1b9 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(hwtimer_systick.o)
+ .debug_str     0x0000b64e      0x1b9 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(hwtimer_systick.o)
                                 0x5b1 (size before relaxing)
- .debug_str     0x0000b7f1       0x57 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_dma.o)
+ .debug_str     0x0000b807       0x57 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_dma.o)
                                 0x54a (size before relaxing)
- .debug_str     0x0000b848      0x109 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_sai.o)
+ .debug_str     0x0000b85e      0x109 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_sai.o)
                                 0x49a (size before relaxing)
- .debug_str     0x0000b951      0x361 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(bsp_cm.o)
+ .debug_str     0x0000b967      0x361 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(bsp_cm.o)
                                 0xda0 (size before relaxing)
- .debug_str     0x0000bcb2      0x79b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_sci.o)
+ .debug_str     0x0000bcc8      0x79b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_sci.o)
                                 0xa4a (size before relaxing)
- .debug_str     0x0000c44d       0x72 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(mqx_init.o)
+ .debug_str     0x0000c463       0x72 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(mqx_init.o)
                                 0x45a (size before relaxing)
- .debug_str     0x0000c4bf       0x4e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_esdhc.o)
+ .debug_str     0x0000c4d5       0x4e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_esdhc.o)
                                 0x292 (size before relaxing)
- .debug_str     0x0000c50d      0x242 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi.o)
+ .debug_str     0x0000c523      0x242 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi.o)
                                 0x85a (size before relaxing)
- .debug_str     0x0000c74f      0x287 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(core_mutex_sema4.o)
+ .debug_str     0x0000c765      0x287 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(core_mutex_sema4.o)
                                 0x593 (size before relaxing)
- .debug_str     0x0000c9d6      0x20e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(lwgpio_vgpio.o)
+ .debug_str     0x0000c9ec      0x20e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(lwgpio_vgpio.o)
                                0x14f8 (size before relaxing)
- .debug_str     0x0000cbe4      0x48c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_gpio.o)
+ .debug_str     0x0000cbfa      0x48c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_gpio.o)
                                0x14da (size before relaxing)
- .debug_str     0x0000d070      0x16b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(dma.o)
+ .debug_str     0x0000d086      0x16b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(dma.o)
                                 0x713 (size before relaxing)
- .debug_str     0x0000d1db      0x112 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_spi.o)
+ .debug_str     0x0000d1f1      0x112 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_spi.o)
                                 0x5cf (size before relaxing)
- .debug_str     0x0000d2ed       0xd9 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(hwtimer_vybrid_m4.o)
+ .debug_str     0x0000d303       0xd9 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(hwtimer_vybrid_m4.o)
                                 0xcbf (size before relaxing)
- .debug_str     0x0000d3c6      0x6df /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sai_dma_ksai.o)
+ .debug_str     0x0000d3dc      0x6df /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sai_dma_ksai.o)
                                0x105d (size before relaxing)
- .debug_str     0x0000daa5       0x74 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(vectors.o)
+ .debug_str     0x0000dabb       0x74 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(vectors.o)
                                 0x25d (size before relaxing)
- .debug_str     0x0000db19      0x5f7 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_driver.o)
+ .debug_str     0x0000db2f      0x5f7 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_driver.o)
                                0x12a4 (size before relaxing)
- .debug_str     0x0000e110       0x5b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(io_sinit.o)
+ .debug_str     0x0000e126       0x5b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(io_sinit.o)
                                 0xf89 (size before relaxing)
- .debug_str     0x0000e16b      0x58e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_int_kuart.o)
+ .debug_str     0x0000e181      0x58e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_int_kuart.o)
                                 0xcc0 (size before relaxing)
- .debug_str     0x0000e6f9       0xa1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(core_mutex.o)
+ .debug_str     0x0000e70f       0xa1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(core_mutex.o)
                                 0x3da (size before relaxing)
- .debug_str     0x0000e79a      0x178 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_pol_kuart.o)
+ .debug_str     0x0000e7b0      0x178 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_pol_kuart.o)
                                 0xb0c (size before relaxing)
- .debug_str     0x0000e912       0x79 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_i2c.o)
+ .debug_str     0x0000e928       0x79 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(init_i2c.o)
                                 0x2d9 (size before relaxing)
- .debug_str     0x0000e98b      0x490 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(esdhc.o)
+ .debug_str     0x0000e9a1      0x490 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(esdhc.o)
                                 0xa6b (size before relaxing)
- .debug_str     0x0000ee1b      0x161 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(hwtimer.o)
+ .debug_str     0x0000ee31      0x161 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(hwtimer.o)
                                 0x639 (size before relaxing)
- .debug_str     0x0000ef7c      0x3ca /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_pol_qi2c.o)
+ .debug_str     0x0000ef92      0x3ca /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_pol_qi2c.o)
                                 0x756 (size before relaxing)
- .debug_str     0x0000f346       0xe5 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_int_qi2c.o)
+ .debug_str     0x0000f35c       0xe5 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_int_qi2c.o)
                                 0x6c6 (size before relaxing)
- .debug_str     0x0000f42b      0x118 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sai_int.o)
+ .debug_str     0x0000f441      0x118 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sai_int.o)
                                 0x622 (size before relaxing)
- .debug_str     0x0000f543      0x551 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(edma.o)
+ .debug_str     0x0000f559      0x551 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(edma.o)
                                 0xb5f (size before relaxing)
- .debug_str     0x0000fa94       0xcf /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_int.o)
+ .debug_str     0x0000faaa       0xcf /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_int.o)
                                 0x5aa (size before relaxing)
- .debug_str     0x0000fb63       0xdd /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_pol.o)
+ .debug_str     0x0000fb79       0xdd /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_pol.o)
                                 0x5c8 (size before relaxing)
- .debug_str     0x0000fc40      0x248 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi_dspi_dma.o)
+ .debug_str     0x0000fc56      0x248 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi_dspi_dma.o)
                                 0xb6a (size before relaxing)
- .debug_str     0x0000fe88       0x9a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(edma_vybrid_m4.o)
+ .debug_str     0x0000fe9e       0x9a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(edma_vybrid_m4.o)
                                 0xad0 (size before relaxing)
- .debug_str     0x0000ff22       0x8a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(esdhc_vf65gs10_m4.o)
+ .debug_str     0x0000ff38       0x8a /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(esdhc_vf65gs10_m4.o)
                                 0xa73 (size before relaxing)
- .debug_str     0x0000ffac      0x19e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_pol.o)
+ .debug_str     0x0000ffc2      0x19e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_pol.o)
                                 0x67b (size before relaxing)
- .debug_str     0x0001014a       0x8b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sema4_vybrid.o)
+ .debug_str     0x00010160       0x8b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sema4_vybrid.o)
                                 0x319 (size before relaxing)
- .debug_str     0x000101d5       0x83 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi_vybrid_m4.o)
+ .debug_str     0x000101eb       0x83 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi_vybrid_m4.o)
                                 0xa40 (size before relaxing)
- .debug_str     0x00010258       0xe0 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sai_vf65gs10.o)
+ .debug_str     0x0001026e       0xe0 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(sai_vf65gs10.o)
                                 0x386 (size before relaxing)
- .debug_str     0x00010338      0x26e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_int.o)
+ .debug_str     0x0001034e      0x26e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_int.o)
                                0x101c (size before relaxing)
- .debug_str     0x000105a6      0x75f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_hal.o)
+ .debug_str     0x000105bc      0x75f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(fsl_flexcan_hal.o)
                                0x15df (size before relaxing)
- .debug_str     0x00010d05      0x117 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi_dspi_common.o)
+ .debug_str     0x00010d1b      0x117 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(spi_dspi_common.o)
                                 0x3ce (size before relaxing)
- .debug_str     0x00010e1c       0xa9 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_vybrid.o)
+ .debug_str     0x00010e32       0xa9 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_vybrid.o)
                                 0x387 (size before relaxing)
- .debug_str     0x00010ec5      0x15c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_int.o)
+ .debug_str     0x00010edb      0x15c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(serl_int.o)
                                 0x7ed (size before relaxing)
- .debug_str     0x00011021       0xc1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_qi2c_vybrid_m4.o)
+ .debug_str     0x00011037       0xc1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/bsp/bsp.a(i2c_qi2c_vybrid_m4.o)
                                 0xa1c (size before relaxing)
- .debug_str     0x000110e2      0x372 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_api.o)
+ .debug_str     0x000110f8      0x372 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_api.o)
                                 0x6ab (size before relaxing)
- .debug_str     0x00011454       0xe7 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_common.o)
+ .debug_str     0x0001146a       0xe7 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_common.o)
                                 0x49e (size before relaxing)
- .debug_str     0x0001153b      0x122 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_mqx.o)
+ .debug_str     0x00011551      0x122 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_mqx.o)
                                 0x4d3 (size before relaxing)
- .debug_str     0x0001165d      0xdd2 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_vf600.o)
+ .debug_str     0x00011673      0xdd2 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/mcc/mcc.a(mcc_vf600.o)
                                0x16f0 (size before relaxing)
- .debug_str     0x0001242f       0x7f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_instx.o)
+ .debug_str     0x00012445       0x7f /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_instx.o)
                                0x116e (size before relaxing)
- .debug_str     0x000124ae       0x55 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_iinit.o)
+ .debug_str     0x000124c4       0x55 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(psp_iinit.o)
                                 0x27a (size before relaxing)
- .debug_str     0x00012503       0x52 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(cortex.o)
+ .debug_str     0x00012519       0x52 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(cortex.o)
                                 0x765 (size before relaxing)
- .debug_str     0x00012555       0xaa /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mem_copy.o)
+ .debug_str     0x0001256b       0xaa /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(mem_copy.o)
                                 0x2a1 (size before relaxing)
- .debug_str     0x000125ff      0x14e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(int_vtab.o)
+ .debug_str     0x00012615      0x14e /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(int_vtab.o)
                                 0x38d (size before relaxing)
- .debug_str     0x0001274d       0x4b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_inst.o)
+ .debug_str     0x00012763       0x4b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_inst.o)
                                 0x406 (size before relaxing)
- .debug_str     0x00012798       0x9c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(nvic.o)
+ .debug_str     0x000127ae       0x9c /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(nvic.o)
                                 0x3ab (size before relaxing)
- .debug_str     0x00012834      0x1d1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(cache.o)
+ .debug_str     0x0001284a      0x1d1 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(cache.o)
                                 0x3d6 (size before relaxing)
- .debug_str     0x00012a05       0x3b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_init.o)
+ .debug_str     0x00012a1b       0x3b /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(io_init.o)
                                 0xf94 (size before relaxing)
- .debug_str     0x00012a40       0x5d /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(irouter_vybrid.o)
+ .debug_str     0x00012a56       0x5d /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(irouter_vybrid.o)
                                 0x213 (size before relaxing)
- .debug_str     0x00012a9d       0x57 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(int_inst.o)
+ .debug_str     0x00012ab3       0x57 /mnt/hgfs/DBT/M4/MQX/lib/twrvf65gs10_m4.gcc_arm/release/psp/psp.a(int_inst.o)
                                 0xf85 (size before relaxing)
 
 .comment        0x00000000       0x70

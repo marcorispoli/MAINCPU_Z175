@@ -93,6 +93,7 @@ typedef struct
      unsigned short manual_decell;   // 0.1° unit al secondo al secondo
 
      unsigned short direction_memory; // Memoria direzione se presente
+     unsigned short rapporto_trasmissione; // IMposta il rapporto di trasmissione cinghia e vite/corona
 } armConfig_Str;
 
 typedef struct

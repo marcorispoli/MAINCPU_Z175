@@ -46,7 +46,7 @@ public:
     void activateSlaveConnections(void);
 
     // Caricamento files di configurazione per dispositivi su CAN
-    bool readTrxConfig(void);
+
     bool saveTomoConfig(QString filename);
     bool readTomoConfig(QString filename);
     QString getTomoFilename(void);
@@ -54,12 +54,17 @@ public:
     void enableSlavePrint(void);
     void slaveRestartMcc(void);
 
-    bool readArmConfig(void);
+    bool readTrxConfig(void);
+    bool readArmConfig(void);    
     bool readLenzeConfig(void);
 
-    bool saveTrxConfig(void);
+    void setTrxDefaultConfig();
+    void setArmDefaultConfig();
+    void setLenzeDefaultConfig();
+
     bool saveArmConfig(void);
     bool saveLenzeConfig(void);
+    bool saveTrxConfig(void);
 
     bool setTomoSpeedMode(QString tomoMode, int console_id); // Impostazione file di configurazione rotazioni
 

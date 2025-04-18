@@ -1017,8 +1017,7 @@ QList<QString> Config::getNextArrayFields(QFile* fp)
 // Velocità = Angolo/Ts
 // Accelerazione e velocità sono espresse in centesimi di grado/secondo e centesimi/secondoq
 // Posizioni sono espresse in centesimi di grado
-bool Config::readTrxConfig(void)
-{
+void Config::setTrxDefaultConfig(void){
     // ________________________ CONTESTO MOVIMENTO 2D/BIOPSIA ________
     trxConfig.context2D.speed = 400;
     trxConfig.context2D.accell= 400;
@@ -1034,6 +1033,12 @@ bool Config::readTrxConfig(void)
 
     // ________________________ Modalità Tomo  __________________________
     trxConfig.tomo_mode = _TOMO_MODE_2F; // Modalità TOMO di default
+    return;
+}
+
+bool Config::readTrxConfig(void)
+{
+    setTrxDefaultConfig();
 
     // Apre il file se esiste
     QString filename = QString(TRX_FILE_CFG);
@@ -1299,14 +1304,7 @@ bool Config::saveTomoConfig(QString filename)
 
 
 
-
-
-
-
-
-// Lettura file di configurazione pendolazione
-bool Config::readArmConfig(void)
-{
+void Config::setArmDefaultConfig(void){
     armConfig.speed = 200;
     armConfig.accell = 100;
     armConfig.decell = 100;
@@ -1314,7 +1312,14 @@ bool Config::readArmConfig(void)
     armConfig.manual_accell = 50;
     armConfig.manual_decell = 200;
     armConfig.direction_memory = MEM_ARM_DIR_UNDEF;
+    armConfig.rapporto_trasmissione = 1120;
+    return;
+}
 
+// Lettura file di configurazione pendolazione
+bool Config::readArmConfig(void)
+{
+    setArmDefaultConfig();
 
     // Apre il file se esiste
     QString filename = QString(ARM_FILE_CFG);
@@ -1339,6 +1344,7 @@ bool Config::readArmConfig(void)
         else if(dati.at(0)=="MACC")   armConfig.manual_accell=dati.at(1).toInt();
         else if(dati.at(0)=="MDEC")   armConfig.manual_decell=dati.at(1).toInt();
         else if(dati.at(0)=="MEMDIR")   armConfig.direction_memory=dati.at(1).toInt();
+        else if(dati.at(0)=="RATIO")   armConfig.rapporto_trasmissione=dati.at(1).toInt();
 
     }
 
@@ -1381,6 +1387,10 @@ bool Config::saveArmConfig(void)
     frame = QString("<MEMDIR,%1>  \n").arg(armConfig.direction_memory);
     file.write(frame.toAscii().data());
 
+    frame = QString("<RATIO,%1>  \n").arg(armConfig.rapporto_trasmissione);
+    file.write(frame.toAscii().data());
+
+
     file.close();
     file.flush();
 
@@ -1391,9 +1401,7 @@ bool Config::saveArmConfig(void)
     return TRUE;
 }
 
-// Lettura file di configurazione pendolazione
-bool Config::readLenzeConfig(void)
-{
+void Config::setLenzeDefaultConfig(void){
     lenzeConfig.calibrated = 1;
     lenzeConfig.min_lenze_position = 15;  // %
     lenzeConfig.max_lenze_position = 85;  // %
@@ -1404,6 +1412,13 @@ bool Config::readLenzeConfig(void)
     lenzeConfig.parkingTarget = 400;
     lenzeConfig.parkingSafePoint = 410;
     lenzeConfig.calibratedParkingTarget = false;
+    return;
+}
+
+// Lettura file di configurazione pendolazione
+bool Config::readLenzeConfig(void)
+{
+    setLenzeDefaultConfig();
 
 
     // Apre il file se esiste
