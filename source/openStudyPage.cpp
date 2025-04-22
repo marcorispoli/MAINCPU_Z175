@@ -125,7 +125,7 @@ OpenStudyPage::OpenStudyPage(bool local, QString bgl, QString bgs , bool showLog
     pulsanteAecPix->show();
     font.setPointSize(23);
     font.setStretch(30);
-    currentSelectedRoi = new GLabel(this,QRectF(485,161,75,24),font,QColor(_W_TEXT),QString(""),Qt::AlignCenter);
+    currentSelectedRoi = new GLabel(this,QRectF(485,161,75,24),font,QColor(_BK_TEXT),QString(""),Qt::AlignCenter);
     pulsanteAecMode = new GPush((GWindow*) this, setPointPath(8,485,104,560,104,560,162,485,162),476,104,0,0,false);
     pulsanteAecMode->setEnable(true);
     AECMode = 0;
@@ -838,6 +838,8 @@ void OpenStudyPage::buttonActivationNotify(int id, bool status,int opt)
 
             // Imposta il massimo numero di roi selezionabili, prima di aprire la pagina
             paginaRoi->max_selectable_roi =  pCompressore->getPaddleRoi();
+            if(pCompressore->comprPad == PAD_18x24) paginaRoi->paddle_18x24 = true;
+            else paginaRoi->paddle_18x24 = false;
 
             setPage(_PG_ROI_SELECTION_PAGE,GWindowRoot.curPage,0);
             return;

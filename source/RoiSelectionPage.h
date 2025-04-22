@@ -32,6 +32,7 @@ public:
 
     int selectedRoi;        // Roi selezionata
     int max_selectable_roi; // IMpostato dal chiamante per limitare la selezione
+    bool paddle_18x24;      // Utilizzato per mostrare la grafica aggiuntiva
 
 public slots:
     void valueChanged(int,int); // Link esterno alla fonte dei contenuti dei campi valore
@@ -52,6 +53,7 @@ private:
 
     void initWindow(void);
     void initButtons(void);
+    void initAdditiveGraph(void);
     void updateSelectedButtons(void);
 
     QColor studyColor;   // Colore relativo allo studio in corso

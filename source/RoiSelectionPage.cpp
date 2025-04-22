@@ -5,7 +5,11 @@
 
 
 #define BACKGROUNDC "://paginaRoi/paginaRoi/backgroundC.png"
+#define BACKGROUNDC_18x24 "://paginaRoi/paginaRoi/backgroundC_18x24.png"
+
 #define BACKGROUNDY "://paginaRoi/paginaRoi/backgroundY.png"
+#define BACKGROUNDY_18x24 "://paginaRoi/paginaRoi/backgroundY_18x24.png"
+
 #define BUTTON_UNSELECTED_PIX "://paginaRoi/paginaRoi/RoiSelection.png"
 #define BUTTON_SELECTED_PIX "://paginaRoi/paginaRoi/RoiSelected.png"
 
@@ -212,6 +216,13 @@ void RoiSelectionPage::valueChanged(int index,int opt)
     case _DB_SERVICE1_INT:
         max_selectable_roi = ApplicationDatabase.getDataI(_DB_SERVICE1_INT);
         initButtons();
+        break;
+
+    case _DB_SERVICE2_INT:
+        paddle_18x24 = (ApplicationDatabase.getDataI(_DB_SERVICE2_INT) == (int) 1);
+        initAdditiveGraph();
+        break;
+
     default:
     break;
 
@@ -419,17 +430,8 @@ void RoiSelectionPage::buttonActivationNotify(int id, bool status,int opt)
 
 void RoiSelectionPage::initWindow(void){
 
-    if (ApplicationDatabase.getDataU(_DB_STUDY_STAT)==_OPEN_STUDY_DICOM)
-    {
-        setBackground(BACKGROUNDC);
-        studyColor = QColor(_C_COL);
+    // Il Background viene impostato successivamente da initAdditiveGraph()
 
-    }else
-    {
-        studyColor = QColor(_Y_COL);
-        setBackground(BACKGROUNDY);
-
-    }
 
     setIntestazione();
 
@@ -440,6 +442,8 @@ void RoiSelectionPage::initWindow(void){
     // Si utilizza una variabile tempranea del database:
     if(isMaster){
         ApplicationDatabase.setData(_DB_SERVICE1_INT,max_selectable_roi, DBase::_DB_FORCE_SGN);
+        if(paddle_18x24) ApplicationDatabase.setData(_DB_SERVICE2_INT,(int) 1, DBase::_DB_FORCE_SGN);
+        else  ApplicationDatabase.setData(_DB_SERVICE2_INT,(int) 0, DBase::_DB_FORCE_SGN);
 
     }
 
@@ -458,4 +462,23 @@ void RoiSelectionPage::languageChanged()
 {
     setIntestazione();
 }
+
+void RoiSelectionPage::initAdditiveGraph(void){
+
+    if (ApplicationDatabase.getDataU(_DB_STUDY_STAT)==_OPEN_STUDY_DICOM)
+    {
+        if(paddle_18x24)      setBackground(BACKGROUNDC_18x24);
+        else setBackground(BACKGROUNDC);
+        studyColor = QColor(_C_COL);
+
+    }else
+    {
+        studyColor = QColor(_Y_COL);
+        if(paddle_18x24)      setBackground(BACKGROUNDY_18x24);
+        else setBackground(BACKGROUNDY);
+
+    }
+
+}
+
 
