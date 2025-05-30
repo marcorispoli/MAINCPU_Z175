@@ -1071,12 +1071,14 @@ void mcc_raggi_tomo(void)
     data[13] = num pre-pulses
     data[14] = num samples
     data[15] = tomo mode (0=Narrow, 1=Wide 2=Calib 3=Intermediate)
-    data[16] = Compressore sblocco
-    data[17] = Dead man attivo
+    data[16] = tomo_skip
+    data[17] = Compressore sblocco
+    data[18] = Dead man attivo
+    data[19] = first tomo gonio
+    data[20][21] = tomo speed
 
-Autore: M. Rispoli
-Data: 04/11/2014
-Modificato: 
+
+    Modificato: 26/02/2025 per ID14
 */
 
 //////////////////////////////////////////////////////////////////////////////
@@ -1085,7 +1087,7 @@ void mcc_raggi_tomo(void)
   unsigned char chk,i;
   unsigned char data[16];
   int timeout;
-  
+
     // Verifica se la sequenza è partita
     if(tomoIsRunning)
     {
@@ -1093,11 +1095,11 @@ void mcc_raggi_tomo(void)
       timeout = 30;
       while(tomoIsRunning)
       {
-        if(timeout-- == 0) 
+        if(timeout-- == 0)
         {
-          data[0]=ERROR_WAIT_PENDING_XRAY;       
-          data[1]= 0; 
-          data[2]= 0 ;  
+          data[0]=ERROR_WAIT_PENDING_XRAY;
+          data[1]= 0;
+          data[2]= 0 ;
           mccGuiNotify(1,MCC_CMD_RAGGI_TOMO,data,3);
           return;
         }
@@ -1136,22 +1138,51 @@ void mcc_raggi_tomo(void)
 
     if(mcc_cmd.buffer[18]==1)  tomoParam.tomo_deadman = true;      // Modalità deadman
     else tomoParam.tomo_deadman = false;
-    
+
+    // Aggiunti per gestire la nuova collimazione dinamica
+    tomoParam.first_gonio = mcc_cmd.buffer[19];       // Primo angolo valido
+    tomoParam.tomo_speed = (unsigned short) mcc_cmd.buffer[20] + (unsigned short) mcc_cmd.buffer[21] * 256;
 
     // Partenza sequenza
     _EVCLR(_SEQEV_RX_TOMO_TERMINATED);
     _EVSET(_SEQEV_RX_TOMO_START);
-    
+
   return;
 }
 
+/*
+    data[0] =  VADCL
+    data[1] =  VDACH
+    data[2] =  IDACL
+    data[3] =  IDACH
+    data[4] =  MASDACL
+    data[5] =  MASDACH
+    data[6] =  TIMEOUT (100ms)
+    data[7] =  [x,hs,swb,swa]
+    data[8] =  grid;
+    data[9] =  maxV
+    data[10] = minV
+    data[11] = maxI
+    data[12] = minI
+    data[13] = num pre-pulses
+    data[14] = num samples
+    data[15] = tomo mode (0=Narrow, 1=Wide 2=Calib 3=Intermediate)
+    data[16] = tomo_skip
+    data[17] = Compressore sblocco
+    data[18] = Dead man attivo
+    data[19] = first tomo gonio
+    data[20][21] = tomo speed
+
+
+    Modificato: 26/02/2025 per ID14
+ */
 void mcc_raggi_aec_tomo(void)
 {
   unsigned char chk,i;
   unsigned char data[16];
 
   int timeout;
-  
+
     // Verifica se la sequenza è partita
     if(tomoAecIsRunning)
     {
@@ -1159,11 +1190,11 @@ void mcc_raggi_aec_tomo(void)
       timeout = 30;
       while(tomoAecIsRunning)
       {
-        if(timeout-- == 0) 
+        if(timeout-- == 0)
         {
-          data[0]=ERROR_WAIT_PENDING_XRAY;       
-          data[1]= 0; 
-          data[2]= 0 ;  
+          data[0]=ERROR_WAIT_PENDING_XRAY;
+          data[1]= 0;
+          data[2]= 0 ;
           mccGuiNotify(1,MCC_CMD_RAGGI_AEC_TOMO,data,3);
           return;
         }
@@ -1187,7 +1218,7 @@ void mcc_raggi_aec_tomo(void)
     tomoAecParam.esposizione.CHK= chk;
 
     // ACCESSORI ALL'ESPOSIZIONE
-//    tomoAecParam.potter_cfg = _POTTER_TOMO;         
+//    tomoAecParam.potter_cfg = _POTTER_TOMO;
     // ACCESSORI ALL'ESPOSIZIONE
     tomoAecParam.tomo_pre_pulses = mcc_cmd.buffer[13];      // Numero di impulsi da scartare
     tomoAecParam.tomo_samples = mcc_cmd.buffer[14];         // Numero totale di impulsi
@@ -1200,11 +1231,15 @@ void mcc_raggi_aec_tomo(void)
 
     if(mcc_cmd.buffer[18]==1)  tomoAecParam.tomo_deadman = true;      // Modalità deadman
     else tomoAecParam.tomo_deadman = false;
-    
+
+    // Aggiunti per gestire la nuova collimazione dinamica
+    tomoAecParam.first_gonio = mcc_cmd.buffer[19];       // Primo angolo valido
+    tomoAecParam.tomo_speed = (unsigned short) mcc_cmd.buffer[20] + (unsigned short) mcc_cmd.buffer[21] * 256;
+
     // Partenza sequenza
     _EVCLR(_SEQEV_RX_TOMO_AEC_TERMINATED);
     _EVSET(_SEQEV_RX_TOMO_AEC_START);
-    
+
   return;
 }
 

@@ -43,6 +43,7 @@ typedef struct
     unsigned short samples;         // Numero di campioni
     unsigned short pre_samples;     // Numero di campioni iniziali da scartare
     unsigned short skip_samples;    // Indica il numero di frame da saltare all'inetrno della sequenza (0 oppure 1)
+    unsigned short first_gonio;     // Indica l'angolo (intero) corrispondente al primo impulso valido
 
 }_tomoParam;
 

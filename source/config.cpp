@@ -1143,7 +1143,11 @@ bool Config::saveTrxConfig(void)
 }
 
 //_________________________________________________________________________________________
-//  READ TOMO CONFIG
+//  READ TOMO CONFIG:
+//  Modifiche introdotte in ID14 per la gestione della nuova collimazione dinamica con EW
+//  Aggiunto campo (GONIO_W, GONIO_I, GONIO_N) relativo al primo angolo valido per la scansione Tomo
+//  Modificato il default per rendere la modifica retro compatibile con
+//  le versioni precedenti
 bool Config::readTomoConfig(QString filename)
 {
 
@@ -1158,6 +1162,7 @@ bool Config::readTomoConfig(QString filename)
     trxConfig.tomo.w.pre_samples = 1;
     trxConfig.tomo.w.skip_samples = 0;
 
+
     trxConfig.tomo.i.speed = 400; // Velocità = 2°/ 0.5
     trxConfig.tomo.i.accell= 400; // Anticipo = 4 * 4 / (2 * 4) = 2
     trxConfig.tomo.i.home_position = 1200 + 200;
@@ -1167,6 +1172,7 @@ bool Config::readTomoConfig(QString filename)
     trxConfig.tomo.i.pre_samples = 1;
     trxConfig.tomo.i.skip_samples = 0;
 
+
     trxConfig.tomo.n.speed = 300; // Velocità = 1.5°/ 0.5
     trxConfig.tomo.n.accell= 300; // Anticipo = 3 * 3 / (2*3) = 1.5
     trxConfig.tomo.n.home_position = 750 + 150;
@@ -1175,6 +1181,23 @@ bool Config::readTomoConfig(QString filename)
     trxConfig.tomo.n.samples = 11;
     trxConfig.tomo.n.pre_samples = 1;
     trxConfig.tomo.n.skip_samples = 0;
+
+    // Per la nuova collimazione, nel caso non siano ancora stati inseriti nei files il valore del primo angolo
+    // vengono caricati quelli nominali al 19/02/2025
+    if(filename.contains("1F")){
+        trxConfig.tomo.w.first_gonio = 18;
+        trxConfig.tomo.i.first_gonio = 12;
+        trxConfig.tomo.n.first_gonio = 8;
+    }else if(filename.contains("2F")){
+        trxConfig.tomo.w.first_gonio = 18;
+        trxConfig.tomo.i.first_gonio = 12;
+        trxConfig.tomo.n.first_gonio = 8;
+    }else{
+        trxConfig.tomo.w.first_gonio = 25;
+        trxConfig.tomo.i.first_gonio = 12;
+        trxConfig.tomo.n.first_gonio = 8;
+    }
+
 
     // Apre il file se esiste
     QFile file(filename);
@@ -1199,6 +1222,7 @@ bool Config::readTomoConfig(QString filename)
         else if(dati.at(0)=="SMP_W")        trxConfig.tomo.w.samples=dati.at(1).toInt();
         else if(dati.at(0)=="PRESMP_W")     trxConfig.tomo.w.pre_samples=dati.at(1).toInt();
         else if(dati.at(0)=="SKSMP_W")      trxConfig.tomo.w.skip_samples=dati.at(1).toInt();
+        else if(dati.at(0)=="GONIO_W")      trxConfig.tomo.w.first_gonio=dati.at(1).toInt();
 
         if(dati.at(0)=="HOME_I")            trxConfig.tomo.i.home_position=dati.at(1).toInt();
         else if(dati.at(0)=="END_I")        trxConfig.tomo.i.end_position=dati.at(1).toInt();
@@ -1208,6 +1232,7 @@ bool Config::readTomoConfig(QString filename)
         else if(dati.at(0)=="SMP_I")       trxConfig.tomo.i.samples=dati.at(1).toInt();
         else if(dati.at(0)=="PRESMP_I")    trxConfig.tomo.i.pre_samples=dati.at(1).toInt();
         else if(dati.at(0)=="SKSMP_I")      trxConfig.tomo.i.skip_samples=dati.at(1).toInt();
+        else if(dati.at(0)=="GONIO_I")      trxConfig.tomo.i.first_gonio=dati.at(1).toInt();
 
         if(dati.at(0)=="HOME_N")            trxConfig.tomo.n.home_position=dati.at(1).toInt();
         else if(dati.at(0)=="END_N")        trxConfig.tomo.n.end_position=dati.at(1).toInt();
@@ -1217,7 +1242,7 @@ bool Config::readTomoConfig(QString filename)
         else if(dati.at(0)=="SMP_N")        trxConfig.tomo.n.samples=dati.at(1).toInt();
         else if(dati.at(0)=="PRESMP_N")     trxConfig.tomo.n.pre_samples=dati.at(1).toInt();
         else if(dati.at(0)=="SKSMP_N")      trxConfig.tomo.n.skip_samples=dati.at(1).toInt();
-
+        else if(dati.at(0)=="GONIO_N")      trxConfig.tomo.n.first_gonio=dati.at(1).toInt();
 
     }
 
