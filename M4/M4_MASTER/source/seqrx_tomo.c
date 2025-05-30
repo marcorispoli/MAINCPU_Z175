@@ -91,6 +91,7 @@ void tomo_rx_task(uint32_t taskRegisters)
 
     if((Param->tomo_mode!=_TOMO_MODE_STATIC)&&(!generalConfiguration.demoMode)&&(generalConfiguration.gantryCfg.autoFilter))
     {
+      // Acquisisce la posizione nominale del filtro per eventualmente centrare i target tomo
       if(generalConfiguration.filterTomoEna!=0){
           Ser422ReadRegister(_REGID(RG249U2_POS_TARGET),4,&PCB249U2_CONTEST);
           tomoCurrentFilterPosition = _DEVREGL(RG249U2_POS_TARGET,PCB249U2_CONTEST);
@@ -120,8 +121,14 @@ void tomo_rx_task(uint32_t taskRegisters)
 
 
       // Impostazione collimatori ..
-      if(pcb249U1SetColliCmd(3)==FALSE) _SEQERROR(_SEQ_ERR_COLLI_TOMO); // Imposta la modalità tomo
+      if(pcb249U1SetColliCmd(3)==FALSE) _SEQERROR(_SEQ_ERR_COLLI_TOMO); // Imposta la modalità tomo (ew o standard dipende dalla presenza del cavo)
       if(pcb249U2ColliCmd(generalConfiguration.colliCfg.dynamicArray.tomoBack, generalConfiguration.colliCfg.dynamicArray.tomoFront)==FALSE) _SEQERROR(_SEQ_ERR_COLLI_TOMO);
+
+      // Imposta il filtro in modalità inseguimento
+      if(!pcb249U2_activateFilterTomo(tomoParam.first_gonio)){
+           debugPrint("ERRORE IN IMPOSTAZIONE FILTRO TOMO");
+           _SEQERROR(_SEQ_ERR_COLLI_TOMO)
+      }
     }
     
     // Verifica pulsante raggi
@@ -164,37 +171,22 @@ void tomo_rx_task(uint32_t taskRegisters)
         if(Param->tomo_mode!=_TOMO_MODE_STATIC) actuatorsMoveTomoTrxEnd(Param->tomo_mode,true); // actuatorsActivateTrxTriggerStart();
 
 
-        // Impostazione iniziale filtro
-        int angolo = 0;
+        // Impostazione iniziale filtro vecchio inseguimento
+        /*
         if((generalConfiguration.filterTomoEna!=0)&&(Param->tomo_mode!=_TOMO_MODE_STATIC) && (generalConfiguration.gantryCfg.autoFilter)){
           Ser422ReadRegister(_REGID(RG249U1_GONIO_REL),4,&PCB249U1_CONTEST);
-          angolo = (int) _DEVREGL(RG249U1_GONIO_REL,PCB249U1_CONTEST);
+          int angolo = (int) _DEVREGL(RG249U1_GONIO_REL,PCB249U1_CONTEST);
           if(angolo&0x80) angolo = -1 * (angolo&0x7F); 
-
-
-          tomoFilterTarget = getTomoDeltaFilter(angolo) +  tomoCurrentFilterPosition;
+          tomoFilterTarget = getTomoDeltaFilter(angolo) +  tomoCurrentFilterPosition;        
           int i=100;
+          debugPrintI("RX-3D SET FILTER IN INITIAL RAW POSITION",tomoFilterTarget);
           while(--i){
-              pcb249WaitBusy(20);
-              pcb249U2SetFiltroRaw(tomoFilterTarget);
-              pcb249WaitBusy(20);
-              Ser422ReadRegister(_REGID(RG249U2_POS_RAW),4,&PCB249U2_CONTEST);
-              if(
-                  (_DEVREGL(RG249U2_POS_RAW,PCB249U2_CONTEST)>tomoFilterTarget+1) ||
-                  (_DEVREGL(RG249U2_POS_RAW,PCB249U2_CONTEST)<tomoFilterTarget-1)
-                ){
-                  debugPrintI2("RAW FILTER ERROR! CURRENT:", _DEVREGL(RG249U2_POS_RAW,PCB249U2_CONTEST), "RICHIESTO:", tomoFilterTarget);
-                  _time_delay(100);
-              }else break;
+              if( pcb249U2SetFiltroRaw(tomoFilterTarget)) break;
+              _time_delay(50);
           }
 
           if(i==0) debugPrint("RX-3D INITIAL FILTER POSITIONING FAILED!\n");
-        }
-
-        // Lettura angolo reale finale
-        _time_delay(100);
-        Ser422ReadRegister(_REGID(RG249U2_POS_RAW),4,&PCB249U2_CONTEST);
-        debugPrintI4("POSFILTRO:", _DEVREGL(RG249U2_POS_RAW,PCB249U2_CONTEST), "INIT FILTRO", tomoCurrentFilterPosition, "ANGOLO TUBO:", angolo, "FILTRO TARGET:",tomoFilterTarget);
+        }*/
 
         // Attende i segnali e verifica l'uscita con pulsante raggi
         if(SystemInputs.CPU_XRAY_ENA_ACK==0)
@@ -222,7 +214,7 @@ void tomo_rx_task(uint32_t taskRegisters)
              if(SystemInputs.CPU_XRAY_COMPLETED==1) break; // Fine sequenza
            }else delay--;
 
-
+           /* Sezione vecchio inseguimento
            if((generalConfiguration.filterTomoEna!=0) && (Param->tomo_mode!=_TOMO_MODE_STATIC) && (generalConfiguration.gantryCfg.autoFilter)){
               Ser422ReadRegister(_REGID(RG249U1_GONIO_REL),4,&PCB249U1_CONTEST);
               int angolo = (int) _DEVREGL(RG249U1_GONIO_REL,PCB249U1_CONTEST);
@@ -236,7 +228,7 @@ void tomo_rx_task(uint32_t taskRegisters)
                   pcb249U2SetFiltroRaw(tomoFilterTarget);
                   debugPrintI2("RX-3D FILTRO FOLLOWER. ANGOLO",angolo,"FPOS",tomoFilterTarget);
               }
-           }
+           }*/
            
            _time_delay(100);
         }

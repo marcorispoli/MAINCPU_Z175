@@ -1034,5 +1034,20 @@ bool pcb249U2_GetFreeze(void){
     return STATUS.freeze;
 }
 
+bool pcb249U2_activateFilterTomo(unsigned char angolo){
+    _Ser422_Command_Str frame;
+
+   // Prepara il comando di download
+   frame.address = TARGET_ADDRESS;
+   frame.attempt = 10;
+   frame.cmd=SER422_COMMAND;
+   frame.data1=_CMD1(PCB249U2_FILTER_TOMO);
+   frame.data2= angolo; // Angolo iniziale inseguimento
+
+   Ser422Send(&frame, SER422_BLOCKING,CONTEST.ID);
+   if(frame.retcode == SER422_COMMAND_OK) return TRUE;
+   return FALSE;
+}
+
 /* EOF */
  

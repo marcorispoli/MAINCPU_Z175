@@ -172,9 +172,8 @@ volatile _DeviceRegItem_Str  PCB249U2_Registers[]=
  
   #define PCB249U2_MIRROR_HOME        9,0// Mirror in posizione Home
   #define PCB249U2_MIRROR_OUT         10,0// Mirror in Campo
-  #define PCB249U2_MIRROR_FWD         11,0 // Muove fine (0:255 step) in campo
-  #define PCB249U2_MIRROR_BCK         12,0 // Muove fine (0:255 step) in home
-  
+  #define PCB249U2_FILTER_TOMO        11,0 // Attiva inseguimento filtro guidato da UC1
+
   /*
       BIT[0:5] = Timeout (0==INFINITO)        ; Sezione comandi LUCE centratore
       BIT6: 1 = LUCE ON; 0 = LUCE OFF
@@ -239,9 +238,11 @@ volatile _DeviceRegItem_Str  PCB249U2_Registers[]=
   ext bool          filtro_eseguito;// esito ultimo comando
 
 
-  //ext int comando_backfront;
+
   ext unsigned char backcolli_req,frontcolli_req; // Richiesta di spostamento lame frontali e posteriori
   ext bool backfront_eseguito;
   ext bool pcb249WaitBusy(int timeout);
   ext bool pcb249U2_GetFreeze(void);
+
+  ext bool pcb249U2_activateFilterTomo(unsigned char angolo);
 #endif

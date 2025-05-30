@@ -194,6 +194,7 @@ volatile _DeviceRegItem_Str  PCB249U1_Registers[]=
   #define PCB249U1_SET_COLLI_18x24    6,1 // Impostazione Modo collimazione 2D 18x24
   #define PCB249U1_SET_COLLI_USER     6,2 // Impostazione Modo collimazione 2D USER
   #define PCB249U1_SET_COLLI_TOMO     6,3 // Impostazione Modo collimazione 3D 24x30
+  #define PCB249U1_SET_COLLI_TOMO_TEST     6,4 // Impostazione Modo collimazione 3D di test (senza segnale ew)
   #define PCB249U1_TEACH_ZERO         7,0 // Ricerca le posizioni di zero del collimatore
   #define PCB249U1_WRITE_B23          8,1 // Imposta il modo scrittura a banco 23
   #define PCB249U1_WRITE_B01          8,0 // Imposta il modo scrittura a banco 23
