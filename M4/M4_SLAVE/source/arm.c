@@ -40,11 +40,14 @@
 
 //#define RIDUZIONE 1200 // 40 * 3, Riduzione * 10  Versione a fune
 //#define RIDUZIONE 840 // 28 * 3, Riduzione * 10   Versione a fune
-#define RIDUZIONE 1120 // 56 * 2, Riduzione * 10    Versione con cinghia(2) e corona(56)
+#define DEF_RIDUZIONE 1120 // 56 * 2, Riduzione * 10    Versione con cinghia(2) e corona(56)
+static long RIDUZIONE = 1120; // 10 * Riduzione Cinghia = 2, Riduzione Corona = 56
 
-#define dGRADsec_TO_ROTmin(x)  ((x * RIDUZIONE)/600)
-#define dGRAD_TO_POS(x)        ((x * RIDUZIONE )/18)
-#define POS_TO_dGRAD(x)        ((((long) x) * 18) / RIDUZIONE)
+#define dGRADsec_TO_ROTmin(x)  (long) ((x * (long)RIDUZIONE)/600)
+
+#define dGRAD_TO_POS(x)        (long) ((x * (long)RIDUZIONE)/18)
+#define DEF_dGRAD_TO_POS(x)        (long) ((x * (long)DEF_RIDUZIONE)/18)
+#define POS_TO_dGRAD(x)        ((((long) x) * 18) / (long)RIDUZIONE)
 
 #define TIMEOUT(speed,delay) (3600*1000/(speed*delay))
 
@@ -53,7 +56,10 @@ static _arm_positioning_data_t positioningData;
 static int  blocco_input_ostacolo;
 static bool armSafetyDuringMotion(int activation_mode);
 
-#define PARAM_ID    2 // Identificativo del codice del blocco parametri da salvare
+static bool runtime_config = false;
+static bool executeRuntimeConfig(void);
+
+#define PARAM_ID    1 // Identificativo del codice del blocco parametri da salvare
 static const _canopen_ObjectDictionary_t generalMotorProfile[]={
 
     {OD_4013_01,1},    // 1 = EXTERNAL VCC LOGIC ON
@@ -166,12 +172,12 @@ static const _canopen_ObjectDictionary_t generalMotorProfile[]={
 
     // Position Range Limit
     {OD_607B_01,0}, 	// Min Position Range Limit
-    {OD_607B_02,0 },	// Max Position Range Limit
+    {OD_607B_02,0},	// Max Position Range Limit
 
     // Software Position Limit: attenzione che l'encoder non viene azzerato con l'inclinometro
     // pertanto se la macchina viene accesas con il braccio ruotato di 180, l'endoder deve poter fare almeno 360 gradi
-    {OD_607D_01,dGRAD_TO_POS(-3650)},	// Min Position Limit
-    {OD_607D_02,dGRAD_TO_POS(3650) },	// Max Position Limit
+    {OD_607D_01,DEF_dGRAD_TO_POS(-3650)},	// Min Position Limit
+    {OD_607D_02,DEF_dGRAD_TO_POS(3650) },	// Max Position Limit
 
     // Polarity
     {OD_607E_00,0 },	// b7:1-> inverse rotaion
@@ -333,6 +339,12 @@ void CiA402_Arm_Stat(void){
 
         while(1){
            if(driver_stat.resetModule) break; // Exit the main while loop and restart the module
+
+           // Gestione configurazione aggiuntiva runtime
+           if(runtime_config){
+               runtime_config = !executeRuntimeConfig();
+               _time_delay(200);
+           }
 
            // Gestione debounce per l'errore di disabilitazione alimentazione motore
            if(!SystemOutputs.CPU_ROT_ENA){
@@ -1042,11 +1054,15 @@ return;
     printf("MANUAL ACCELL:%d\n", armConfig.manual_accell);
     printf("MANUAL DECELL:%d\n", armConfig.manual_decell);
 
+    printf("TRASMISSIONE:%d\n", armConfig.rapporto_trasmissione);
+
 }
 
 void armUpdateConfiguration(void){
 
     driver_stat.configured = true;
+    RIDUZIONE = armConfig.rapporto_trasmissione;
+    runtime_config = true;
     printArmConfig();
 }
 
@@ -1204,5 +1220,21 @@ bool armSafetyDuringMotion(int activation_mode){
     return true;
 }
 
+// Esegue una configurazione aggiuntiva del motore durante il ciclo di lavoro
+// Viene configurato il rapporto di trasmissione
+bool executeRuntimeConfig(void){
+
+
+    // Min Position Limit aggiornato con il nuovo valore di rapporto di trasmissione
+    _canopen_ObjectDictionary_t od607d01={OD_607D_01,dGRAD_TO_POS(-3650)};
+    if(canopenWriteSDO(&od607d01, CANOPEN_ARM_CONTEXT)==false) return false;
+
+    _canopen_ObjectDictionary_t od607d02={OD_607D_02,dGRAD_TO_POS(3650)};
+    if(canopenWriteSDO(&od607d02, CANOPEN_ARM_CONTEXT)==false) return false;
+
+    debugPrint("ARM: AGGIORNATO NUOVI LIMITI DI ROTAZIONE (TRANSMISSION RATE)");
+
+    return true;
+}
 
 /* EOF */

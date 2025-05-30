@@ -407,5 +407,7 @@
         <file>paginaRoi/backgroundY.png</file>
         <file>paginaRoi/RoiSelected.png</file>
         <file>paginaRoi/RoiSelection.png</file>
+        <file>paginaRoi/backgroundC_18x24.png</file>
+        <file>paginaRoi/backgroundY_18x24.png</file>
     </qresource>
 </RCC>

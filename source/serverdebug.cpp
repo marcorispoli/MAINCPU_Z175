@@ -2578,14 +2578,28 @@ void serverDebug::handleRotazioni(QByteArray data)
         serviceTcp->txData(QByteArray("TRX LOOP val  Attiva la procedura di rodaggio tubo\r\n"));
         serviceTcp->txData(QByteArray("TRX [angolo]  Muove tubo a Angolo (+/-)  \r\n"));
         serviceTcp->txData(QByteArray("ARM [angolo]  Muove braccio a Angolo (+/-)  \r\n"));
+
+        serviceTcp->txData(QByteArray("rotazioni: ---------- Comandi Inclinometro -----------------\r\n"));
         serviceTcp->txData(QByteArray("resetGonio    Reset Inclinometri\r\n"));
         serviceTcp->txData(QByteArray("getGonio      Legge inclinometro\r\n"));
+
+        serviceTcp->txData(QByteArray("rotazioni: ---------- Configurazione TRX -----------------\r\n"));
         serviceTcp->txData(QByteArray("readTrxConfig Rilegge TRX config e download\r\n"));
+        serviceTcp->txData(QByteArray("setTrxConfigDefault      Reset file di configurazione e salvataggio\r\n"));
         serviceTcp->txData(QByteArray("saveTrxConfig Salva il TRX config \r\n"));
-        serviceTcp->txData(QByteArray("readArmConfig Rilegge ARM config e download\r\n"));
-        serviceTcp->txData(QByteArray("saveArmConfig Salva il ARM config \r\n"));
+
+        serviceTcp->txData(QByteArray("rotazioni: ---------- Configurazione ARM -----------------\r\n"));
+        serviceTcp->txData(QByteArray("readArmConfig            Rilegge ARM config e download\r\n"));
+        serviceTcp->txData(QByteArray("setArmTransmission <val> Imposta il rapporto di trasmission\r\n"));
+        serviceTcp->txData(QByteArray("setArmConfigDefault      Reset file di configurazione e salvataggio\r\n"));
+        serviceTcp->txData(QByteArray("saveArmConfig            Salva il ARM config \r\n"));
+
+        serviceTcp->txData(QByteArray("rotazioni: ---------- Configurazione LENZE -----------------\r\n"));
         serviceTcp->txData(QByteArray("readLenzeConfig Rilegge Lenze config e download\r\n"));
+        serviceTcp->txData(QByteArray("setLenzeConfigDefault      Reset file di configurazione e salvataggio\r\n"));
         serviceTcp->txData(QByteArray("saveLenzeConfig Salva il Lenze config \r\n"));
+
+        serviceTcp->txData(QByteArray("rotazioni: ---------- Altri Comandi -----------------\r\n"));
         serviceTcp->txData(QByteArray("setRotManualMode [ARMS|ARMC|TRXS|TRXC] \r\n"));
         serviceTcp->txData(QByteArray("resetBusy    reset the busy condition \r\n"));
         serviceTcp->txData(QByteArray("pollingSlave trigger a can bus polling \r\n"));
@@ -2703,6 +2717,38 @@ void serverDebug::handleRotazioni(QByteArray data)
             return;
         }
         connect(pConsole,SIGNAL(mccGuiNotify(unsigned char,unsigned char,QByteArray)),this,SLOT(resetGonioNotify(unsigned char,unsigned char,QByteArray)),Qt::UniqueConnection);
+
+    }else if(data.contains("setArmTransmission")){
+        unsigned short trasmissione;
+        trasmissione = getNextFieldAfterTag(data,"setArmTransmission ").toInt();
+        if((trasmissione < 500) || (trasmissione > 2000) ){
+            serviceTcp->txData(QByteArray("WRONG VALUE: ACCEPTABLE RANGE IS: 500 to 2000 \n\r"));
+            return;
+        }
+        pConfig-> armConfig.rapporto_trasmissione = trasmissione;
+        pConfig->saveArmConfig();
+        pConfig->updateArmDriver();
+        QString stringa = QString("ARM DRIVER UPDATED WITH THE NEW TRANSMISSION RATE:%1\n\r").arg(trasmissione);
+        serviceTcp->txData(stringa.toAscii());
+        return;
+
+    }else if(data.contains("setArmConfigDefault")){
+        pConfig->setArmDefaultConfig();
+        pConfig->saveArmConfig();
+        pConfig->updateArmDriver();
+        serviceTcp->txData(QByteArray("ARM DRIVER UPDATED WITH THE DEFAULT PARAMETERS\n\r"));
+
+    }else if(data.contains("setTrxConfigDefault")){
+        pConfig->setTrxDefaultConfig();
+        pConfig->saveTrxConfig();
+        pConfig->updateTrxDriver();
+        serviceTcp->txData(QByteArray("TRX DRIVER UPDATED WITH THE DEFAULT PARAMETERS\n\r"));
+
+    }else if(data.contains("setLenzeConfigDefault")){
+        pConfig->setLenzeDefaultConfig();
+        pConfig->saveLenzeConfig();
+        pConfig->updateLenzeDriver();
+        serviceTcp->txData(QByteArray("LENZE DRIVER UPDATED WITH THE DEFAULT PARAMETERS\n\r"));
 
     }else if(data.contains("readTrxConfig")){
         pConfig->readTrxConfig();

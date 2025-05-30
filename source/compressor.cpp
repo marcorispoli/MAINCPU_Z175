@@ -599,15 +599,19 @@ int Compressor::getPaddleRoi(void){
     case PAD_24x30:
     case PAD_18x24:
     case PAD_18x24_LEFT:
-    case PAD_18x24_RIGHT:
-    case PAD_PROSTHESIS:
+    case PAD_18x24_RIGHT:    
     case PAD_TOMO_24x30:
         return 7;
         break;
 
     // Paddle a selezione ridotta
+    case PAD_PROSTHESIS:
+        return 4;
+        break;
+
     case PAD_10x24:
         return 3;
+        break;
     }
 }
 

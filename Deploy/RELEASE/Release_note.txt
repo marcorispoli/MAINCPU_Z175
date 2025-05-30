@@ -1,3 +1,0 @@
-ID14
-Patch per risolvere il problema dello Starter (timeout allungato)
-
