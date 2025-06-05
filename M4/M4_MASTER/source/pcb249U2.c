@@ -877,17 +877,49 @@ bool config_pcb249U2(bool setmem, unsigned char blocco, unsigned char* buffer, u
    generalConfiguration.colli_filter[2] = buffer[2];
    generalConfiguration.colli_filter[3] = buffer[3];
 
-   // Hotfix 11C
-   generalConfiguration.filterTomoEna = buffer[4];
-   generalConfiguration.filterTomo[0] = buffer[5];
-   generalConfiguration.filterTomo[1] = buffer[6];
-   generalConfiguration.filterTomo[2] = buffer[7];
+
+   generalConfiguration.filterTomoEnable = buffer[4];
+   generalConfiguration.filterTomoChangePositions[0] = buffer[5];
+   generalConfiguration.filterTomoChangePositions[1] = buffer[6];
+   generalConfiguration.filterTomoChangePositions[2] = buffer[7];
+   generalConfiguration.filterTomoChangePositions[3] = buffer[8];
+   generalConfiguration.filterTomoChangePositions[4] = buffer[9];
+   generalConfiguration.filterTomoChangePositions[5] = buffer[10];
+   generalConfiguration.filterTomo_AdjustPosition = buffer[11];
 
    // Configurazione specchio
-   generalConfiguration.mirror_position = buffer[8]+256*buffer[9];
+   generalConfiguration.mirror_position = buffer[12]+256*buffer[13];
 
    // Scrive il target specchio nel device
    Ser422WriteRegister(_REGID(RG249U2_PR_MIRROR_STEPS),generalConfiguration.mirror_position ,10,&CONTEST);
+
+
+   // Scrittura dei 6 indici di scatto
+   val = 27 - generalConfiguration.filterTomoChangePositions[0];
+   if(val<0) val = 0;
+   if(Ser422WriteRegister(_REGID(RG249U2_FILTER_CHG_1),(unsigned char) val,10,&PCB249U2_CONTEST) != _SER422_NO_ERROR) return false;
+
+   val = 27 - generalConfiguration.filterTomoChangePositions[1];
+   if(val<0) val = 0;
+   if(Ser422WriteRegister(_REGID(RG249U2_FILTER_CHG_2),(unsigned char) val,10,&PCB249U2_CONTEST) != _SER422_NO_ERROR) return false;
+
+   val = 27 - generalConfiguration.filterTomoChangePositions[2];
+   if(val<0) val = 0;
+   if(Ser422WriteRegister(_REGID(RG249U2_FILTER_CHG_3),(unsigned char) val,10,&PCB249U2_CONTEST) != _SER422_NO_ERROR) return false;
+
+   val = 27 - generalConfiguration.filterTomoChangePositions[3];
+   if(val<0) val = 0;
+   if(Ser422WriteRegister(_REGID(RG249U2_FILTER_CHG_4),(unsigned char) val,10,&PCB249U2_CONTEST) != _SER422_NO_ERROR) return false;
+
+   val = 27 - generalConfiguration.filterTomoChangePositions[4];
+   if(val<0) val = 0;
+   if(Ser422WriteRegister(_REGID(RG249U2_FILTER_CHG_5),(unsigned char) val,10,&PCB249U2_CONTEST) != _SER422_NO_ERROR) return false;
+
+   val = 27 - generalConfiguration.filterTomoChangePositions[5];
+   if(val<0) val = 0;
+   if(Ser422WriteRegister(_REGID(RG249U2_FILTER_CHG_6),(unsigned char) val,10,&PCB249U2_CONTEST) != _SER422_NO_ERROR) return false;
+
+
 
 #ifdef PRINTCFG
 
@@ -1034,7 +1066,29 @@ bool pcb249U2_GetFreeze(void){
     return STATUS.freeze;
 }
 
+/**
+ * @brief pcb249U2_activateFilterTomo
+ *
+ * Questa funzione viene utilizzata per attivare la modalità di inseguimento
+ * del filtro attraverso la sincronizzazione con nUC1 e il segnale Exposure Window
+ * del Detector.
+ *
+ * Quando questa funzione viene utilizzata, il filtro viene posizionato
+ * alla posizione corrispondente all'angolo passato come parametro.
+ * Da quel momento, ad ogni trigger di UC1 la posizione verrà aggiornata.
+ *
+ * @param angolo
+ * Si riferisce al primo angolo valido della scansione Tomo.
+ *
+ * @return
+ * True: commando accettato;
+ * False: Busy condition
+ */
 bool pcb249U2_activateFilterTomo(unsigned char angolo){
+
+    // Per compatibilità con filtro fisso
+    if(!generalConfiguration.gantryCfg.autoFilter) return true;
+
     _Ser422_Command_Str frame;
 
    // Prepara il comando di download
@@ -1048,6 +1102,95 @@ bool pcb249U2_activateFilterTomo(unsigned char angolo){
    if(frame.retcode == SER422_COMMAND_OK) return TRUE;
    return FALSE;
 }
+
+/**
+ * @brief pcb249U2_activateFilterHome
+ *
+ * Questa funzione permette di posizionare il filtro alla posizione
+ * relativa all'angolo del tubo, pasdsato come parametro.
+ *
+ * La funzione NON attiva la modalità di inseguimento: questa funzione
+ * è stata creata per consentire di posizionare il filtro correttamente
+ * durante il pre impulso, per il quale il Tubo si trova nella posizione di Home
+ *
+ * @param angolo
+ * angolo del tubo
+ * @return
+ * True: commando accettato;
+ * False: Busy condition
+ */
+bool pcb249U2_activateFilterHome(unsigned char angolo){
+    _Ser422_Command_Str frame;
+
+    // Per compatibilità con filtro fisso
+    if(!generalConfiguration.gantryCfg.autoFilter) return true;
+
+   // Prepara il comando di download
+   frame.address = TARGET_ADDRESS;
+   frame.attempt = 10;
+   frame.cmd=SER422_COMMAND;
+   frame.data1=_CMD1(PCB249U2_FILTER_HOME);
+   frame.data2= angolo; // Angolo iniziale inseguimento
+
+   Ser422Send(&frame, SER422_BLOCKING,CONTEST.ID);
+   if(frame.retcode == SER422_COMMAND_OK) return TRUE;
+   return FALSE;
+}
+
+/**
+ * @brief pcb249U2_initTomoFilter
+ *
+ * Questa funzione viene utilizzata per inizializzare
+ * i registri di UC2 per gestire la posizione del filtro
+ * durante la sequenza Tomo.
+ *
+ * -Impostazione della posizione 0 della sequenza:
+ *  La posizione 0 corrisponde alla posizione iniziale del filtro per il braccio che si trovi a 27°.
+ *  POS0 = (POS_NOMINALE - 3 ) + Adjust.
+ *      POS_NOMINALE = posizione nominale del filtro utilizzato;
+ *      Adjust = eventuale correzione determinata durante la calibrazione del collimatore.
+ *
+ *
+ *
+ *
+ *
+ * @return
+ */
+bool pcb249U2_initTomoFilter(void)
+{
+    // Nn fa nulla se inseguimento non è abilitato
+    if(!generalConfiguration.filterTomoEnable) return true;
+
+    // Scrittura posizione 0 con correzione da calibrazione
+    int val = target_filtro + generalConfiguration.filterTomo_AdjustPosition - 3;
+    if(Ser422WriteRegister(_REGID(RG249U2_FILTER_POS_0),(unsigned char) val,10,&PCB249U2_CONTEST) != _SER422_NO_ERROR) {
+        debugPrint("pcb249U2_initTomoFilter: fallito caricamento posizione 0!");
+        return false;
+    }
+
+    // Imposta il filtro in modalità inseguimento
+    if(!pcb249U2_activateFilterTomo(tomoParam.first_gonio)){
+         debugPrint("pcb249U2_initTomoFilter: ativazione filtro dinamico fallito!");
+         return false;
+    }
+
+    return true;
+}
+
+
+void pcb249U2_exitTomoFilter(void) {
+
+    // Nn fa nulla se inseguimento non è abilitato
+    if(!generalConfiguration.filterTomoEnable) return ;
+
+    // Ripristina l'angolo nominale del filtro selezionato
+    if(pcb249U2SetFiltroRaw(target_filtro) == false) {
+          debugPrint("pcb249U2_exitTomoFilter: fallito impostazione del filtro nominale!");
+    }
+
+    return;
+}
+
 
 /* EOF */
  

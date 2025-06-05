@@ -59,8 +59,8 @@ Data di Creazione: 01/11/2014
   #define _PMIR         0x4E
   #define _PADDR        0xA0 
   #define _PLAMP        0x6B
-  #define _pFILTER      0x66
-  
+  #define _pFILTER      0x66  
+  #define _pFARRAY      0xB2
 
   #define RG249U2_SYS_FLAGS0       0,_PSYSU2+0     ,_BNK01,_8BIT ,_RD, _VL, (unsigned short)0 // Flags di systema
   #define RG249U2_ERRORS           1,_PSYSU2+3     ,_BNK01,_8BIT ,_RD, _VL, (unsigned short)0 // Registro Errori
@@ -84,7 +84,18 @@ Data di Creazione: 01/11/2014
   #define RG249U2_FILTER_STAT      12,_pFILTER+1 ,_BNK01,_8BIT ,_RD, _VL, (unsigned short)0 // Flag di target movimento filtro
   #define RG249U2_POS_TARGET       13,_pFILTER+2 ,_BNK01,_8BIT ,_RD, _VL, (unsigned short)0 // Target corrente filtro
   #define RG249U2_POS_RAW          14,_pFILTER+5 ,_BNK01,_8BIT ,_RD, _VL, (unsigned short)0 // Posizione aggiornata filtro run time
-  #define PCB249U2_NREGISTERS      15
+
+  #define RG249U2_FILTER_POS_0     15,_pFARRAY+1 ,_BNK01,_8BIT ,_RW, _VL, (unsigned short)0 // Posizione 0 per inseguimento
+  #define RG249U2_FILTER_CHG_1     16,_pFARRAY+2 ,_BNK01,_8BIT ,_RW, _VL, (unsigned short)0 // Indice prima posizione di scatto
+  #define RG249U2_FILTER_CHG_2     17,_pFARRAY+3 ,_BNK01,_8BIT ,_RW, _VL, (unsigned short)0 // Indice seconda posizione di scatto
+  #define RG249U2_FILTER_CHG_3     18,_pFARRAY+4 ,_BNK01,_8BIT ,_RW, _VL, (unsigned short)0 // Indice terza posizione di scatto
+  #define RG249U2_FILTER_CHG_4     19,_pFARRAY+5 ,_BNK01,_8BIT ,_RW, _VL, (unsigned short)0 // Indice quarta posizione di scatto
+  #define RG249U2_FILTER_CHG_5     20,_pFARRAY+6 ,_BNK01,_8BIT ,_RW, _VL, (unsigned short)0 // Indice quinta posizione di scatto
+  #define RG249U2_FILTER_CHG_6     21,_pFARRAY+7 ,_BNK01,_8BIT ,_RW, _VL, (unsigned short)0 // Indice sesta posizione di scatto
+
+
+
+  #define PCB249U2_NREGISTERS      22
 
 
   //////////////////////////////////////////////////////////////////////////////
@@ -121,7 +132,16 @@ volatile _DeviceRegItem_Str  PCB249U2_Registers[]=
     _REGDEF(RG249U2_FILTER_CURPOS),
     _REGDEF(RG249U2_FILTER_STAT),
     _REGDEF(RG249U2_POS_TARGET),
-    _REGDEF(RG249U2_POS_RAW)
+    _REGDEF(RG249U2_POS_RAW),
+
+    _REGDEF(RG249U2_FILTER_POS_0),
+    _REGDEF(RG249U2_FILTER_CHG_1),
+    _REGDEF(RG249U2_FILTER_CHG_2),
+    _REGDEF(RG249U2_FILTER_CHG_3),
+    _REGDEF(RG249U2_FILTER_CHG_4),
+    _REGDEF(RG249U2_FILTER_CHG_5),
+    _REGDEF(RG249U2_FILTER_CHG_6)
+
 
   }; 
   #else
@@ -172,7 +192,8 @@ volatile _DeviceRegItem_Str  PCB249U2_Registers[]=
  
   #define PCB249U2_MIRROR_HOME        9,0// Mirror in posizione Home
   #define PCB249U2_MIRROR_OUT         10,0// Mirror in Campo
-  #define PCB249U2_FILTER_TOMO        11,0 // Attiva inseguimento filtro guidato da UC1
+  #define PCB249U2_FILTER_TOMO        11,0 // Attiva inseguimento filtro guidato da UC1 (sincronizzato con ew)
+  #define PCB249U2_FILTER_HOME        12,0 // Seleziona Filtro im posizione angolo Home (passato come parametro)
 
   /*
       BIT[0:5] = Timeout (0==INFINITO)        ; Sezione comandi LUCE centratore
@@ -245,4 +266,8 @@ volatile _DeviceRegItem_Str  PCB249U2_Registers[]=
   ext bool pcb249U2_GetFreeze(void);
 
   ext bool pcb249U2_activateFilterTomo(unsigned char angolo);
+  ext bool pcb249U2_activateFilterHome(unsigned char angolo);
+  ext bool pcb249U2_initTomoFilter(void);
+  ext bool pcb249U2_exitTomoFilter(void);
+
 #endif

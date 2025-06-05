@@ -55,4 +55,8 @@ ext void actuatorsManageEnables(void);
 ext void actuatorsStartProcess(bool lenze, bool trx, bool arm);
 
 ext void actuatorsTrxResetBusy(void);
+
+// Inquiry
+ext unsigned char getTrxHomeDegree(unsigned char tomo_mode);
+
 #endif

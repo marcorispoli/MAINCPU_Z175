@@ -1212,6 +1212,55 @@ bool pcb249U1_GetFreeze(void){
     return STATUS.freeze;
 }
 
+/**
+ * @brief pcb249U1_initTomoColli
+ */
+bool pcb249U1_initTomoColli(void){
+
+    // Impostazione dell'angolo del braccio su U1 per le modalità di collimazione non EW
+    short angolo = generalConfiguration.armExecution.dAngolo * 4;
+    if(Ser422WriteRegister(_REGID(RG249U1_GONIO16_ARM),angolo,10,&PCB249U1_CONTEST) != _SER422_NO_ERROR){
+        debugPrint("pcb249U1_initTomoColli: errore scrittura angolo braccio!");
+        return false;
+    }
+
+    // Impostazioni per collimazione dinamica con EW
+    if(Ser422WriteRegister(_REGID(RG249U1_TSKIP),tomoParam.tomo_pre_pulses,10,&PCB249U1_CONTEST) != _SER422_NO_ERROR){
+        debugPrint("pcb249U1_initTomoColli: errore scrittura tomo skip!");
+        return false;
+    }
+
+    // Calcolo del time_tick del collimatore in funzione della velocità di rotazione del bracccio
+    float delay =  90090 / tomoParam.tomo_speed;
+    unsigned short udel = (unsigned short) delay;
+    if(Ser422WriteRegister(_REGID(RG249U1_TTIME),udel,10,&PCB249U1_CONTEST) != _SER422_NO_ERROR){
+        debugPrint("pcb249U1_initTomoColli: errore scrittura time-tick!");
+        return false;
+    }
+
+    // Assegnazione del primo angolo valido per la tomo
+     if(Ser422WriteRegister(_REGID(RG249U1_TGONIO),tomoParam.first_gonio,10,&PCB249U1_CONTEST) != _SER422_NO_ERROR){
+         debugPrint("pcb249U1_initTomoColli: errore scrittura first gonio!");
+         return false;
+     }
+
+    debugPrintI3("COLLI DINAMICA: SKIP=", tomoParam.tomo_pre_pulses, "DELAY:",udel, "GONIO:",tomoParam.first_gonio);
+
+
+    // Attivazione collimazione dinamica
+    if(!pcb249U1SetColliCmd(3)) {
+        debugPrint("pcb249U1_initTomoColli: errore attivazione collimazione dinamica lame laterali!");
+        return false;
+    }
+
+    if(!pcb249U2ColliCmd(generalConfiguration.colliCfg.dynamicArray.tomoBack, generalConfiguration.colliCfg.dynamicArray.tomoFront)){
+        debugPrint("pcb249U1_initTomoColli: errore colimazione dinamica fronte retro!");
+        return false;
+    }
+
+    return true;
+}
+
 /* EOF */
  
   

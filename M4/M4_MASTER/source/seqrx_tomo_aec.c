@@ -62,6 +62,17 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
     if(pcb249U2MirrorHome()==FALSE)_SEQERROR(ERROR_MIRROR_LAMP);
     if(wait2DLeftRightTrapCompletion(100)==false) _SEQERROR(ERROR_INVALID_COLLI);
 
+    // Posiziona il filtro per l'angolo Home del braccio
+    int i = 10;
+    while(i){
+        if(pcb249U2_activateFilterHome(getTrxHomeDegree(Param->tomo_mode))) break;
+        i--;
+        if(i==0){
+            debugPrint("POSIZIONAMENTO FILTRO IN HOME FALLITO!!");
+            _SEQERROR(ERROR_INVALID_FILTRO);
+        }
+    }
+
     // Apre le lame del collimatore per l'AEC
     pcb249U1SetColli(0,0,50);
     _time_delay(100);

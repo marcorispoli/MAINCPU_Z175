@@ -9,7 +9,7 @@ bool tomoSeqResult=FALSE;
 bool tomoIsRunning=FALSE;
 unsigned char tomoError;
 
-// Hotfix 11C
+
 int tomoCurrentFilterPosition;
 int tomoFilterTarget;
 
@@ -45,12 +45,15 @@ void tomo_rx_task(uint32_t taskRegisters)
     if(generalConfiguration.demoMode) debugPrint("RX-3D START IN DEMO MODE");
     else  debugPrint("RX-3D START SEQUENCE");
 
+    // ___________________________________________________________________________ POSIZIONAMENTI DEL COLLIMATORE GIA' IN ESSERE
+
     // Prima di andare in freeze bisogna accertarsi che la collimazione 2D sia andata a buon fine
     if(wait2DBackFrontCompletion(100)==false) _SEQERROR(ERROR_INVALID_COLLI);
     if(waitRxFilterCompletion()==FALSE)  _SEQERROR(ERROR_INVALID_FILTRO);
     if(pcb249U2MirrorHome()==FALSE)_SEQERROR(ERROR_MIRROR_LAMP);
     if(wait2DLeftRightTrapCompletion(100)==false) _SEQERROR(ERROR_INVALID_COLLI);
 
+    // ___________________________________________________________________________ FREEZE DEI PROCESSI
     // Manda subito in FREEZE i drivers per non intralciare le operazioni
     // Non viene però atteso che effettivamente i drivers si fermino
     Ser422DriverFreezeAll(0);
@@ -65,6 +68,7 @@ void tomo_rx_task(uint32_t taskRegisters)
     // Reset Eventuale Fault della PCB190
     pcb190ResetFault();
 
+    // ___________________________________________________________________________ ATTIVAZIONE STARTER
     // Attiva Starter precocemente
     if(!generalConfiguration.demoMode){
       if(Param->esposizione.HV & 0x4000)
@@ -78,6 +82,7 @@ void tomo_rx_task(uint32_t taskRegisters)
       }
     }
 
+    // ___________________________________________________________________________ TUBO IN HOME POSITION (senza attesa)
     // Manda subito il Braccio in Home Tomo.
     if(actuatorsMoveTomoTrxHome(Param->tomo_mode)==false) _SEQERROR(_SEQ_ERR_INTERMEDIATE_HOME);
 
@@ -89,46 +94,15 @@ void tomo_rx_task(uint32_t taskRegisters)
     pcb249U1ResetFaults();
 
 
-    if((Param->tomo_mode!=_TOMO_MODE_STATIC)&&(!generalConfiguration.demoMode)&&(generalConfiguration.gantryCfg.autoFilter))
+    if((Param->tomo_mode!=_TOMO_MODE_STATIC)&&(!generalConfiguration.demoMode))
     {
-      // Acquisisce la posizione nominale del filtro per eventualmente centrare i target tomo
-      if(generalConfiguration.filterTomoEna!=0){
-          Ser422ReadRegister(_REGID(RG249U2_POS_TARGET),4,&PCB249U2_CONTEST);
-          tomoCurrentFilterPosition = _DEVREGL(RG249U2_POS_TARGET,PCB249U2_CONTEST);
-      }
-      
-      debugPrintI2("POS FILTRO:", tomoCurrentFilterPosition, "ANGOLO BRACCIO:",generalConfiguration.armExecution.dAngolo/10);
 
-      // Si deve esprimere l'angolo in 0.025 °/unit per compatibilità con collimatore
-      short angolo = generalConfiguration.armExecution.dAngolo * 4;
-      if(Ser422WriteRegister(_REGID(RG249U1_GONIO16_ARM),angolo,10,&PCB249U1_CONTEST) != _SER422_NO_ERROR)
-          _SEQERROR(_SEQ_WRITE_REGISTER);
-      
-      // Impostazioni per collimazione dinamica con EW
-       if(Ser422WriteRegister(_REGID(RG249U1_TSKIP),tomoParam.tomo_pre_pulses,10,&PCB249U1_CONTEST) != _SER422_NO_ERROR)
-           _SEQERROR(_SEQ_WRITE_REGISTER);
+      // inizializzazione Inseguimento Collimatore
+      if(!pcb249U1_initTomoColli()) _SEQERROR(_SEQ_WRITE_REGISTER);
 
-       float delay =  90090 / tomoParam.tomo_speed;
-       unsigned short udel = (unsigned short) delay;
+      // inizializzazione Inseguimento Filtro
+      if(!pcb249U2_initTomoFilter()) _SEQERROR(_SEQ_WRITE_REGISTER);
 
-       if(Ser422WriteRegister(_REGID(RG249U1_TTIME),udel,10,&PCB249U1_CONTEST) != _SER422_NO_ERROR)
-           _SEQERROR(_SEQ_WRITE_REGISTER);
-
-       if(Ser422WriteRegister(_REGID(RG249U1_TGONIO),tomoParam.first_gonio,10,&PCB249U1_CONTEST) != _SER422_NO_ERROR)
-           _SEQERROR(_SEQ_WRITE_REGISTER);
-
-       debugPrintI3("COLLI DINAMICA: SKIP=", tomoParam.tomo_pre_pulses, "DELAY:",udel, "GONIO:",tomoParam.first_gonio);
-
-
-      // Impostazione collimatori ..
-      if(pcb249U1SetColliCmd(3)==FALSE) _SEQERROR(_SEQ_ERR_COLLI_TOMO); // Imposta la modalità tomo (ew o standard dipende dalla presenza del cavo)
-      if(pcb249U2ColliCmd(generalConfiguration.colliCfg.dynamicArray.tomoBack, generalConfiguration.colliCfg.dynamicArray.tomoFront)==FALSE) _SEQERROR(_SEQ_ERR_COLLI_TOMO);
-
-      // Imposta il filtro in modalità inseguimento
-      if(!pcb249U2_activateFilterTomo(tomoParam.first_gonio)){
-           debugPrint("ERRORE IN IMPOSTAZIONE FILTRO TOMO");
-           _SEQERROR(_SEQ_ERR_COLLI_TOMO)
-      }
     }
     
     // Verifica pulsante raggi
@@ -170,24 +144,6 @@ void tomo_rx_task(uint32_t taskRegisters)
         if(actuatorsTrxWaitReady(100)==false) _SEQERROR(_SEQ_ERR_WIDE_HOME);
         if(Param->tomo_mode!=_TOMO_MODE_STATIC) actuatorsMoveTomoTrxEnd(Param->tomo_mode,true); // actuatorsActivateTrxTriggerStart();
 
-
-        // Impostazione iniziale filtro vecchio inseguimento
-        /*
-        if((generalConfiguration.filterTomoEna!=0)&&(Param->tomo_mode!=_TOMO_MODE_STATIC) && (generalConfiguration.gantryCfg.autoFilter)){
-          Ser422ReadRegister(_REGID(RG249U1_GONIO_REL),4,&PCB249U1_CONTEST);
-          int angolo = (int) _DEVREGL(RG249U1_GONIO_REL,PCB249U1_CONTEST);
-          if(angolo&0x80) angolo = -1 * (angolo&0x7F); 
-          tomoFilterTarget = getTomoDeltaFilter(angolo) +  tomoCurrentFilterPosition;        
-          int i=100;
-          debugPrintI("RX-3D SET FILTER IN INITIAL RAW POSITION",tomoFilterTarget);
-          while(--i){
-              if( pcb249U2SetFiltroRaw(tomoFilterTarget)) break;
-              _time_delay(50);
-          }
-
-          if(i==0) debugPrint("RX-3D INITIAL FILTER POSITIONING FAILED!\n");
-        }*/
-
         // Attende i segnali e verifica l'uscita con pulsante raggi
         if(SystemInputs.CPU_XRAY_ENA_ACK==0)
         {   
@@ -201,10 +157,9 @@ void tomo_rx_task(uint32_t taskRegisters)
         if(waitPcb190Ready(50)==FALSE) _SEQERROR(_SEQ_PCB190_BUSY);
 
         int rc = pcb190StartRxTomo();
-        // if(rc==SER422_BUSY) _SEQERROR(_SEQ_PCB190_BUSY);
         if(rc==SER422_ILLEGAL_FUNCTION) _SEQERROR(ERROR_PUSHRX_NO_PREP);
 
-        // Spin Lock ogni 100ms per testare anche eventuali blocchi sul braccio in movimento
+        // Spin Lock ogni 100ms per testare il termine della sequenza
         long rxloop = (_WAIT_XRAY_COMPLETED / 100);        
         int delay = 4; // Per i primi 2 secondi non verifica il fine raggi
         while(rxloop--){
@@ -213,46 +168,17 @@ void tomo_rx_task(uint32_t taskRegisters)
            if(!delay){
              if(SystemInputs.CPU_XRAY_COMPLETED==1) break; // Fine sequenza
            }else delay--;
-
-           /* Sezione vecchio inseguimento
-           if((generalConfiguration.filterTomoEna!=0) && (Param->tomo_mode!=_TOMO_MODE_STATIC) && (generalConfiguration.gantryCfg.autoFilter)){
-              Ser422ReadRegister(_REGID(RG249U1_GONIO_REL),4,&PCB249U1_CONTEST);
-              int angolo = (int) _DEVREGL(RG249U1_GONIO_REL,PCB249U1_CONTEST);
-              if(angolo&0x80) angolo = -1 * (angolo&0x7F); 
-
-              int  new_filter;
-              new_filter = getTomoDeltaFilter(angolo) + tomoCurrentFilterPosition;        
-
-              if(new_filter > tomoFilterTarget){ 
-                  tomoFilterTarget = new_filter;
-                  pcb249U2SetFiltroRaw(tomoFilterTarget);
-                  debugPrintI2("RX-3D FILTRO FOLLOWER. ANGOLO",angolo,"FPOS",tomoFilterTarget);
-              }
-           }*/
-           
            _time_delay(100);
         }
         
         if(rxloop==0){_SEQERROR(_SEQ_PCB190_TMO);}
 
         // Disattivazione XRAY-ENA
-       _mutex_lock(&output_mutex);
-       SystemOutputs.CPU_XRAY_ENA=0;   // Disattivazione segnale XRAY ENA
-       SystemOutputs.CPU_DEMO_ACTIVATION = 0;   // Disattivazione Buzzer
-       _EVSET(_EV0_OUTPUT_CAMBIATI);         
-       _mutex_unlock(&output_mutex);
-
-       // Ferma subito il braccio       
-
-       if((generalConfiguration.filterTomoEna!=0) && (Param->tomo_mode != _TOMO_MODE_STATIC)&& (generalConfiguration.gantryCfg.autoFilter)){
-          if(tomoCurrentFilterPosition!=0){
-            if(pcb249U2SetFiltroRaw(tomoCurrentFilterPosition) == false) {
-                  debugPrint("RX-3D FILTER COMMAND FAILED");
-            }else{          
-                  debugPrintI("RX-3D CURRENT FILTER POSITION", tomoCurrentFilterPosition);
-            }
-          }
-       }
+        _mutex_lock(&output_mutex);
+        SystemOutputs.CPU_XRAY_ENA=0;   // Disattivazione segnale XRAY ENA
+        SystemOutputs.CPU_DEMO_ACTIVATION = 0;   // Disattivazione Buzzer
+        _EVSET(_EV0_OUTPUT_CAMBIATI);
+        _mutex_unlock(&output_mutex);
 
        // Lettura esito raggi
        if(pcb190GetPostRxRegisters()==FALSE){
@@ -404,6 +330,9 @@ void tomo_rx_task(uint32_t taskRegisters)
    if(Ser422DriverSetReadyAll(5000) == FALSE) printf("FALLITO SBLOCCO DRIVER!!\n");
    else printf("SBLOCCO DRIVER OK\n");
 
+   // Stop inseguimento Filtro
+   pcb249U2_exitTomoFilter();
+
    // Re-imposta la collimazione 2D
    pcb249U2SetColli( generalConfiguration.colliCfg.lame2D.back , generalConfiguration.colliCfg.lame2D.front);
    pcb249U1SetColli(generalConfiguration.colliCfg.lame2D.left,generalConfiguration.colliCfg.lame2D.right,generalConfiguration.colliCfg.lame2D.trap);
@@ -444,6 +373,9 @@ void RxTomoSeqError(int code)
     if(Param->compressor_unlock)
         pcb215SetSblocco();
     
+    // Stop inseguimento Filtro
+    pcb249U2_exitTomoFilter();
+
     // Re-imposta la collimazione 2D
     pcb249U2SetColli( generalConfiguration.colliCfg.lame2D.back , generalConfiguration.colliCfg.lame2D.front);
     pcb249U1SetColli(generalConfiguration.colliCfg.lame2D.left,generalConfiguration.colliCfg.lame2D.right,generalConfiguration.colliCfg.lame2D.trap);
@@ -475,16 +407,6 @@ void RxTomoSeqError(int code)
     // Carica i dati relativi all'esposizione se necessario
     if(!generalConfiguration.demoMode) rxNotifyData(2,code);
 
-
-    if((generalConfiguration.filterTomoEna!=0)&&(Param->tomo_mode!=_TOMO_MODE_STATIC)&&(generalConfiguration.gantryCfg.autoFilter)){
-      if(tomoCurrentFilterPosition!=0){
-        if(pcb249U2SetFiltroRaw(tomoCurrentFilterPosition) == false) {
-            debugPrint("RX-3D FILTER COMMAND FAILED");
-        }else{          
-            debugPrintI("RX-3D CURRENT FILTER POSITION", tomoCurrentFilterPosition);
-        }
-      }
-    }
 
     // Se richiesto viene spento lo starter
     if(generalConfiguration.pcb190Cfg.starter_off_after_exposure){

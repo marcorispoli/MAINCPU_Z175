@@ -220,9 +220,10 @@ typedef struct
     unsigned short mirror_position; // Posizione dello specchio
 
 
-    unsigned char filterTomoEna;
-    unsigned char filterTomo[3];  // Posizioni cambio filtro in Tomo. 
-    
+    unsigned char filterTomoEnable;              // Enable inseguimento filtro
+    int           filterTomoChangePositions[6];  // Posizioni di scatto
+    int           filterTomo_AdjustPosition;     // Valore di aggiustamento
+
     bool        isInCompression;    // stato di compressione in corso
     
     // Loader
