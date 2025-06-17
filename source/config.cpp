@@ -1606,24 +1606,39 @@ bool Config::sendMccConfigCommand(unsigned char cmd){
         break;
         case CONFIG_PCB249U2:
 
-            // Invia il blocco 0. Sulle risposte verranno inviati i blocchi successivi.
+            // Posizioni calibrate dei filtri
             pData[0] = pCollimatore->colliConf.filterPos[0];
             pData[1] = pCollimatore->colliConf.filterPos[1];
             pData[2] = pCollimatore->colliConf.filterPos[2];
             pData[3] = pCollimatore->colliConf.filterPos[3];
-            pData[4] = pCollimatore->colliConf.filterTomo[0]; // Hotfix 11C
-            pData[5] = pCollimatore->colliConf.filterTomo[1];
-            pData[6] = pCollimatore->colliConf.filterTomo[2];
-            pData[7] = pCollimatore->colliConf.filterTomo[3];
+
+            // Abilitazione modalita di inseguimento dinamico
+            if(pCollimatore->colliConf.filterTomoEna) pData[4] = (unsigned char) 1;
+            else pData[4] = (unsigned char) 0;
+
+            // Angoli di avanzamento filtro nell'inseguimento dinamico
+            pData[5] = (unsigned char) pCollimatore->colliConf.filterTomoAngChg[0];
+            pData[6] = (unsigned char) pCollimatore->colliConf.filterTomoAngChg[1];
+            pData[7] = (unsigned char) pCollimatore->colliConf.filterTomoAngChg[2];
+            pData[8] = (unsigned char) pCollimatore->colliConf.filterTomoAngChg[3];
+            pData[9] = (unsigned char) pCollimatore->colliConf.filterTomoAngChg[4];
+            pData[10] = (unsigned char) pCollimatore->colliConf.filterTomoAngChg[5];
+
+            // Correzione della posizione iniziale del filtro rispetto al valore nominale
+            pData[11] = (unsigned char) pCollimatore->colliConf.filterAdjust;
+
+            // Posizione dello specchio, discriminato per ASSY
             if(pCollimatore->colli_model == _COLLI_TYPE_ASSY_01){
-                pData[8] = (unsigned char) pCollimatore->colliConf.mirrorSteps_ASSY_01;
-                pData[9] = (unsigned char) (pCollimatore->colliConf.mirrorSteps_ASSY_01>>8);
+                pData[12] = (unsigned char) pCollimatore->colliConf.mirrorSteps_ASSY_01;
+                pData[13] = (unsigned char) (pCollimatore->colliConf.mirrorSteps_ASSY_01>>8);
             }else{
-                pData[8] = (unsigned char) pCollimatore->colliConf.mirrorSteps_ASSY_02;
-                pData[9] = (unsigned char) (pCollimatore->colliConf.mirrorSteps_ASSY_02>>8);
+                pData[12] = (unsigned char) pCollimatore->colliConf.mirrorSteps_ASSY_02;
+                pData[13] = (unsigned char) (pCollimatore->colliConf.mirrorSteps_ASSY_02>>8);
             }
-            buflen += 10;
+
+            buflen += 14;
         break;
+
         case CONFIG_BIOPSY:
             pData[0] = pBiopsy->configStd.Z_homePosition; // Distanza home to fibra
             pData[1] = pBiopsy->configStd.Z_basePosizionatore; // Distanza base metallica fibra di carbonio

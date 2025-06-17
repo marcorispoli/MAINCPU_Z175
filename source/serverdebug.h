@@ -90,13 +90,13 @@ public slots:
     QList<QByteArray> getNextFieldsAfterTag(QByteArray data, QString tag);
 
     void handleCollimatore(QByteArray data);
-        void handleGetCalib(QByteArray data);
-        void handleSetCalibFiltro(QByteArray data);
-        void handleSetCalibMirror(QByteArray data);
-        void handleSetCalib2D(QByteArray data);
-        void handleSetCalibTomo(QByteArray data);
-        void handleSetCalibTomoFiltro(QByteArray data);
-        void handleSetCalibCustom(QByteArray data);
+    void handleSetCalibFiltro(QByteArray data);
+    void handleSetCalibMirror(QByteArray data);
+    void handleSetCalib2D(QByteArray data);
+    void handleSetCalibCustom(QByteArray data);
+
+    bool handleSetFilterChangeAngles(QByteArray data);
+    bool handleAdjustNominalFilterPosition(QByteArray data);
 
     void setManualLameVal(QString lama, int val);
     void handleRotazioni(QByteArray data);

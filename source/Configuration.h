@@ -36,7 +36,10 @@ typedef struct
 
 typedef struct
 {
-    unsigned char           filterTomo[4];     // Angoli con incremento dinamico posizione filtro in Tomo Hotfix 11C
+    bool                    filterTomoEna;          // Abilitazione all'uso dell'inseguimento del filtro
+    signed char             filterTomoAngChg[6];    // 6 Angoli di avanzamento (da 27 a -27 in ordine decrescente )
+    signed char             filterAdjust;           // Correzione della posizione del filtro rispetto al nominale 2D
+
     unsigned char           filterPos[4];      // Posizioni filtri Rh, Al, Ag, User
     unsigned char           filterType[4];     // Associazione Materiale - posizione
     int                     mirrorSteps_ASSY_01;       // Steps posizionamento specchio in campo per ASSY 01

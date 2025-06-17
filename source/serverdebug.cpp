@@ -1424,148 +1424,6 @@ void serverDebug::handleSetPeso(QByteArray data)
 
 }
 
-/*
- */
-void serverDebug::handleSetCalibTomo(QByteArray data)
-{
-    QList<QByteArray> parametri;
-    QString frame;
-    colliTomoConf_Str* pTomo;
-    unsigned char* pLama;
-
-    parametri = getNextFieldsAfterTag(data, QString("setCalibTomo"));
-    if(parametri.size()!=28)
-    {
-        frame = QString("Numero di parametri errato.\n\r");
-        serviceTcp->txData(frame.toAscii());
-        return;
-    }
-
-    if(parametri.at(0)=="W") pTomo = &pCollimatore->colliConf.colliTomoW;
-    else if(parametri.at(0)=="Mo") pTomo = &pCollimatore->colliConf.colliTomoMo;
-    else {
-        frame = QString("Anodo errato.\n\r");
-        serviceTcp->txData(frame.toAscii());
-        return ;
-    }
-
-    if((parametri.at(1)=="L") &&  (parametri.at(2)=="P")) pLama = (pTomo->tomoLeftBladeP);
-    else if((parametri.at(1)=="L") &&  (parametri.at(2)=="N")) pLama = (pTomo->tomoLeftBladeN);
-    else if((parametri.at(1)=="R") &&  (parametri.at(2)=="P")) pLama = (pTomo->tomoRightBladeP);
-    else if((parametri.at(1)=="R") &&  (parametri.at(2)=="N")) pLama = (pTomo->tomoRightBladeN);
-    else if((parametri.at(1)=="T") &&  (parametri.at(2)=="P")) pLama = (pTomo->tomoBackTrapP);
-    else if((parametri.at(1)=="T") &&  (parametri.at(2)=="N")) pLama = (pTomo->tomoBackTrapN);
-    else return ;
-
-    for(int i=0; i<COLLI_DYNAMIC_SAMPLES; i++) pLama[i] = (unsigned char) parametri.at(3+i).toInt();
-
-    serviceTcp->txData(QString("PARAMETRI aggiornati (DOWNLOAD PER SCARICARLI)\n\r").toAscii());
-    return;
-
-}
-
-void serverDebug::handleGetCalib(QByteArray data)
-{
-
-    QString stringa,tag;
-    int i;
-
-    if(pCollimatore->colli_model == _COLLI_TYPE_ASSY_01) printf("COLLIMATOR MODEL: ASSY-01\n");
-    else printf("COLLIMATOR MODEL: ASSY-02\n");
-
-    for(i=0; i<4; i++){
-        if(pCollimatore->colliConf.filterType[i]==Collimatore::FILTRO_Rh) tag = "Rh";
-        else if(pCollimatore->colliConf.filterType[i]==Collimatore::FILTRO_Ag) tag="Ag" ;
-        else if(pCollimatore->colliConf.filterType[i]==Collimatore::FILTRO_Al) tag="Al" ;
-        else if(pCollimatore->colliConf.filterType[i]==Collimatore::FILTRO_Mo) tag="Mo" ;
-        else tag="Cu";
-        stringa = QString("FILTRO-%1:%2, %3\n\r").arg(i).arg(pCollimatore->colliConf.filterPos[i]).arg(tag);
-        serviceTcp->txData(stringa.toAscii());
-    }
-
-    // Hotfix 11C
-    stringa = QString("TOMO-FILTER: ");
-    for(i=0; i<4; i++)  stringa.append(QString("%1  ").arg(pCollimatore->colliConf.filterTomo[i]));
-    stringa.append("\n\r");
-    serviceTcp->txData(stringa.toAscii());
-
-    if(pCollimatore->colli_model == _COLLI_TYPE_ASSY_01)
-        stringa = QString("MIRROR STEPS:%1\n\r").arg(pCollimatore->colliConf.mirrorSteps_ASSY_01);
-    else stringa = QString("MIRROR STEPS:%1\n\r").arg(pCollimatore->colliConf.mirrorSteps_ASSY_02);
-    serviceTcp->txData(stringa.toAscii());
-
-    for(i=0; i<pCollimatore->colliConf.colli2D.size(); i++){
-        stringa = QString("%1,").arg(pCompressore->getPadTag((Pad_Enum) (pCollimatore->colliConf.colli2D[i].PadCode)).toAscii().data());
-        stringa+=QString("L=%1,").arg(pCollimatore->colliConf.colli2D[i].L);
-        stringa+=QString("R=%1,").arg(pCollimatore->colliConf.colli2D[i].R);
-        stringa+=QString("F=%1,").arg(pCollimatore->colliConf.colli2D[i].F);
-        stringa+=QString("B=%1,").arg(pCollimatore->colliConf.colli2D[i].B);
-        stringa+=QString("T=%1\n\r").arg(pCollimatore->colliConf.colli2D[i].T);
-        serviceTcp->txData(stringa.toAscii());
-    }
-
-    stringa = QString("OPEN: L=%1 R=%2 F=%3 B=%4 T=%5 \n\r").arg(pCollimatore->colliConf.colliOpen.L).arg(pCollimatore->colliConf.colliOpen.R).arg(pCollimatore->colliConf.colliOpen.F).arg(pCollimatore->colliConf.colliOpen.B).arg(pCollimatore->colliConf.colliOpen.T);
-    serviceTcp->txData(stringa.toAscii());
-
-    stringa = QString("CUSTOM: L=%1 R=%2 F=%3 B=%4 T=%5 \n\r").arg(pCollimatore->customL).arg(pCollimatore->customR).arg(pCollimatore->customF).arg(pCollimatore->customB).arg(pCollimatore->customT);
-    serviceTcp->txData(stringa.toAscii());
-
-    stringa = QString("\n\rTOMO-W-L-P: ");
-    for(i=0; i<COLLI_DYNAMIC_SAMPLES;i++) stringa += QString("%1 ").arg(pCollimatore->colliConf.colliTomoW.tomoLeftBladeP[i]);
-    serviceTcp->txData(stringa.toAscii());
-
-    stringa = QString("\n\rTOMO-W-L-N: ");
-    for(i=0; i<COLLI_DYNAMIC_SAMPLES;i++) stringa += QString("%1 ").arg(pCollimatore->colliConf.colliTomoW.tomoLeftBladeN[i]);
-    serviceTcp->txData(stringa.toAscii());
-
-    stringa = QString("\n\rTOMO-W-R-P: ");
-    for(i=0; i<COLLI_DYNAMIC_SAMPLES;i++) stringa += QString("%1 ").arg(pCollimatore->colliConf.colliTomoW.tomoRightBladeP[i]);
-    serviceTcp->txData(stringa.toAscii());
-
-    stringa = QString("\n\rTOMO-W-R-N: ");
-    for(i=0; i<COLLI_DYNAMIC_SAMPLES;i++) stringa += QString("%1 ").arg(pCollimatore->colliConf.colliTomoW.tomoRightBladeN[i]);
-    serviceTcp->txData(stringa.toAscii());
-
-    stringa = QString("\n\rTOMO-W-T-P: ");
-    for(i=0; i<COLLI_DYNAMIC_SAMPLES;i++) stringa += QString("%1 ").arg(pCollimatore->colliConf.colliTomoW.tomoBackTrapP[i]);
-    serviceTcp->txData(stringa.toAscii());
-
-    stringa = QString("\n\rTOMO-W-T-N: ");
-    for(i=0; i<COLLI_DYNAMIC_SAMPLES;i++) stringa += QString("%1 ").arg(pCollimatore->colliConf.colliTomoW.tomoBackTrapN[i]);
-    serviceTcp->txData(stringa.toAscii());
-
-    stringa = QString("\n\rTOMO-W-FB: %1, %2").arg(pCollimatore->colliConf.colliTomoW.tomoFront).arg(pCollimatore->colliConf.colliTomoW.tomoBack);
-    serviceTcp->txData(stringa.toAscii());
-
-
-    stringa = QString("\n\rTOMO-Mo-L-P: ");
-    for(i=0; i<COLLI_DYNAMIC_SAMPLES;i++) stringa += QString("%1 ").arg(pCollimatore->colliConf.colliTomoMo.tomoLeftBladeP[i]);
-    serviceTcp->txData(stringa.toAscii());
-
-    stringa = QString("\n\rTOMO-Mo-L-N: ");
-    for(i=0; i<COLLI_DYNAMIC_SAMPLES;i++) stringa += QString("%1 ").arg(pCollimatore->colliConf.colliTomoMo.tomoLeftBladeN[i]);
-    serviceTcp->txData(stringa.toAscii());
-
-    stringa = QString("\n\rTOMO-Mo-R-P: ");
-    for(i=0; i<COLLI_DYNAMIC_SAMPLES;i++) stringa += QString("%1 ").arg(pCollimatore->colliConf.colliTomoMo.tomoRightBladeP[i]);
-    serviceTcp->txData(stringa.toAscii());
-
-    stringa = QString("\n\rTOMO-Mo-R-N: ");
-    for(i=0; i<COLLI_DYNAMIC_SAMPLES;i++) stringa += QString("%1 ").arg(pCollimatore->colliConf.colliTomoMo.tomoRightBladeN[i]);
-    serviceTcp->txData(stringa.toAscii());
-
-    stringa = QString("\n\rTOMO-Mo-T-P: ");
-    for(i=0; i<COLLI_DYNAMIC_SAMPLES;i++) stringa += QString("%1 ").arg(pCollimatore->colliConf.colliTomoMo.tomoBackTrapP[i]);
-    serviceTcp->txData(stringa.toAscii());
-
-    stringa = QString("\n\rTOMO-Mo-T-N: ");
-    for(i=0; i<COLLI_DYNAMIC_SAMPLES;i++) stringa += QString("%1 ").arg(pCollimatore->colliConf.colliTomoMo.tomoBackTrapN[i]);
-    serviceTcp->txData(stringa.toAscii());
-
-    stringa = QString("\n\rTOMO-Mo-FB: %1, %2\n\r\n\r").arg(pCollimatore->colliConf.colliTomoMo.tomoFront).arg(pCollimatore->colliConf.colliTomoMo.tomoBack);
-    serviceTcp->txData(stringa.toAscii());
-
-}
 
 // <pad,Mat,L,R,F,B,T>
 void serverDebug::handleSetCalibCustom(QByteArray data){
@@ -1683,7 +1541,7 @@ void serverDebug::handleSetCalibFiltro(QByteArray data)
     int i;
 
 
-    parametri = getNextFieldsAfterTag(data, QString("setCalibFiltro"));
+    parametri = getNextFieldsAfterTag(data, QString("setFilterPosition"));
     if(parametri.size()!=2)
     {
         serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\n\r"));
@@ -1717,31 +1575,62 @@ void serverDebug::handleSetCalibFiltro(QByteArray data)
 
 }
 
-// Hotfix 11C
-void serverDebug::handleSetCalibTomoFiltro(QByteArray data)
+
+bool serverDebug::handleAdjustNominalFilterPosition(QByteArray data)
+{
+    QList<QByteArray> parametri;
+
+    parametri = getNextFieldsAfterTag(data, QString("adjustNominalFilterPosition"));
+    if(parametri.size()!=1)
+    {
+        serviceTcp->txData(QByteArray("NUMERO PARAMETRI ERRATI: INSERIRE IL VALORE DI CORREZIONE DELLA POSIZIONE TRA +/- 5!\n\r"));
+        return false;
+    }
+
+    // Verifica range +/-5
+    if( (parametri[0].toInt() > 5) ||(parametri[0].toInt() < -5)){
+        serviceTcp->txData(QByteArray("VALORI OUT OF RANGE! INTERVALLO AMMESSO: -5:5 \n\r"));
+        return false;
+    }
+
+    pCollimatore->colliConf.filterAdjust = (signed char) parametri[0].toInt();
+    return true;
+}
+
+bool serverDebug::handleSetFilterChangeAngles(QByteArray data)
 {
     QList<QByteArray> parametri;
 
 
-    parametri = getNextFieldsAfterTag(data, QString("setCalibTomoFiltro"));
-    if(parametri.size()!=4)
+    parametri = getNextFieldsAfterTag(data, QString("setFilterChangeAngles"));
+    if(parametri.size()!=6)
     {
-        serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\n\r"));
-        return;
-    }
-    if(parametri[1].toInt()>255)
-    {
-        serviceTcp->txData(QByteArray("VALORE FUORI SCALA!\n\r"));
-        return;
+        serviceTcp->txData(QByteArray("NUMERO PARAMETRI ERRATI: INSERIRE 6 ANGOLI DI AVANZAMENTO!\n\r"));
+        return false;
     }
 
-    pCollimatore->colliConf.filterTomo[0] = parametri[0].toInt();
-    pCollimatore->colliConf.filterTomo[1] = parametri[1].toInt();
-    pCollimatore->colliConf.filterTomo[2] = parametri[2].toInt();
-    pCollimatore->colliConf.filterTomo[3] = parametri[3].toInt();
+    // Verifica range -27,27
+    for(int i=0; i<6; i++){
+        if( (parametri[i].toInt() > 27) ||(parametri[i].toInt() < -27)){
+            serviceTcp->txData(QByteArray("VALORI OUT OF RANGE! INTERVALLO AMMESSO: -27:27 \n\r"));
+            return false;
+        }
+    }
 
-    serviceTcp->txData(QByteArray("ESEGUITO: OCCORRE EFFETTUARE IL COMANDO STORE PER COMPLETARE!\n\r"));
-    pConfig->updatePCB249U2();
+    // Verifica coerenza: angolo decrescenti
+    for(int i=1; i<6; i++){
+        if(parametri[i].toInt() >= parametri[i-1].toInt()){
+            serviceTcp->txData(QByteArray("VALORI INCOERENTI! La sequenza deve essere decrescente \n\r"));
+            return false;
+        }
+    }
+
+    // Assegna gli indici alla configurazione
+    for(int i=1; i<6; i++){
+        pCollimatore->colliConf.filterTomoAngChg[i] = (signed char) (parametri[i].toInt());
+    }
+
+    return true;
 }
 
 
@@ -2878,30 +2767,35 @@ void serverDebug::handleCollimatore(QByteArray data)
     if(data.contains("?"))
     {
         serviceTcp->txData(QByteArray("--------- CONFIGURAZIONE -------------------------------------------------\r\n"));
-        serviceTcp->txData(QByteArray("readColliConf     Rilegge il file di configurazione  \r\n"));
-        serviceTcp->txData(QByteArray("STORE             Salva i dati di collimazione nel file di configurazione\r\n"));
+        serviceTcp->txData(QByteArray("readColliConf     Rilegge il file di configurazione (non aggiorna il sistema!) \r\n"));
+        serviceTcp->txData(QByteArray("storeColliConf    Salva i dati di collimazione nel file di configurazione\r\n"));
+        serviceTcp->txData(QByteArray("updateColliU1     Aggiorna il collimatore - U1 \r\n"));
+        serviceTcp->txData(QByteArray("updateColliU2     Aggiorna il collimatore - U2 \r\n"));
+
+        serviceTcp->txData(QByteArray("--------- COLLIMAZIONE 2D PADDLES ---------------------------------------\r\n"));
         serviceTcp->txData(QByteArray("setCalib2D <pad,Mat,L,R,F,B,T> Impostazione collimazioni pad\r\n"));
         serviceTcp->txData(QByteArray("setCalibCustom <L,R,F,B,T> Impostazione collimazioni custom\r\n"));
-        serviceTcp->txData(QByteArray("setCalibTomo   <Mat,Lama,P/N, n0..n25> <Mat,Front,Back>\r\n"));
-        serviceTcp->txData(QByteArray("getCalib         Restituisce tutta la calibrazione\r\n"));
-        serviceTcp->txData(QByteArray("download         Aggiorna configurazione su periferica\r\n"));
 
-
-        serviceTcp->txData(QByteArray("\r\n--- MODALITA COLLIMATORE  -------------------------\r\n"));
+        serviceTcp->txData(QByteArray("\r\n--- MODALITA COLLIMAZIONE FORMATO  -------------------------\r\n"));
         serviceTcp->txData(QByteArray("getStatus  Restituisce la collimazione correntemente impostata\r\n"));
         serviceTcp->txData(QByteArray("setAuto           Imposta la modalita' di collimazione Automatica\r\n"));
-        serviceTcp->txData(QByteArray("setManual         Imposta modalitÃ  di collimazione Manuale\r\n"));
-        serviceTcp->txData(QByteArray("setL  val _____ Imposta la lama sinistra della collimazione corrente   \r\n"));
-        serviceTcp->txData(QByteArray("setR  val _____ Imposta la lama destra della collimazione corrente  \r\n"));
-        serviceTcp->txData(QByteArray("setT  val _____ Imposta il trapezio della collimazione corrente  \r\n"));
-        serviceTcp->txData(QByteArray("setB  val _____ Imposta la lama posteriore della collimazione corrente  \r\n"));
-        serviceTcp->txData(QByteArray("setF  val _____ Imposta la lama frontale della collimazione corrente  \r\n"));
-        serviceTcp->txData(QByteArray("update    _____ Effettua la collimazione con i valori su elencati  \r\n"));
+        serviceTcp->txData(QByteArray("setManual         Imposta modalita'  di collimazione Manuale\r\n"));
+        serviceTcp->txData(QByteArray("setL  val         Imposta la lama sinistra della collimazione corrente   \r\n"));
+        serviceTcp->txData(QByteArray("setR  val         Imposta la lama destra della collimazione corrente  \r\n"));
+        serviceTcp->txData(QByteArray("setT  val         Imposta il trapezio della collimazione corrente  \r\n"));
+        serviceTcp->txData(QByteArray("setB  val         Imposta la lama posteriore della collimazione corrente  \r\n"));
+        serviceTcp->txData(QByteArray("setF  val         Imposta la lama frontale della collimazione corrente  \r\n"));
+        serviceTcp->txData(QByteArray("update            Effettua la collimazione con i valori su elencati  \r\n"));
 
-        serviceTcp->txData(QByteArray("\r\n--- COMANDI FILTRO -------------------------\r\n"));
-        serviceTcp->txData(QByteArray("setFiltro [Al/Rh/Ag/Us]    Imposta il filtro\r\n"));
-        serviceTcp->txData(QByteArray("setCalibTomoFiltro <ENA,ang0,ang1,ang2>    Imposta gli angoli di incremento filtro\r\n"));
-        serviceTcp->txData(QByteArray("setCalibFiltro <Filtro,val>    Modifica il valore di calibrazione del filtro\r\n"));
+        serviceTcp->txData(QByteArray("\r\n--- COMANDI FILTRO 2D -------------------------\r\n"));
+        serviceTcp->txData(QByteArray("selectFilter [Al/Rh/Ag/Us]       Imposta il filtro corrente\r\n"));
+        serviceTcp->txData(QByteArray("setFilterPosition <Filtro,val>   Imposta i valori di calibrazione delle posizioni dei filtri\r\n"));
+
+        serviceTcp->txData(QByteArray("\r\n--- COMANDI FILTRO TOMO -------------------------\r\n"));
+        serviceTcp->txData(QByteArray("getTomoFilterConfig   Visualizza la configurazione corrente \r\n"));
+        serviceTcp->txData(QByteArray("enableTomoFilter [ON/OFF]    Abilitazione Inseguimento \r\n"));
+        serviceTcp->txData(QByteArray("adjustNominalFilterPosition <val>  Correzione posizione nominale filtro\r\n"));
+        serviceTcp->txData(QByteArray("setFilterChangeAngles <ang0,ang1,ang2,ang3,ang4,ang5>    Imposta gli Angoli di avanzamento filtro\r\n"));
 
         serviceTcp->txData(QByteArray("--- COMANDI SPECCHIO/LUCE  -------------------------\r\n"));
         serviceTcp->txData(QByteArray("setMirror [HOME/OUT]  Imposta lo specchio\r\n"));
@@ -2914,9 +2808,31 @@ void serverDebug::handleCollimatore(QByteArray data)
         serviceTcp->txData(QByteArray("-------------------------------------------------------------------------------\r\n"));
     }
 
-    if(data.contains("download"))
+    if(data.contains("readColliConf"))
     {
+        pCollimatore->readConfigFile();
+        serviceTcp->txData(QByteArray("File di configurazione letto! Il collimatore NON è automaticamente aggiornato\r\n"));
+        serviceTcp->txData(QByteArray("Aggiornare il collimaotre con i comandi updateColliU1 o updateColliU2 se necessario\r\n"));
+        return;
+    }
+
+    if(data.contains("storeColliConf"))
+    {
+        pCollimatore->storeConfigFile();
+        serviceTcp->txData(QString("DATI DI COLLIMAZIONE SALVATI IN CONFIGURAZIONE\n\r").toAscii());
+        return;
+    }
+
+    if(data.contains("updateColliU1"))
+    {
+        serviceTcp->txData(QByteArray("Aggiornamento collimatore U1 in corso. Attendere..\r\n"));
         pConfig->updatePCB249U1();
+        return;
+    }
+    if(data.contains("updateColliU2"))
+    {
+        serviceTcp->txData(QByteArray("Aggiornamento collimatore U2 in corso. Attendere..\r\n"));
+        pConfig->updatePCB249U2();
         return;
     }
 
@@ -2933,32 +2849,6 @@ void serverDebug::handleCollimatore(QByteArray data)
         serviceTcp->txData(QByteArray("COLLI TEST STARTED\r\n"));
         return;
     }
-
-    if(data.contains("readColliConf"))
-    {
-        pCollimatore->readConfigFile();
-        pConfig->updatePCB249U1();
-        return;
-    }
-
-    if(data.contains("getCalib"))
-    {
-        handleGetCalib(data);
-        return;
-    }
-
-    if(data.contains("setCalibTomoFiltro"))
-    {
-        handleSetCalibTomoFiltro(data);
-        return;
-    }
-
-    if(data.contains("setCalibTomo"))
-    {
-        handleSetCalibTomo(data);
-        return;
-    }
-
 
     if(data.contains("setAuto")) // Imposta la modalitÃ  AUTOMATICA
     {
@@ -3017,9 +2907,9 @@ void serverDebug::handleCollimatore(QByteArray data)
         return;
     }
 
-    if(data.contains("setFiltro"))
+    if(data.contains("selectFilter"))
     {
-         pCollimatore->manualFiltroCollimation=TRUE;
+        pCollimatore->manualFiltroCollimation=TRUE;
         if(data.contains(" Al")) pCollimatore->manualFilter = Collimatore::FILTRO_Al;
         else if(data.contains(" Ag")) pCollimatore->manualFilter = Collimatore::FILTRO_Ag;
         else if(data.contains(" Rh")) pCollimatore->manualFilter = Collimatore::FILTRO_Rh;
@@ -3029,20 +2919,78 @@ void serverDebug::handleCollimatore(QByteArray data)
         return;
     }
 
-    if(data.contains("setCalibFiltro"))
-    {
 
+    if(data.contains("setFilterPosition"))
+    {
         handleSetCalibFiltro(data);
         return;
     }
 
-    if(data.contains("STORE"))
+
+    if(data.contains("getTomoFilterConfig"))
     {
 
-        pCollimatore->storeConfigFile();
-        serviceTcp->txData(QString("DATI DI COLLIMAZIONE SALVATI IN CONFIGURAZIONE\n\r").toAscii());
+        QString stringa;
+
+        if(pCollimatore->colliConf.filterTomoEna){
+            serviceTcp->txData(QByteArray("Inseguimento Filtro: Abilitato.\n\r"));
+        }else{
+            serviceTcp->txData(QByteArray("Inseguimento Filtro: Disabilitato.\n\r"));
+        }
+
+        stringa = QString("Correzione Posizione:%1 \n\r").arg(pCollimatore->colliConf.filterAdjust);
+        serviceTcp->txData(stringa.toAscii());
+
+        stringa = QString("Angoli avanzamento:%1 %2 %3 %4 %5 %6 \n\r").arg(pCollimatore->colliConf.filterTomoAngChg[0]).arg(pCollimatore->colliConf.filterTomoAngChg[1]).arg(pCollimatore->colliConf.filterTomoAngChg[2]).arg(pCollimatore->colliConf.filterTomoAngChg[3]).arg(pCollimatore->colliConf.filterTomoAngChg[4]).arg(pCollimatore->colliConf.filterTomoAngChg[5]);
+        serviceTcp->txData(stringa.toAscii());
+
         return;
     }
+
+
+    if(data.contains("enableTomoFilter"))
+    {
+        if(data.contains(" ON")) pCollimatore->colliConf.filterTomoEna = true;
+        else if(data.contains(" OFF")) pCollimatore->colliConf.filterTomoEna = false;
+        else{
+            serviceTcp->txData(QByteArray("PARAMETERO ERRATO! ACCETTATO SOLO ON/OFF\n\r"));
+            return;
+        }
+        if(pCollimatore->colliConf.filterTomoEna) serviceTcp->txData(QByteArray("Modalità inseguimento Filtro attivata\n\r"));
+        else serviceTcp->txData(QByteArray("Modalità inseguimento Filtro disabilitata\n\r"));
+
+        // Aggiornamento configurazione
+        serviceTcp->txData(QByteArray("Aggiornamento file di configurazione e sistema in corso .. \n\r"));
+        pCollimatore->storeConfigFile();
+        pConfig->updatePCB249U2();
+        return;
+    }
+
+
+    if(data.contains("adjustNominalFilterPosition"))
+    {
+        if(handleAdjustNominalFilterPosition(data)){
+            // Aggiornamento configurazione
+            serviceTcp->txData(QByteArray("Aggiornamento file di configurazione e sistema in corso .. \n\r"));
+            pCollimatore->storeConfigFile();
+            pConfig->updatePCB249U2();
+        }
+        return;
+    }
+
+    if(data.contains("setFilterChangeAngles"))
+    {
+        if(handleSetFilterChangeAngles(data)){
+            // Aggiornamento configurazione
+            serviceTcp->txData(QByteArray("Aggiornamento file di configurazione e sistema in corso .. \n\r"));
+            pCollimatore->storeConfigFile();
+            pConfig->updatePCB249U2();
+        }
+        return;
+    }
+
+
+
     if(data.contains("setMirror"))
     {
         if(data.contains("HOME")) pCollimatore->setMirror(Collimatore::MIRROR_HOME);

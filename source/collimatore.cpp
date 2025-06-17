@@ -924,11 +924,16 @@ bool Collimatore::readConfigFile(void)
     colliConf.filterPos[2] = 159;
     colliConf.filterPos[3] = 224;
 
-    colliConf.filterTomo[0] = 1; // 1= Enabled, 0 = Disabled
-    colliConf.filterTomo[1] = 2; // angolo per +1
-    colliConf.filterTomo[2] = 10;// angolo per +2
-    colliConf.filterTomo[3] = 21;// angolo per +3
+    colliConf.filterTomoEna = true; // Enable inseguimento
 
+    // Impostazione Angoli di avanzamento
+    colliConf.filterTomoAngChg[0] = (signed char) 27-4;
+    colliConf.filterTomoAngChg[1] = (signed char) 27-14;
+    colliConf.filterTomoAngChg[2] = (signed char) 27-24;
+    colliConf.filterTomoAngChg[3] = (signed char) 27-33;
+    colliConf.filterTomoAngChg[4] = (signed char) 27-41;
+    colliConf.filterTomoAngChg[5] = (signed char) 27-46;
+    colliConf.filterAdjust = (signed char) 0;
 
     // Impostazione dipendente dal tipo di collimatore montato
     colliConf.mirrorSteps_ASSY_01 = 1530;
@@ -984,12 +989,25 @@ bool Collimatore::readConfigFile(void)
             continue;
         }
 
-        // Hotfix 11C
-        // Configurazione posizione Tomo filtri
-        if(dati.at(0)=="TFILTRI"){
-            for(i=0;i<4;i++) colliConf.filterTomo[i] = (unsigned char) dati.at(i+1).toInt();
+
+       if(dati.at(0)=="TFILTRI"){
+
+            // Nel caso che il file di configurazione sia antecedente alla revisione con bnuova collimazione, questa parte non deve essere letta!
+            if(fileRevision < COLLI_CNF_REV_EW){
+
+                // Enable/Disable filter follower
+                if(dati.at(1) == "ON") colliConf.filterTomoEna = true;
+                else colliConf.filterTomoEna = false;
+
+                // Adjust parameter
+                colliConf.filterAdjust = (signed char) dati.at(2).toInt();
+
+                // Change angles
+                for(int i=3, j=0; i<9; i++, j++)  colliConf.filterTomoAngChg[j] = (signed char) dati.at(i).toInt();
+            }
             continue;
         }
+
 
 
         // Configurazione step specchio
@@ -1116,19 +1134,12 @@ bool Collimatore::readConfigFile(void)
 
 bool Collimatore::storeConfigFile(void)
 {
-    QString filename;
-    QString filenamecpy;
+    QString filename;    
     QString command;
-    QString frame;
 
     int i=0;
 
     filename =  QString(COLLICFG);
-    //filenamecpy = "collitemp.cnf";
-
-    // Copia il file da modificare in file.cnf.<date time> per sicurezza
-    //command = QString("cp %1 %1.%2.%3").arg(filename).arg(QDateTime::currentDateTime().toString("dd.MM.yy")).arg(QDateTime::currentDateTime().toString("hh.mm.ss"));
-    //system(command.toStdString().c_str());
 
     QFile file(filename.toAscii());
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
@@ -1147,8 +1158,11 @@ bool Collimatore::storeConfigFile(void)
     data = QString("<PFILTRI,%1,%2,%3,%4>\n").arg(colliConf.filterPos[0]).arg(colliConf.filterPos[1]).arg(colliConf.filterPos[2]).arg(colliConf.filterPos[3]);
     file.write(data.toAscii().data());
 
-    // Hotfix 11C
-    data = QString("<TFILTRI,%1,%2,%3,%4>\n").arg(colliConf.filterTomo[0]).arg(colliConf.filterTomo[1]).arg(colliConf.filterTomo[2]).arg(colliConf.filterTomo[3]);
+    QString enastr;
+    if(colliConf.filterTomoEna) enastr = "ON";
+    else enastr = "OFF";
+
+    data = QString("<TFILTRI,%1,%2,%3,%4,%5,%6,%7>\n").arg(enastr).arg(colliConf.filterAdjust).arg(colliConf.filterTomoAngChg[0]).arg(colliConf.filterTomoAngChg[1]).arg(colliConf.filterTomoAngChg[2]).arg(colliConf.filterTomoAngChg[3]).arg(colliConf.filterTomoAngChg[4]).arg(colliConf.filterTomoAngChg[5]);
     file.write(data.toAscii().data());
 
 

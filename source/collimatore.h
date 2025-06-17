@@ -86,7 +86,8 @@ public:
     unsigned char accessorio; // Accessorio riconosciuto
 
     // Gestione file di configurazione   
-    #define COLLI_CNF_REV   3   // Revisione file di configurazione del collimatore
+    #define COLLI_CNF_REV_EW 4   // Revisione relativa al nuovo metodo di collimazione
+    #define COLLI_CNF_REV    4   // Modificato file di configurazione per nuova gestione guidata
 
     bool colliConfUpdated;      // Configurazione aggiornata
     colliConf_Str colliConf;    // Configurazione collimatore
