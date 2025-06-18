@@ -1018,7 +1018,7 @@ void mcc_exp_aec_std(void)
     pParam = &tomoAecParam;
 
     // Attiva immediatamente il braccio
-    if(pParam->tomo_mode!=_TOMO_MODE_STATIC) actuatorsMoveTomoTrxEnd(pParam->tomo_mode,true);
+    //if(pParam->tomo_mode!=_TOMO_MODE_STATIC) actuatorsMoveTomoTrxEnd(pParam->tomo_mode,true);
     debugPrint("GUI ARRIVATI DATI AEC (TOMO)");
 
   }else if(mcc_cmd.buffer[13]==_AEC_AE)

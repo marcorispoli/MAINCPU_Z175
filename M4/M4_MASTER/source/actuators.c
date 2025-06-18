@@ -86,6 +86,24 @@ bool actuatorsMoveTomoTrxHome(unsigned char tomoType)
     return TRUE;
 }
 
+unsigned char getTrxHomeDegree(unsigned char tomoType){
+    switch(tomoType){
+        case _TOMO_MODE_WIDE:
+            return (unsigned char) (generalConfiguration.trxCfg.tomo.w.home_position / 100);
+        break;
+        case _TOMO_MODE_INTERMEDIATE:
+            return (unsigned char) (generalConfiguration.trxCfg.tomo.i.home_position / 100);
+        break;
+        case _TOMO_MODE_NARROW:
+            return (unsigned char) (generalConfiguration.trxCfg.tomo.n.home_position / 100);
+        break;
+        case _TOMO_MODE_STATIC:
+            return (unsigned char) 0;
+        break;
+
+    }
+    return 0;
+}
 
 bool actuatorsMoveTomoTrxEnd(unsigned char tomoType, bool expwin_trigger)
 {

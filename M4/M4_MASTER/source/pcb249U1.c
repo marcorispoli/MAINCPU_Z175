@@ -1261,6 +1261,28 @@ bool pcb249U1_initTomoColli(void){
     return true;
 }
 
+bool pcb249U1_setBlades(unsigned char left, unsigned char right, unsigned char trap, bool blocking){
+
+    // Scrittura posizione lame
+    if(Ser422WriteRegister(_REGID(RG249U1_PR_2D_L_USER),left,10,&PCB249U1_CONTEST) != _SER422_NO_ERROR)  return false;
+    if(Ser422WriteRegister(_REGID(RG249U1_PR_2D_R_USER),right,10,&PCB249U1_CONTEST) != _SER422_NO_ERROR)  return false;
+    if(Ser422WriteRegister(_REGID(RG249U1_PR_2D_B_USER),trap,10,&PCB249U1_CONTEST) != _SER422_NO_ERROR)  return false;
+
+    // Attesa READY dal dispositivo
+    if(blocking){
+        if(!pcb249U1WaitBusy(80)) return false;
+    }
+
+    if(!pcb249U1SetColliCmd(2)) return false;
+
+    // Attesa READY dal dispositivo
+    if(blocking){
+        if(!pcb249U1WaitBusy(80)) return false;
+    }
+
+    return true;
+}
+
 /* EOF */
  
   

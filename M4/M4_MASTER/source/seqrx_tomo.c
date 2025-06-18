@@ -89,18 +89,30 @@ void tomo_rx_task(uint32_t taskRegisters)
     // Verifica pulsante raggi
     if(SystemInputs.CPU_XRAY_REQ==0)  _SEQERROR(ERROR_PUSHRX_NO_PREP);
 
-    // Impostazione collimazione Dinamica solo se non in calibrazione
-    // Questi comandi sono compatibili con il modo FREEZE
-    pcb249U1ResetFaults();
 
-
+    // Preparazione del collimatore per l'inseguimento di formato e di filtro,
+    // valido per entrambi i metodi di collimazione dinamica (Inclinometro/Expwin)
     if((Param->tomo_mode!=_TOMO_MODE_STATIC)&&(!generalConfiguration.demoMode))
     {
+      pcb249U1ResetFaults();
 
-      // inizializzazione Inseguimento Collimatore
+      // Impostazione lama frontale e posteriore adatte per la sequenza Tomo
+      if(pcb249U2ColliCmd(generalConfiguration.colliCfg.dynamicArray.tomoBack, generalConfiguration.colliCfg.dynamicArray.tomoFront)==FALSE){
+          debugPrint("POSIZIONAMENTO FRONTE RETRO FALLITA!!");
+          _SEQERROR(_SEQ_ERR_COLLI_TOMO);
+      }
+
+      // Inizializzazione Inseguimento Collimatore:
+      // impostazione dell'angolo attuale del braccio, nel caso di collimazione dinamica vecchio stile.
+      // impostazioni numero di skip per collimazione ew.
+      // impostazione timing di inseguimento, in funzione della velocità del braccio.
+      // impostazione del primo angolo valido della scansione tomo (escludendo gli skips)
       if(!pcb249U1_initTomoColli()) _SEQERROR(_SEQ_WRITE_REGISTER);
 
-      // inizializzazione Inseguimento Filtro
+      // Inizializzazione Inseguimento Filtro:
+      // viene impostato il valore della posizione del filtro ad angolo 27°, corretto con l'aggiustamento.
+      // viene impostato il primo angolo valido della scansione tomo (escludendo gli skips)
+      // viene attivato l'inseguimento comandato da U1.
       if(!pcb249U2_initTomoFilter()) _SEQERROR(_SEQ_WRITE_REGISTER);
 
     }
@@ -188,7 +200,10 @@ void tomo_rx_task(uint32_t taskRegisters)
        }
 
     }else{      
-      // DEMO MODE
+        //////////////////////////////////////////////////////////////////////////////////////////////////
+        //                                    SEZIONE SEQUENZA DEMO
+        //////////////////////////////////////////////////////////////////////////////////////////////////
+
            
       // Attesa completamento movimento tubo       
       int delay = 0;

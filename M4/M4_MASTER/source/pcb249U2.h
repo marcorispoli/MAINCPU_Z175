@@ -245,8 +245,7 @@ volatile _DeviceRegItem_Str  PCB249U2_Registers[]=
   ext void pcb249U2ResetCalibFilterFlag(void);
   ext bool pcb249U2ColliCmd(unsigned char back, unsigned char front); //Usata dalla funzione ragg
 
-  ext bool pcb249U2SetFiltroRaw(unsigned char val);
-  ext int getTomoDeltaFilter(int angolo);
+  ext bool pcb249U2SetFiltroRaw(unsigned char val);  
   ext bool pcb249U2RxSetFiltroCmd(unsigned char cmd);
   ext bool waitRxFilterCompletion(void);
   ext bool wait2DBackFrontCompletion(int timeout);
