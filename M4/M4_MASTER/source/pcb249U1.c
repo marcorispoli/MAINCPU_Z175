@@ -1277,8 +1277,18 @@ bool pcb249U1_setBlades(unsigned char left, unsigned char right, unsigned char t
 }
 
 bool pcb249U1_activateBladesHome(unsigned char angolo){
- return true;
+
+    // Limita all'angolo massimo possibile
+    if(angolo >= COLLI_DYNAMIC_SAMPLES) angolo = COLLI_DYNAMIC_SAMPLES - 1;
+
+    // Imposta le lame come sarebbero nella posizione trx home
+    unsigned char left = generalConfiguration.colliCfg.dynamicArray.tomoLeftBladeP[angolo];
+    unsigned char right = generalConfiguration.colliCfg.dynamicArray.tomoRightBladeP[angolo];
+    unsigned char trap = generalConfiguration.colliCfg.dynamicArray.tomoBackTrapP[angolo];
+    return pcb249U1_setBlades(left, right, trap, true);
+
 }
+
 
 /* EOF */
  
