@@ -1189,11 +1189,6 @@ bool pcb249U2_initTomoFilter(void)
         return false;
     }
 
-    // Imposta il filtro in modalità inseguimento
-    if(!pcb249U2_activateFilterTomo(tomoParam.first_gonio)){
-         debugPrint("pcb249U2_initTomoFilter: ativazione filtro dinamico fallito!");
-         return false;
-    }
 
     return true;
 }

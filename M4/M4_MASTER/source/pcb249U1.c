@@ -1247,16 +1247,9 @@ bool pcb249U1_initTomoColli(void){
     debugPrintI3("COLLI DINAMICA: SKIP=", tomoParam.tomo_pre_pulses, "DELAY:",udel, "GONIO:",tomoParam.first_gonio);
 
 
-    // Attivazione collimazione dinamica
-    if(!pcb249U1SetColliCmd(3)) {
-        debugPrint("pcb249U1_initTomoColli: errore attivazione collimazione dinamica lame laterali!");
-        return false;
-    }
 
-    if(!pcb249U2ColliCmd(generalConfiguration.colliCfg.dynamicArray.tomoBack, generalConfiguration.colliCfg.dynamicArray.tomoFront)){
-        debugPrint("pcb249U1_initTomoColli: errore colimazione dinamica fronte retro!");
-        return false;
-    }
+
+
 
     return true;
 }
@@ -1281,6 +1274,10 @@ bool pcb249U1_setBlades(unsigned char left, unsigned char right, unsigned char t
     }
 
     return true;
+}
+
+bool pcb249U1_activateBladesHome(unsigned char angolo){
+ return true;
 }
 
 /* EOF */

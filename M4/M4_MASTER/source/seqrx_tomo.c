@@ -58,6 +58,15 @@ void tomo_rx_task(uint32_t taskRegisters)
     // Non viene però atteso che effettivamente i drivers si fermino
     Ser422DriverFreezeAll(0);
 
+    // Resetta eventuali fault del collimatore
+    pcb249U1ResetFaults();
+
+    // Impostazione della lama frontale e posteriore fin da subito
+    if(!pcb249U2ColliCmd(generalConfiguration.colliCfg.dynamicArray.tomoBack, generalConfiguration.colliCfg.dynamicArray.tomoFront)){
+        debugPrint("Errore collimazione formato tomo fronte retro!");
+        _SEQERROR(_SEQ_ERR_COLLI_TOMO);
+    }
+
     // Verifica Chiusura porta
     if((SystemInputs.CPU_CLOSED_DOOR==0) && (!generalConfiguration.demoMode))
     {
@@ -82,38 +91,48 @@ void tomo_rx_task(uint32_t taskRegisters)
       }
     }
 
+    // Verifica pulsante raggi
+    if(SystemInputs.CPU_XRAY_REQ==0)  _SEQERROR(ERROR_PUSHRX_NO_PREP);
+
+
     // ___________________________________________________________________________ TUBO IN HOME POSITION (senza attesa)
     // Manda subito il Braccio in Home Tomo.
     if(actuatorsMoveTomoTrxHome(Param->tomo_mode)==false) _SEQERROR(_SEQ_ERR_INTERMEDIATE_HOME);
-
-    // Verifica pulsante raggi
-    if(SystemInputs.CPU_XRAY_REQ==0)  _SEQERROR(ERROR_PUSHRX_NO_PREP);
 
 
     // Preparazione del collimatore per l'inseguimento di formato e di filtro,
     // valido per entrambi i metodi di collimazione dinamica (Inclinometro/Expwin)
     if((Param->tomo_mode!=_TOMO_MODE_STATIC)&&(!generalConfiguration.demoMode))
     {
-      pcb249U1ResetFaults();
 
-      // Impostazione lama frontale e posteriore adatte per la sequenza Tomo
-      if(pcb249U2ColliCmd(generalConfiguration.colliCfg.dynamicArray.tomoBack, generalConfiguration.colliCfg.dynamicArray.tomoFront)==FALSE){
-          debugPrint("POSIZIONAMENTO FRONTE RETRO FALLITA!!");
-          _SEQERROR(_SEQ_ERR_COLLI_TOMO);
-      }
 
       // Inizializzazione Inseguimento Collimatore:
       // impostazione dell'angolo attuale del braccio, nel caso di collimazione dinamica vecchio stile.
       // impostazioni numero di skip per collimazione ew.
-      // impostazione timing di inseguimento, in funzione della velocità del braccio.
-      // impostazione del primo angolo valido della scansione tomo (escludendo gli skips)
-      if(!pcb249U1_initTomoColli()) _SEQERROR(_SEQ_WRITE_REGISTER);
+      // impostazione timing di inseguimento, in funzione della velocità del braccio.      
+      if(!pcb249U1_initTomoColli()){
+          _SEQERROR(_SEQ_ERR_COLLI_TOMO);
+      }
 
       // Inizializzazione Inseguimento Filtro:
       // viene impostato il valore della posizione del filtro ad angolo 27°, corretto con l'aggiustamento.
-      // viene impostato il primo angolo valido della scansione tomo (escludendo gli skips)
-      // viene attivato l'inseguimento comandato da U1.
-      if(!pcb249U2_initTomoFilter()) _SEQERROR(_SEQ_WRITE_REGISTER);
+      // viene impostato il primo angolo valido della scansione tomo (escludendo gli skips)      
+      if(!pcb249U2_initTomoFilter()){
+          _SEQERROR(ERROR_INVALID_FILTRO);
+      }
+
+      // Attivazione collimazione dinamica
+      if(!pcb249U1SetColliCmd(3)) {
+          debugPrint("Errore attivazione collimazione dinamica lame laterali!");
+          _SEQERROR(_SEQ_ERR_COLLI_TOMO);
+      }
+
+      // Attiva modalità inseguimento filtro
+      if(!pcb249U2_activateFilterTomo(tomoParam.first_gonio)){
+           debugPrint("Attivazione filtro dinamico fallito!");
+           _SEQERROR(ERROR_INVALID_FILTRO);
+      }
+
 
     }
     
@@ -152,9 +171,9 @@ void tomo_rx_task(uint32_t taskRegisters)
 
         // Attesa completamento movimento tubo + preparazione per nuovo movimento con EXP-WIN
         // Se si rilascia il pulsante durante il posizionamento verrà segnalato l'errore sul posizionamento
-        debugPrint("RX-3D ATTESA FINE POSIZIONAMENO");
+        debugPrint("ATTESA FINE POSIZIONAMENO TRX IN HOME");
         if(actuatorsTrxWaitReady(100)==false) _SEQERROR(_SEQ_ERR_WIDE_HOME);
-        if(Param->tomo_mode!=_TOMO_MODE_STATIC) actuatorsMoveTomoTrxEnd(Param->tomo_mode,true); // actuatorsActivateTrxTriggerStart();
+        if(Param->tomo_mode!=_TOMO_MODE_STATIC) actuatorsMoveTomoTrxEnd(Param->tomo_mode,true);
 
         // Attende i segnali e verifica l'uscita con pulsante raggi
         if(SystemInputs.CPU_XRAY_ENA_ACK==0)
@@ -168,6 +187,7 @@ void tomo_rx_task(uint32_t taskRegisters)
         // Comando Attivazione Raggi
         if(waitPcb190Ready(50)==FALSE) _SEQERROR(_SEQ_PCB190_BUSY);
 
+        debugPrint("ATTIVAZIONE GENERATORE...");
         int rc = pcb190StartRxTomo();
         if(rc==SER422_ILLEGAL_FUNCTION) _SEQERROR(ERROR_PUSHRX_NO_PREP);
 
@@ -184,6 +204,7 @@ void tomo_rx_task(uint32_t taskRegisters)
         }
         
         if(rxloop==0){_SEQERROR(_SEQ_PCB190_TMO);}
+        debugPrint("GENERATORE IN IDLE ");
 
         // Disattivazione XRAY-ENA
         _mutex_lock(&output_mutex);

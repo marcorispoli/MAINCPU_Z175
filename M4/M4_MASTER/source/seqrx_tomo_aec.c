@@ -68,11 +68,14 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
     // Non viene però atteso che effettivamente i drivers si fermino
     Ser422DriverFreezeAll(0);
 
+    // Resetta eventuali fault del collimatore
+    pcb249U1ResetFaults();
 
-    // Apre le lame del collimatore per l'AEC
-    //pcb249U1SetColli(0,0,50);
-    //_time_delay(100);
-    //if(wait2DLeftRightTrapCompletion(100)==false) _SEQERROR(ERROR_INVALID_COLLI);
+    // Impostazione della lama frontale e posteriore fin da subito
+    if(!pcb249U2ColliCmd(generalConfiguration.colliCfg.dynamicArray.tomoBack, generalConfiguration.colliCfg.dynamicArray.tomoFront)){
+        debugPrint("Errore collimazione formato tomo fronte retro!");
+        _SEQERROR(_SEQ_ERR_COLLI_TOMO);
+    }
 
 
     // Verifica Chiusura porta
@@ -98,12 +101,12 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
       }
     }
 
+    // Verifica pulsante raggi
+    if(SystemInputs.CPU_XRAY_REQ==0)  _SEQERROR(ERROR_PUSHRX_NO_PREP);
+
     // ___________________________________________________________________________ TUBO IN HOME POSITION (senza attesa)
     // Manda subito il Braccio in Home Tomo
     if(actuatorsMoveTomoTrxHome(Param->tomo_mode)==false) _SEQERROR(_SEQ_ERR_INTERMEDIATE_HOME);
-
-    // Verifica pulsante raggi
-    if(SystemInputs.CPU_XRAY_REQ==0)  _SEQERROR(ERROR_PUSHRX_NO_PREP);
 
 
     // Preparazione collimatore per l'esecuzione dell'impulso AEC con il Tubo in Home:
@@ -111,26 +114,33 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
     // Il filtro viene posizionato correttamente e le lame laterali vegono aperte (trapezio al centro)
     if((Param->tomo_mode!=_TOMO_MODE_STATIC)&&(!generalConfiguration.demoMode))
     {
-        pcb249U1ResetFaults();
+        // Inizializzazione Inseguimento Collimatore:
+        // impostazione dell'angolo attuale del braccio, nel caso di collimazione dinamica vecchio stile.
+        // impostazioni numero di skip per collimazione ew.
+        // impostazione timing di inseguimento, in funzione della velocità del braccio.
+        if(!pcb249U1_initTomoColli()){
+            _SEQERROR(_SEQ_ERR_COLLI_TOMO);
+        }
+
+        // Inizializzazione Inseguimento Filtro:
+        // viene impostato il valore della posizione del filtro ad angolo 27°, corretto con l'aggiustamento.
+        // viene impostato il primo angolo valido della scansione tomo (escludendo gli skips)
+        if(!pcb249U2_initTomoFilter()){
+            _SEQERROR(ERROR_INVALID_FILTRO);
+        }
+
+        // Impostazione lame laterali alla posizione Home
+        if(!pcb249U1_activateBladesHome(getTrxHomeDegree(Param->tomo_mode))){
+            debugPrint("POSIZIONAMENTO LAME IN HOME FALLITO!!");
+            _SEQERROR(_SEQ_ERR_COLLI_TOMO);
+        }
 
         // Posiziona il filtro per l'angolo Home del braccio
         if(!pcb249U2_activateFilterHome(getTrxHomeDegree(Param->tomo_mode))){
             debugPrint("POSIZIONAMENTO FILTRO IN HOME FALLITO!!");
            _SEQERROR(ERROR_INVALID_FILTRO);
-        }
+        }       
 
-        // Impostazione lama frontale e posteriore adatte per la sequenza Tomo
-        if(pcb249U2ColliCmd(generalConfiguration.colliCfg.dynamicArray.tomoBack, generalConfiguration.colliCfg.dynamicArray.tomoFront)==FALSE){
-            debugPrint("POSIZIONAMENTO FRONTE RETRO FALLITA!!");
-            _SEQERROR(_SEQ_ERR_COLLI_TOMO);
-        }
-
-        // Apertura delle lame laterali e trapezio arbitrariamente al centro
-        // il comando attende il completamento del posizionamento delle lame
-        if(!pcb249U1_setBlades(0,0,50, true)){
-            debugPrint("POSIZIONAMENTO LAME IN OPEN FALLITO!!");
-            _SEQERROR(_SEQ_ERR_COLLI_TOMO);
-        }
 
     }
         
@@ -186,7 +196,8 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
 
         //____________________________________________________________________ ESECUZIONE RAGGI IN PRE IMPULSO
         // Comando Attivazione Raggi
-        int rc = pcb190StartRxTomoAec();                
+        debugPrint("ATTIVAZIONE GENERATORE PRE-IMPULSO...");
+        int rc = pcb190StartRxTomoAec();
         if(rc==SER422_ILLEGAL_FUNCTION) _SEQERROR(ERROR_PUSHRX_NO_PREP);
 
         aecIsValid =TRUE;
@@ -210,6 +221,7 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
           debugPrint("RX-3D-AEC ERRORE SEQUENZA RAGGI DURANTE ATTESA AEC");
           _SEQERROR(_DEVREGL(RG190_FAULTS,PCB190_CONTEST));      
         }
+        debugPrint("ATTIVAZIONE COMPLETATA...");
 
         //____________________________________________________________________ DATI AEC GIUNTI CORRETTAMENTE
         if(aecExpIsValid==FALSE) _SEQERROR(_SEQ_AEC_NOT_AVAILABLE);
@@ -217,26 +229,25 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
         //____________________________________________________________________ ATTIVAZIONE COLLIMAZIONE DINAMICA
         // Preparazione del collimatore per l'inseguimento di formato e di filtro,
         // valido per entrambi i metodi di collimazione dinamica (Inclinometro/Expwin)
-        if((Param->tomo_mode!=_TOMO_MODE_STATIC)&&(!generalConfiguration.demoMode))
+        if(Param->tomo_mode!=_TOMO_MODE_STATIC)
         {
 
-          // Inizializzazione Inseguimento Collimatore:
-          // impostazione dell'angolo attuale del braccio, nel caso di collimazione dinamica vecchio stile.
-          // impostazioni numero di skip per collimazione ew.
-          // impostazione timing di inseguimento, in funzione della velocità del braccio.
-          // impostazione del primo angolo valido della scansione tomo (escludendo gli skips)
-          if(!pcb249U1_initTomoColli()) _SEQERROR(_SEQ_WRITE_REGISTER);
+            // Attivazione collimazione dinamica
+            if(!pcb249U1SetColliCmd(3)) {
+                debugPrint("Errore attivazione collimazione dinamica lame laterali!");
+                _SEQERROR(_SEQ_ERR_COLLI_TOMO);
+            }
 
-          // Inizializzazione Inseguimento Filtro:
-          // viene impostato il valore della posizione del filtro ad angolo 27°, corretto con l'aggiustamento.
-          // viene impostato il primo angolo valido della scansione tomo (escludendo gli skips)
-          // viene attivato l'inseguimento comandato da U1.
-          if(!pcb249U2_initTomoFilter()) _SEQERROR(_SEQ_WRITE_REGISTER);
+            // Attiva modalità inseguimento filtro
+            if(!pcb249U2_activateFilterTomo(tomoParam.first_gonio)){
+                 debugPrint("Attivazione filtro dinamico fallito!");
+                 _SEQERROR(ERROR_INVALID_FILTRO);
+            }
 
+            //____________________________________________________________________ ATTIVAZIONE TRX CON TRIGGER
+            actuatorsMoveTomoTrxEnd(Param->tomo_mode,true);
         }
 
-        //____________________________________________________________________ ATTIVAZIONE TRX CON TRIGGER
-        if(Param->tomo_mode!=_TOMO_MODE_STATIC) actuatorsMoveTomoTrxEnd(Param->tomo_mode,true);
 
         // Ricarica i dati alla PCB190        
         pcb190UploadTomoExpose(Param, TRUE);
