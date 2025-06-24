@@ -2,7 +2,7 @@
 #define APPLICATION_H
 
 #define APPREVMAJ   1
-#define APPREVMIN   10
+#define APPREVMIN   11
 #define BETAREV     0
 
 

@@ -882,12 +882,12 @@ bool config_pcb249U2(bool setmem, unsigned char blocco, unsigned char* buffer, u
    else generalConfiguration.filterTomoEnable = false;
 
    // Assegnazione degli angoli di avanzamento del filtro (espressi in gradi, non in indice)
-   generalConfiguration.filterTomoChangePositions[0] = buffer[5];
-   generalConfiguration.filterTomoChangePositions[1] = buffer[6];
-   generalConfiguration.filterTomoChangePositions[2] = buffer[7];
-   generalConfiguration.filterTomoChangePositions[3] = buffer[8];
-   generalConfiguration.filterTomoChangePositions[4] = buffer[9];
-   generalConfiguration.filterTomoChangePositions[5] = buffer[10];
+   generalConfiguration.filterTomoChangePositions[0] = (int) ((signed char) buffer[5]);
+   generalConfiguration.filterTomoChangePositions[1] = (int) ((signed char) buffer[6]);
+   generalConfiguration.filterTomoChangePositions[2] = (int) ((signed char) buffer[7]);
+   generalConfiguration.filterTomoChangePositions[3] = (int) ((signed char) buffer[8]);
+   generalConfiguration.filterTomoChangePositions[4] = (int) ((signed char) buffer[9]);
+   generalConfiguration.filterTomoChangePositions[5] = (int) ((signed char) buffer[10]);
 
    // Assegnazione della posizione nominale (2D)
    generalConfiguration.filterTomo_AdjustPosition = (int) ((signed char) buffer[11]);

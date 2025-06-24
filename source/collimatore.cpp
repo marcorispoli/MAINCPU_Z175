@@ -991,17 +991,14 @@ bool Collimatore::readConfigFile(void)
 
 
        if(dati.at(0)=="TFILTRI"){
-
             // Nel caso che il file di configurazione sia antecedente alla revisione con bnuova collimazione, questa parte non deve essere letta!
-            if(fileRevision < COLLI_CNF_REV_EW){
+            if(fileRevision >= COLLI_CNF_REV_EW){
 
                 // Enable/Disable filter follower
                 if(dati.at(1) == "ON") colliConf.filterTomoEna = true;
                 else colliConf.filterTomoEna = false;
-
                 // Adjust parameter
                 colliConf.filterAdjust = (signed char) dati.at(2).toInt();
-
                 // Change angles
                 for(int i=3, j=0; i<9; i++, j++)  colliConf.filterTomoAngChg[j] = (signed char) dati.at(i).toInt();
             }
@@ -1162,7 +1159,15 @@ bool Collimatore::storeConfigFile(void)
     if(colliConf.filterTomoEna) enastr = "ON";
     else enastr = "OFF";
 
-    data = QString("<TFILTRI,%1,%2,%3,%4,%5,%6,%7>\n").arg(enastr).arg(colliConf.filterAdjust).arg(colliConf.filterTomoAngChg[0]).arg(colliConf.filterTomoAngChg[1]).arg(colliConf.filterTomoAngChg[2]).arg(colliConf.filterTomoAngChg[3]).arg(colliConf.filterTomoAngChg[4]).arg(colliConf.filterTomoAngChg[5]);
+    data = QString("<TFILTRI,%1,%2,%3,%4,%5,%6,%7,%8>\n")
+            .arg(enastr)
+            .arg(colliConf.filterAdjust)
+            .arg(colliConf.filterTomoAngChg[0])
+            .arg(colliConf.filterTomoAngChg[1])
+            .arg(colliConf.filterTomoAngChg[2])
+            .arg(colliConf.filterTomoAngChg[3])
+            .arg(colliConf.filterTomoAngChg[4])
+            .arg(colliConf.filterTomoAngChg[5]);
     file.write(data.toAscii().data());
 
 
