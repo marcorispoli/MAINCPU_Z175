@@ -1201,10 +1201,9 @@ bool pcb249U2_initTomoFilter(void)
  */
 bool pcb249U2_exitTomoFilter(void) {
 
-    // Nn fa nulla se inseguimento non è abilitato
-    if(!generalConfiguration.filterTomoEnable) return ;
-
-    // Ripristina l'angolo nominale del filtro selezionato
+    // Ripristina l'angolo nominale del filtro selezionato:
+    // con questo comando inoltre disabilita la modalità inseguimento
+    // ativa nel dispositivo.
     if(pcb249U2SetFiltroRaw(target_filtro) == false) {
           debugPrint("pcb249U2_exitTomoFilter: fallito impostazione del filtro nominale!");
           return false;

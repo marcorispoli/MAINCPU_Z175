@@ -110,7 +110,7 @@ void tomo_rx_task(uint32_t taskRegisters)
       // impostazione dell'angolo attuale del braccio, nel caso di collimazione dinamica vecchio stile.
       // impostazioni numero di skip per collimazione ew.
       // impostazione timing di inseguimento, in funzione della velocità del braccio.      
-      if(!pcb249U1_initTomoColli()){
+      if(!pcb249U1_initTomoColli(Param)){
           _SEQERROR(_SEQ_ERR_COLLI_TOMO);
       }
 
@@ -127,12 +127,13 @@ void tomo_rx_task(uint32_t taskRegisters)
           _SEQERROR(_SEQ_ERR_COLLI_TOMO);
       }
 
-      // Attiva modalità inseguimento filtro
-      if(!pcb249U2_activateFilterTomo(tomoParam.first_gonio)){
-           debugPrint("Attivazione filtro dinamico fallito!");
-           _SEQERROR(ERROR_INVALID_FILTRO);
+      // Attiva modalità inseguimento filtro (se abilitato)
+      if(generalConfiguration.filterTomoEnable){
+          if(!pcb249U2_activateFilterTomo(tomoParam.first_gonio)){
+               debugPrint("Attivazione filtro dinamico fallito!");
+               _SEQERROR(ERROR_INVALID_FILTRO);
+          }
       }
-
 
     }
     

@@ -253,7 +253,7 @@ volatile _DeviceRegItem_Str  PCB249U1_Registers[]=
   ext bool pcb249U1_GetFreeze(void);
   ext void pcb249U1SetTubeTemperatureThresholds(unsigned char alarm_on, unsigned char alarm_off, unsigned char fan_on, unsigned char fan_off);
 
-  ext bool pcb249U1_initTomoColli(void);
+  ext bool pcb249U1_initTomoColli(_RxStdSeq_Str* pParam);
   ext bool pcb249U1_setBlades(unsigned char left, unsigned char right, unsigned char trap, bool blocking);
   ext bool pcb249U1_activateBladesHome(unsigned char angolo);
 

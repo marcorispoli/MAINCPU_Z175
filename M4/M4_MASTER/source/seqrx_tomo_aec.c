@@ -118,7 +118,7 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
         // impostazione dell'angolo attuale del braccio, nel caso di collimazione dinamica vecchio stile.
         // impostazioni numero di skip per collimazione ew.
         // impostazione timing di inseguimento, in funzione della velocità del braccio.
-        if(!pcb249U1_initTomoColli()){
+        if(!pcb249U1_initTomoColli(Param)){
             _SEQERROR(_SEQ_ERR_COLLI_TOMO);
         }
 
@@ -135,12 +135,13 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
             _SEQERROR(_SEQ_ERR_COLLI_TOMO);
         }
 
-        // Posiziona il filtro per l'angolo Home del braccio
-        if(!pcb249U2_activateFilterHome(getTrxHomeDegree(Param->tomo_mode))){
-            debugPrint("POSIZIONAMENTO FILTRO IN HOME FALLITO!!");
-           _SEQERROR(ERROR_INVALID_FILTRO);
-        }       
-
+        // Posiziona il filtro per l'angolo Home del braccio (se abilitato l'inseguimento)
+        if(generalConfiguration.filterTomoEnable){
+            if(!pcb249U2_activateFilterHome(getTrxHomeDegree(Param->tomo_mode))){
+                debugPrint("POSIZIONAMENTO FILTRO IN HOME FALLITO!!");
+               _SEQERROR(ERROR_INVALID_FILTRO);
+            }
+        }
 
     }
         
@@ -238,10 +239,12 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
                 _SEQERROR(_SEQ_ERR_COLLI_TOMO);
             }
 
-            // Attiva modalità inseguimento filtro
-            if(!pcb249U2_activateFilterTomo(tomoParam.first_gonio)){
-                 debugPrint("Attivazione filtro dinamico fallito!");
-                 _SEQERROR(ERROR_INVALID_FILTRO);
+            // Attiva modalità inseguimento filtro (se abilitata)
+            if(generalConfiguration.filterTomoEnable){
+                if(!pcb249U2_activateFilterTomo(tomoParam.first_gonio)){
+                     debugPrint("Attivazione filtro dinamico fallito!");
+                     _SEQERROR(ERROR_INVALID_FILTRO);
+                }
             }
 
             //____________________________________________________________________ ATTIVAZIONE TRX CON TRIGGER
