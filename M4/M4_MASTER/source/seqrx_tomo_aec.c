@@ -241,7 +241,7 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
 
             // Attiva modalità inseguimento filtro (se abilitata)
             if(generalConfiguration.filterTomoEnable){
-                if(!pcb249U2_activateFilterTomo(tomoParam.first_gonio)){
+                if(!pcb249U2_activateFilterTomo(Param->first_gonio)){
                      debugPrint("Attivazione filtro dinamico fallito!");
                      _SEQERROR(ERROR_INVALID_FILTRO);
                 }
