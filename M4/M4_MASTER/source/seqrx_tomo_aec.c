@@ -239,9 +239,17 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
                 _SEQERROR(_SEQ_ERR_COLLI_TOMO);
             }
 
-            // Attiva modalità inseguimento filtro (se abilitata)
-            if(generalConfiguration.filterTomoEnable){
+            // Attiva modalità inseguimento filtro (se abilitata) e solo in EW
+            if((generalConfiguration.filterTomoEnable) && (generalConfiguration.ew_collimation_mode)) {
                 if(!pcb249U2_activateFilterTomo(Param->first_gonio)){
+                     debugPrint("Attivazione filtro dinamico fallito!");
+                     _SEQERROR(ERROR_INVALID_FILTRO);
+                }
+            }
+
+            // Nella collimazione in modaità Gonio, si aggiorna la posizione del filtro.
+            if(!generalConfiguration.ew_collimation_mode){
+                if(!pcb249U2_updateGonioTomo(true)){
                      debugPrint("Attivazione filtro dinamico fallito!");
                      _SEQERROR(ERROR_INVALID_FILTRO);
                 }
@@ -270,7 +278,14 @@ void tomo_aec_rx_task(uint32_t taskRegisters)
            }else delay--;
            
 
-            _time_delay(100);
+           // Nella collimazione in modaità Gonio, si aggiorna la posizione del filtro.
+           if(!generalConfiguration.ew_collimation_mode){
+               if(!pcb249U2_updateGonioTomo(false)){
+                    debugPrint("Attivazione filtro dinamico fallito!");
+               }
+           }
+
+           _time_delay(100);
         }
         
         if(rxloop==0){_SEQERROR(_SEQ_PCB190_TMO);}

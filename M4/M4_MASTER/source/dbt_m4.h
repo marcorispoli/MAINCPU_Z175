@@ -223,6 +223,7 @@ typedef struct
     unsigned char filterTomoEnable;              // Enable inseguimento filtro
     int           filterTomoChangePositions[6];  // Posizioni di scatto
     int           filterTomo_AdjustPosition;     // Valore di aggiustamento
+    bool          ew_collimation_mode;            // Modalità di collimazione con EW
 
     bool        isInCompression;    // stato di compressione in corso
     

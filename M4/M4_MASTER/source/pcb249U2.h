@@ -63,39 +63,40 @@ Data di Creazione: 01/11/2014
   #define _pFARRAY      0xB2
 
   #define RG249U2_SYS_FLAGS0       0,_PSYSU2+0     ,_BNK01,_8BIT ,_RD, _VL, (unsigned short)0 // Flags di systema
-  #define RG249U2_ERRORS           1,_PSYSU2+3     ,_BNK01,_8BIT ,_RD, _VL, (unsigned short)0 // Registro Errori
-  #define RG249U2_MIRROR_STAT      2,_PMIR+0       ,_BNK01,_8BIT ,_RD, _VL, (unsigned short)0 // Registro Stato Specchio
-  #define RG249U2_LAMP_STAT        3,_PLAMP+0      ,_BNK01,_8BIT ,_RD, _VL, (unsigned short)0 // Registro Stato Lampada
+  #define RG249U2_SYS_FLAGS2       1,_PSYSU2+2     ,_BNK01,_8BIT ,_RD, _VL, (unsigned short)0 // Flags di systema
+  #define RG249U2_ERRORS           2,_PSYSU2+3     ,_BNK01,_8BIT ,_RD, _VL, (unsigned short)0 // Registro Errori
+  #define RG249U2_MIRROR_STAT      3,_PMIR+0       ,_BNK01,_8BIT ,_RD, _VL, (unsigned short)0 // Registro Stato Specchio
+  #define RG249U2_LAMP_STAT        4,_PLAMP+0      ,_BNK01,_8BIT ,_RD, _VL, (unsigned short)0 // Registro Stato Lampada
 
   // Parametri per il posizionamento del rullo filtri
-  #define RG249U2_PR_FILTER0       4,_PADDR+0    ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0 // Posizione filtro 0        
-  #define RG249U2_PR_FILTER1       5,_PADDR+1    ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0 // Posizione filtro 1        
-  #define RG249U2_PR_FILTER2       6,_PADDR+2    ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0 // Posizione filtro 2        
-  #define RG249U2_PR_FILTER3       7,_PADDR+3    ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0 // Posizione filtro 3        
+  #define RG249U2_PR_FILTER0       5,_PADDR+0    ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0 // Posizione filtro 0
+  #define RG249U2_PR_FILTER1       6,_PADDR+1    ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0 // Posizione filtro 1
+  #define RG249U2_PR_FILTER2       7,_PADDR+2    ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0 // Posizione filtro 2
+  #define RG249U2_PR_FILTER3       8,_PADDR+3    ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0 // Posizione filtro 3
   
   // Parametri per il posizionamento dello specchio
-  #define RG249U2_PR_MIRROR_STEPS  8,_PADDR+4    ,_BNK01,_16BIT ,_RW, _NVL, (unsigned short)0 // Steps posizionamento specchio        
-  #define RG249U2_PR_FILTER_DISABLED  9,_PADDR+14   ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0 // Set to 1 se disabilitato da teaching
+  #define RG249U2_PR_MIRROR_STEPS  9,_PADDR+4    ,_BNK01,_16BIT ,_RW, _NVL, (unsigned short)0 // Steps posizionamento specchio
+  #define RG249U2_PR_FILTER_DISABLED  10,_PADDR+14   ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0 // Set to 1 se disabilitato da teaching
   
-  #define RG249U2_PR_CALIBRATED    10,_PADDR+15  ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0 // Sistema è sttato calibrato
+  #define RG249U2_PR_CALIBRATED    11,_PADDR+15  ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0 // Sistema è sttato calibrato
     
 
-  #define RG249U2_FILTER_CURPOS    11,_pFILTER+0 ,_BNK01,_8BIT ,_RD, _VL, (unsigned short)0 // Posizione corrente
-  #define RG249U2_FILTER_STAT      12,_pFILTER+1 ,_BNK01,_8BIT ,_RD, _VL, (unsigned short)0 // Flag di target movimento filtro
-  #define RG249U2_POS_TARGET       13,_pFILTER+2 ,_BNK01,_8BIT ,_RD, _VL, (unsigned short)0 // Target corrente filtro
-  #define RG249U2_POS_RAW          14,_pFILTER+5 ,_BNK01,_8BIT ,_RD, _VL, (unsigned short)0 // Posizione aggiornata filtro run time
+  #define RG249U2_FILTER_CURPOS    12,_pFILTER+0 ,_BNK01,_8BIT ,_RD, _VL, (unsigned short)0 // Posizione corrente
+  #define RG249U2_FILTER_STAT      13,_pFILTER+1 ,_BNK01,_8BIT ,_RD, _VL, (unsigned short)0 // Flag di target movimento filtro
+  #define RG249U2_POS_TARGET       14,_pFILTER+2 ,_BNK01,_8BIT ,_RD, _VL, (unsigned short)0 // Target corrente filtro
+  #define RG249U2_POS_RAW          15,_pFILTER+5 ,_BNK01,_8BIT ,_RD, _VL, (unsigned short)0 // Posizione aggiornata filtro run time
 
-  #define RG249U2_FILTER_POS_0     15,_pFARRAY+1 ,_BNK01,_8BIT ,_RW, _VL, (unsigned short)0 // Posizione 0 per inseguimento
-  #define RG249U2_FILTER_CHG_1     16,_pFARRAY+2 ,_BNK01,_8BIT ,_RW, _VL, (unsigned short)0 // Indice prima posizione di scatto
-  #define RG249U2_FILTER_CHG_2     17,_pFARRAY+3 ,_BNK01,_8BIT ,_RW, _VL, (unsigned short)0 // Indice seconda posizione di scatto
-  #define RG249U2_FILTER_CHG_3     18,_pFARRAY+4 ,_BNK01,_8BIT ,_RW, _VL, (unsigned short)0 // Indice terza posizione di scatto
-  #define RG249U2_FILTER_CHG_4     19,_pFARRAY+5 ,_BNK01,_8BIT ,_RW, _VL, (unsigned short)0 // Indice quarta posizione di scatto
-  #define RG249U2_FILTER_CHG_5     20,_pFARRAY+6 ,_BNK01,_8BIT ,_RW, _VL, (unsigned short)0 // Indice quinta posizione di scatto
-  #define RG249U2_FILTER_CHG_6     21,_pFARRAY+7 ,_BNK01,_8BIT ,_RW, _VL, (unsigned short)0 // Indice sesta posizione di scatto
+  #define RG249U2_FILTER_POS_0     16,_pFARRAY+1 ,_BNK01,_8BIT ,_RW, _VL, (unsigned short)0 // Posizione 0 per inseguimento
+  #define RG249U2_FILTER_CHG_1     17,_pFARRAY+2 ,_BNK01,_8BIT ,_RW, _VL, (unsigned short)0 // Indice prima posizione di scatto
+  #define RG249U2_FILTER_CHG_2     18,_pFARRAY+3 ,_BNK01,_8BIT ,_RW, _VL, (unsigned short)0 // Indice seconda posizione di scatto
+  #define RG249U2_FILTER_CHG_3     19,_pFARRAY+4 ,_BNK01,_8BIT ,_RW, _VL, (unsigned short)0 // Indice terza posizione di scatto
+  #define RG249U2_FILTER_CHG_4     20,_pFARRAY+5 ,_BNK01,_8BIT ,_RW, _VL, (unsigned short)0 // Indice quarta posizione di scatto
+  #define RG249U2_FILTER_CHG_5     21,_pFARRAY+6 ,_BNK01,_8BIT ,_RW, _VL, (unsigned short)0 // Indice quinta posizione di scatto
+  #define RG249U2_FILTER_CHG_6     22,_pFARRAY+7 ,_BNK01,_8BIT ,_RW, _VL, (unsigned short)0 // Indice sesta posizione di scatto
 
 
 
-  #define PCB249U2_NREGISTERS      22
+  #define PCB249U2_NREGISTERS      23
 
 
   //////////////////////////////////////////////////////////////////////////////
@@ -118,6 +119,7 @@ Data di Creazione: 01/11/2014
 volatile _DeviceRegItem_Str  PCB249U2_Registers[]=
   {
     _REGDEF(RG249U2_SYS_FLAGS0),
+    _REGDEF(RG249U2_SYS_FLAGS2),
     _REGDEF(RG249U2_ERRORS),
     _REGDEF(RG249U2_MIRROR_STAT),
     _REGDEF(RG249U2_LAMP_STAT),
@@ -264,6 +266,7 @@ volatile _DeviceRegItem_Str  PCB249U2_Registers[]=
   ext bool pcb249WaitBusy(int timeout);
   ext bool pcb249U2_GetFreeze(void);
 
+  ext bool pcb249U2_updateGonioTomo(bool reset);
   ext bool pcb249U2_activateFilterTomo(unsigned char angolo);
   ext bool pcb249U2_activateFilterHome(unsigned char angolo);
   ext bool pcb249U2_initTomoFilter(void);

@@ -127,8 +127,8 @@ void tomo_rx_task(uint32_t taskRegisters)
           _SEQERROR(_SEQ_ERR_COLLI_TOMO);
       }
 
-      // Attiva modalità inseguimento filtro (se abilitato)
-      if(generalConfiguration.filterTomoEnable){
+      // Attiva modalità inseguimento filtro (se abilitato) e solo in modalità EW
+      if((generalConfiguration.filterTomoEnable) && (generalConfiguration.ew_collimation_mode)) {
           if(!pcb249U2_activateFilterTomo(tomoParam.first_gonio)){
                debugPrint("Attivazione filtro dinamico fallito!");
                _SEQERROR(ERROR_INVALID_FILTRO);
@@ -174,7 +174,22 @@ void tomo_rx_task(uint32_t taskRegisters)
         // Se si rilascia il pulsante durante il posizionamento verrà segnalato l'errore sul posizionamento
         debugPrint("ATTESA FINE POSIZIONAMENO TRX IN HOME");
         if(actuatorsTrxWaitReady(100)==false) _SEQERROR(_SEQ_ERR_WIDE_HOME);
-        if(Param->tomo_mode!=_TOMO_MODE_STATIC) actuatorsMoveTomoTrxEnd(Param->tomo_mode,true);
+
+        if(Param->tomo_mode!=_TOMO_MODE_STATIC){
+
+            // Nella collimazione in modaità Gonio, si aggiorna la posizione del filtro.
+            if(!generalConfiguration.ew_collimation_mode){
+                if(!pcb249U2_updateGonioTomo(true)){
+                     debugPrint("Attivazione filtro dinamico fallito!");
+                     _SEQERROR(ERROR_INVALID_FILTRO);
+                }
+            }
+
+            // Si attiva la modalità di partenza braccio con EW
+            actuatorsMoveTomoTrxEnd(Param->tomo_mode,true);
+        }
+
+
 
         // Attende i segnali e verifica l'uscita con pulsante raggi
         if(SystemInputs.CPU_XRAY_ENA_ACK==0)
@@ -201,6 +216,14 @@ void tomo_rx_task(uint32_t taskRegisters)
            if(!delay){
              if(SystemInputs.CPU_XRAY_COMPLETED==1) break; // Fine sequenza
            }else delay--;
+
+           // Nella collimazione in modaità Gonio, si aggiorna la posizione del filtro.
+           if(!generalConfiguration.ew_collimation_mode){
+               if(!pcb249U2_updateGonioTomo(false)){
+                    debugPrint("Attivazione filtro dinamico fallito!");
+               }
+           }
+
            _time_delay(100);
         }
         

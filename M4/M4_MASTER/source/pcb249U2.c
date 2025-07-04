@@ -89,6 +89,16 @@ void pcb249U2_driver(uint32_t taskRegisters)
          break;
       }
    }
+
+   // Modalità collimazione dinamica
+   if(_DEVREGL(RG249U2_SYS_FLAGS2,CONTEST) & 0x8){
+       generalConfiguration.ew_collimation_mode = true;
+       printf("PCB249U2: COLLIMAZIONE IN MODALITA' EXPWIN DETECTED\n");
+   }else{
+       generalConfiguration.ew_collimation_mode = false;
+       printf("PCB249U2: COLLIMAZIONE IN MODALITA' GONIO DETECTED\n");
+
+   }
     
     // Attende la ricezione della configurazione se necessario
    _EVSET(_EV2_PCB249U2_STARTUP_OK);
@@ -1114,6 +1124,49 @@ bool pcb249U2_activateFilterTomo(unsigned char angolo){
    if(frame.retcode == SER422_COMMAND_OK) return TRUE;
    return FALSE;
 }
+
+
+bool pcb249U2_updateGonioTomo(bool reset){
+
+    static unsigned char idx = 0;
+
+    // Per compatibilità con filtro fisso
+    if(!generalConfiguration.gantryCfg.autoFilter) return true;
+
+    // Richiesta angolo relativo da U1
+    Ser422ReadRegister(_REGID(RG249U1_GONIO_REL),4,&PCB249U1_CONTEST);
+    int angolo = (int) _DEVREGL(RG249U1_GONIO_REL,PCB249U1_CONTEST);
+    if(angolo&0x80) angolo = -1 * (angolo&0x7F);
+
+    // Calcolo dell'index
+    int index = 27 - angolo;
+    if(index<0) index = 0;
+    if(index > 53 ) index = 53;
+
+    if(reset){
+        idx = (unsigned char) index;
+    }else{
+        if(index > idx) idx++;
+        else return true;
+    }
+
+    printf("CURRENT GONIO TOMO INDEX=IDX=%d, INDEX=%d\n ", idx, index);
+
+    // Aggiornamento U2
+    _Ser422_Command_Str frame;
+
+   // Prepara il comando di download
+   frame.address = TARGET_ADDRESS;
+   frame.attempt = 10;
+   frame.cmd=SER422_COMMAND;
+   frame.data1=_CMD1(PCB249U2_FILTER_TOMO);
+   frame.data2= (unsigned char) idx;
+
+   Ser422Send(&frame, SER422_BLOCKING,CONTEST.ID);
+   if(frame.retcode == SER422_COMMAND_OK) return TRUE;
+   return FALSE;
+}
+
 
 /**
  * @brief pcb249U2_activateFilterHome
