@@ -148,12 +148,8 @@ public:
         _REQ_SUBSEQ_HOME_Y_MOVE,   // Common Y move
         _REQ_SUBSEQ_HOME_Z_MOVE,   // Common Z move
 
-        _REQ_SUBSEQ_HOME_EXE_Z,    // Moves to Home Z
-        _REQ_SUBSEQ_HOME_EXE_Y,    // Moves to Home Y
-        _REQ_SUBSEQ_HOME_TEST_Y_UP, // Test if the Y shall be reversed up
-        _REQ_SUBSEQ_HOME_TEST_SCROLL_X, // Test if the X shall be scrolled
-        _REQ_SUBSEQ_HOME_EXE_X,         // Activate the X position in home
-        _REQ_SUBSEQ_HOME_TEST_Y_DOWN, // Test if the Y shall be reversed down
+        _REQ_SUBSEQ_HOME_ACTIVATE_FROM_YUP, // GEstisce il movimento con il cursore alto
+        _REQ_SUBSEQ_HOME_FROM_XCORNER,      // GEstisce il movimento con il cursore dal bordo
         _REQ_SUBSEQ_HOME_COMPLETED
 
     };
@@ -174,7 +170,6 @@ public:
     #define _REQ_SUBSEQ_XYZ_EXE_SCROLL_Y_LEFT       7
     #define _REQ_SUBSEQ_XYZ_EXE_SCROLL_Y_RIGHT      8
     #define _REQ_SUBSEQ_XYZ_EXE_SCROLL_Y_CENTER     9
-
 
     #define _REQ_SUBSEQ_XYZ_COMPLETED               21
 
@@ -257,7 +252,7 @@ private:
     // Movimenti su tre assi
     int moveXYZ(unsigned short X, unsigned short Y, unsigned short Z); // Chiede il movimento sui tre assi
 
-    bool testUpsidePosition(unsigned short X);
+    bool isPossibleXImpact(unsigned short X);
     bool isTarget(unsigned short X, unsigned short Y, unsigned short Z);
 
     // Test if the Y block is turned Up based on the current X posiiton scenaro
