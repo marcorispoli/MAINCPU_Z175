@@ -80,7 +80,7 @@ biopsyExtendedDevice::biopsyExtendedDevice(int rotview, QWidget *parent) :
     exitPageCode = _PG_MAIN_DIGITAL;
     outPosition_ena = false;
     outPosition = false;
-
+    isYUpright = false;
 }
 biopsyExtendedDevice::~biopsyExtendedDevice()
 {
@@ -908,6 +908,7 @@ void biopsyExtendedDevice::mccStatNotify(unsigned char id_notify,unsigned char c
 
         outPosition_ena = false;
         outPosition = false;
+        isYUpright = false;
         Y = 0xFFFF;
         outOfPosition = false;
         pBiopsy->connected = FALSE;
@@ -934,6 +935,7 @@ void biopsyExtendedDevice::mccStatNotify(unsigned char id_notify,unsigned char c
 
         prev_home_lat = req_home_lat = _BP_EXT_ASSEX_POSITION_ND;
 
+        isYUpright = false;
         movingCommand =_BIOPSY_MOVING_NO_COMMAND;
         movingError = _BIOPSY_MOVING_NO_ERROR;
         pBiopsy->activationId = 0;
@@ -956,6 +958,10 @@ void biopsyExtendedDevice::mccStatNotify(unsigned char id_notify,unsigned char c
     curLatX = data.at(_BP_EXT_ASSEX_POSITION);
     ApplicationDatabase.setData(_DB_BIOP_LAT_X,(int) data.at(_BP_EXT_ASSEX_POSITION),0);
     if(curLatX != _BP_EXT_ASSEX_POSITION_ND) last_xscroll_detected = curLatX;
+
+    // Ribaltamento asse Y:
+    if(data[_BP_EXT_ASSEY_POSITION] == 1) isYUpright = true;
+    else isYUpright = false;
 
     // Inizializzazione del flag di comando Home precedente
     if(req_home_lat == _BP_EXT_ASSEX_POSITION_ND){

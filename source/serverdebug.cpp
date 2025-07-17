@@ -4013,7 +4013,7 @@ void serverDebug::handleExtendedBiopsy(QByteArray data)
 
         serviceTcp->txData(QByteArray("--------------- CALIBRATION ----------------------------\r\n"));
         serviceTcp->txData(QByteArray("calibXbase  val       ? calibrazione base X\r\n"));
-        serviceTcp->txData(QByteArray("calibSh  zero,up,down ? calibrazione asse SH: zero, +150,-150 \r\n"));
+        serviceTcp->txData(QByteArray("calibSh  zero,-150,+150 ? calibrazione asse cuneo \r\n"));
 
 
 #ifdef __BIOPSY_SIMULATOR
@@ -4102,7 +4102,7 @@ void serverDebug::handleExtendedBiopsy(QByteArray data)
         }else if(data.contains("calibSh")){
             parametri = getNextFieldsAfterTag(data, QString("calibSh"));
             if(parametri.size()!=3){
-                serviceTcp->txData(QByteArray("PARAM ERROR: calibSh zero up150 down150 \r\n"));
+                serviceTcp->txData(QByteArray("PARAM ERROR: calibSh zero +150 -150 \r\n"));
                 return;
             }
 
@@ -4112,7 +4112,14 @@ void serverDebug::handleExtendedBiopsy(QByteArray data)
             pBiopsy->storeConfigExtended();
             serviceTcp->txData(QByteArray("DONE \r\n"));
         }else if(data.contains("getAdapter")){
-            serviceTcp->txData(QString("current adapter: %1\n\r").arg(pBiopsyExtended->getAdapterId()).toAscii().data());
+            QString stringa;
+
+            if(pBiopsyExtended->getAdapterId() == _BP_EXT_ADAPTER_OPEN) stringa = "DETECTED ADAPTER:ND \n\r";
+            else if(pBiopsyExtended->getAdapterId() == _BP_EXT_ADAPTER_A) stringa = "DETECTED ADAPTER:A \n\r";
+            else if(pBiopsyExtended->getAdapterId() == _BP_EXT_ADAPTER_B) stringa = "DETECTED ADAPTER:B \n\r";
+            else if(pBiopsyExtended->getAdapterId()== _BP_EXT_ADAPTER_C) stringa = "DETECTED ADAPTER:C \n\r";
+            serviceTcp->txData(stringa.toAscii().data());
+
         }else if(data.contains("getSignals")){
             QString lat;
             if(pBiopsyExtended->curLatX == _BP_EXT_ASSEX_POSITION_CENTER) lat = "CENTER";
@@ -4120,14 +4127,24 @@ void serverDebug::handleExtendedBiopsy(QByteArray data)
             else if(pBiopsyExtended->curLatX == _BP_EXT_ASSEX_POSITION_RIGHT) lat = "RIGHT";
             else lat = "UNDEF";
 
-            QString stringa = QString("SIGNALS: X:%1, Y:%2, Z:%3, SHR:%4, SH:%5 LAT:%6 ").arg(pBiopsyExtended->curX_dmm).arg(pBiopsyExtended->curY_dmm).arg(pBiopsyExtended->curZ_dmm).arg(pBiopsyExtended->curSh_raw).arg(pBiopsyExtended->curSh_dmm).arg(lat);
-            if(pBiopsyExtended->outPosition) stringa+= " OUT";
-            else stringa += "IN ";
+            QString Yupdown;
+            if(pBiopsyExtended->isYUpright) Yupdown = "YUP";
+            else Yupdown = "YUNDEF";
 
-            if(pBiopsyExtended->getAdapterId() == _BP_EXT_ADAPTER_OPEN) stringa += "ADAPTER:ND";
-            else if(pBiopsyExtended->getAdapterId() == _BP_EXT_ADAPTER_A) stringa += "ADAPTER:A";
-            else if(pBiopsyExtended->getAdapterId() == _BP_EXT_ADAPTER_B) stringa += "ADAPTER:B";
-            else if(pBiopsyExtended->getAdapterId()== _BP_EXT_ADAPTER_C) stringa += "ADAPTER:C";
+            QString stringa = QString("BIOPSY SIGNALS:\n\r");
+            stringa += QString("- POSITION: X=%1, Y=%2, Z=%3\n\r").arg(pBiopsyExtended->curX_dmm).arg(pBiopsyExtended->curY_dmm).arg(pBiopsyExtended->curZ_dmm);
+            stringa += "- XSCROLL: " + lat + "\n\r";
+            stringa += "- YSCROLL: " + Yupdown + "\n\r";
+            stringa += QString("- CUNEO: RAW:%1, CALIBRATED:%2 \n\r").arg(pBiopsyExtended->curSh_raw).arg(pBiopsyExtended->curSh_dmm);
+
+            if(pBiopsyExtended->getAdapterId() == _BP_EXT_ADAPTER_OPEN) stringa += "- ADAPTER:ND \n\r";
+            else if(pBiopsyExtended->getAdapterId() == _BP_EXT_ADAPTER_A) stringa += "- ADAPTER:A \n\r";
+            else if(pBiopsyExtended->getAdapterId() == _BP_EXT_ADAPTER_B) stringa += "- ADAPTER:B \n\r";
+            else if(pBiopsyExtended->getAdapterId()== _BP_EXT_ADAPTER_C) stringa += "- ADAPTER:C \n\r";
+
+
+            if(pBiopsyExtended->outPosition) stringa+= "- POSITION STATUS:  OUT-POSITION \n\r";
+            else stringa+= "- POSITION STATUS:  POSITIONED \n\r";
 
             stringa+=" \r\n";
 

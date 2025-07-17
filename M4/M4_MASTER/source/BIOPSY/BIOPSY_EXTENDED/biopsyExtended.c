@@ -160,6 +160,11 @@ void BIOPSY_manageDriverConnectedStatus(void){
     // Determina la posizione di dislocazione dell'asse X
     dati[_BP_EXT_ASSEX_POSITION] = generalConfiguration.biopsyCfg.extendedConf.statusH &0x3;
 
+    // Determina la posizione del ribaltamento asse Y:
+    // se bit attivo Y è UpRight altrementi è indeterminato
+    if(generalConfiguration.biopsyCfg.extendedConf.statusH & 0x10) dati[_BP_EXT_ASSEY_POSITION] = 1;
+    else dati[_BP_EXT_ASSEY_POSITION] = 0;
+
     // Chiede sempre la posizione del cuneo
     if(!BiopsyDriverGetSH(&generalConfiguration.biopsyCfg.SH)) return;
     dati[_BP_EXT_SHL] = (unsigned char) (generalConfiguration.biopsyCfg.SH & 0x00FF);
