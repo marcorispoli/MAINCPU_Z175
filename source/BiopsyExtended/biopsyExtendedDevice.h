@@ -26,6 +26,7 @@ public:
     int setStepVal(unsigned char step);
     unsigned char getLatX(void);
     unsigned char getAdapterId(void);
+    unsigned short getAdapterRaw(void){return rawadapterId;}
 
     void  setBuzzer(void);
     void  setPowerled(bool stat);
@@ -121,7 +122,10 @@ public:
     unsigned short curY_dmm;    // (0.1mm) Posizione corrente Y
     unsigned short curZ_dmm;    // (0.1mm) Posizione corrente Z
     unsigned short curSh_raw;   // cursor dac level
+
     int curSh_dmm;   // (0.1mm) Posizione corrente Sh
+    bool biopsyExtendedUpdateSh(void);
+
     unsigned char  curLatX;     // Posizione dislocazione asse X
     bool isYUpright;            // Posizione Y è Upright
 
@@ -231,6 +235,7 @@ private:
 
     // Accessorio riconosciuto
     unsigned char adapterId;       // adapterId riconosciuto
+    unsigned short rawadapterId;   // Valore rilevato dalla conversione ADC
 
     // Pulsante di sblocco
     bool unlock_button;

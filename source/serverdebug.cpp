@@ -3999,7 +3999,7 @@ void serverDebug::handleExtendedBiopsy(QByteArray data)
     {
         serviceTcp->txData(QByteArray("--------------- ACTIVATION ----------------------------\r\n"));
         serviceTcp->txData(QByteArray("moveXYZ   x,y,z       ? X,Y,Z in dmm \r\n"));
-        serviceTcp->txData(QByteArray("moveLoop   x0,y0,z0 x1,y1,z1   \r\n"));
+        serviceTcp->txData(QByteArray("moveLoop   num,x0,y0,z0 x1,y1,z1   \r\n"));
 
         serviceTcp->txData(QByteArray("moveHome  [L,C,R]     ? Imposta lateralità \r\n"));
         serviceTcp->txData(QByteArray("testBuzzer            ? attiva buzzer BYM X\r\n"));
@@ -4013,7 +4013,7 @@ void serverDebug::handleExtendedBiopsy(QByteArray data)
 
         serviceTcp->txData(QByteArray("--------------- CALIBRATION ----------------------------\r\n"));
         serviceTcp->txData(QByteArray("calibXbase  val       ? calibrazione base X\r\n"));
-        serviceTcp->txData(QByteArray("calibSh  zero,-150,+150 ? calibrazione asse cuneo \r\n"));
+        serviceTcp->txData(QByteArray("calibSh  RAW(zero) RAW(+15) RAW(-15) ? calibrazione asse cuneo \r\n"));
 
 
 #ifdef __BIOPSY_SIMULATOR
@@ -4102,7 +4102,24 @@ void serverDebug::handleExtendedBiopsy(QByteArray data)
         }else if(data.contains("calibSh")){
             parametri = getNextFieldsAfterTag(data, QString("calibSh"));
             if(parametri.size()!=3){
-                serviceTcp->txData(QByteArray("PARAM ERROR: calibSh zero +150 -150 \r\n"));
+                serviceTcp->txData(QByteArray("PARAM ERROR: calibSh RAW(zero) RAW(+15) RAW(-15) \r\n"));
+                return;
+            }
+
+            // Controllo di coerenza dati
+            int pzero = parametri[0].toInt();
+            int p150 =  parametri[1].toInt();
+            int m150 = parametri[2].toInt();
+
+            if((pzero-p150) < 280){
+                QString stringa = "Invalid Range: RAW(zero) - RAW(+15) < 280 -> Not Valid!!! \n\r";
+                serviceTcp->txData(stringa.toAscii().data());
+                return;
+            }
+
+            if((m150-pzero) < 280){
+                QString stringa = "Invalid Range: RAW(-15) - RAW(zero) < 280 -> Not Valid!!! \n\r";
+                serviceTcp->txData(stringa.toAscii().data());
                 return;
             }
 
@@ -4110,14 +4127,22 @@ void serverDebug::handleExtendedBiopsy(QByteArray data)
             pBiopsy->configExt.sh_150_level = parametri[1].toUShort();
             pBiopsy->configExt.sh_m150_level = parametri[2].toUShort();
             pBiopsy->storeConfigExtended();
-            serviceTcp->txData(QByteArray("DONE \r\n"));
+            pBiopsyExtended->biopsyExtendedUpdateSh(); // Aggiorna il dato
+            QString stringa = QString("POSIZIONE CUNEO: RAW:%1, CALIBRATED:%2 \n\r").arg(pBiopsyExtended->curSh_raw).arg(pBiopsyExtended->curSh_dmm);
+            serviceTcp->txData(stringa.toAscii().data());
+
         }else if(data.contains("getAdapter")){
             QString stringa;
 
-            if(pBiopsyExtended->getAdapterId() == _BP_EXT_ADAPTER_OPEN) stringa = "DETECTED ADAPTER:ND \n\r";
-            else if(pBiopsyExtended->getAdapterId() == _BP_EXT_ADAPTER_A) stringa = "DETECTED ADAPTER:A \n\r";
-            else if(pBiopsyExtended->getAdapterId() == _BP_EXT_ADAPTER_B) stringa = "DETECTED ADAPTER:B \n\r";
-            else if(pBiopsyExtended->getAdapterId()== _BP_EXT_ADAPTER_C) stringa = "DETECTED ADAPTER:C \n\r";
+            stringa="ADAPTER IDENTIFICATION:\n\r";
+            stringa += QString("- ADAPTER SENSOR: %1\n\r").arg(pBiopsyExtended->getAdapterRaw());
+            if(pBiopsyExtended->getAdapterId() == _BP_EXT_ADAPTER_OPEN) stringa += "- CLASSIFIED:ND \n\r";
+            else if(pBiopsyExtended->getAdapterId() == _BP_EXT_ADAPTER_A) stringa += "- CLASSIFIED:A \n\r";
+            else if(pBiopsyExtended->getAdapterId() == _BP_EXT_ADAPTER_B) stringa += "- CLASSIFIED:B \n\r";
+            else if(pBiopsyExtended->getAdapterId()== _BP_EXT_ADAPTER_C) stringa += "- CLASSIFIED:C \n\r";
+            else if(pBiopsyExtended->getAdapterId()== _BP_EXT_ADAPTER_SHORT) stringa += "- CLASSIFIED:SHORT \n\r";
+            else stringa = +"- CLASSIFIED:INVALID CODE \n\r";
+
             serviceTcp->txData(stringa.toAscii().data());
 
         }else if(data.contains("getSignals")){
@@ -4137,11 +4162,14 @@ void serverDebug::handleExtendedBiopsy(QByteArray data)
             stringa += "- YSCROLL: " + Yupdown + "\n\r";
             stringa += QString("- CUNEO: RAW:%1, CALIBRATED:%2 \n\r").arg(pBiopsyExtended->curSh_raw).arg(pBiopsyExtended->curSh_dmm);
 
-            if(pBiopsyExtended->getAdapterId() == _BP_EXT_ADAPTER_OPEN) stringa += "- ADAPTER:ND \n\r";
-            else if(pBiopsyExtended->getAdapterId() == _BP_EXT_ADAPTER_A) stringa += "- ADAPTER:A \n\r";
-            else if(pBiopsyExtended->getAdapterId() == _BP_EXT_ADAPTER_B) stringa += "- ADAPTER:B \n\r";
-            else if(pBiopsyExtended->getAdapterId()== _BP_EXT_ADAPTER_C) stringa += "- ADAPTER:C \n\r";
-
+            stringa+="ADAPTER IDENTIFICATION:\n\r";
+            stringa += QString("- ADAPTER SENSOR: %1\n\r").arg(pBiopsyExtended->getAdapterRaw());
+            if(pBiopsyExtended->getAdapterId() == _BP_EXT_ADAPTER_OPEN) stringa += "- CLASSIFIED:ND \n\r";
+            else if(pBiopsyExtended->getAdapterId() == _BP_EXT_ADAPTER_A) stringa += "- CLASSIFIED:A \n\r";
+            else if(pBiopsyExtended->getAdapterId() == _BP_EXT_ADAPTER_B) stringa += "- CLASSIFIED:B \n\r";
+            else if(pBiopsyExtended->getAdapterId()== _BP_EXT_ADAPTER_C) stringa += "- CLASSIFIED:C \n\r";
+            else if(pBiopsyExtended->getAdapterId()== _BP_EXT_ADAPTER_SHORT) stringa += "- CLASSIFIED:SHORT \n\r";
+            else stringa = +"- CLASSIFIED:INVALID CODE \n\r";
 
             if(pBiopsyExtended->outPosition) stringa+= "- POSITION STATUS:  OUT-POSITION \n\r";
             else stringa+= "- POSITION STATUS:  POSITIONED \n\r";

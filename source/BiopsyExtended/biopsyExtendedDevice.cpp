@@ -978,16 +978,37 @@ void biopsyExtendedDevice::onConfirmButton(void){
 // Return dmm offset over the 0 point
 int biopsyExtendedDevice::calibrateSh(ushort sh,ushort sh_m15, ushort sh_p15, ushort sh0){
 
+    if(sh <= sh0){
+        return (150 * (sh0-sh))/(sh0-sh_p15);
+    }else{
+        return -((sh-sh0) * 150) /(sh_m15-sh0);
+    }
+}
 
-    float k = (float) 300 / (float) (sh_m15 - sh_p15);
-    float  val = (((float) sh  - (float) sh0) * k);
-    return - (int) val ;
+// Restituisce true in caso di variazione del valore attuale oltre 3 decimi
+bool biopsyExtendedDevice::biopsyExtendedUpdateSh(void){
+    static int  bCalibratedSh = -10;
+    static int  oldcursor = -1000;
+
+    // Ricalcola il valore calibrato in decimi di millimetro
+    curSh_dmm = calibrateSh(curSh_raw, pBiopsy->configExt.sh_m150_level, pBiopsy->configExt.sh_150_level, pBiopsy->configExt.sh_zero_level);
+    if(curSh_dmm != oldcursor){
+        oldcursor = curSh_dmm;
+        ApplicationDatabase.setData(_DB_BIOP_SH,(int) curSh_dmm,0);
+    }
+
+
+    // Aggiorna AWS solo per variazioni consistenti
+    if( (curSh_dmm > bCalibratedSh + 3) || (curSh_dmm < bCalibratedSh - 3)){
+        bCalibratedSh = curSh_dmm;
+        return true;
+    }
+    return false;
 }
 
 void biopsyExtendedDevice::mccStatNotify(unsigned char id_notify,unsigned char cmd, QByteArray data)
 {
-    unsigned char errore;
-    static int              bCalibratedSh = -10;
+    unsigned char errore;    
     static unsigned short Y;
     static bool outOfPosition;
     static uchar manual = 0;
@@ -1077,6 +1098,7 @@ void biopsyExtendedDevice::mccStatNotify(unsigned char id_notify,unsigned char c
     }
 
     //  Riconoscimento dell'adapter
+    rawadapterId = (unsigned short) data.at(_BP_EXT_ID_RAWL) + 256 * data.at(_BP_EXT_ID_RAWH);
     if(adapterId != data.at(_BP_EXT_ADAPTER_ID)){
         adapterId = data.at(_BP_EXT_ADAPTER_ID);
         update_aws = true;
@@ -1089,19 +1111,13 @@ void biopsyExtendedDevice::mccStatNotify(unsigned char id_notify,unsigned char c
     curX_dmm = data.at(_BP_EXT_XL) + 256 * data.at(_BP_EXT_XH) ;
     curY_dmm = data.at(_BP_EXT_YL) + 256 * data.at(_BP_EXT_YH) ;
     curZ_dmm = data.at(_BP_EXT_ZL) + 256 * data.at(_BP_EXT_ZH) ;
-    curSh_raw = data.at(_BP_EXT_SHL) + 256 * data.at(_BP_EXT_SHH) ;
-    curSh_dmm = calibrateSh(curSh_raw, pBiopsy->configExt.sh_m150_level, pBiopsy->configExt.sh_150_level, pBiopsy->configExt.sh_zero_level);
-
-
-
-    if( (curSh_dmm > bCalibratedSh + 5) || (curSh_dmm < bCalibratedSh - 5)){
-        update_aws = true;
-        bCalibratedSh = curSh_dmm;
-    }
     ApplicationDatabase.setData(_DB_BIOP_X,(int) curX_dmm,0);
     ApplicationDatabase.setData(_DB_BIOP_Y,(int) curY_dmm,0);
     ApplicationDatabase.setData(_DB_BIOP_Z,(int) curZ_dmm,0);
-    ApplicationDatabase.setData(_DB_BIOP_SH,(int) curSh_dmm,0);
+
+    // Posizione del cursore del cuneo
+    curSh_raw = data.at(_BP_EXT_SHL) + 256 * data.at(_BP_EXT_SHH) ;
+    if(biopsyExtendedUpdateSh()) update_aws = true;
 
 
     if(movingCommand > _BIOPSY_MOVING_COMPLETED) {

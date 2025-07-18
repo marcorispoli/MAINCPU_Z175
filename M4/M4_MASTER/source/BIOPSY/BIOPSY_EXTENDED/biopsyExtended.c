@@ -129,7 +129,7 @@ void BIOPSY_manageDriverDisconnectedStatus(void){
 
 void BIOPSY_manageDriverConnectedStatus(void){
     static unsigned char slot = 0;
-
+    static unsigned short old_idLevel=0xFFFF;
 
     static int timer_stat = 2000 /_BYM_CONNECTED_STAT_DELAY;
     _time_delay(_BYM_CONNECTED_STAT_DELAY);
@@ -180,6 +180,13 @@ void BIOPSY_manageDriverConnectedStatus(void){
 
         // Gestione needle
         if(!BiopsyDriverGetNeedle(&generalConfiguration.biopsyCfg.adapterId)) return;
+
+        // Evita di triggerare troppo frequentemente il Master
+        if(abs(generalConfiguration.biopsyCfg.adapterId-old_idLevel) > 50){
+            old_idLevel = generalConfiguration.biopsyCfg.adapterId;
+            dati[_BP_EXT_ID_RAWL] = (unsigned char) (generalConfiguration.biopsyCfg.adapterId & 0xff);
+            dati[_BP_EXT_ID_RAWH] = (unsigned char) ((generalConfiguration.biopsyCfg.adapterId >> 8) & 0xff);
+        }
 
         // Conversione valori NEEDLE -> IDENTIFICATORE
 

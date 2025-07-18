@@ -216,27 +216,30 @@ typedef enum
 #define _BP_EXT_MOTION_END      2 // Risultato del movimento appena terminato
 #define _BP_EXT_PUSH_SBLOCCO    3 // Stato del pulsante di sblocco
 #define _BP_EXT_ADAPTER_ID      4 // Codice holder riconosciuto
-#define _BP_EXT_ASSEX_POSITION  5 // Dislocamento asse-X
-#define _BP_EXT_ASSEY_POSITION  6 // Dislocamento asse-Y (1 = Upright)
+#define _BP_EXT_ID_RAWL         5 // Low sensor byte
+#define _BP_EXT_ID_RAWH         6 // High sensor byte
+
+#define _BP_EXT_ASSEX_POSITION  7 // Dislocamento asse-X
+#define _BP_EXT_ASSEY_POSITION  8 // Dislocamento asse-Y (1 = Upright)
 
 // Posizione torretta in dmm
-#define _BP_EXT_XL              7
-#define _BP_EXT_XH              8
-#define _BP_EXT_YL              9
-#define _BP_EXT_YH              10
-#define _BP_EXT_ZL              11
-#define _BP_EXT_ZH              12
-#define _BP_EXT_SHL             13
-#define _BP_EXT_SHH             14
-#define _BP_EXT_MAN             15
+#define _BP_EXT_XL              9
+#define _BP_EXT_XH              10
+#define _BP_EXT_YL              11
+#define _BP_EXT_YH              12
+#define _BP_EXT_ZL              13
+#define _BP_EXT_ZH              14
+#define _BP_EXT_SHL             15
+#define _BP_EXT_SHH             16
+#define _BP_EXT_MAN             17
 
 // Dati per la revisione e checksum
-#define _BP_EXT_CHKH            16
-#define _BP_EXT_CHKL            17
-#define _BP_EXT_REVIS           18
-#define _BP_EXT_MODEL           19
+#define _BP_EXT_CHKH            18
+#define _BP_EXT_CHKL            19
+#define _BP_EXT_REVIS           20
+#define _BP_EXT_MODEL           21
 //______________________________
-#define _BP_EXT_DATA_LEN        20
+#define _BP_EXT_DATA_LEN        22
 
 
 //_____________________________
