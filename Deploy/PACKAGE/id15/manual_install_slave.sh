@@ -1,7 +1,7 @@
 ##############################################################
 # Definizione del Package di riferimento
 ##############################################################
-PKGCODE=ID14
+PKGCODE=ID15
 
 # Definizione delle directory
 HOME=/home/user
