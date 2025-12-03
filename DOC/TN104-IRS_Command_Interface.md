@@ -35,7 +35,8 @@
 |Rev |Date|Change Description|Prepared By|Verified By|Approved By| 
 |:---:| :----: | :----: |:---|:---|:---| 
 |1.0|16/01/2023|Applicable to<br> Z175/ID09| M. Rispoli<br>.|L.Nastasi<br>.|G.B.Peretta<br>.|
-|2.0|20/02/2023|Applicable to<br> Z175/ID11| M. Rispoli<br>.|L.Nastasi<br>.|G.B.Peretta<br>.|
+|1.0|20/02/2023|Applicable to<br> Z175/ID11| M. Rispoli<br>.|L.Nastasi<br>.|G.B.Peretta<br>.|
+|2.0|29/09/2025|Applicable to<br> Z175/ID15| M. Rispoli<br>.|L.Nastasi<br>.|G.B.Peretta<br>.|
 ||||||| 
 
 
@@ -49,10 +50,7 @@
 <br/>
 
 
-+ In the ***config:*** menu it has been added the commands to configure the Gantry Options;
-+ In the ***config:*** menu it has been added the commands *setDemoMode()*;
-+ The menu ***generatore*** has been renamed ***generator:***;
-+ In the menu ***generator:*** it has been added commands for the Manual Exposure;
++ The collimator menu has been modified including new commands to handle the dynamic filter collimation;
 
  <div style="page-break-after: always;"></div>
 
@@ -99,31 +97,37 @@
   - [7.3. COLLIMATOR COMMANDS (collimatore:)](#73-collimator-commands-collimatore)
     - [7.3.1. Collimator configuration](#731-collimator-configuration)
       - [7.3.1.1. ***readColliConf***](#7311-readcolliconf)
-      - [7.3.1.2. ***setCalib2D***](#7312-setcalib2d)
-      - [7.3.1.3. ***setCalibCustom***](#7313-setcalibcustom)
-      - [7.3.1.4. ***getCalib***](#7314-getcalib)
-      - [7.3.1.5. ***STORE***](#7315-store)
-      - [7.3.1.6. ***download***](#7316-download)
-    - [7.3.2. Collimation format activation](#732-collimation-format-activation)
-      - [7.3.2.1. ***getStatus***](#7321-getstatus)
-      - [7.3.2.2. ***setManual***](#7322-setmanual)
-      - [7.3.2.3. ***setAuto***](#7323-setauto)
-      - [7.3.2.4. ***setL***](#7324-setl)
-      - [7.3.2.5. ***setR***](#7325-setr)
-      - [7.3.2.6. ***setF***](#7326-setf)
-      - [7.3.2.7. ***setB***](#7327-setb)
-      - [7.3.2.8. ***setT***](#7328-sett)
-      - [7.3.2.9. ***update***](#7329-update)
-    - [7.3.3. Filter activation commands](#733-filter-activation-commands)
-      - [7.3.3.1. ***setFiltro***](#7331-setfiltro)
-      - [7.3.3.2. ***setCalibFiltro***](#7332-setcalibfiltro)
-    - [7.3.4. Mirror and Light activation commands](#734-mirror-and-light-activation-commands)
-      - [7.3.4.1. ***setMirror***](#7341-setmirror)
-      - [7.3.4.2. ***setLamp***](#7342-setlamp)
-      - [7.3.4.3. ***setCalibMirror***](#7343-setcalibmirror)
-    - [7.3.5. Test commands](#735-test-commands)
-      - [7.3.5.1. ***setTrx***](#7351-settrx)
-      - [7.3.5.2. ***testColli***](#7352-testcolli)
+      - [7.3.1.2. ***storeColliConf***](#7312-storecolliconf)
+      - [7.3.1.3. ***updateColliU1***](#7313-updatecolliu1)
+      - [7.3.1.4. ***updateColliU2***](#7314-updatecolliu2)
+    - [7.3.2. 2D Paddle Collimation calibration](#732-2d-paddle-collimation-calibration)
+      - [7.3.2.1. ***setCalib2D***](#7321-setcalib2d)
+      - [7.3.2.2. ***setCalibCustom***](#7322-setcalibcustom)
+    - [7.3.3. Collimation Format activation](#733-collimation-format-activation)
+      - [7.3.3.1. ***getStatus***](#7331-getstatus)
+      - [7.3.3.2. ***setManual***](#7332-setmanual)
+      - [7.3.3.3. ***setAuto***](#7333-setauto)
+      - [7.3.3.4. ***setL***](#7334-setl)
+      - [7.3.3.5. ***setR***](#7335-setr)
+      - [7.3.3.6. ***setF***](#7336-setf)
+      - [7.3.3.7. ***setB***](#7337-setb)
+      - [7.3.3.8. ***setT***](#7338-sett)
+      - [7.3.3.9. ***update***](#7339-update)
+    - [7.3.4. 2D Filter activation and calibration](#734-2d-filter-activation-and-calibration)
+      - [7.3.4.1. ***selectFiltro***](#7341-selectfiltro)
+      - [7.3.4.2. ***setFilterPosition***](#7342-setfilterposition)
+    - [7.3.5. Dynamic Filter activation calibration](#735-dynamic-filter-activation-calibration)
+      - [7.3.5.1. ***getTomoFilterConfig***](#7351-gettomofilterconfig)
+      - [7.3.5.2. ***enableTomoFilter***](#7352-enabletomofilter)
+      - [7.3.5.3. ***adjustNominalFilterPosition***](#7353-adjustnominalfilterposition)
+      - [7.3.5.4. ***setFilterChangeAngles***](#7354-setfilterchangeangles)
+    - [7.3.6. Mirror and Light activation commands](#736-mirror-and-light-activation-commands)
+      - [7.3.6.1. ***setMirror***](#7361-setmirror)
+      - [7.3.6.2. ***setLamp***](#7362-setlamp)
+      - [7.3.6.3. ***setCalibMirror***](#7363-setcalibmirror)
+    - [7.3.7. Test commands](#737-test-commands)
+      - [7.3.7.1. ***setTrx***](#7371-settrx)
+      - [7.3.7.2. ***testColli***](#7372-testcolli)
   - [7.4. COMPRESSOR COMMANDS (compressore:)](#74-compressor-commands-compressore)
     - [7.4.1. Configuration File Modification](#741-configuration-file-modification)
       - [7.4.1.1. ***readPadConfig***](#7411-readpadconfig)
@@ -591,9 +595,33 @@ shall be: slave_***backup_name***.tar;
 
 ***The command doesn't update the Devices. Use the download command (see below)***
 
+#### 7.3.1.2. ***storeColliConf***
 
+|COMMAND|
+|---|
+|**storeColliConf** |
+|**DESCRIPTION**|
+|Stores the Collimator configuration file |
 
-#### 7.3.1.2. ***setCalib2D***
+#### 7.3.1.3. ***updateColliU1***
+
+|COMMAND|
+|---|
+|**updateColliU1** |
+|**DESCRIPTION**|
+|Updates the microcontroller U1 with the current calibration parameters related to that microcontroller |
+
+#### 7.3.1.4. ***updateColliU2***
+
+|COMMAND|
+|---|
+|**updateColliU2** |
+|**DESCRIPTION**|
+|Updates the microcontroller U2 with the current calibration parameters related to that microcontroller |
+
+### 7.3.2. 2D Paddle Collimation calibration
+
+#### 7.3.2.1. ***setCalib2D***
 
 |COMMAND|
 |---|
@@ -623,7 +651,7 @@ shall be: slave_***backup_name***.tar;
 + Back is the back collimation blade position: 0 to 255;
 + Trap: is the Trap collimation blade position: 0 to 255;
 
-#### 7.3.1.3. ***setCalibCustom***
+#### 7.3.2.2. ***setCalibCustom***
 
 |COMMAND|
 |---|
@@ -637,39 +665,12 @@ shall be: slave_***backup_name***.tar;
 + Back is the back collimation blade position: 0 to 255;
 + Trap: is the Trap collimation blade position: 0 to 255;
 
-#### 7.3.1.4. ***getCalib***
 
-|COMMAND|
-|---|
-|**getCalib**|
-|**DESCRIPTION**|
-|Return the current content value of the collimation parameter|
-
-
-***The command returns the memory content, not the configuration file!***
-
-
-#### 7.3.1.5. ***STORE***
-
-|COMMAND|
-|---|
-|**STORE** |
-|**DESCRIPTION**|
-|Store the current collimator parameters from memory to the configuration file |
-
-#### 7.3.1.6. ***download***
-
-|COMMAND|
-|---|
-|**download** |
-|**DESCRIPTION**|
-|Download the collimator parameters to the COllimator device (PCB249U1 and U2) |
-
-### 7.3.2. Collimation format activation
+### 7.3.3. Collimation Format activation
 
 The following commands allow to control the Collimator Device bypassing the Gantry
 
-#### 7.3.2.1. ***getStatus***
+#### 7.3.3.1. ***getStatus***
 
 |COMMAND|
 |---|
@@ -685,7 +686,7 @@ Returned string description:
 When the Collimation type is AUTOMATICA then the Gantry controls the collimation.
 When the Collimation type is MANUALE then the collimation is controlled manually by IRS commands.
 
-#### 7.3.2.2. ***setManual***
+#### 7.3.3.2. ***setManual***
 
 |COMMAND|
 |---|
@@ -695,7 +696,7 @@ When the Collimation type is MANUALE then the collimation is controlled manually
 
 ***The Filter setting remains in Automatic mode!!***
 
-#### 7.3.2.3. ***setAuto***
+#### 7.3.3.3. ***setAuto***
 
 |COMMAND|
 |---|
@@ -704,7 +705,7 @@ When the Collimation type is MANUALE then the collimation is controlled manually
 |Set both the Filter and the Collimation format in Auto mode |
 
 
-#### 7.3.2.4. ***setL***
+#### 7.3.3.4. ***setL***
 
 |COMMAND|
 |---|
@@ -714,7 +715,7 @@ When the Collimation type is MANUALE then the collimation is controlled manually
 
 *** This position is valid only in Manual Mode and it is updated only after the command -update-***
 
-#### 7.3.2.5. ***setR***
+#### 7.3.3.5. ***setR***
 
 |COMMAND|
 |---|
@@ -724,7 +725,7 @@ When the Collimation type is MANUALE then the collimation is controlled manually
 
 *** This position is valid only in Manual Mode and it is updated only after the command -update-***
 
-#### 7.3.2.6. ***setF***
+#### 7.3.3.6. ***setF***
 
 |COMMAND|
 |---|
@@ -734,7 +735,7 @@ When the Collimation type is MANUALE then the collimation is controlled manually
 
 *** This position is valid only in Manual Mode and it is updated only after the command -update-***
 
-#### 7.3.2.7. ***setB***
+#### 7.3.3.7. ***setB***
 
 |COMMAND|
 |---|
@@ -744,7 +745,7 @@ When the Collimation type is MANUALE then the collimation is controlled manually
 
 *** This position is valid only in Manual Mode and it is updated only after the command -update-***
 
-#### 7.3.2.8. ***setT***
+#### 7.3.3.8. ***setT***
 
 |COMMAND|
 |---|
@@ -754,7 +755,7 @@ When the Collimation type is MANUALE then the collimation is controlled manually
 
 *** This position is valid only in Manual Mode and it is updated only after the command -update-***
 
-#### 7.3.2.9. ***update***
+#### 7.3.3.9. ***update***
 
 |COMMAND|
 |---|
@@ -763,17 +764,17 @@ When the Collimation type is MANUALE then the collimation is controlled manually
 |Update the collimator device with the current left, right, front, back and trap manual blade positions |
 
 
-### 7.3.3. Filter activation commands
+### 7.3.4. 2D Filter activation and calibration
 
 The following commands allow to control the Filter selection and calibration
 
-#### 7.3.3.1. ***setFiltro***
+#### 7.3.4.1. ***selectFiltro***
 
 |COMMAND|
 |---|
-|**setFiltro** filterType|
+|**selectFiltro** filterType|
 |**DESCRIPTION**|
-|Set the current filter position to the filterType |
+|Selects the current filter from the Matter code |
 
 + The filter type is one of those tags:
   + Ag;
@@ -783,13 +784,13 @@ The following commands allow to control the Filter selection and calibration
 
 ***NOTE: after this command the filter is set in Manual mode. To reset the manual mode uses setAuto command***
 
-#### 7.3.3.2. ***setCalibFiltro***
+#### 7.3.4.2. ***setFilterPosition***
 
 |COMMAND|
 |---|
-|**setCalibFiltro** filterType Position|
+|**setFilterPosition** filterType Position|
 |**DESCRIPTION**|
-|Set the position of the FilterType|
+|Set the calibrated position of the FilterType|
 
 + The filter type is one of those tags:
   + Ag;
@@ -799,14 +800,69 @@ The following commands allow to control the Filter selection and calibration
 
 + The Position: is the current position of the filter (0:255)
 
-***NOTE: this command changes only the memory not the configuration File. Use the command STORE to update the configuration File***
+***NOTE: this command changes only the memory not the configuration File. Use the command storeColliConf to update the configuration File***
 
-### 7.3.4. Mirror and Light activation commands
+### 7.3.5. Dynamic Filter activation calibration
+This section controls the filter position follower when in Tomo.
+
+#### 7.3.5.1. ***getTomoFilterConfig***
+
+|COMMAND|
+|---|
+|**getTomoFilterConfig** |
+|**DESCRIPTION**|
+|returns the current dynamic filter parameters|
+
+The following strings will be displayed:
++ *Inseguimento filtro: abilitato* -> The dynamic filter is activated;
++ *Inseguimento filtro: disabilitato* -> The dynamic filter is not active;
++ *Correzione posizione: xxx* -> This is the current Adjust position value;
++ *Angoli avanzamento: chg0, chg1, chg2, chg3, chg4, chg5* -> This is the current change angle vector set;
+
+#### 7.3.5.2. ***enableTomoFilter***
+
+|COMMAND|
+|---|
+|**enableTomoFilter** param|
+|**DESCRIPTION**|
+|Acivates/Deactivates the filter dynamic feature|
+
++ param = ON -> Activates the dynamic filter;
++ param = OFF -> Deactivates the dynamic filter;
+
+***NOTE: the configuration file and the device microcontroller U2 are updated after this command!***
+
+#### 7.3.5.3. ***adjustNominalFilterPosition***
+
+|COMMAND|
+|---|
+|**adjustNominalFilterPosition** adj|
+|**DESCRIPTION**|
+|sets the position correction value applied to the initial filter position|
+
++ adj: signed value (positive/negative) changing the initial position of the filter.
+  
+***NOTE: the configuration file and the device microcontroller U2 are updated after this command!***
+
+#### 7.3.5.4. ***setFilterChangeAngles***
+
+|COMMAND|
+|---|
+|**setFilterChangeAngles** chg0 chg1 chg2 chg3 chg4 chg5|
+|**DESCRIPTION**|
+|sets the array of the filter change angles, in order from negativ to positive|
+
++ chg0 to chg5: signed value, in the range of [-27 to 27]
+  
+***NOTE: the configuration file and the device microcontroller U2 are updated after this command!***
+
+
+### 7.3.6. Mirror and Light activation commands
 
 The following commands allow to control the Mirror position and the Light state.
 
 
-#### 7.3.4.1. ***setMirror***
+#### 7.3.6.1. ***setMirror***
 
 |COMMAND|
 |---|
@@ -815,7 +871,7 @@ The following commands allow to control the Mirror position and the Light state.
 |Set the Mirror to one of the status: OUT or HOME|
 
 
-#### 7.3.4.2. ***setLamp***
+#### 7.3.6.2. ***setLamp***
 
 |COMMAND|
 |---|
@@ -823,7 +879,7 @@ The following commands allow to control the Mirror position and the Light state.
 |**DESCRIPTION**|
 |Set the Lamp to one of the status: ON or OFF|
 
-#### 7.3.4.3. ***setCalibMirror***
+#### 7.3.6.3. ***setCalibMirror***
 
 |COMMAND|
 |---|
@@ -833,11 +889,11 @@ The following commands allow to control the Mirror position and the Light state.
 
 ***NOTE: this command changes only the memory not the configuration File. Use the command STORE to update the configuration File***
 
-### 7.3.5. Test commands
+### 7.3.7. Test commands
 
 The following commands help to test the collimator device.
 
-#### 7.3.5.1. ***setTrx***
+#### 7.3.7.1. ***setTrx***
 
 |COMMAND|
 |---|
@@ -845,7 +901,7 @@ The following commands help to test the collimator device.
 |**DESCRIPTION**|
 |Move the Tube to a target angle|
 
-#### 7.3.5.2. ***testColli***
+#### 7.3.7.2. ***testColli***
 
 |COMMAND|
 |---|
