@@ -201,6 +201,12 @@ void Compressor::setConfigDefault(void){
     config.pads[PAD_BIOP_3D].kF = 10;
     config.pads[PAD_BIOP_3D].peso = 30;
 
+    // Funzioni speciali
+
+    // Non viene salvata nel file di configurazione
+    // Ma viene passata al driver copiando il valore
+    // caricato dal file user.cnf durante la fase di configurazione
+    config.free_unlock_compressor = false;
 }
 
 

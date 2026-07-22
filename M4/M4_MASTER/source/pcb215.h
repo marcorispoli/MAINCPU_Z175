@@ -236,4 +236,8 @@ Data Ultima Modifica:17/09/2014
   ext void pcb215ActivateCalibMode(bool status);                // Forza l'ingresso/uscita dal modo calibrazione
   ext bool pcb215ResetBoard(void);
   ext int pcb215GetSpessoreNonCompresso(void); // Richiede la posizione del compressore anche se non in compressione
+
+  ext void pcb215XrayFreeSblocco(void);
+  ext bool pcb215FreeSblocco(void);
+
 #endif

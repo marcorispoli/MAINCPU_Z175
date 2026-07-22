@@ -110,6 +110,9 @@ typedef struct
     int  tempCuffiaAlr ;         // <TEMPCUFFIA_ON,51>        Attivazione allarme cuffia
     int  tempCuffiaAlrOff ;      // <TEMPCUFFIA_OFF,45>       Disattivazione allarme cuffia
 
+    // Customizzazioni
+    bool enableFreeUnlockCompression; // Abilita lo sblocco anche quando non c'è compressione (minmo movimento up)
+
     QString tubeFileName;           // Nome del file con la configurazione del Tubo utilizzato
     QString languageInterface;   // linguaggio dell'interfaccia grafica    
     QString SN;                  // Seriale macchina
