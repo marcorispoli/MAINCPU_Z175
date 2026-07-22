@@ -153,6 +153,10 @@ typedef struct
     // Configurazione riconoscimento nacchera
     unsigned char  thresholds[10];
 
+    // Decompressione libera
+    bool free_unlock_compressor;
+    bool spare_param;
+
 }compressoreCnf_Str;
 
 

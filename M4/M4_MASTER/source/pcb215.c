@@ -446,6 +446,11 @@ Data: 18/09/2014
 //////////////////////////////////////////////////////////////////////////////
 bool pcb215SetSblocco()
 {
+
+  // Funzione di sblocco speciale
+  if(generalConfiguration.comprCfg.calibration.free_unlock_compressor)
+      return pcb215FreeSblocco();
+
   _Ser422_Command_Str frame;
 
   // Sospende il driver bloccando la mutex del polling
@@ -458,7 +463,7 @@ bool pcb215SetSblocco()
     _mutex_unlock(&(CONTEST.pollinglist_mutex));
     return TRUE;
   }
-  
+
   // Prepara il comando di sblocco
   frame.address = TARGET_ADDRESS;
   frame.attempt = 4;
@@ -499,6 +504,10 @@ bool pcb215SetSblocco()
 // Il sistema DEVE essere in IDLE duraNTE RAGGI..
 void pcb215SetXRaySblocco(void)
 {
+    // Funzione di sblocco speciale
+    if(generalConfiguration.comprCfg.calibration.free_unlock_compressor)
+        return pcb215XrayFreeSblocco();
+
   _Ser422_Command_Str frame;
 
   // Prepara il comando di sblocco
@@ -511,6 +520,70 @@ void pcb215SetXRaySblocco(void)
   frame.data2=_CMD2(PCB215_SET_SBLOCCO);
   Ser422Send(&frame, SER422_BLOCKING,CONTEST.ID);
   return ;  
+}
+
+bool pcb215FreeSblocco(void){
+    _Ser422_Command_Str frame;
+
+    // Sospende il driver bloccando la mutex del polling
+    // Il driver si blocca esattamente dopo aver letto i registri di stato
+    _mutex_lock(&(CONTEST.pollinglist_mutex));
+
+    // Verifica che non sia già sbloccato o in sblocco ..
+    if(_TEST_BIT(PCB215_SBLOCCO))
+    {
+      _mutex_unlock(&(CONTEST.pollinglist_mutex));
+      return TRUE;
+    }
+
+    // Prepara il comando di sblocco
+    frame.address = TARGET_ADDRESS;
+    frame.attempt = 4;
+    frame.cmd=SER422_COMMAND;
+
+    // Verifica se si trova in IDLE
+    if(!_TEST_BIT(PCB215_IDLE))
+    {
+      // Invia il comando di IDLE come condizione necessaria
+      frame.data1=_CMD1(PCB215_SET_IDLE);
+      frame.data2=_CMD2(PCB215_SET_IDLE);
+      Ser422Send(&frame, SER422_BLOCKING,CONTEST.ID);
+      if(frame.retcode!=SER422_COMMAND_OK)
+      {
+        _mutex_unlock(&(CONTEST.pollinglist_mutex));
+        return FALSE;
+      }
+    }
+
+    // Invia il comando di SBLOCCO che ora deve essere accettato
+    frame.data1=_CMD1(PCB215_MOVE_UP);
+    frame.data2=255; // 5 cm di sblocco
+    Ser422Send(&frame, SER422_BLOCKING,CONTEST.ID);
+    if(frame.retcode!=SER422_COMMAND_OK)
+    {
+      _mutex_unlock(&(CONTEST.pollinglist_mutex));
+      return FALSE;
+    }
+
+    // Sblocca il driver ed attende il tempo necessario di
+    // vedere il comando attivo sui registri opportuni
+    _mutex_unlock(&(CONTEST.pollinglist_mutex));
+    return TRUE;
+}
+
+void pcb215XrayFreeSblocco(void){
+    _Ser422_Command_Str frame;
+
+    // Prepara il comando di sblocco
+    frame.address = TARGET_ADDRESS;
+    frame.attempt = 4;
+    frame.cmd=SER422_COMMAND;
+
+    // Invia il comando di SBLOCCO che ora deve essere accettato
+    frame.data1=_CMD1(PCB215_MOVE_UP);
+    frame.data2=255;
+    Ser422Send(&frame, SER422_BLOCKING,CONTEST.ID);
+    return ;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -1489,6 +1562,11 @@ void pcb215PrintConfig(void){
     printf("THRESHOLD[%d]=%d\n",i, generalConfiguration.comprCfg.calibration.thresholds[i]);
   }
 
+  // Funzioni speciali
+  if( generalConfiguration.comprCfg.calibration.free_unlock_compressor) printf("FREE UNLOCK COMPRESSOR ENABLED\n");
+  else printf("STANDARD UNLOCK COMPRESSOR\n");
+
+
   printf("---------------------------------------------------\n");
 
   
@@ -1516,7 +1594,6 @@ bool config_pcb215(bool setmem, unsigned char blocco, unsigned char* buffer, uns
   if(Ser422WriteRegister(_REGID(COMPRESSOR_POS_OFS), generalConfiguration.comprCfg.calibration.calibPosOfs,10,&CONTEST)!=_SER422_NO_ERROR) return false;
   if(Ser422WriteRegister(_REGID(COMPRESSOR_POS_K), generalConfiguration.comprCfg.calibration.calibPosK,10,&CONTEST)!=_SER422_NO_ERROR) return false;
   if(Ser422WriteRegister(_REGID(COMPRESSOR_STR_K), 0,10,&CONTEST)!=_SER422_NO_ERROR) return false;
-  if(Ser422WriteRegister(_REGID(COMPRESSION_LIMIT),  generalConfiguration.comprCfg.calibration.max_compression_force,10,&CONTEST)!=_SER422_NO_ERROR) return false;
 
   if(Ser422WriteRegister(_REGID(COMPRESSOR_F0), generalConfiguration.comprCfg.calibration.F0,10,&CONTEST)!=_SER422_NO_ERROR) return false;
   if(Ser422WriteRegister(_REGID(COMPRESSOR_KF0), generalConfiguration.comprCfg.calibration.KF0,10,&CONTEST)!=_SER422_NO_ERROR) return false;
@@ -1524,7 +1601,7 @@ bool config_pcb215(bool setmem, unsigned char blocco, unsigned char* buffer, uns
   if(Ser422WriteRegister(_REGID(COMPRESSOR_KF1), generalConfiguration.comprCfg.calibration.KF1,10,&CONTEST)!=_SER422_NO_ERROR) return false;
   if(Ser422WriteRegister(_REGID(POSITION_PAD_TARA), 0,10,&CONTEST)!=_SER422_NO_ERROR) return false;
   if(Ser422WriteRegister(_REGID(POSITION_LOW_MODO_0), 30,10,&CONTEST)!=_SER422_NO_ERROR) return false;
-  if(Ser422WriteRegister(_REGID(COMPRESSION_LIMIT), 200,10,&CONTEST)!=_SER422_NO_ERROR) return false;
+  if(Ser422WriteRegister(_REGID(COMPRESSION_LIMIT),  generalConfiguration.comprCfg.calibration.max_compression_force,10,&CONTEST)!=_SER422_NO_ERROR) return false;
 
   return true;
 }

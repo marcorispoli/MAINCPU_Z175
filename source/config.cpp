@@ -403,6 +403,8 @@ bool Config::openUserCfg(void)
     userCnf.tempCuffiaAlr = 52;     // Set allarme cuffia
     userCnf.tempCuffiaAlrOff = 45;  // Reset Allarme cuffia
 
+    // Gruppo custom
+    userCnf.enableFreeUnlockCompression = false;
 
     // Gruppo Speciali
     userCnf.demoMode = false;   
@@ -505,6 +507,13 @@ bool Config::openUserCfg(void)
             else SN_Configured=false;
         }else if(dati.at(0)=="PASSWD"){
             userCnf.ServicePassword = dati.at(1);
+        }else if(dati.at(0)=="FREE_UNLOCK_COMPRESSOR"){
+            if(dati.at(1)=="1") {
+                userCnf.enableFreeUnlockCompression = TRUE;
+            } else{
+                userCnf.enableFreeUnlockCompression = FALSE;
+            }
+
         }
 
     }
@@ -583,6 +592,10 @@ bool Config::saveUserCfg(void)
 
     frame = QString("<TEMPCUFFIA_OFF,%1>  //  Temperatura allarme cuffia reset\n").arg(userCnf.tempCuffiaAlrOff);
     file.write(frame.toAscii().data());
+
+    // GRUPPO CUSTOM
+    if(userCnf.enableFreeUnlockCompression) file.write("<FREE_UNLOCK_COMPRESSOR,1>    // Enable/Disable Sblocco in libera\n");
+    else file.write("<FREE_UNLOCK_COMPRESSOR,0>    // Enable/Disable Sblocco in libera\n");
 
     // GRUPPO SPECIALI --------------------------------------------------------------------------------------------------------
     if(userCnf.demoMode) file.write("<DEMO,1>    //  Attivazione/Disattivazione modalitÃ  demo\n");
@@ -1558,6 +1571,10 @@ bool Config::sendMccConfigCommand(unsigned char cmd){
             buflen += sizeof(pcb190Conf_Str);
         break;
         case CONFIG_PCB269_0:
+            // Con il primo blocco viene anche copiato il valore relativo
+            // allo sblocco speciale
+            pCompressore->config.free_unlock_compressor = userCnf.enableFreeUnlockCompression;
+
             memcpy(pData, (unsigned char*) (&pCompressore->config), (_MCC_DIM-2));
             buflen = _MCC_DIM;
         break;

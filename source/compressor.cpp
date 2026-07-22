@@ -201,6 +201,12 @@ void Compressor::setConfigDefault(void){
     config.pads[PAD_BIOP_3D].kF = 10;
     config.pads[PAD_BIOP_3D].peso = 30;
 
+    // Funzioni speciali
+
+    // Non viene salvata nel file di configurazione
+    // Ma viene passata al driver copiando il valore
+    // caricato dal file user.cnf durante la fase di configurazione
+    config.free_unlock_compressor = false;
 }
 
 
@@ -282,7 +288,7 @@ void Compressor::readCompressorConfigFile(void){
             config.KF1  = dati.at(4).toUShort();
             config.max_compression_force = dati.at(5).toUShort();
             if(config.max_compression_force > 200) config.max_compression_force=200;
-            else if(config.max_compression_force < 70) config.max_compression_force=70;
+            else if(config.max_compression_force < 30) config.max_compression_force=30;
 
         }else  if(dati.at(0)=="PAD24x30"){
             config.pads[PAD_24x30].offset = dati.at(1).toInt();

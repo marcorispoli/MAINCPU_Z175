@@ -599,6 +599,7 @@ void serverDebug::handleConfig(QByteArray data)
         serviceTcp->txData(QByteArray("setHsStarter     [ON/OFF]   ON=HS Starter OFF=LS Starter \r\n"));
         serviceTcp->txData(QByteArray("setArmMotor      [ON/OFF]   ON=ARM with motor OFF=ARM without motor \r\n"));
         serviceTcp->txData(QByteArray("setTrxMotor      [ON/OFF]   ON=TRX with motor OFF=No TRX \r\n"));
+        serviceTcp->txData(QByteArray("setFreeUnlock    [ON/OFF]   ON=FreeUnlock Enabled, OFF=FreeUnlock Disabled \r\n"));
 
         serviceTcp->txData(QByteArray("setDemoMode       [ON/OFF]   ON=Activate Demo OFF=Clear Demo \r\n"));
         serviceTcp->txData(QByteArray("enableAccessory   [ON/OFF]   ON=Enabled OFF=Disabled \r\n"));
@@ -653,6 +654,24 @@ void serverDebug::handleConfig(QByteArray data)
             serviceTcp->txData(QByteArray("NO TRX. Request a system reboot!!\n\r"));
             pConfig->saveSysCfg();
         }
+    }else if(data.contains("setFreeUnlock")){
+        if(data.contains("ON")) {
+            pConfig->userCnf.enableFreeUnlockCompression = 1;
+            serviceTcp->txData(QByteArray("Free Unlock Mode Enabled.\n\rThe User.cnf config file and the Compressor are updated.\n\r"));
+        }else if(data.contains("OFF")){
+            pConfig->userCnf.enableFreeUnlockCompression = 0;
+            serviceTcp->txData(QByteArray("Free Unlock Mode Disabled.\n\rThe User.cnf config file and the Compressor are updated.\n\r"));
+        }else {
+             serviceTcp->txData(QByteArray("PARAM ERROR: ON/OFF are valid parameters !!!! \n\r"));
+             return;
+        }
+
+        // Salva file di configurazione
+        pConfig->saveUserCfg();
+
+        // Forza aggiornamento Drivers e Compressore
+        pConfig->updatePCB269();
+
     }else if(data.contains("enableAccessory")){
                 if(data.contains("ON")) {
                     pConfig->userCnf.enableCheckAccessorio = 1;
@@ -1054,7 +1073,7 @@ void serverDebug::handleCompressore(QByteArray data)
         serviceTcp->txData(QByteArray("getCalibPad:                 restituisce valore calibrazione pad corrente \r\n"));
         serviceTcp->txData(QByteArray("setThick: <val>              corregge spessore alla compressione corrente \r\n"));
         serviceTcp->txData(QByteArray("setKF: <val>                 imposta coefficiente di flessione spessore\r\n"));
-        serviceTcp->txData(QByteArray("setLimitForce: <val>         imposta max compressione (range 70:200) \r\n"));
+        serviceTcp->txData(QByteArray("setLimitForce: <val>         imposta max compressione (range 30:200) \r\n"));
         serviceTcp->txData(QByteArray("setWeight: <val>             imposta Tara Paddle in (N) \r\n"));
 
         serviceTcp->txData(QByteArray("getTrolley                   Restituisce posizione trolley \r\n"));
@@ -1118,8 +1137,8 @@ void serverDebug::handleCompressore(QByteArray data)
             serviceTcp->txData(QByteArray("ERROR: the limit force cannot exceed 200N!\n\r"));
             return;
         }
-        if(parametri[0].toInt() < 70){
-            serviceTcp->txData(QByteArray("ERROR: the limit force cannot be lower than 70N!\n\r"));
+        if(parametri[0].toInt() < 30){
+            serviceTcp->txData(QByteArray("ERROR: the limit force cannot be lower than 30N!\n\r"));
             return;
         }
 
