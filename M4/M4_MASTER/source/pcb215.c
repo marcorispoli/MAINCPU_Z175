@@ -557,7 +557,7 @@ bool pcb215FreeSblocco(void){
 
     // Invia il comando di SBLOCCO che ora deve essere accettato
     frame.data1=_CMD1(PCB215_MOVE_UP);
-    frame.data2=50; // 5 cm di sblocco
+    frame.data2=255; // 5 cm di sblocco
     Ser422Send(&frame, SER422_BLOCKING,CONTEST.ID);
     if(frame.retcode!=SER422_COMMAND_OK)
     {
@@ -581,7 +581,7 @@ void pcb215XrayFreeSblocco(void){
 
     // Invia il comando di SBLOCCO che ora deve essere accettato
     frame.data1=_CMD1(PCB215_MOVE_UP);
-    frame.data2=50;
+    frame.data2=255;
     Ser422Send(&frame, SER422_BLOCKING,CONTEST.ID);
     return ;
 }
