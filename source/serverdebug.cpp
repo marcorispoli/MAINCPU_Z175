@@ -1074,6 +1074,7 @@ void serverDebug::handleCompressore(QByteArray data)
         serviceTcp->txData(QByteArray("setThick: <val>              corregge spessore alla compressione corrente \r\n"));
         serviceTcp->txData(QByteArray("setKF: <val>                 imposta coefficiente di flessione spessore\r\n"));
         serviceTcp->txData(QByteArray("setLimitForce: <val>         imposta max compressione (range 30:200) \r\n"));
+        serviceTcp->txData(QByteArray("setMinTarget: <val>          imposta il minimo valore del target di compressione(range 30:200) \r\n"));
         serviceTcp->txData(QByteArray("setWeight: <val>             imposta Tara Paddle in (N) \r\n"));
 
         serviceTcp->txData(QByteArray("getTrolley                   Restituisce posizione trolley \r\n"));
@@ -1144,6 +1145,28 @@ void serverDebug::handleCompressore(QByteArray data)
 
         // Salva il valore, aggiorna il file di configurazione e aggiorna la periferica
         pCompressore->config.max_compression_force = parametri[0].toInt();
+        pCompressore->storeConfigFile();
+        pConfig->updatePCB269();
+
+        serviceTcp->txData(QByteArray("Pad Configuration file and peripheral device updated!\n\r"));
+        return;
+    }else if(data.contains("setMinTarget"))
+    {
+        QList<QByteArray> parametri;
+
+        parametri = getNextFieldsAfterTag(data, QString("setMinTarget"));
+        if(parametri.size()!=1) serviceTcp->txData(QByteArray("WRONG PARAMETER!\n\r"));
+        if(parametri[0].toInt() > 200){
+            serviceTcp->txData(QByteArray("ERROR: the min target force cannot exceed 200N!\n\r"));
+            return;
+        }
+        if(parametri[0].toInt() < 30){
+            serviceTcp->txData(QByteArray("ERROR: the min target force cannot be lower than 30N!\n\r"));
+            return;
+        }
+
+        // Salva il valore, aggiorna il file di configurazione e aggiorna la periferica
+        pCompressore->config.min_compression_target = parametri[0].toInt();
         pCompressore->storeConfigFile();
         pConfig->updatePCB269();
 

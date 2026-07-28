@@ -100,10 +100,11 @@ Data Ultima Modifica:17/09/2014
   #define COMPRESSION_THRESHOLD_L 24,14+0xA0  ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0
   #define COMPRESSION_TARGET    25,35+0xA0  ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0
   #define COMPRESSION_LIMIT     26,36+0xA0  ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0
-  #define RG215_PEDALS          27,0x6d     ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0
+  #define COMPRESSION_MIN_TARGET     27,42+0xA0  ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0
+  #define RG215_PEDALS          28,0x6d     ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0
 
 
-  #define PCB215_NREGISTERS     28
+  #define PCB215_NREGISTERS     29
 
   //////////////////////////////////////////////////////////////////////////////
   // ATTIVAZIONE DEI REGISTRI
@@ -155,6 +156,7 @@ Data Ultima Modifica:17/09/2014
    _REGDEF(COMPRESSION_THRESHOLD_L),
    _REGDEF(COMPRESSION_TARGET),
    _REGDEF(COMPRESSION_LIMIT),
+   _REGDEF(COMPRESSION_MIN_TARGET),
    _REGDEF(RG215_PEDALS)
   
   }; 

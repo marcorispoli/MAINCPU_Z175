@@ -1,9 +1,9 @@
-<PACKAGE,15>  //  Revisione Package corrente
-<FILENAME,PACKAGE_ID15.tar>  //  file package istallato
-<MASTER,1.11>  //  Revisione GUI Master
-<SLAVE,1.11>  //  Revisione GUI Slave
-<M4_MASTER,1.10>  //  Revisione M4 Master
-<M4_SLAVE,1.8>  //  Revisione M4 Slave
+<PACKAGE,16>  //  Revisione Package corrente
+<FILENAME,PACKAGE_ID16.tar>  //  file package istallato
+<MASTER,1.12>  //  Revisione GUI Master
+<SLAVE,1.12>  //  Revisione GUI Slave
+<M4_MASTER,1.11>  //  Revisione M4 Master
+<M4_SLAVE,1.9>  //  Revisione M4 Slave
 <LANGUAGE,1.0>  //  language package istallato
 <PCB269,1.2>  //  Revisione PCB215
 <PCB190,3.5>  //  Revisione PCB190

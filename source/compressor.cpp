@@ -207,6 +207,7 @@ void Compressor::setConfigDefault(void){
     // Ma viene passata al driver copiando il valore
     // caricato dal file user.cnf durante la fase di configurazione
     config.free_unlock_compressor = false;
+    config.min_compression_target = 60;
 }
 
 
@@ -278,6 +279,10 @@ void Compressor::readCompressorConfigFile(void){
         if(dati.at(0)=="REVISION"){
             // COMPRESSOR_CONFIG_FILE_RELEASE
 
+        }else  if(dati.at(0)=="TARGET"){
+            unsigned short  val = dati.at(1).toUShort();
+            config.min_compression_target = (unsigned char) val;
+            if(config.min_compression_target < 30) config.min_compression_target = 30;
         }else  if(dati.at(0)=="POSITION"){
             config.calibPosOfs = dati.at(1).toUShort();
             config.calibPosK = dati.at(2).toUShort();
@@ -389,6 +394,9 @@ void Compressor::storeConfigFile(void){
     file.write(frame.toAscii().data());
 
     frame = QString("<FORCE,%1,%2,%3,%4,%5>\n").arg(config.F0).arg(config.KF0).arg(config.F1).arg(config.KF1).arg(config.max_compression_force);
+    file.write(frame.toAscii().data());
+
+    frame = QString("<TARGET,%1>\n").arg((unsigned char) config.min_compression_target);
     file.write(frame.toAscii().data());
 
     int padcode = PAD_24x30;

@@ -47,7 +47,8 @@ static bool pcb215_startup = true;
 #define THRESHOLD_NO_PAD 15 // (N) Soglia di compressione senza il PAD riconosciuto
 #define THRESHOLD_CC     30 // (N) Soglia di compressione in zona CC
 #define THRESHOLD_INCL   60 // (N) Soglia di compressione in zona angolata
-#define THRESHOLD_ANG    50 // (°) Soglia per la definizione di area angolata     
+#define THRESHOLD_ANG    50 // (°)
+
 
 //////////////////////////////////////////////////////////////////////////////
 /*
@@ -1602,6 +1603,21 @@ bool config_pcb215(bool setmem, unsigned char blocco, unsigned char* buffer, uns
   if(Ser422WriteRegister(_REGID(POSITION_PAD_TARA), 0,10,&CONTEST)!=_SER422_NO_ERROR) return false;
   if(Ser422WriteRegister(_REGID(POSITION_LOW_MODO_0), 30,10,&CONTEST)!=_SER422_NO_ERROR) return false;
   if(Ser422WriteRegister(_REGID(COMPRESSION_LIMIT),  generalConfiguration.comprCfg.calibration.max_compression_force,10,&CONTEST)!=_SER422_NO_ERROR) return false;
+  if(Ser422WriteRegister(_REGID(COMPRESSION_MIN_TARGET),  generalConfiguration.comprCfg.calibration.min_compression_target,10,&CONTEST)!=_SER422_NO_ERROR) return false;
+
+  // Legge il valore del target di compressione e lo aggiorna se tale valore è maggiore del massimo o minore del minimo
+  Ser422ReadRegister(_REGID(COMPRESSION_TARGET),4,&CONTEST);
+
+  unsigned char val =  _DEVREGL(COMPRESSION_TARGET,CONTEST);
+  if(val > generalConfiguration.comprCfg.calibration.max_compression_force)
+      val = generalConfiguration.comprCfg.calibration.max_compression_force;
+  else if(val < generalConfiguration.comprCfg.calibration.min_compression_target)
+      val = generalConfiguration.comprCfg.calibration.min_compression_target;
+
+  if(val != _DEVREGL(COMPRESSION_TARGET,CONTEST)){
+      if(Ser422WriteRegister(_REGID(COMPRESSION_TARGET),  val,10,&CONTEST)!=_SER422_NO_ERROR) return false;
+  }
+
 
   return true;
 }

@@ -1,15 +1,20 @@
 #ifndef _DBT_M4_H
 #define _DBT_M4_H
 
-#define REVISIONE "1.10.0"
+#define REVISIONE "1.11.0"
 #define REVMAJ 1
-#define REVMIN 10
+#define REVMIN 11
 #define REV_BETA 0
 
 #define M4_MASTER
 
 /*______________________________________________________________________________
 
+    REV 1.11.0
+    -23/07/2026
+
+    Aggiunta modalita di sblocco senz compressione
+    Attivato il passaggio della massima compressione al compressore
 
 
 

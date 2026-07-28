@@ -155,7 +155,7 @@ typedef struct
 
     // Decompressione libera
     bool free_unlock_compressor;
-    bool spare_param;
+    unsigned char min_compression_target;
 
 }compressoreCnf_Str;
 
