@@ -195,6 +195,7 @@ void Config::configSlave(void)
     timerPoweroff = 0;
     timerXrayPush = 0; // Diagnostica pulsante raggi
 
+
     readLogo();
 
 }
@@ -2773,6 +2774,8 @@ void Config::slaveNotifySlot(unsigned char id,unsigned char mcc_code,QByteArray 
 
         // Assegna lo stato corrente della potenza, ad uso generale
         ApplicationDatabase.setData(_DB_POWER_STAT,data.at(PWRMANAGEMENT_STAT),0);
+        ApplicationDatabase.setData(_DB_SSR_STAT,(unsigned char) data.at(PWRMANAGEMENT_SSR_STAT),0);
+
 
         switch((int) data.at(PWRMANAGEMENT_STAT)){
         case PWRMANAGEMENT_STAT_OK:
@@ -2795,10 +2798,11 @@ void Config::slaveNotifySlot(unsigned char id,unsigned char mcc_code,QByteArray 
             PageAlarms::activateNewAlarm(_DB_ALLARMI_POWERDOWN,ERROR_POWER_DOWN_TF155_FUSE);
             ApplicationDatabase.setData(_DB_ACVOLT,(int) (data.at(PWRMANAGEMENT_VLENZE_L)+256*data.at(PWRMANAGEMENT_VLENZE_H)),0);
         break;
-        case PWRMANAGEMENT_STAT_BLITERS_ON:
+        case PWRMANAGEMENT_STAT_BLITERS_ON:            
             PageAlarms::activateNewAlarm(_DB_ALLARMI_POWERDOWN,ERROR_POWER_DOWN_WARNING_BLITERS_ON);
             ApplicationDatabase.setData(_DB_ACVOLT,(int) (data.at(PWRMANAGEMENT_VLENZE_L)+256*data.at(PWRMANAGEMENT_VLENZE_H)),0);
         break;
+
 
         }
 

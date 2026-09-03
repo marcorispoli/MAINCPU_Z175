@@ -138,6 +138,9 @@ int main(int argc, char *argv[])
     ApplicationDatabase.append((int) 0);            // _DB_ANGOLO (decimi di grado)
     ApplicationDatabase.append((int) 0);            // _DB_TRX (decimi di grado)
     ApplicationDatabase.append((int) 0);            // _DB_GONIO (decimi di grado)
+
+
+    ApplicationDatabase.append((unsigned char) 0);  // _DB_SSR_STAT
     ApplicationDatabase.append((int) 0);            // _DB_ACVOLT (V, 0=powerdown)
     ApplicationDatabase.append((int) 0);            // _DB_VPRIMARIO (0 not calibrated)
     ApplicationDatabase.append((unsigned char) 0);  // _DB_BATTCHARGE (%, 0 = disabled)

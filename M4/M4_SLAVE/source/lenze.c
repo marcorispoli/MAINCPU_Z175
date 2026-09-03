@@ -41,6 +41,7 @@ static int lenzeReadMotorFreq(void);
 static void lenzeStartupConfiguration(void);
 static void lenzeRunConfiguration(void);
 static int lenzeVBUS=-1;
+static bool ssr_activation_event = false;
 
 #define ERR_SOGLIA_H 0x7081
 #define ERR_SOGLIA_L 0x7082
@@ -128,6 +129,8 @@ void driver_Lenze_Stat(void){
 
         debugPrint("LENZE INIT CONFIGURATION");
 
+
+
         // Upload of the Object Dictionary general parameters to configure the motor device
         while(canopenUploadObjectDictionaryList(lenzeGeneralMotorProfile,10,CANOPEN_LENZE_CONTEXT)==false){
             debugPrint("LENZE ERROR IN UPLOADING THE GENERAL OBJECT DICTIONARY ITEMS");
@@ -143,6 +146,7 @@ void driver_Lenze_Stat(void){
 
         // Inizializza la lettura del potenziometro per evitare diagnostiche finte
         driver_stat.analog1 = driver_stat.analog2 = 500;
+
 
         // Attende infine l'ok generale prima di iniziare il ciclo di lavoro
         while(!generalConfiguration.deviceConnected) _time_delay(500);
@@ -850,6 +854,19 @@ void lenzeSetCommand(unsigned char command, unsigned char param){
         lenzeActivatePark();
     }
 }
+
+bool lenzeGetSSRActivationEvent(){
+    return ssr_activation_event;
+}
+
+void lenzeGetSSR(void){
+    // Legge la tensione rilevata per identificare l'attivazione del SSR
+    int val = getI510BusVoltage(CANOPEN_LENZE_CONTEXT);
+    if(val<270) ssr_activation_event = true;
+
+    printf("\nLENZE VBUS:%d\n", val);
+}
+
 /*
 void lenzeActivateParkingMode(void){
     lenzeConfig.startupInParkingMode = true;

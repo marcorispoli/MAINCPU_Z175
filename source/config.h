@@ -272,6 +272,7 @@ private:
 
 public:
     bool isMaster; // Master o Slave
+    bool ssr_activation_event;
 
     bool pcb249U1UpdateRequired;
 

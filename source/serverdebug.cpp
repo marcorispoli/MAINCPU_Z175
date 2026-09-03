@@ -3778,7 +3778,8 @@ void serverDebug::handleSystem(QByteArray data)
         serviceTcp->txData(QByteArray("reboot                   Effettua il reboot di entrambi i terminali\r\n"));
         serviceTcp->txData(QByteArray("setPowerOff              Attiva il powerdown \r\n"));
         serviceTcp->txData(QByteArray("setUnpark                Attiva procedura di unpark \r\n"));
-        serviceTcp->txData(QByteArray("setPark                Attiva procedura di unpark \r\n"));
+        serviceTcp->txData(QByteArray("setPark                  Attiva procedura di unpark \r\n"));
+        serviceTcp->txData(QByteArray("getSSRStat               Verifica se SSR funziona correttamente \r\n"));
         serviceTcp->txData(QByteArray("------------------------------------------------------------------------\r\n"));
     } else
     {
@@ -3786,6 +3787,12 @@ void serverDebug::handleSystem(QByteArray data)
         if(data.contains("setIp")){
             QHostAddress host = setIpAddress(10);
             serviceTcp->txData(QString("IP:%1\r\n").arg(host.toString()).toAscii());
+
+        }else if(data.contains("getSSRStat")){
+            int val = ApplicationDatabase.getDataU(_DB_SSR_STAT);
+            if(val) serviceTcp->txData(QString("SSR is correctly working!\n\r").toAscii());
+            else serviceTcp->txData(QString("SSR seams to be broken!\n\r").toAscii());
+            return;
 
         }else if(data.contains("setUnpark")){
             unsigned char buffer[2];

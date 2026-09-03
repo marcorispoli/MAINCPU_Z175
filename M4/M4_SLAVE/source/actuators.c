@@ -81,6 +81,9 @@ void managePowerEvents(void){
     if(!SystemOutputs.CPU_MASTER_ENA) return;
 
     mccbuffer[PWRMANAGEMENT_STAT] = PWRMANAGEMENT_STAT_OK;
+    if(lenzeGetSSRActivationEvent()) mccbuffer[PWRMANAGEMENT_SSR_STAT]=1;
+    else mccbuffer[PWRMANAGEMENT_SSR_STAT]=0;
+
 
     if(SystemInputs.CPU_POWER_DOWN){
         // -----------------    Powerdown condition ----------------------- //

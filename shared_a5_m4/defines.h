@@ -186,13 +186,14 @@ typedef enum
 #define ACTUATOR_STATUS_ENABLE_LIFT_FLAG 0x4
 
 #define PWRMANAGEMENT_STAT              0
-#define PWRMANAGEMENT_VBAT1             1
-#define PWRMANAGEMENT_VBAT2             2
-#define PWRMANAGEMENT_VLENZE_L          3
-#define PWRMANAGEMENT_VLENZE_H          4
-#define PWRMANAGEMENT_ACTUATOR_STATUS   5
+#define PWRMANAGEMENT_SSR_STAT          1
+#define PWRMANAGEMENT_VBAT1             2
+#define PWRMANAGEMENT_VBAT2             3
+#define PWRMANAGEMENT_VLENZE_L          4
+#define PWRMANAGEMENT_VLENZE_H          5
+#define PWRMANAGEMENT_ACTUATOR_STATUS   6
 
-#define PWRMANAGEMENT_ACTUATOR_IO       6
+#define PWRMANAGEMENT_ACTUATOR_IO       7
 #define PWRMANAGEMENT_SIZE (PWRMANAGEMENT_ACTUATOR_IO + sizeof(_SystemInputs_Str) + sizeof(_SystemOutputs_Str))
 
 #define ACT_STAT_ROTENA 0

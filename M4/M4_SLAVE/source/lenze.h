@@ -96,6 +96,8 @@ ext bool lenzeGetObstacleStat(void);
 ext void lenzeSetCommand(unsigned char command, unsigned char param);
 ext bool lenzeSetSpeedManualPark(bool state);
 ext bool lenzeActivateUnpark(void);
+ext bool lenzeGetSSRActivationEvent();
+ext void lenzeGetSSR(void);
 
 ext uint32_t lenzeGetAn1(void);
 ext uint32_t lenzeGetAn2(void);

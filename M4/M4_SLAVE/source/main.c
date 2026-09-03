@@ -179,6 +179,9 @@ void main_task(uint32_t initial_data)
     printf("RICHIESTA REVISIONE FW A PCB240 FALLITA!\n");
   }
 
+  // Legge subito il valore della tensione dal lenze..
+  lenzeGetSSR();
+
   unsigned char buffer[20];
   while(1)
   {
@@ -471,6 +474,10 @@ void mainStartProcesses(void){
 void device_startup_Task(uint32_t parameter)
 {
     _task_id  created_task;
+
+    printf("\nDEVICE START PROCESS\n");
+
+
 
     // IL driver LENZE è il primo a partire
     if(generalConfiguration.lenzeDriver){

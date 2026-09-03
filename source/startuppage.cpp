@@ -296,7 +296,7 @@ void StartupPage::valueChanged(int index,int opt)
 {
     unsigned char startupFase;
     int connStatus;
-
+    int val;
     if(opt&DBase::_DB_NO_ACTION) return;
 
     switch(index)
@@ -345,6 +345,8 @@ void StartupPage::valueChanged(int index,int opt)
         if(!isMaster) return;
         if(ApplicationDatabase.getDataU(index)) pConfig->activatePowerOff();
         break;
+
+
     }
 
 }
