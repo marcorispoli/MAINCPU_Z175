@@ -376,7 +376,9 @@ void biopsyExtendedDevice::handleYScroll(void){
     }
 
     // La conferma da pulsante viene annullata se non c'è il rilevamento della posizione
-    if(((seq_param2 == _PARAM_UP) && (!isYUpright)) ||((seq_param2 == _PARAM_DOWN) && (isYUpright)) ) user_confirmation = false;
+    if(pBiopsy->configExt.enable_use_Y_upright){
+        if(((seq_param2 == _PARAM_UP) && (!isYUpright)) ||((seq_param2 == _PARAM_DOWN) && (isYUpright)) ) user_confirmation = false;
+    }
 
     // Attende che l'utente confermi e che l'hardware confermi la corretta posizione dell'Y
     if((!user_confirmation))
@@ -528,13 +530,15 @@ void biopsyExtendedDevice::manageHomeSequence(void){
 
 
         // Con il cursore già in alto va direttamente alla sequenza di posizionamento _REQ_SUBSEQ_HOME_ACTIVATE_FROM_YUP
-        if(isYUpright){
+        if(pBiopsy->configExt.enable_use_Y_upright){
+            if(isYUpright){
 
-            // Muove verso il target di destinazione
-            // Inizializza le posizioni a valori non di target
-            sub_sequence = next_seq = _REQ_SUBSEQ_HOME_ACTIVATE_FROM_YUP;
-            nextStepSequence(1);
-            break;
+                // Muove verso il target di destinazione
+                // Inizializza le posizioni a valori non di target
+                sub_sequence = next_seq = _REQ_SUBSEQ_HOME_ACTIVATE_FROM_YUP;
+                nextStepSequence(1);
+                break;
+            }
         }
 
         // Se il cursore è giù va verso il bordo più vicino
@@ -1195,8 +1199,10 @@ void biopsyExtendedDevice::mccStatNotify(unsigned char id_notify,unsigned char c
  */
 bool biopsyExtendedDevice::isPossibleXImpact(unsigned short X){
 
-    // Se l'asse Y risulta in posizione Upright non ci sono mai rischi di impatto
-    if(pBiopsyExtended->isYUpright) return false;
+    if(pBiopsy->configExt.enable_use_Y_upright){
+        // Se l'asse Y risulta in posizione Upright non ci sono mai rischi di impatto
+        if(pBiopsyExtended->isYUpright) return false;
+    }
 
     // Se l'asse X non è definito allora e sempre possibile
     if(curLatX == _BP_EXT_ASSEX_POSITION_ND) return true;

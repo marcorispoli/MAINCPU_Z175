@@ -250,6 +250,7 @@ typedef struct
     unsigned short sh_150_level;    // Signal level of the shaft, above 15mm the zero level
     unsigned short sh_m150_level;   // Signal level of the shaft, below 15mm the zero level
 
+    bool   enable_use_Y_upright; // If true, the Y upright info is used in the workflow
 }biopsyConfExt_Str;
 
 

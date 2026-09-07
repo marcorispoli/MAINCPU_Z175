@@ -42,6 +42,7 @@ void biopsyModule::defaultConfigDataExtended(void){
     configExt.sh_150_level = 680;
     configExt.sh_m150_level = 0;
 
+    configExt.enable_use_Y_upright = true;
 }
 
 
@@ -139,6 +140,9 @@ bool biopsyModule::openCfgExtended(void)
         }else  if(dati.at(0)=="SH_M150"){
             configExt.sh_m150_level = dati.at(1).toInt();
 
+        }else  if(dati.at(0)=="Y_UPRIGHT"){
+            if(dati.at(1).toInt()==1)  configExt.enable_use_Y_upright = true;
+            else configExt.enable_use_Y_upright = false;
         }
     }
 
@@ -187,6 +191,8 @@ bool biopsyModule::storeConfigExtended(void)
     file.write( QString("<SH_150,%1>\n").arg((int) configExt.sh_150_level).toAscii());
     file.write( QString("<SH_M150,%1>\n").arg((int) configExt.sh_m150_level).toAscii());
 
+    if(configExt.enable_use_Y_upright) file.write( QString("<Y_UPRIGHT,1>\n").toAscii());
+    else   file.write( QString("<Y_UPRIGHT,0>\n").toAscii());
 
     file.flush();
     file.close();
