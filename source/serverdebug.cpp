@@ -4064,6 +4064,9 @@ void serverDebug::handleExtendedBiopsy(QByteArray data)
         serviceTcp->txData(QByteArray("calibXbase  val       ? calibrazione base X\r\n"));
         serviceTcp->txData(QByteArray("calibSh  RAW(zero) RAW(+15) RAW(-15) ? calibrazione asse cuneo \r\n"));
 
+        serviceTcp->txData(QByteArray("--------------- CONFIGURATION ----------------------------\r\n"));
+        serviceTcp->txData(QByteArray("setYSensor  ON|OFF       ? Enable/Disable Y Upright sensor \r\n"));
+
 
 #ifdef __BIOPSY_SIMULATOR
         serviceTcp->txData(QByteArray("\n\r BIOPSY SIMULATOR COMMANDS: --------\r\n"));
@@ -4243,6 +4246,16 @@ void serverDebug::handleExtendedBiopsy(QByteArray data)
             }
             if(parametri[0]=="ON") pBiopsyExtended->setPowerled(true);
             else pBiopsyExtended->setPowerled(false);
+            serviceTcp->txData(QByteArray("DONE \r\n"));
+        }else if(data.contains("setYSensor")){
+            parametri = getNextFieldsAfterTag(data, QString("setYSensor"));
+            if(parametri.size()!=1){
+                serviceTcp->txData(QByteArray("SYNTAX ERROR! setYSensor ON or OFF \r\n"));
+                return;
+            }
+            if(parametri[0]=="ON") pBiopsy->configExt.enable_use_Y_upright = true;
+            else pBiopsy->configExt.enable_use_Y_upright = false;
+            pBiopsy->storeConfigExtended();
             serviceTcp->txData(QByteArray("DONE \r\n"));
         }else handleBiopsySimulator(data);
     }
