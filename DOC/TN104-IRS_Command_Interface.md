@@ -21,7 +21,7 @@
 
  <br/>
 
-<center><font size =4">REV: 2.0</font></center>
+<center><font size =4">REV: 2.1</font></center>
  <br/>
  <br/>
 <br/>
@@ -37,6 +37,7 @@
 |1.0|16/01/2023|Applicable to<br> Z175/ID09| M. Rispoli<br>.|L.Nastasi<br>.|G.B.Peretta<br>.|
 |1.0|20/02/2023|Applicable to<br> Z175/ID11| M. Rispoli<br>.|L.Nastasi<br>.|G.B.Peretta<br>.|
 |2.0|29/09/2025|Applicable to<br> Z175/ID15| M. Rispoli<br>.|L.Nastasi<br>.|G.B.Peretta<br>.|
+|2.1|07/09/2026|Applicable to<br> Z175/ID16| M. Rispoli<br>.|L.Nastasi<br>.|G.B.Peretta<br>.|
 ||||||| 
 
 
@@ -50,7 +51,10 @@
 <br/>
 
 
-+ The collimator menu has been modified including new commands to handle the dynamic filter collimation;
++ Compressor: Added command to set the minimum selectable target compression;
++ Config: Added command to change the compressor release behavior
++ System: Added a command to test the SSR relay integrity;
++ Biopsy: Added command to enable/disable the use of the Y upright position sensor;
 
  <div style="page-break-after: always;"></div>
 
@@ -78,6 +82,7 @@
     - [7.1.10. ***setPowerOff***](#7110-setpoweroff)
     - [7.1.11. ***setUnpark***](#7111-setunpark)
     - [7.1.12. ***setPark***](#7112-setpark)
+    - [7.1.13. ***getSSRStat***](#7113-getssrstat)
   - [7.2. CONFIGURATION COMMANDS (config:)](#72-configuration-commands-config)
     - [7.2.1. ***setAutoFilter***](#721-setautofilter)
     - [7.2.2. ***setHsStarter***](#722-sethsstarter)
@@ -94,6 +99,7 @@
     - [7.2.13. ***resetKvCalib***](#7213-resetkvcalib)
     - [7.2.14. ***sysBackup***](#7214-sysbackup)
     - [7.2.15. ***sysRestore***](#7215-sysrestore)
+    - [7.2.16. ***setFreeUnlock***](#7216-setfreeunlock)
   - [7.3. COLLIMATOR COMMANDS (collimatore:)](#73-collimator-commands-collimatore)
     - [7.3.1. Collimator configuration](#731-collimator-configuration)
       - [7.3.1.1. ***readColliConf***](#7311-readcolliconf)
@@ -144,6 +150,7 @@
     - [7.4.4. Compression Force Parameters](#744-compression-force-parameters)
       - [7.4.4.1. ***setWeight***](#7441-setweight)
       - [7.4.4.2. ***setLimitForce***](#7442-setlimitforce)
+      - [7.4.4.3. ***setMinTarget***](#7443-setmintarget)
   - [7.5. MOTOR ACTIVATION COMMANDS (rotazioni:)](#75-motor-activation-commands-rotazioni)
     - [7.5.1. Configuration File Management](#751-configuration-file-management)
       - [7.5.1.1. ***readTrxConfig***](#7511-readtrxconfig)
@@ -180,6 +187,8 @@
       - [7.8.3.3. ***moveHome***](#7833-movehome)
       - [7.8.3.4. ***testBuzzer***](#7834-testbuzzer)
       - [7.8.3.5. ***powerLed***](#7835-powerled)
+    - [7.8.4. Configuration commands](#784-configuration-commands)
+      - [7.8.4.1. ***setYSensor***](#7841-setysensor)
   - [7.9. GENERATOR COMMANDS (generator:)](#79-generator-commands-generator)
     - [7.9.1. Configuration commands](#791-configuration-commands)
       - [7.9.1.1. ***reloadTube***](#7911-reloadtube)
@@ -211,6 +220,7 @@
       - [7.11.2.2. The TcpIp terinal debug](#71122-the-tcpip-terinal-debug)
 
 
+<div style="page-break-after: always;"></div>
 
 # 1. Document Overview
 
@@ -396,6 +406,18 @@ setDATE Year Month Day hour minute second
 |**DESCRIPTION**|
 |Activate the ARM parking procedure|
 
+### 7.1.13. ***getSSRStat***
+
+|COMMAND|
+|---|
+|getSSRStat |
+|**DESCRIPTION**|
+|Request the integrity status of the SSR relay|
+
+If the SSR relay is not damaged, the command answers: " SSR relay is correctly working."
+If the SSR relay should be damaged, the command answers: " SSR seams to be broken."
+
+***NOTE: this command shall be used only with the system powered off for almost 1 minutes before to be repowered.***
 
 ## 7.2. CONFIGURATION COMMANDS (config:)
 
@@ -578,6 +600,19 @@ shall be: master_***backup_name***.tar;
 
 The file present into the HOME directory of the Slave 
 shall be: slave_***backup_name***.tar;
+
+
+### 7.2.16. ***setFreeUnlock***
+
+|COMMAND|
+|---|
+|setFreeUnlock ON/OFF|
+|**DESCRIPTION**|
+|Enable/Disable the compressor unlock activation without a compression|
+
+When this parameter is disabled (OFF, default), at the exposure completion, if the Unlock Compressor option is ON, the compressor move upwards only if a compression is detected.
+
+When this parameter is enabled (ON), at the exposure completion, if the Unlock Compressor option is ON, the compressor move upwards in any case.
 
 
 
@@ -1037,6 +1072,15 @@ when the ARM is in CounterUpright position.
 The value can be set in a range from 70 to 200 Newton.
 
 
+#### 7.4.4.3. ***setMinTarget***
+
+|COMMAND|
+|---|
+|**setMinTarget** val|
+|**DESCRIPTION**|
+|Set the minimum selectable Automatic target compression|
+
+The value can be set in the range: 30 to 200 Newton.
 
 ## 7.5. MOTOR ACTIVATION COMMANDS (rotazioni:)
 
@@ -1315,6 +1359,18 @@ To early stop the loop use the same command without the parameters
 |**powerLed** ON/OFF|
 |**DESCRIPTION**|
 |Activate (ON) or Deactivate (OFF) the Light|
+
+### 7.8.4. Configuration commands
+
+#### 7.8.4.1. ***setYSensor***
+
+|COMMAND|
+|---|
+|**setYSensor** ON/OFF|
+|**DESCRIPTION**|
+|Activate (ON) or Deactivate (OFF) Y Upright position sensor|
+
+***Note: Set this command OFF only for the old Biopsy devices that are not equipped with the Y Upright sensor!***
 
 ## 7.9. GENERATOR COMMANDS (generator:)
 
