@@ -398,6 +398,13 @@ void biopsyExtendedDevice::handleYScroll(void){
         event_req_sequence = startTimer(100);
         return;
     }
+
+    // Se l'operatore ha confermato, in caso di sensore disabilitato, viene impostato il flag direttamente da SW
+    if(!pBiopsy->configExt.enable_use_Y_upright){
+        if(seq_param2 == _PARAM_UP) isYUpright = true;
+        else if(seq_param2 == _PARAM_DOWN) isYUpright = false;
+    }
+
     user_confirmation = false;
     sub_sequence = next_seq;
     init = true;
@@ -530,23 +537,36 @@ void biopsyExtendedDevice::manageHomeSequence(void){
 
 
         // Con il cursore già in alto va direttamente alla sequenza di posizionamento _REQ_SUBSEQ_HOME_ACTIVATE_FROM_YUP
-        if(pBiopsy->configExt.enable_use_Y_upright){
-            if(isYUpright){
+        // Se il riconoscimento non è attivo, allora questo flag viene impostato via software alla
+        // Pressione del pulsante grafico
+        if(isYUpright){
 
-                // Muove verso il target di destinazione
-                // Inizializza le posizioni a valori non di target
-                sub_sequence = next_seq = _REQ_SUBSEQ_HOME_ACTIVATE_FROM_YUP;
-                nextStepSequence(1);
-                break;
+            // Muove verso il target di destinazione
+            // Inizializza le posizioni a valori non di target
+            sub_sequence = next_seq = _REQ_SUBSEQ_HOME_ACTIVATE_FROM_YUP;
+            nextStepSequence(1);
+            break;
+        }
+
+        // Prova ad andare all'X target se può, altrementi prova dall'altra parte
+        move_X = 0xFFFF;
+        if(req_X == XHOME_LEFT){
+            if(!isPossibleXImpact(_DEF_EXT_XHOME_LEFT)) move_X = _DEF_EXT_XHOME_LEFT;
+        }else if(req_X == XHOME_RIGHT){
+            if(!isPossibleXImpact(_DEF_EXT_XHOME_RIGHT)) move_X = _DEF_EXT_XHOME_RIGHT;
+        }
+
+        // Ne prova uno a caso
+        if(move_X == 0xFFFF){
+            // Se il cursore è giù va verso il bordo più vicino
+            if(!isPossibleXImpact(_DEF_EXT_XHOME_RIGHT)){ // Prova a vedere se può andare a destra
+                move_X = _DEF_EXT_XHOME_RIGHT;
+            }else if(!isPossibleXImpact(_DEF_EXT_XHOME_LEFT)){// Prova a vedere se può andare a sinistra
+                move_X = _DEF_EXT_XHOME_LEFT;
             }
         }
 
-        // Se il cursore è giù va verso il bordo più vicino
-        if(!isPossibleXImpact(_DEF_EXT_XHOME_RIGHT)){ // Prova a vedere se può andare a destra
-            move_X = _DEF_EXT_XHOME_RIGHT;
-        }else if(!isPossibleXImpact(_DEF_EXT_XHOME_LEFT)){// Prova a vedere se può andare a sinistra
-            move_X = _DEF_EXT_XHOME_LEFT;
-        }else{
+        if(move_X == 0xFFFF){
             manageRequestErrors(_BIOPSY_MOVING_UNDEFINED_CORNER_POSITION); // NOn esiste posizione sicura
             return;
         }
@@ -654,6 +674,20 @@ void biopsyExtendedDevice::manageHomeSequence(void){
                 else if(req_home_lat == _BP_EXT_ASSEX_POSITION_RIGHT) seq_param1 = _PARAM_RIGHT;
                 else seq_param1 = _PARAM_CENTER;
                 next_seq = _REQ_SUBSEQ_HOME_FROM_XCORNER;
+                nextStepSequence(1);
+                break;
+            }
+
+            // Il ribaltamento è corretto?
+            if((req_home_lat == _BP_EXT_ASSEX_POSITION_LEFT) ||(req_home_lat == _BP_EXT_ASSEX_POSITION_RIGHT)){
+
+                // Deve ribaltare in alto e poi ripartire da INIT
+                sub_sequence =_REQ_SUBSEQ_HOME_Y_SCROLL;
+                seq_param2 = _PARAM_DOWN;
+                if(curLatX == _BP_EXT_ASSEX_POSITION_LEFT) seq_param1 = _PARAM_LEFT;
+                else seq_param1 = _PARAM_RIGHT;
+
+                next_seq = _REQ_SUBSEQ_HOME_COMPLETED;
                 nextStepSequence(1);
                 break;
             }
@@ -917,6 +951,10 @@ int biopsyExtendedDevice::requestBiopsyHome(int id, unsigned char lat, int rot_h
     req_sequence = _REQ_SEQ_HOME;
     sub_sequence = _REQ_SUBSEQ_HOME_INIT;
 
+    if(!pBiopsy->configExt.enable_use_Y_upright){
+        isYUpright = false;
+    }
+
     // Apre la pagina grafica di gestione delle attivazioni
     GWindowRoot.setNewPage(_PG_BIOPSY_EXTENDED_DEVICE,GWindowRoot.curPage,0);
     nextStepSequence(1);
@@ -1085,9 +1123,11 @@ void biopsyExtendedDevice::mccStatNotify(unsigned char id_notify,unsigned char c
     ApplicationDatabase.setData(_DB_BIOP_LAT_X,(int) data.at(_BP_EXT_ASSEX_POSITION),0);
     if(curLatX != _BP_EXT_ASSEX_POSITION_ND) last_xscroll_detected = curLatX;
 
-    // Ribaltamento asse Y:
-    if(data[_BP_EXT_ASSEY_POSITION] == 1) isYUpright = true;
-    else isYUpright = false;
+    // Ribaltamento asse Y: solo con riconoscimento attivo
+    if(pBiopsy->configExt.enable_use_Y_upright){
+        if(data[_BP_EXT_ASSEY_POSITION] == 1) isYUpright = true;
+        else isYUpright = false;
+    }
 
     // Inizializzazione del flag di comando Home precedente
     if(req_home_lat == _BP_EXT_ASSEX_POSITION_ND){

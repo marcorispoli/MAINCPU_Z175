@@ -864,7 +864,10 @@ void lenzeGetSSR(void){
     int val = getI510BusVoltage(CANOPEN_LENZE_CONTEXT);
     if(val<270) ssr_activation_event = true;
 
-    printf("\nLENZE VBUS:%d\n", val);
+    printf("\n--------- TEST SSR RELAY INTEGRITY ------------\n");
+    if(ssr_activation_event) printf("\nINTEGRITY OK. VOLTAGE:%d\n", val);
+    else printf("\nINTEGRITY FAIL. VOLTAGE:%d\n", val);
+
 }
 
 /*
