@@ -21,7 +21,7 @@
 
  <br/>
 
-<center><font size =4">REV: 2.1</font></center>
+<center><font size =4">REV: 3.0</font></center>
  <br/>
  <br/>
 <br/>
@@ -37,7 +37,7 @@
 |1.0|16/01/2023|Applicable to<br> Z175/ID09| M. Rispoli<br>.|L.Nastasi<br>.|G.B.Peretta<br>.|
 |1.0|20/02/2023|Applicable to<br> Z175/ID11| M. Rispoli<br>.|L.Nastasi<br>.|G.B.Peretta<br>.|
 |2.0|29/09/2025|Applicable to<br> Z175/ID15| M. Rispoli<br>.|L.Nastasi<br>.|G.B.Peretta<br>.|
-|2.1|07/09/2026|Applicable to<br> Z175/ID16| M. Rispoli<br>.|L.Nastasi<br>.|G.B.Peretta<br>.|
+|3.0|07/09/2026|Applicable to<br> Z175/ID16| M. Rispoli<br>.|L.Nastasi<br>.|G.B.Peretta<br>.|
 ||||||| 
 
 
