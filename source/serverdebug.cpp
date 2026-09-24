@@ -4218,8 +4218,14 @@ void serverDebug::handleExtendedBiopsy(QByteArray data)
             else lat = "UNDEF";
 
             QString Yupdown;
-            if(pBiopsyExtended->isYUpright) Yupdown = "YUP";
-            else Yupdown = "YUNDEF";
+
+            if(pBiopsy->configExt.enable_use_Y_upright){
+                if(pBiopsyExtended->isYUpright) Yupdown = "(Enabled) YUP";
+                else Yupdown = "(Enabled) YDOWN";
+            }else{
+                Yupdown = "(Disabled)";
+            }
+
 
             QString stringa = QString("BIOPSY SIGNALS:\n\r");
             stringa += QString("- POSITION: X=%1, Y=%2, Z=%3\n\r").arg(pBiopsyExtended->curX_dmm).arg(pBiopsyExtended->curY_dmm).arg(pBiopsyExtended->curZ_dmm);

@@ -3,8 +3,8 @@
 
 #include "application.h"
 
-#define IRS_MAJ  2
-#define IRS_MIN  1
+#define IRS_MAJ  3
+#define IRS_MIN  0
 
 
 /*___________________________________________________________________________________

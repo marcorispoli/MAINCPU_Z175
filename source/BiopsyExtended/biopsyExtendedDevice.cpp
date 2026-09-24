@@ -714,6 +714,15 @@ void biopsyExtendedDevice::manageHomeSequence(void){
     case _REQ_SUBSEQ_HOME_COMPLETED:
         isHome = true;
 
+
+        // Se la home è centrale e il sensore Y non è abilitato, si impone il flag Y alto
+        // Altrementi è basso (Left Right)
+        if(!pBiopsy->configExt.enable_use_Y_upright){
+            if(curLatX == _BP_EXT_ASSEX_POSITION_CENTER) isYUpright = true;
+            else isYUpright = false;
+        }
+
+
         // Notifica di fine movimento
         movingError = _BIOPSY_MOVING_NO_ERROR;
         if(pBiopsy->activationId) pToConsole->endCommandAck(pBiopsy->activationId, _BIOPSY_MOVING_NO_ERROR);
@@ -942,7 +951,12 @@ int biopsyExtendedDevice::requestBiopsyHome(int id, unsigned char lat, int rot_h
     }
 
     // Bym già in posizione
-    if((req_home_lat == curLatX) && (isTarget(req_X, req_Y, req_Z))) return 0;
+    if((req_home_lat == curLatX) && (isTarget(req_X, req_Y, req_Z))){
+        if(!pBiopsy->configExt.enable_use_Y_upright){
+            isYUpright = true;
+        }
+        return 0;
+    }
 
     // Prepara la sequenza di gestione del movimento
     ApplicationDatabase.setData(BIOPSY_ACTIVATION_TITLE_DB,activationString,0);
@@ -951,6 +965,7 @@ int biopsyExtendedDevice::requestBiopsyHome(int id, unsigned char lat, int rot_h
     req_sequence = _REQ_SEQ_HOME;
     sub_sequence = _REQ_SUBSEQ_HOME_INIT;
 
+    // Si inizializza il sensore a false
     if(!pBiopsy->configExt.enable_use_Y_upright){
         isYUpright = false;
     }
@@ -1239,10 +1254,12 @@ void biopsyExtendedDevice::mccStatNotify(unsigned char id_notify,unsigned char c
  */
 bool biopsyExtendedDevice::isPossibleXImpact(unsigned short X){
 
-    if(pBiopsy->configExt.enable_use_Y_upright){
-        // Se l'asse Y risulta in posizione Upright non ci sono mai rischi di impatto
-        if(pBiopsyExtended->isYUpright) return false;
-    }
+
+    // Se l'asse Y risulta in posizione Upright non ci sono mai rischi di impatto
+    // Attenzione: in caso di sensore disabilitato, il flag viene impostato true
+    // a seguito di un posizionamento di Home Centrale.
+    if(pBiopsyExtended->isYUpright) return false;
+
 
     // Se l'asse X non è definito allora e sempre possibile
     if(curLatX == _BP_EXT_ASSEX_POSITION_ND) return true;
