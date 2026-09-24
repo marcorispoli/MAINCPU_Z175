@@ -915,17 +915,30 @@ int biopsyExtendedDevice::requestBiopsyHome(int id, unsigned char lat, int rot_h
 
 
     // Non può essere eseguita con una pagina di errore in corso
-    if(paginaAllarmi->isCurrentPage()) return -1;
+    if(paginaAllarmi->isCurrentPage()){
+        DEBUG("BIOPSY: HOME REQUEST REJECTED. CURRENT ALARMS ACTIVATED");
+        return -1;
+    }
 
     // Prima di tutto controlla che il braccio si trovi in CC
-    if(ApplicationDatabase.getDataI(_DB_TRX) > 50) return -2;
-    if(ApplicationDatabase.getDataI(_DB_TRX) < -50) return -2;
+    if(ApplicationDatabase.getDataI(_DB_TRX) > 50){
+        DEBUG("BIOPSY: HOME REQUEST REJECTED. TILT ARM NOT IN SCOUT");
+        return -2;
+    }
+    if(ApplicationDatabase.getDataI(_DB_TRX) < -50){
+        DEBUG("BIOPSY: HOME REQUEST REJECTED. TILT ARM NOT IN SCOUT");
+        return -2;
+    }
 
     // Non può essere eseguita senza una rilevazione corretta della lateralità
     if(
             (curLatX !=_BP_EXT_ASSEX_POSITION_LEFT) &&
             (curLatX !=_BP_EXT_ASSEX_POSITION_CENTER) &&
-            (curLatX !=_BP_EXT_ASSEX_POSITION_RIGHT) ) return -3;
+            (curLatX !=_BP_EXT_ASSEX_POSITION_RIGHT) ) {
+
+        DEBUG("BIOPSY: HOME REQUEST REJECTED. XSCROLL OUT OF POSITION");
+        return -3;
+    }
 
     prev_home_lat = req_home_lat;
     req_home_lat = lat;
@@ -955,6 +968,8 @@ int biopsyExtendedDevice::requestBiopsyHome(int id, unsigned char lat, int rot_h
         if(!pBiopsy->configExt.enable_use_Y_upright){
             isYUpright = true;
         }
+
+        DEBUG("BIOPSY: ALREADY IN POSITION");
         return 0;
     }
 
@@ -973,6 +988,8 @@ int biopsyExtendedDevice::requestBiopsyHome(int id, unsigned char lat, int rot_h
     // Apre la pagina grafica di gestione delle attivazioni
     GWindowRoot.setNewPage(_PG_BIOPSY_EXTENDED_DEVICE,GWindowRoot.curPage,0);
     nextStepSequence(1);
+
+    DEBUG("BIOPSY: HOME REQUEST EXECUTING");
     return 1;
 
 
@@ -995,7 +1012,10 @@ int biopsyExtendedDevice::requestBiopsyOutOfPosition(void){
 int biopsyExtendedDevice::requestBiopsyMoveXYZ(unsigned short X, unsigned short Y,unsigned short Z,int id){
 
     // Non può essere eseguita con una pagina di errore in corso
-    if(paginaAllarmi->isCurrentPage()) return -1;
+    if(paginaAllarmi->isCurrentPage()){
+        DEBUG("BIOPSY: MOVE_XYZ REJECTED. CURRENT ALARMS ACTIVATED");
+        return -1;
+    }
 
     // Abilita la visualizzazione del cursore
     ApplicationDatabase.setData(_DB_BIOP_SHOW_SH, (unsigned char) 1);
@@ -1018,6 +1038,8 @@ int biopsyExtendedDevice::requestBiopsyMoveXYZ(unsigned short X, unsigned short 
     // Apre la pagina grafica di gestione delle attivazioni
     GWindowRoot.setNewPage(_PG_BIOPSY_EXTENDED_DEVICE,GWindowRoot.curPage,0);
     nextStepSequence(1);
+
+    DEBUG("BIOPSY: MOVE_XYZ EXECUTING.");
     return 1;
 
 }
@@ -1262,7 +1284,10 @@ bool biopsyExtendedDevice::isPossibleXImpact(unsigned short X){
 
 
     // Se l'asse X non è definito allora e sempre possibile
-    if(curLatX == _BP_EXT_ASSEX_POSITION_ND) return true;
+    if(curLatX == _BP_EXT_ASSEX_POSITION_ND){
+        DEBUG("BIOPSY: POSSIBLE IMPACT CONDITION DETECTED. X SCROLL UNDETECTED POSITION");
+        return true;
+    }
 
     // Se il cursore attraversa l'area centrale allora c'è rischio di impatto
 
@@ -1285,6 +1310,8 @@ bool biopsyExtendedDevice::isPossibleXImpact(unsigned short X){
     if(
         ((curX_dmm>xh) && (X<xh)) ||
         ((curX_dmm<xl) && (X>xl)) ){
+
+        DEBUG("BIOPSY: POSSIBLE IMPACT CONDITION DETECTED. BODY CROSS CONDITION");
         return true;
 
     }
